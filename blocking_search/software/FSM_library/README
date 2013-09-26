@@ -1,0 +1,25 @@
+In a standard UNIX shell, enter the directory where the contents of the zip file reside.
+
+Run the following command to compile the program:
+	
+		 g++ -std=c++0x blocking.cpp -o <name of exectuable>
+		 
+To run the search on a set of .fsm files, run the following command:
+
+		./<name of executable> <example1>.fsm <example2>.fsm ... <exampleN>.fsm 
+		
+For example:
+		
+		$ g++ -std=c++0x blocking.cpp -o block
+		$ ./block G1.fsm G2.fsm G3.fsm G5.fsm bsp.fsm
+		
+Any number of automata and variable automata may be entered.
+All .fsm files should reside in the same directory as the .cpp and .h files.
+All .fsm files must be well-formatted, or the program will give unpredictable results.
+
+The program works as follows:
+	1. Read in .fsm files
+	2. Perform DFS of parallel composition, starting from state 0 in each automata. Transitions are calculated on the fly. This search will identify all accessible states
+	3. Invert the transitions on all .fsm files
+	4. Perform DFS of parallel composition, starting from state 0 in each automata. Transitions are calculated on the fly. This search will identify all coaccessible states
+	5. Find all states that are accessible but not coaccessible. Print these to "blocking_states.txt".

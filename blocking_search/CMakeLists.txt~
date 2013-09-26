@@ -1,0 +1,14 @@
+cmake_minimum_required (VERSION 2.6)
+project (blocking_search)
+
+# add the binary tree to the search path for include files
+# so that we will find TutorialConfig.h
+include_directories ("${PROJECT_BINARY_DIR}")
+
+# add the MathFunctions library?
+# include_directories ("${PROJECT_SOURCE_DIR}/FSMFunctions")
+  add_subdirectory (FSMFunctions)
+
+# add the executable
+add_executable (blocking_search main.cpp)
+# target_link_libraries (blocking_search  FSMFunctions)

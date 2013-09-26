@@ -1,0 +1,2 @@
+/usr/bin/ar cr libFSM_library.a  CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o CMakeFiles/FSM_library.dir/src/Utilities.cpp.o CMakeFiles/FSM_library.dir/src/Event_wrapper.cpp.o CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o CMakeFiles/FSM_library.dir/src/EventManager.cpp.o CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o
+/usr/bin/ranlib libFSM_library.a
