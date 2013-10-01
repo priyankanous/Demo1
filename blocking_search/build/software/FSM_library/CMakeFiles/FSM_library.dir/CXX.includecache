@@ -85,6 +85,10 @@ map
 -
 cmath
 -
+string
+-
+sstream
+-
 FSMDataStructures.h
 ../software/FSM_library/inc/FSMDataStructures.h
 

@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -18,8 +19,112 @@
 
 using namespace std;
 
-unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArr, MemoryManager & memory, EventManager & event, StateEncoder & encoder, unsigned int worstcase)
+void MapCommonEvents(vector<FSM_struct> & FSMArray)
 {
+  vector< vector<int> > sharedEvents;
+  
+  cout << "Index" << endl;
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    cout << i << "\t" << FSMArray[i].fsmName << endl;
+  }
+  cout << endl<<"   ";
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    if(i<10)
+      cout << i << "  ";
+    else
+      cout << i << " ";
+  }
+  cout<<endl;
+  
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    if(i<10)
+      cout << i << "  ";
+    else
+      cout << i << " ";
+      
+    vector<int> row;
+    for(int j=0; j<=i; j++)
+    {
+      cout << "...";
+      row.push_back(0);
+    }
+    for(int j=i+1; j<FSMArray.size(); j++)
+    {
+      sort(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end());
+      sort(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end());
+      
+      vector<string> intersection(FSMArray[i].alphabet.size() + FSMArray[j].alphabet.size());
+      vector<string>::iterator it = set_intersection(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), intersection.begin());
+      intersection.resize(it-intersection.begin());
+      
+      if(intersection.size() == 0)
+      {
+        cout << "-  ";
+      }
+      else
+      {
+        if(intersection.size() >= 10 )
+          cout <<  intersection.size()<< " ";
+        else
+          cout << intersection.size() << "  ";
+      }
+      row.push_back(intersection.size()); 
+    }
+    cout << endl;
+    sharedEvents.push_back(row);
+  }
+  cout << endl;
+
+}
+
+void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder)
+{
+  outfile << encoder.GenerateStateName( currentState ) << "\t";
+  if(marked)
+  {
+    outfile << 1 << "\t";
+  }
+  else
+  {
+    outfile << 0 << "\t";
+  }
+  outfile << nextStates.size() << "\t" << endl;
+  
+  for(int i=0; i<nextStates.size(); i++)
+  {
+    outfile << nextStates[i].second << "\t";
+    outfile << encoder.GenerateStateName( nextStates[i].first ) << "\t";
+    outfile << "c\to" << endl;
+  }
+  
+  outfile << endl;
+  outfile.flush();
+}
+
+
+unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArr, MemoryManager & memory, EventManager & event, StateEncoder & encoder, unsigned int worstcase, string outputDirectory)
+{
+  ofstream outfile;
+  if(!outputDirectory.empty())
+  {
+    string filename;
+    for(int i=0; i<FSMArr.size(); i++)
+    {
+      filename += (FSMArr[i].fsmName + ",");
+    }
+    filename.erase(filename.end()-1);
+    
+    string filepath = outputDirectory + filename + ".fsm";
+    outfile.open(filepath.c_str());
+    if(!outfile.is_open())
+    {
+      cerr << "File "<<filepath <<" failed to open!"<<endl;
+    }
+    outfile << setw(8) << "CORRUPT" << endl << endl;
+  }
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
 	unsigned currentState = 0;
@@ -33,22 +138,49 @@ unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArr, MemoryManager & memory
 		//Get current state off top of stack
 		currentState = memory.PopOffStack();
 		
-		//Loop through each FSM, examining the current state's transitions
-		for(int i=0; i<FSMArr.size(); i++)
-		{
-			//Extract state index from encoded composite state
-			int stateIndex = encoder.FindStateIndex(currentState, i);
-			
-			//Insert events into EventManager
-			event.AddTransitions(FSMArr[i].states[stateIndex], i);
-		}
-
-		//Get next states, push onto stack
-		vector<unsigned int> nextStates;
-    event.GetNextStates( nextStates , currentState );
+		// Loop through each FSM, examining the current state's transitions
+		// case 1:
+		//    If ALL states are marked (indicating real or "proper" states),
+		//    consider all events from all states. 
+		// case 2: 
+		//    If at least one state is unmarked, consider only variable events
+		//    That is, lowercase events in unmarked states
+		 
+		bool unmarkedStates = encoder.CheckForUnmarkedStates(currentState);
+		
+    for(int i=0; i<FSMArr.size(); i++)
+    {
+	    //Extract state index from encoded composite state
+	    int stateIndex = encoder.FindStateIndex(currentState, i);
+	    
+	    if( unmarkedStates )
+	    {
+	      //Add only variable events
+	      event.AddTransitions(FSMArr[i].states[stateIndex], i, VARIABLE_EVENT);
+      }
+      else
+      {
+        //Add both variable and exogenous events
+        event.AddTransitions(FSMArr[i].states[stateIndex], i, ALL_EVENTS);
+      }
+    }
+        
+		//Get next states
+		vector<pair<unsigned int, string> > nextStates;
+    event.GetNextStates( currentState, nextStates );
+    
+    
+    //Write current state to .FSM file
+    if( outfile.is_open() )
+    {
+      WriteStateToFile( currentState, nextStates, !unmarkedStates, outfile, encoder );
+    }
+    
+ 
+    //Push next states onto stack
     for( int i=0; i<nextStates.size(); i++)
     {
-      memory.PushOnStack(nextStates[i]);
+      memory.PushOnStack(nextStates[i].first);
     }
 
 		//Update counter 
@@ -70,7 +202,13 @@ unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArr, MemoryManager & memory
 	cout << "Total states accessed: " << counter << endl;
 	cout << "Max size of stack: "<< maxStackSize << endl;
 	
-	
+	if(outfile.is_open())
+  {
+    outfile.seekp(0, ios::beg);
+    outfile << setw(8) << counter;
+    outfile.close();
+  }  
+  
 	return counter;
 }
 
@@ -82,7 +220,7 @@ int main(int argc, char * argv[])
 	//Read in .fsm files
 	//Change second parameter to "0" to not print update
 	int worstcase = readFSM(FSMArr, 1, argc, argv);
-	
+	MapCommonEvents(FSMArr);
 	//Populate number of states in each FSM
 	vector<int> numStates;
 	for(int i=0; i<FSMArr.size(); i++)
@@ -94,7 +232,7 @@ int main(int argc, char * argv[])
 	StateEncoder encoder(FSMArr);
 	
 	unsigned int totalStatesAccessed;
-	totalStatesAccessed = DepthFirstSearch(FSMArr, memory, event, encoder, worstcase);
+	//totalStatesAccessed = DepthFirstSearch(FSMArr, memory, event, encoder, worstcase, "../FSM_files/");
 	
 	cout << (int)PARAM_IN << endl;
 	//GenerateOptimalSubgroups(FSMArr);

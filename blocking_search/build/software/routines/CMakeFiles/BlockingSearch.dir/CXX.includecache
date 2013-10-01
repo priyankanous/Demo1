@@ -85,6 +85,10 @@ map
 -
 cmath
 -
+string
+-
+sstream
+-
 FSMDataStructures.h
 ../software/routines/../FSM_library/inc/FSMDataStructures.h
 
@@ -116,6 +120,8 @@ Event_wrapper.h
 
 /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/blocking.cpp
 iostream
+-
+iomanip
 -
 fstream
 -

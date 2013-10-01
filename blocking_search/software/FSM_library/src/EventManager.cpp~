@@ -13,6 +13,8 @@ EventManager::EventManager(vector<FSM_struct> & FSMArray)
 		{
 		  string eventName = FSMArray[i].alphabet[j];
 		  
+		  EventTypeMask mask = AssignMask(eventName);
+		  
 		  //Look for event name in frequency map
 			map<string, int>::iterator it = EventFrequency.find(eventName);
 			
@@ -20,6 +22,7 @@ EventManager::EventManager(vector<FSM_struct> & FSMArray)
 			if (it == EventFrequency.end())
 			{
 				EventFrequency.insert( make_pair(eventName, 1) );
+				EventTypeMap.insert( make_pair(eventName, mask) );
 			}
 			else
 			{
@@ -30,8 +33,27 @@ EventManager::EventManager(vector<FSM_struct> & FSMArray)
 	}
 }
 
+EventTypeMask EventManager::AssignMask(string event)
+{
+  if(event == "DC")
+  {
+    return DC_AND_EXOGENOUS;  
+  }
+  else
+  {
+    for(int i=0; i < event.length(); i++)
+    {
+      if( !islower( event[i] ) )
+      {
+        return EXOGENOUS_EVENT;
+      }
+    }
+    
+    return VARIABLE_EVENT;
+  }
+}
 
-void EventManager::AddTransitions(State & state, int fsmIndex)
+void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int restriction)
 {
   //Iterate through all transitions in state
   const int numberOfTransitions = state.transitions.size();
@@ -39,7 +61,17 @@ void EventManager::AddTransitions(State & state, int fsmIndex)
   {
     //Find event entry
     const Trans NewTransition = state.transitions[i];
-    map<string, Event>::iterator it = EventsAtCurrentState.find(NewTransition.event);
+    
+    //Compare restriction to event's mask, don't add irrelevant events
+    map<string, EventTypeMask>::iterator it = EventTypeMap.find( NewTransition.event );
+    
+    if( !(restriction & (*it).second) )
+    {
+      continue;
+    }
+    
+    //Find event reference
+    map<string, Event>::iterator it = EventsAtCurrentState.find( NewTransition.event );
     
     //Add event entry with new instance
     if( it == EventsAtCurrentState.end() )
@@ -64,7 +96,9 @@ void EventManager::AddTransitions(State & state, int fsmIndex)
   }
 }
 
-void EventManager::GetNextStates( vector<unsigned int> & nextStates, unsigned int currentState )
+
+
+void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<unsigned int, std::string> > & nextStates )
 {
   //Iterate through each event, determining the transitions that must be added
   map<string, Event>::iterator it; 
@@ -84,7 +118,7 @@ void EventManager::GetNextStates( vector<unsigned int> & nextStates, unsigned in
     else if( (*it).second.UniqueFSMcount == (*it).second.transitions.size() )
     {
       unsigned int newState = encoder.UpdateStateWithTransitions( currentState, (*it).second.transitions );
-			nextStates.push_back(newState);    
+			nextStates.push_back( make_pair(newState, it->first) );    
     }
     
     //In this case, the event has multiple instances, 
@@ -150,12 +184,12 @@ void EventManager::GetNextStates( vector<unsigned int> & nextStates, unsigned in
 				}
 						
         unsigned int newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
-			  nextStates.push_back(newState); 
+			  nextStates.push_back( make_pair(newState, it->first) ); 
 			}
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     }
   }
-  EventsAtCurrentStates.clear();
+  EventsAtCurrentState.clear();
 }
 
 
