@@ -10,12 +10,15 @@
 
 enum EventTypeMask
 {
+  NO_EVENTS = 0x0,
   VARIABLE_EVENT = 0x1,
   EXOGENOUS_EVENT = 0x2,
   ALL_EVENTS = 0x3,
   DC_ONLY = 0x4,
+  DC_AND_VARIABLE = 0x5,
   DC_AND_EXOGENOUS = 0x6
 };
+
 
 
 struct Event
@@ -29,7 +32,7 @@ class EventManager
 {
 public:
   EventManager(std::vector<FSM_struct> & FSMArray);
-  void AddTransitions(State & state, int fsmIndex);
+  void AddTransitions(State & state, int fsmIndex, unsigned int restriction);
   void GetNextStates( unsigned int currentState, std::vector<std::pair<unsigned int, std::string> > & nextStates );
   EventTypeMask AssignMask(std::string event);
   

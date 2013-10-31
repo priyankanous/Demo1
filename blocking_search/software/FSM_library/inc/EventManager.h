@@ -10,12 +10,18 @@
 
 enum EventTypeMask
 {
+  NO_EVENTS = 0x0,
   VARIABLE_EVENT = 0x1,
   EXOGENOUS_EVENT = 0x2,
   ALL_EVENTS = 0x3,
   DC_ONLY = 0x4,
-  DC_AND_EXOGENOUS = 0x6
+  DC_AND_VARIABLE = 0x5,
+  DC_AND_EXOGENOUS = 0x6,
+  DDC_ONLY = 0x8,
+  DDC_AND_VARIABLE = 0x9,
+  DDC_AND_EXOGENOUS = 0xA,
 };
+
 
 
 struct Event

@@ -124,6 +124,32 @@ BlockingSearch/fast:
 	$(MAKE) -f software/routines/CMakeFiles/BlockingSearch.dir/build.make software/routines/CMakeFiles/BlockingSearch.dir/build
 .PHONY : BlockingSearch/fast
 
+#=============================================================================
+# Target rules for targets named FSMsort
+
+# Build rule for target.
+FSMsort: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 FSMsort
+.PHONY : FSMsort
+
+# fast build rule for target.
+FSMsort/fast:
+	$(MAKE) -f software/routines/CMakeFiles/FSMsort.dir/build.make software/routines/CMakeFiles/FSMsort.dir/build
+.PHONY : FSMsort/fast
+
+#=============================================================================
+# Target rules for targets named PrintParComp
+
+# Build rule for target.
+PrintParComp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 PrintParComp
+.PHONY : PrintParComp
+
+# fast build rule for target.
+PrintParComp/fast:
+	$(MAKE) -f software/routines/CMakeFiles/PrintParComp.dir/build.make software/routines/CMakeFiles/PrintParComp.dir/build
+.PHONY : PrintParComp/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -134,6 +160,8 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... FSM_library"
 	@echo "... BlockingSearch"
+	@echo "... FSMsort"
+	@echo "... PrintParComp"
 .PHONY : help
 
 

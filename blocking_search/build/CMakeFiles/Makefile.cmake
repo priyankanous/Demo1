@@ -42,4 +42,6 @@ SET(CMAKE_MAKEFILE_PRODUCTS
 SET(CMAKE_DEPEND_INFO_FILES
   "software/FSM_library/CMakeFiles/FSM_library.dir/DependInfo.cmake"
   "software/routines/CMakeFiles/BlockingSearch.dir/DependInfo.cmake"
+  "software/routines/CMakeFiles/FSMsort.dir/DependInfo.cmake"
+  "software/routines/CMakeFiles/PrintParComp.dir/DependInfo.cmake"
   )

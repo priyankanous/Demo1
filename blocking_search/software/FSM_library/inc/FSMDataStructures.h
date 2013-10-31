@@ -34,7 +34,10 @@ struct State
 {
 public:
 	bool marked;
-	int numTrans;
+	int GetNumberOfTransitions(void)
+	{
+	  return transitions.size();
+	};
 	std::string stateName;
 	std::vector<Trans> transitions;
 	State(std::string& str);
@@ -47,12 +50,12 @@ struct FSM_struct
 {
 public:
 	std::string fsmName;
-	int numStates;
+	int GetNumberOfStates(void);
 	int numEvents;
 	std::vector<std::string> alphabet;
 	std::vector<State> states;
 	
-	FSM_struct(int nS);
+	FSM_struct(void);
 	void addEvent(std::string& str);
 	int getStateIndex(std::string& str);
 };

@@ -3,23 +3,21 @@
 using namespace std;
 
 /*
- * Constructor for memory manager
+ * @brief Constructor for memory manager
  * @param numStates Vector corresponding to number of states in each FSM
  */
-MemoryManager::MemoryManager(std::vector<int> & numStates)
- /* :numberOfStateMachines(numStates.size()),
-  numbits(numberOfStateMachines),
-  offset(numberOfStateMachines),
-  accumulator(numberOfStateMachines)*/
+MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
 {
   /* Resize all vectors to have proper size */
-  numberOfStateMachines = numStates.size();
+  numberOfStateMachines = FSMArray.size();
   numbits.resize(numberOfStateMachines);
   offset.resize(numberOfStateMachines);
   accumulator.resize(numberOfStateMachines);
+  
+  numberOfBitsSet = 0;
+  accessed = new bitset<WORSTCASE_NUMBER_OF_STATES>;
 
-
-  /* Populate parameter vectors */ 
+  /* Populate parameter vectors */
 	for( int i=(numberOfStateMachines - 1); i>=0; i-- )
 	{
 	  if( i == (numberOfStateMachines - 1) )
@@ -30,13 +28,20 @@ MemoryManager::MemoryManager(std::vector<int> & numStates)
 	  else
 	  {
 	    offset[i] = offset[i+1] + numbits[i+1];
-	    accumulator[i] = accumulator[i+1] * numStates[i+1];
+	    accumulator[i] = accumulator[i+1] * FSMArray[i+1].GetNumberOfStates();
 	  }
 		
-		numbits[i] = ceil(log2(numStates[i]));
-		
+		numbits[i] = ceil( log2( FSMArray[i].GetNumberOfStates() ) );
 	}
+	
+	actualStateSpace = accumulator[0]*FSMArray[0].GetNumberOfStates();
 }
+
+MemoryManager::~MemoryManager(void)
+{
+  delete accessed;
+}
+
 
 /*
  * @brief Calculates the encoded state value for a given bitset index
@@ -87,7 +92,7 @@ bool  MemoryManager::GetBit(unsigned int encodedValue)
 {
   try
   {
-    return accessed.test(EncodedStateToIndex(encodedValue));
+    return accessed->test(EncodedStateToIndex(encodedValue));
   }
   catch(out_of_range)
   {
@@ -106,7 +111,8 @@ void  MemoryManager::SetBit(unsigned int encodedValue)
 {
   try
   {
-    accessed.set(EncodedStateToIndex(encodedValue));
+    accessed->set(EncodedStateToIndex(encodedValue));
+    numberOfBitsSet++;
   }
   catch(out_of_range)
   {
@@ -159,6 +165,42 @@ bool MemoryManager::IsStackEmpty(void)
 {
   return searchStack.empty();
 }
+
+/*
+ * @brief Get the number of Set Bits
+ * @returns number of set bits
+ */
+unsigned int MemoryManager::GetNumberOfSetBits(void)
+{
+  return numberOfBitsSet;
+}
+
+unsigned int MemoryManager::GetIntersectionCardinality(MemoryManager & other)
+{
+  unsigned int counter = 0;
+  
+  for(unsigned int i=0; i<actualStateSpace; i++)
+  {
+    try
+    {
+      if( this->accessed->test(i) && other.accessed->test(i) )
+      {
+        counter++;
+      }
+    }
+    catch(out_of_range)
+    {
+      cerr << "A bitset went out of range when looking at bit " << i << "."<<endl;
+      cerr << "Intersection states counted so far: " << counter << " Exiting." << endl;
+      exit(1);
+    }
+  }
+  
+  return counter;
+}
+
+
+
 
 
 

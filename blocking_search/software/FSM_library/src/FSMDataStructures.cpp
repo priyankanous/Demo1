@@ -10,10 +10,20 @@ State::State(std::string& str)
 /*
  * FSM_struct constructor
  */
-FSM_struct::FSM_struct(int nS)
-	:numStates(nS),
-	numEvents(0)
+FSM_struct::FSM_struct(void)
+	:numEvents(0)
 {};
+
+
+
+
+int FSM_struct::GetNumberOfStates(void)
+{
+  return states.size();
+}
+
+
+
 
 
 /*

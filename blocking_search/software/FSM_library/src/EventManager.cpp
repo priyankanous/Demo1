@@ -2,6 +2,8 @@
 
 using namespace std;
 
+const char * EventTypeNamesArray[7] = {"NO_EVENTS", "VARIABLE_EVENT","EXOGENOUS_EVENT","ALL_EVENTS","DC_ONLY","DC_AND_VARIABLE", "DC_AND_EXOGENOUS"};
+
 EventManager::EventManager(vector<FSM_struct> & FSMArray)
   :encoder(FSMArray)
 {
@@ -31,19 +33,34 @@ EventManager::EventManager(vector<FSM_struct> & FSMArray)
 			}		
 		}
 	}
+	
+	/* This prints the events and their type.
+	cout << "~~~~~~" << endl << "Events" << endl << "~~~~~~~~" << endl;
+	
+	for(map<string, EventTypeMask>::iterator it = EventTypeMap.begin(); it != EventTypeMap.end(); it++ )
+	{
+	  cout << (*it).first << "\t" << EventTypeNamesArray[(*it).second] << endl;
+	}*/
+	
 }
 
-EventTypeMask EventManager::AssignMask(string event)
+EventTypeMask EventManager::AssignMask(string eventString)
 {
-  if(event == "DC")
+  const char * event = eventString.c_str();
+  
+  if( !eventString.compare("DC") )
   {
     return DC_AND_EXOGENOUS;  
   }
+  else if( !eventString.compare("DDC") )
+  {
+    return DDC_AND_EXOGENOUS;  
+  } 
   else
   {
-    for(int i=0; i < event.length(); i++)
+    for(int i=0; i < eventString.length(); i++)
     {
-      if( !islower( event[i] ) )
+      if( !islower( event[i] ) && !isdigit( event[i] ) && event[i] != '_' )
       {
         return EXOGENOUS_EVENT;
       }
@@ -64,12 +81,13 @@ void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int rest
     
     //Compare restriction to event's mask, don't add irrelevant events
     map<string, EventTypeMask>::iterator it1 = EventTypeMap.find( NewTransition.event );
-    
+  
+    //Do not consider events which don't match restriction
     if( !(restriction & (*it1).second) )
     {
       continue;
     }
-    
+
     //Find event reference
     map<string, Event>::iterator it = EventsAtCurrentState.find( NewTransition.event );
     
@@ -96,12 +114,11 @@ void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int rest
   }
 }
 
-
-
 void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<unsigned int, std::string> > & nextStates )
 {
   //Iterate through each event, determining the transitions that must be added
   map<string, Event>::iterator it; 
+  int countR =0;
   for(it = EventsAtCurrentState.begin(); it != EventsAtCurrentState.end(); it++)
   {
     //If number of unique FSMs for an event does not match the master map,
@@ -111,7 +128,7 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
     {
       continue;
     }
-    
+  
     //We know that the FSM frequency numbers match
     //If the number of transitions matches the number of unique FSMs,
     //then we have no duplicate events (DFA case)
@@ -131,7 +148,8 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
        * of this event in each fsm (at this composite state).
        * For example, if the following set of <fsm, destination> pairs exists for a given event:
        *    Event: event1 
-       *    Instances:  <fsm1, state1.3>
+       *    Instances:  <fsmID, destination_state>
+       *                <fsm1, state1.3>
        *                <fsm1, state1.4>
        *                <fsm3, state3.5>
        *                <fsm3, state3.4>
@@ -140,11 +158,19 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
        *                <fsm4, state4.2>
        *                <fsm7, state7.4>
        * The instances vector generated would be: {2, 3, 2, 1}
-       */ 
+       */
+      
+      //Prevent poorly-formed data from throwing segfault 
+      if( (*it).second.transitions.size() < 1)
+      {
+        cerr << "WARNING: No transitions stored for event "<<(*it).first<<" at state "<<currentState<<endl;
+        continue;
+      }  
+
       vector<int> instances;
 			int fsmIndex = (*it).second.transitions[0].first;
-			int tempFsmCount = 1; //=0
-			for(int i=0; i<(*it).second.transitions.size(); i++)
+			int tempFsmCount = 1;
+			for(int i=1; i<(*it).second.transitions.size(); i++)
 			{
 				if( (*it).second.transitions[i].first == fsmIndex )
 				{
@@ -160,16 +186,18 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
 				}
 			}
 			instances.push_back(tempFsmCount);
-			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */	
 			
 			
 			/* ~~~~~~ Create vector to store current permutation ~~~~~ */		
 			//Intialize vector of length N to {0, 0, 0, 0 ..., -1}
+			//  Where N is the number of unique FSMs which have valid
+			//  transitions at this composite state
+			//
 			vector<int> currentPermutation( (*it).second.UniqueFSMcount - 1, 0 );
 			currentPermutation.push_back( -1 );
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */	
-			
-				
+
 			/* ~ Iterate through all permutations of event instances ~ */
 			int lastIndex = (*it).second.UniqueFSMcount - 1;
 			while( GetNextPermutation(currentPermutation, instances, lastIndex) )
@@ -179,16 +207,31 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
 				for(int i=0; i<instances.size(); i++)
 				{
 				  int localIndex = runningSum + currentPermutation[i];
+
 					temporaryEvent.transitions.push_back( (*it).second.transitions[localIndex] );
 					runningSum += instances[i];
 				}
-						
+				
         unsigned int newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
 			  nextStates.push_back( make_pair(newState, it->first) ); 
 			}
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     }
   }
+  
+/**** Visual Output **********
+cout << "//\n//\nCurrent State: " << currentState << endl;
+cout << "Transitions: "<<endl;
+for(int i=0; i<nextStates.size(); i++)
+{
+  cout << "\t" << nextStates[i].second << "\t" << nextStates[i].first <<"\t";
+  cout << "Event shared by " << EventsAtCurrentState[nextStates[i].second].UniqueFSMcount << " unique FSM\'s" <<endl;
+}
+cout << "//\n//"<<endl;
+char in; cin>>in;
+/*****************************/
+
+
   EventsAtCurrentState.clear();
 }
 
@@ -198,7 +241,15 @@ bool EventManager::GetNextPermutation( vector<int> & currentPermutation, const v
 	//Base case
 	if (fsmIndex == -1)
 		return false;
-		
+	
+	/*** Catch Seg Fault ****
+	if( (fsmIndex	>= instances.size()) || (fsmIndex >= currentPermutation.size()) || (fsmIndex < 0) )
+	{
+	  cout << "SEG FAULT! fsmIndex = "<<fsmIndex << " instances.size = "<<instances.size() << endl;
+	  exit(1);
+	}
+	************************/
+	
 	//Increment currentPermuation
 	if( (currentPermutation[fsmIndex] + 1) >= instances[fsmIndex] )
 	{

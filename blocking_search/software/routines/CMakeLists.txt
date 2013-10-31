@@ -11,9 +11,18 @@ set(test_Sources
 
 add_executable(BlockingSearch src/blocking.cpp)
 add_definitions(-DPARAM_IN=13)
-
 target_link_libraries(BlockingSearch
+  FSM_library
+)
+
+add_executable(FSMsort src/sortFSM.cpp)
+target_link_libraries(FSMsort
 FSM_library
+)
+
+add_executable(PrintParComp src/printParComp.cpp)
+target_link_libraries(PrintParComp
+  FSM_library
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)

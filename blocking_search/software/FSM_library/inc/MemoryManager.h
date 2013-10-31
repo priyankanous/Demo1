@@ -9,17 +9,22 @@
 #include <stdlib.h>
 #include <cmath>
 
-#define WORSTCASE_NUMBER_OF_STATES 100000000
+#include "FSMDataStructures.h"
+
+//#define WORSTCASE_NUMBER_OF_STATES 10000000
+#define WORSTCASE_NUMBER_OF_STATES 1800000000
 
 class MemoryManager
 {
 private:
   /* DFS memory structures */
-  std::bitset<WORSTCASE_NUMBER_OF_STATES> accessed; 
+  std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
+  unsigned int numberOfBitsSet;
   
   /* FSM parameters */
   int numberOfStateMachines;
+  unsigned int actualStateSpace;
   std::vector<int> numbits;
   std::vector<int> offset;
   std::vector<int> accumulator;
@@ -29,12 +34,17 @@ private:
   unsigned int IndexToEncodedState(unsigned int index);
 
 public:
-  MemoryManager(std::vector<int> & numStates);
+  MemoryManager(std::vector<FSM_struct> & FSMArray);
+  ~MemoryManager();
   bool GetBit(unsigned int encodedState);
   void SetBit(unsigned int encodedState);
   unsigned int PopOffStack(void);
   void PushOnStack(unsigned int encodedState);
   unsigned int GetSizeOfStack(void);
   bool IsStackEmpty(void);
+  unsigned int GetNumberOfSetBits(void);
+  unsigned int GetIntersectionCardinality(MemoryManager & m1);
 };
+
+
 #endif

@@ -1,148 +1,87 @@
 
-#include <Utilities.h>
-#define MAX_BITS 10
-#include <bitset>
+#include "IO_Utilities.h"
+
 using namespace std;
 
-void GenerateOptimalSubgroups(vector<FSM_struct> & FSMArr)
-{
-	/* Optimization Parameters */
-	long unsigned int BestMetricSoFar = -1;
-	unsigned int BestMaskSoFar;
+void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
+{	
+  if(verbose) outfile << FSM.fsmName << endl;
 	
-	unsigned int mask = 0;
-	int NumberOfFSMs = FSMArr.size();
+	outfile << FSM.GetNumberOfStates();
+	if(verbose) outfile << " states.";
+	outfile << endl << endl;
 	
-	vector<FSM_struct> Group1, Group2;
-	
-	for(unsigned int mask=0; mask < (1<<NumberOfFSMs); mask++)
+	for(int i=0; i<FSM.GetNumberOfStates(); i++)
 	{
-		/* Split FSM's into 2 groups for parallel composition */
-		for(int i=0; i < NumberOfFSMs; i++)
-		{
-			if( (mask >> i) & 0x1 )
-			{
-				Group1.push_back(FSMArr[i]);
-			}
-			else 
-			{
-				Group2.push_back(FSMArr[i]);
-			}
+	  outfile << FSM.states[i].stateName;
+	  if(verbose)
+	  {
+	    string markedStatus = (FSM.states[i].marked ? "marked" : "unmarked");
+		  outfile << " - "  << markedStatus << endl;
 		}
-		/***************************************************/
-		
-		
-		/* Primary analytics on feasibility of computation */
-		
-		/***************************************************/
-		
-		
-		
-		/***** Run Parallel Compostion on Each Group ******/
-		
-		long unsigned int Size1 = 1;
-		for(int i=0; i<Group1.size(); i++)
-			Size1 *= Group1[i].numStates; // = ParComp();
-			
-		long unsigned int Size2 = 1;
-		for(int i=0; i<Group2.size(); i++)
-			Size2 *= Group2[i].numStates; // = ParComp();
-			
-		/***************************************************/
-		
-		
-		
-		
-		/********** Compare Optimization Metric ************/
-		long unsigned int Metric = Size1 * Size2 * ( 2 + ceil(log2(Size1)) + ceil(log2(Size2)) )/8;
-		
-		if(Metric < BestMetricSoFar)
-		{
-			BestMetricSoFar = Metric;
-			BestMaskSoFar = mask;
-			//system("mv test1.fsm best1.fsm");
-			//system("mv test2.fsm best2.fsm");
-		}
-		/***************************************************/
-		
-		cout << bitset<10>(mask) << "\t";
-		
-		for(int i=0; i<Group1.size(); i++)
-		{
-			cout<<Group1[i].fsmName<<", ";
-			
-		}
-		cout << "\t";
-		for(int i=0; i<Group2.size(); i++)
-		{
-			cout<<Group2[i].fsmName<<", ";
-			
-		}
-		cout << "\t";
-		cout << Size1 << "\t" << Size2 << "\t" << hex<<Metric << endl;
-		
-		Group1.clear();
-		Group2.clear();
-	}
-	
-}
-
-void printFSM(FSM_struct & FSM, std::string filepath)
-{
-	ofstream outfile;
-	
-	const char * fullPath = (filepath+"/"+FSM.fsmName+".fsm").c_str();
-	outfile.open( fullPath );
-	if(!outfile.is_open())
-	{
-		cout << (filepath + "/" + FSM.fsmName + ".fsm") << " did not open!" << endl;
-		exit(1);
-	}
-	
-	outfile << FSM.numStates<<endl<<endl;
-	
-	for(int i=0; i<FSM.numStates; i++)
-	{
-		printState(FSM, FSM.states[i], outfile);
-	}
-	
-	outfile.close();
-}
-
-void printState(FSM_struct & FSM, State & state, ofstream & outfile)
-{
-	/* State name */
-	outfile << state.stateName << "\t";
-	
-	/* Marked status */
-	if(state.marked)
-	{
-		outfile << "1\t";
-	}
-	else
-	{
-		outfile << "0\t";
-	}
-	
-	/* Transitions */
-	outfile << state.numTrans<<endl;
-	for(int j=0; j<state.numTrans; j++)
-	{
-		outfile << state.transitions[j].event<<"\t";
-		outfile << FSM.states[state.transitions[j].dest].stateName<<"\t";
-		outfile << "c\to\t";
-		/*
-		if (state.transitions[j].con)
-			outfile << "c\t";
 		else
-			outfile << "uc\t";
-		if (state.transitions[j].obs)
-			outfile << "o\t";
-		else
-			outfile << "uo\t";	
-		*/
+		{
+		  outfile << " " << (FSM.states[i].marked ? 1 : 0) << " ";
+		}
+		outfile << FSM.states[i].transitions.size() << (verbose?" transitions":"") << endl;
+		for(int j=0; j < FSM.states[i].transitions.size(); j++)
+		{
+		  outfile << FSM.states[i].transitions[j].event << "\t";
+		  outfile << FSM.states[FSM.states[i].transitions[j].dest].stateName << endl;
+		}
 		outfile << endl;
 	}
+}
+
+
+void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder)
+{
+
+  /***** MODE 1 - For use with UMDES conventions **********************
+   *
+   * State names are the encoded value (to fit length requirement)
+   * Only the intial state (state 0) is marked
+   */
+  outfile << currentState << "\t";              //State name
+  outfile << (currentState?0:1) << "\t";        //Marked
+  outfile << nextStates.size() << "\t" << endl; //Number of transitions
+  
+  for(int i=0; i<nextStates.size(); i++)
+  {
+    outfile << nextStates[i].second << "\t";
+    outfile << nextStates[i].first << "\t";
+    outfile << "c\to" << endl;
+  }
+  /*******************************************************************/
+
+  /***** MODE 2 - For use with our conventions ***********************
+   * 
+   * Full state name is used (component state names separated,by,commas)
+   * A state is marked IFF all of it's component states are marked
+   */
+/*  
+  outfile << encoder.GenerateStateName( currentState ) << "\t";
+  if(marked)
+  {
+    outfile << 1 << "\t";
+  }
+  else
+  {
+    outfile << 0 << "\t";
+  }
+  outfile << nextStates.size() << "\t" << endl;
+  
+  for(int i=0; i<nextStates.size(); i++)
+  {
+    outfile << nextStates[i].second << "\t";
+    outfile << encoder.GenerateStateName( nextStates[i].first ) << "\t";
+    outfile << "c\to" << endl;
+  } 
+*/
+  /*******************************************************************/
+  
+  outfile << endl;
+  outfile.flush();
 }
 
 
@@ -157,7 +96,7 @@ string GetNameFromPath (const std::string& str)
 
 
 
-int readFSM(vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]){	
+int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[]){	
 	//Loop through input FSM files, read into structs
 	for(int filenum=1; filenum<argc; filenum++){
 		//Open up fsm
@@ -173,7 +112,7 @@ int readFSM(vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]){
 		getline(infile, junk); 
 	
 		//Build FSM Struct
-		FSM_struct FSM1(numStates);
+		FSM_struct FSM1;
 		string name = argv[filenum];
 		FSM1.fsmName = GetNameFromPath(name);
 	
@@ -186,10 +125,12 @@ int readFSM(vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]){
 			//Find state entry for this state, insert if necessary 
 			int stateindex = FSM1.getStateIndex(stateName);
 			infile >> FSM1.states[stateindex].marked;
-			infile >> FSM1.states[stateindex].numTrans;
+			
+			int numTransIn;
+			infile >> numTransIn;
 		
 			//Loop for events
-			for(int j=0; j<FSM1.states[stateindex].numTrans; j++){
+			for(int j=0; j<numTransIn; j++){
 				//Create new transistion, fill from file
 				Trans newtrans;
 				string dest;
@@ -216,19 +157,19 @@ int readFSM(vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]){
 			getline(infile, junk);
 		}	
 		infile.close();	
-		FSMArr.push_back(FSM1);
+		FSMArray.push_back(FSM1);
 	}
 	
 	//Print update
-	if(print){cout<<FSMArr.size()<<" automata read in: "<<endl;}
+	if(print){cout<<FSMArray.size()<<" automata read in: "<<endl;}
 	unsigned long int worstcase = 1;
 
-	for(int i=0; i<FSMArr.size(); i++){
+	for(int i=0; i<FSMArray.size(); i++){
 		if(print){
-			cout<<FSMArr[i].fsmName<<"\t"<<FSMArr[i].numStates<<" states\t";
-			cout<<FSMArr[i].numEvents<<" events\t";
-			cout<<ceil(log2(FSMArr[i].numStates))<<" bits\n";}
-		worstcase *= FSMArr[i].numStates;
+			cout<<FSMArray[i].fsmName<<"\t"<<FSMArray[i].GetNumberOfStates()<<" states\t";
+			cout<<FSMArray[i].numEvents<<" events\t";
+			cout<<ceil(log2(FSMArray[i].GetNumberOfStates()))<<" bits\n";}
+		worstcase *= FSMArray[i].GetNumberOfStates();
 	}
 	if(print){
 		cout<<"Worst case (shuffle) is "<<worstcase;
@@ -238,74 +179,46 @@ int readFSM(vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]){
 	return worstcase;
 }
 
-/*
 
-unsigned long int DFS_FullComposition(vector<FSM_struct>& FSMArr, vector<bool>& accessed, Event_wrapper& Events, FSM_struct & FSMOut)
+void InvertTransitions(vector<FSM_struct>& FSMArray, vector<FSM_struct>& FSMArray_inv)
 {
-	//Initialize search stack for depth-first search, add initial state
-	//Note that this assumes the 0th state in each file is the marked state
-	stack<unsigned long> Stack;
-	Stack.push(0); 
-	accessed[0] = 1;
-	
-	//Loop until all states have been visited
-	unsigned long int counter = 0;
-	unsigned long curState, newState;
-	
-	while(!Stack.empty()){	
-		//Get current state off top of stack
-		curState = Stack.top();
-		Stack.pop();
-		
-
-		//Loop through each FSM, examining the current state's transitions
-		for(int i=0; i<FSMArr.size(); i++)
-		{
-			//Extract state index from encoded composite state
-			int stateIndex = (curState>>Events.offset[i])&((1<<Events.bits[i])-1);
-			
-			//Loop through transitions at current state of FSM
-			//Insert events into Event structs
-			for(int j=0; j<FSMArr[i].states[stateIndex].numTrans; j++){
-				//Insert each event
-				Events.insertTrans(FSMArr[i].states[stateIndex].transitions[j].event, i,
-					FSMArr[i].states[stateIndex].transitions[j].dest);
-			}
-		}
-		
-		CurrentStateName = GenerateStateName(Events, FSMArr, curState);
-		
-		/* This function should generate the statename by
-		   looping through FSMs and concatenating state names */
-/*	
-		State newstate(CurrentStateName);
-		
-		//Examine all transitions, insert if unvisited
-		vector<unsigned long int> nextStates;
-		vector<string> nextEvents;
-		Events.getNextAddress(nextStates, nextEvents, curState);
-
-		for(auto it=nextStates.begin(); it!=nextStates.end(); it++)
-		{	
-			Trans newtrans
-			if(accessed[*it] == 0){
-				accessed[*it] = 1;
-				Stack.push(*it);
-			}	
-		}
-
-		//Update counter 
-		counter++;
-		if(!(counter % 10000)){
-			cout<<counter<<" states accessed.";
-			cout<<" Stack size: "<<Stack.size()<<endl;
-		}
-		
-		Events.clear();
-	}
-	
-	return counter;
+  //Invert transitions, making new FSMs
+  
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    FSM_struct inv;
+    inv.fsmName = FSMArray[i].fsmName + "_inv";
+    inv.numEvents = FSMArray[i].numEvents;
+    inv.alphabet = FSMArray[i].alphabet;
+    for(int j=0; j<FSMArray[i].GetNumberOfStates(); j++)
+    {
+      State state_inv(FSMArray[i].states[j].stateName);
+      state_inv.marked = FSMArray[i].states[j].marked;
+      inv.states.push_back(state_inv);
+    }
+    for(int j=0; j<inv.GetNumberOfStates(); j++)
+    {
+      for(int k=0; k<FSMArray[i].states[j].GetNumberOfTransitions(); k++)
+      {
+        Trans trans_inv;
+        int newSource = FSMArray[i].states[j].transitions[k].dest;
+        trans_inv.event = FSMArray[i].states[j].transitions[k].event;
+        trans_inv.con = FSMArray[i].states[j].transitions[k].con;
+        trans_inv.con = FSMArray[i].states[j].transitions[k].obs;
+        trans_inv.dest = j;
+        inv.states[newSource].transitions.push_back(trans_inv);
+      }
+    }
+    FSMArray_inv.push_back(inv);
+  }
 }
 
-*/
+
+
+
+
+
+
+
+
 

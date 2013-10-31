@@ -21,17 +21,18 @@ StateEncoder::StateEncoder( vector<FSM_struct> & FSMArray )
 	    offset[i] = offset[i+1] + numbits[i+1];
 	  }
 		
-		numbits[i] = ceil(log2(FSMArray[i].numStates));		
+		numbits[i] = ceil(log2(FSMArray[i].GetNumberOfStates()));		
 	}	
 	
 	//Load up stateNames index and marked status
 	for(int i=0; i<FSMArray.size(); i++)
 	{
 	  vector<pair<string, bool> > stateNamesRow;
-	  for(int j=0; j<FSMArray[i].numStates; j++)
+	  for(int j=0; j<FSMArray[i].GetNumberOfStates(); j++)
 	  {
 	     stateNamesRow.push_back( make_pair(FSMArray[i].states[j].stateName, FSMArray[i].states[j].marked) );
 	  }
+	  
 	  stateNames.push_back(stateNamesRow);
 	}
 }
@@ -109,17 +110,18 @@ string StateEncoder::GenerateStateName( unsigned int currentState )
 bool StateEncoder::CheckForUnmarkedStates(unsigned int currentState)
 {
   int stateIndex;
-  
+
   //Get marked status
   for(int i=0; i<numbits.size(); i++)
   {
     stateIndex = FindStateIndex(currentState, i);
-    if( !stateNames[i][stateIndex].second )
+
+    if( !(stateNames[i][stateIndex].second) )
     {
       return true;
     }
   }
-  
+
   return false;
 }
 
