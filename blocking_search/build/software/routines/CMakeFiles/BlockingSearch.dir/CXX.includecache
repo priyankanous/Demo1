@@ -89,6 +89,8 @@ stdlib.h
 -
 cmath
 -
+set
+-
 FSMDataStructures.h
 ../software/routines/../FSM_library/inc/FSMDataStructures.h
 
@@ -114,6 +116,8 @@ stack
 bitset
 -
 cmath
+-
+map
 -
 FSMDataStructures.h
 ../software/routines/../FSM_library/inc/FSMDataStructures.h

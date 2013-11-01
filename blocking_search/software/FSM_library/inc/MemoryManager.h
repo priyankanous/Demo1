@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
+#include <set>
 
 #include "FSMDataStructures.h"
 
@@ -20,8 +21,8 @@ private:
   /* DFS memory structures */
   std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
-  unsigned int numberOfBitsSet;
-  
+  std::set<unsigned int> specialStates;
+   
   /* FSM parameters */
   int numberOfStateMachines;
   unsigned int actualStateSpace;
@@ -36,14 +37,26 @@ private:
 public:
   MemoryManager(std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
+  
   bool GetBit(unsigned int encodedState);
   void SetBit(unsigned int encodedState);
+  void FlipBits(void);
+  unsigned int GetNumberOfSetBits(void);
+  unsigned int GetNumberOfUnsetBits(void);
+  
   unsigned int PopOffStack(void);
   void PushOnStack(unsigned int encodedState);
   unsigned int GetSizeOfStack(void);
   bool IsStackEmpty(void);
-  unsigned int GetNumberOfSetBits(void);
-  unsigned int GetIntersectionCardinality(MemoryManager & m1);
+  
+  bool IsSpecialState(unsigned int state);
+  void AddSpecialState(unsigned int state);
+  void RemoveSpecialState(unsigned int state);
+  unsigned int GetNumberOfSpecialStates(void);
+  void ClearAllSpecialStates(void);
+  
+
+  //unsigned int GetIntersectionCardinality(MemoryManager & m1);
 };
 
 

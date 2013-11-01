@@ -21,7 +21,7 @@ void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
 
 std::string GetNameFromPath (const std::string& str);
 
-void WriteStateToFile( unsigned int currentState, std::vector<std::pair<unsigned int, std::string> > & nextStates, bool marked, std::ofstream & outfile, StateEncoder & encoder);
+void WriteStateToFile( unsigned int currentState, std::vector<std::pair<unsigned int, std::string> > & nextStates, bool marked, std::ofstream & outfile, StateEncoder & encoder, std::pair<std::string, std::string>);
 
 void InvertTransitions(std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
 

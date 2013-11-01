@@ -14,7 +14,6 @@ MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
   offset.resize(numberOfStateMachines);
   accumulator.resize(numberOfStateMachines);
   
-  numberOfBitsSet = 0;
   accessed = new bitset<WORSTCASE_NUMBER_OF_STATES>;
 
   /* Populate parameter vectors */
@@ -35,8 +34,6 @@ MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
 	}
 	
 	actualStateSpace = accumulator[0]*FSMArray[0].GetNumberOfStates();
-	
-cout << "SANITY CHECK: " << actualStateSpace << endl;
 }
 
 MemoryManager::~MemoryManager(void)
@@ -84,7 +81,7 @@ unsigned int MemoryManager::EncodedStateToIndex(unsigned int encodedState)
 	return index;
 }
 
-
+/******************* BIT OPERATIONS **********************/
 /*
  * @brief Determine the value of a state's bitset entry
  * @param encodedState A composite state encoding
@@ -103,7 +100,6 @@ bool  MemoryManager::GetBit(unsigned int encodedValue)
   }
 }
 
-
 /*
  * @brief Set a state's bitset entry to true
  * @param encodedState A composite state encoding
@@ -114,7 +110,6 @@ void  MemoryManager::SetBit(unsigned int encodedValue)
   try
   {
     accessed->set(EncodedStateToIndex(encodedValue));
-    numberOfBitsSet++;
   }
   catch(out_of_range)
   {
@@ -123,7 +118,43 @@ void  MemoryManager::SetBit(unsigned int encodedValue)
   }
 }
 
+/*
+ * @brief Flip bits in bitset
+ */
+void MemoryManager::FlipBits(void)
+{  
+  if(searchStack.empty())
+  {
+    accessed->flip(); 
+  }
+  else
+  {
+    cerr << "The search stack is not empty. Flipping bits will corrupt search space memory" << endl;
+  }
+}
 
+/*
+ * @brief Number of unset bits
+ * @returns Number of unset bits
+ */
+unsigned int MemoryManager::GetNumberOfUnsetBits(void)
+{
+  return accessed->size() - accessed->count();
+}
+
+/*
+ * @brief Get the number of set bits
+ * @returns number of set bits
+ */
+unsigned int MemoryManager::GetNumberOfSetBits(void)
+{
+  return accessed->count();
+}
+/********************************************************************/
+
+
+
+/************************* STACK OPERATIONS *************************/
 /*
  * @brief Push given state onto stack if unaccessed, set accessed bit
  * @param encodedState A composite state encoding
@@ -136,7 +167,6 @@ void MemoryManager::PushOnStack(unsigned int encodedState)
     SetBit(encodedState);
   }
 }   
-
 
 
 /*
@@ -168,37 +198,49 @@ bool MemoryManager::IsStackEmpty(void)
   return searchStack.empty();
 }
 
+/****************************************************************/
+
+/******************* SPECIAL STATES OPERATORS ********************/
 /*
- * @brief Get the number of Set Bits
- * @returns number of set bits
+ * @brief Test if state is a previously visited special state
+ * @returns true if state has entry in special state set
  */
-unsigned int MemoryManager::GetNumberOfSetBits(void)
+bool MemoryManager::IsSpecialState(unsigned int state)
 {
-  return numberOfBitsSet;
+  return (specialStates.find(state) != specialStates.end());
 }
 
-unsigned int MemoryManager::GetIntersectionCardinality(MemoryManager & other)
+/*
+ * @brief Add special state to map
+ */
+void MemoryManager::AddSpecialState(unsigned int state)
 {
-  unsigned int counter = 0;
-  
-  for(unsigned int i=0; i<actualStateSpace; i++)
-  {
-    try
-    {
-      if( this->accessed->test(i) && other.accessed->test(i) )
-      {
-        counter++;
-      }
-    }
-    catch(out_of_range)
-    {
-      cerr << "A bitset went out of range when looking at bit " << i << "."<<endl;
-      cerr << "Intersection states counted so far: " << counter << " Exiting." << endl;
-      exit(1);
-    }
-  }
-  
-  return counter;
+  specialStates.insert(state);  
+}
+
+/*
+ * @brief Remove special state from set
+ */
+void MemoryManager::RemoveSpecialState(unsigned int state)
+{
+  specialStates.erase(state);
+}
+
+/*
+ * @brief Return the number of entries in the set
+ * @returns count of unique entries
+ */
+unsigned int MemoryManager::GetNumberOfSpecialStates(void)
+{
+  return specialStates.size();
+}
+
+/*
+ * @brief Clear the special states set
+ */
+void ClearAllSpecialStates(void)
+{
+  specialStates.clear();
 }
 
 

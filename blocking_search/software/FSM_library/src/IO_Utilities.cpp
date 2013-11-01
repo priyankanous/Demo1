@@ -34,7 +34,7 @@ void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
 }
 
 
-void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder)
+void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<string,string> specialEvent)
 {
 
   /***** MODE 1 - For use with UMDES conventions **********************
@@ -48,8 +48,12 @@ void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, stri
   
   for(int i=0; i<nextStates.size(); i++)
   {
-    outfile << nextStates[i].second << "\t";
-    outfile << nextStates[i].first << "\t";
+    outfile << nextStates[i].second << "\t"<< nextStates[i].first;
+    if(!nextStates[i].second.compare(specialEvent.first))
+    {
+      outfile << specialEvent.second;
+    }
+    outfile << "\t";
     outfile << "c\to" << endl;
   }
   /*******************************************************************/
@@ -58,8 +62,8 @@ void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, stri
    * 
    * Full state name is used (component state names separated,by,commas)
    * A state is marked IFF all of it's component states are marked
-   */
-/*  
+   *
+ 
   outfile << encoder.GenerateStateName( currentState ) << "\t";
   if(marked)
   {
@@ -74,11 +78,15 @@ void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, stri
   for(int i=0; i<nextStates.size(); i++)
   {
     outfile << nextStates[i].second << "\t";
-    outfile << encoder.GenerateStateName( nextStates[i].first ) << "\t";
+    outfile << encoder.GenerateStateName( nextStates[i].first );
+    if(!nextStates[i].second.compare(specialEvent.first))
+    {
+      outfile << specialEvent.second;
+    }
+    outfile << "\t";
     outfile << "c\to" << endl;
   } 
-*/
-  /*******************************************************************/
+  *******************************************************************/
   
   outfile << endl;
   outfile.flush();
