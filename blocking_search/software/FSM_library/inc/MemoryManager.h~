@@ -8,7 +8,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cmath>
-#include <unordered_set>
+#include <set>
 
 #include "FSMDataStructures.h"
 
@@ -19,9 +19,9 @@ class MemoryManager
 {
 private:
   /* DFS memory structures */
-  std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
+  //std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
-  std::unordered_set<unsigned int> specialStates;
+  std::set<unsigned int> specialStates;
    
   /* FSM parameters */
   int numberOfStateMachines;
@@ -37,7 +37,7 @@ private:
 public:
   MemoryManager(std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
-  
+std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed;
   bool GetBit(unsigned int encodedState);
   void SetBit(unsigned int encodedState);
   void FlipBits(void);

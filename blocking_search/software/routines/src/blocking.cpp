@@ -35,13 +35,17 @@ int main(int argc, char * argv[])
     
     unsigned long int stateSpace = GetUpperBoundStateSpace(FSMArray);
     cout <<"GB currently needed: "<< (stateSpace >> 30) << endl;
-    cout << nextFSMs.first << "\t" << nextFSMs.second << "\t" << stateSpace << endl;
     
     if((nextFSMs.first == -1) || ((stateSpace>>30) < 4) )
     {
       cout << "Memory is now sufficent to perform on-the-fly composition." << endl;
       break;
-    }    
+    }
+    else
+    {
+      cout << FSMArray[nextFSMs.first].fsmName << " and " << FSMArray[nextFSMs.second].fsmName;
+      cout << " will be composed." << endl; 
+    }
     
     vector<FSM_struct> tempArray;
     tempArray.push_back(FSMArray[nextFSMs.first]);

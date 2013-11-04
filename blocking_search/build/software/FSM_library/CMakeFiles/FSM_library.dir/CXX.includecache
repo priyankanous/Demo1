@@ -69,6 +69,8 @@ bitset
 -
 cmath
 -
+sstream
+-
 FSMDataStructures.h
 ../software/FSM_library/inc/FSMDataStructures.h
 StateEncoder.h
@@ -88,6 +90,8 @@ iostream
 stdlib.h
 -
 cmath
+-
+set
 -
 FSMDataStructures.h
 ../software/FSM_library/inc/FSMDataStructures.h

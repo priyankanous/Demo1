@@ -34,27 +34,29 @@ void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
 }
 
 
-void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<string,string> specialEvent)
+void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<string,string> specialEvent, bool special)
 {
-
-  /***** MODE 1 - For use with UMDES conventions **********************
+  /****************For use with UMDES conventions **********************
    *
    * State names are the encoded value (to fit length requirement)
    * Only the intial state (state 0) is marked
    */
-  outfile << currentState << "\t";              //State name
-  outfile << (currentState?0:1) << "\t";        //Marked
-  outfile << nextStates.size() << "\t" << endl; //Number of transitions
-  
-  for(int i=0; i<nextStates.size(); i++)
+  if(UMDES_PRINT_FORMAT)
   {
-    outfile << nextStates[i].second << "\t"<< nextStates[i].first;
-    if(!nextStates[i].second.compare(specialEvent.first))
+    outfile <<  currentState  << (special?specialEvent.second:"") << "\t"; //State name
+    outfile << (currentState?0:1) << "\t";        //Marked
+    outfile << nextStates.size() << "\t" << endl; //Number of transitions
+    
+    for(int i=0; i<nextStates.size(); i++)
     {
-      outfile << specialEvent.second;
+      outfile << nextStates[i].second << "\t"<< nextStates[i].first;
+      if(!nextStates[i].second.compare(specialEvent.first))
+      {
+        outfile << specialEvent.second;
+      }
+      outfile << "\t";
+      outfile << "c\to" << endl;
     }
-    outfile << "\t";
-    outfile << "c\to" << endl;
   }
   /*******************************************************************/
 
@@ -62,34 +64,107 @@ void WriteStateToFile( unsigned int currentState, vector<pair<unsigned int, stri
    * 
    * Full state name is used (component state names separated,by,commas)
    * A state is marked IFF all of it's component states are marked
-   *
- 
-  outfile << encoder.GenerateStateName( currentState ) << "\t";
-  if(marked)
+   */
+  if(SPECIAL_EVENTS_FORMAT)
   {
-    outfile << 1 << "\t";
-  }
-  else
-  {
-    outfile << 0 << "\t";
-  }
-  outfile << nextStates.size() << "\t" << endl;
-  
-  for(int i=0; i<nextStates.size(); i++)
-  {
-    outfile << nextStates[i].second << "\t";
-    outfile << encoder.GenerateStateName( nextStates[i].first );
-    if(!nextStates[i].second.compare(specialEvent.first))
+    outfile << encoder.GenerateStateName( currentState ) << (special?specialEvent.second:"") << "\t";
+    if(marked)
     {
-      outfile << specialEvent.second;
+      outfile << 1 << "\t";
     }
-    outfile << "\t";
-    outfile << "c\to" << endl;
-  } 
-  *******************************************************************/
+    else
+    {
+      outfile << 0 << "\t";
+    }
+    outfile << nextStates.size() << "\t" << endl;
+    
+    for(int i=0; i<nextStates.size(); i++)
+    {
+      outfile << nextStates[i].second << "\t";
+      outfile << encoder.GenerateStateName( nextStates[i].first );
+      if(!nextStates[i].second.compare(specialEvent.first))
+      {
+        outfile << specialEvent.second;
+      }
+      outfile << "\t";
+      outfile << "c\to" << endl;
+    } 
+  }
+  /*******************************************************************/
   
   outfile << endl;
   outfile.flush();
+}
+
+
+void AddStateToFSM( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, FSM_struct * fsm, StateEncoder & encoder, pair<string,string> specialEvent, bool special)
+{
+  if(UMDES_PRINT_FORMAT)
+  {
+    string statename = encoder.GenerateStateName(currentState); 
+    if(special) 
+    {
+      statename += specialEvent.second;
+    }
+     
+    int stateindex = fsm->getStateIndex(statename);
+    fsm->states[stateindex].marked = marked;
+    
+    for(int i=0; i<nextStates.size(); i++)
+    {
+      string nextname = encoder.GenerateStateName( nextStates[i].first );
+      if(!nextStates[i].second.compare(specialEvent.first))
+      {
+        nextname += specialEvent.second;
+      }
+      
+      Trans trans;
+      trans.event = nextStates[i].second;
+      trans.dest = fsm->getStateIndex(nextname);
+      trans.obs = true;
+      trans.con = true;
+      
+      //Add eventName to alphabet if necessary
+      fsm->addEvent(trans.event);
+				
+      fsm->states[stateindex].transitions.push_back(trans); 
+    } 
+  }
+  
+  if(SPECIAL_EVENTS_FORMAT)
+  {
+    stringstream ss;
+    ss << currentState;
+          
+    if(special) 
+    {
+      ss << specialEvent.second;
+    }
+    string statename = ss.str();
+    int stateindex = fsm->getStateIndex(statename);
+    fsm->states[stateindex].marked = !currentState;
+    
+    for(int i=0; i<nextStates.size(); i++)
+    {
+      stringstream ns;
+      ns <<  nextStates[i].first;
+      if(!nextStates[i].second.compare(specialEvent.first))
+      {
+        ns << specialEvent.second;
+      }
+      statename = ns.str();
+      Trans trans;
+      trans.event = nextStates[i].second;
+      trans.dest = fsm->getStateIndex(statename);
+      trans.obs = true;
+      trans.con = true;
+      
+      //Add eventName to alphabet if necessary
+      fsm->addEvent(trans.event);
+			
+      fsm->states[stateindex].transitions.push_back(trans);
+    }
+  }
 }
 
 
@@ -104,7 +179,8 @@ string GetNameFromPath (const std::string& str)
 
 
 
-int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[]){	
+int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
+{	
 	//Loop through input FSM files, read into structs
 	for(int filenum=1; filenum<argc; filenum++){
 		//Open up fsm
