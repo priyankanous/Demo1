@@ -19,9 +19,13 @@ struct Trans
 {
 public:
 	std::string event;
-	int dest;
+	unsigned int dest;
 	bool obs;
 	bool con;
+	int mask;
+	Trans(){};
+	Trans(unsigned int d, std::string e)
+	  :event(e), dest(d), obs(1), con(1), mask(0){};
 };
 
 

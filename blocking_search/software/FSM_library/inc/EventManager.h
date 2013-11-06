@@ -10,17 +10,26 @@
 
 enum EventTypeMask
 {
-  NO_EVENTS = 0x0,
-  VARIABLE_EVENT = 0x1,
-  EXOGENOUS_EVENT = 0x2,
-  ALL_EVENTS = 0x3,
-  DC_ONLY = 0x4,
-  DC_AND_VARIABLE = 0x5,
-  DC_AND_EXOGENOUS = 0x6,
-  DDC_ONLY = 0x8,
-  DDC_AND_VARIABLE = 0x9,
-  DDC_AND_EXOGENOUS = 0xA,
+  VARIABLE_EVENT   = 0x1,
+  EXOGENOUS_EVENT  = 0x2,
+  DC_EVENT         = 0x4,
+  DDC_EVENT        = 0x8,
+  
+  NO_EVENTS_MASK   = 0x0,  
+  EXO_AND_VAR_MASK = 0x3,
+  DC_AND_VAR_MASK  = 0x5,
+  DC_AND_EXO_MASK  = 0x6,
+  NOT_DDC_MASK     = 0x7,
+  DDC_AND_VAR_MASK = 0x9,
+  DDC_AND_EXO_MASK = 0xA,
+  NOT_DC_MASK      = 0xB,
+  DC_AND_DDC_MASK  = 0xC,
+  NOT_EXO_MASK     = 0xD,
+  NOT_VAR_MASK     = 0xE,
+  ALL_EVENTS_MASK  = 0xF
 };
+
+#define DEFAULT_EVENT_MASK    ALL_EVENTS_MASK
 
 
 
@@ -35,8 +44,8 @@ class EventManager
 {
 public:
   EventManager(std::vector<FSM_struct> & FSMArray);
-  void AddTransitions(State & state, int fsmIndex, unsigned int restriction);
-  void GetNextStates( unsigned int currentState, std::vector<std::pair<unsigned int, std::string> > & nextStates );
+  void AddTransitions(State & state, int fsmIndex, EventTypeMask restriction);
+  void GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates );
   EventTypeMask AssignMask(std::string event);
   
 private:

@@ -19,9 +19,12 @@ struct Trans
 {
 public:
 	std::string event;
-	int dest;
+	unsigned int dest;
 	bool obs;
 	bool con;
+	int mask;
+	Trans(std::string e, unsigned int d)
+	  :event(e), dest(d), obs(1), con(1), mask(0){};
 };
 
 
@@ -34,7 +37,10 @@ struct State
 {
 public:
 	bool marked;
-	int numTrans;
+	int GetNumberOfTransitions(void)
+	{
+	  return transitions.size();
+	};
 	std::string stateName;
 	std::vector<Trans> transitions;
 	State(std::string& str);
@@ -47,7 +53,7 @@ struct FSM_struct
 {
 public:
 	std::string fsmName;
-	int GetNumberOfStates();
+	int GetNumberOfStates(void);
 	int numEvents;
 	std::vector<std::string> alphabet;
 	std::vector<State> states;

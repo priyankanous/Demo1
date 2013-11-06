@@ -6,14 +6,54 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <iomanip>
 #include <stdlib.h>
 #include <cmath>
 #include <set>
+#include <unordered_map>
 
 #include "FSMDataStructures.h"
+#include "EventManager.h"
 
-//#define WORSTCASE_NUMBER_OF_STATES 10000000
+/* This number is needed at compile time.
+ * It will vary based on your system constraints and state space.
+ */
 #define WORSTCASE_NUMBER_OF_STATES 1800000000
+
+/*
+ * Structure for storing search data about special state
+ * Intended to be stored in unordered_map<>
+ */
+struct SpecialState{
+  EventTypeMask mask;
+  bool popped;
+  bool accessed;
+  SpecialState(EventTypeMask m)
+    :mask(m), popped(0), accessed(1){};
+};
+
+/*
+ * Snapshot of memory structure at a given time
+ */
+struct StatsPoint{
+  unsigned int statesAccessed;
+  unsigned int stackSize;
+  unsigned int statesCreated;
+  StatsPoint(unsigned int a, unsigned int s, unsigned int c)
+    :statesAccessed(a), stackSize(s), statesCreated(c){};
+};
+
+/*
+ * Stores meta-data about the memory usage 
+ */
+struct StatsObject{
+  unsigned int maxStackSize;
+  const unsigned int sampleSize;
+  unsigned int numberOfPointsSeen;
+  std::vector<StatsPoint> sample;
+  StatsObject()
+    :maxStackSize(0), sampleSize(200), numberOfPointsSeen(0){};
+};
 
 class MemoryManager
 {
@@ -21,8 +61,12 @@ private:
   /* DFS memory structures */
   std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
-  std::set<unsigned int> specialStates;
-   
+  std::unordered_map<unsigned int, SpecialState> stateMasks;
+  StatsObject stats;
+  
+  /*Search space flag */
+  bool limitedSearchSpaceFlag;
+  
   /* FSM parameters */
   int numberOfStateMachines;
   unsigned int actualStateSpace;
@@ -35,28 +79,33 @@ private:
   unsigned int IndexToEncodedState(unsigned int index);
 
 public:
+  /* Object management */
   MemoryManager(std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
   
+  /* Bitset interaction functions */
   bool GetBit(unsigned int encodedState);
   void SetBit(unsigned int encodedState);
   void FlipBits(void);
   unsigned int GetNumberOfSetBits(void);
   unsigned int GetNumberOfUnsetBits(void);
   
-  unsigned int PopOffStack(void);
-  void PushOnStack(unsigned int encodedState);
+  /* Stack interaction functions */
+  std::pair<unsigned int, EventTypeMask> PopOffStack(void);
+  void PushOnStack(unsigned int encodedState, EventTypeMask);
   unsigned int GetSizeOfStack(void);
   bool IsStackEmpty(void);
   
-  bool IsSpecialState(unsigned int state);
-  void AddSpecialState(unsigned int state);
-  void RemoveSpecialState(unsigned int state);
-  unsigned int GetNumberOfSpecialStates(void);
-  void ClearAllSpecialStates(void);
+  /* Created states map */
+  void LimitSearchSpaceOfCreatedStates(void);
+  unsigned int GetNumberOfCreatedStates(void);
+  void ClearAllCreatedStates(void);
   
-
-  //unsigned int GetIntersectionCardinality(MemoryManager & m1);
+  /* Stats functions */
+  void ClearStatistics(void);
+  void UpdateStatistics(unsigned int numberOfStatesAccessed);
+  void PrintStatistics(void);
+  
 };
 
 

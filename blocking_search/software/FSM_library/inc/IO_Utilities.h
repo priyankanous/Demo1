@@ -16,7 +16,7 @@
 #include "FSMDataStructures.h"
 #include "StateEncoder.h"
 
-#define UMDES_PRINT_FORMAT 1
+#define UMDES_PRINT_FORMAT 0
 #define SPECIAL_EVENTS_FORMAT !UMDES_PRINT_FORMAT
 
 int readFSM(std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]);
@@ -26,9 +26,9 @@ void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
 std::string GetNameFromPath (const std::string& str);
 
 void WriteStateToFile( unsigned int currentState, 
-                      std::vector<std::pair<unsigned int, std::string> > & nextStates, 
+                      std::vector<Trans> & nextStates, 
                       bool marked, std::ofstream & outfile, StateEncoder & encoder, 
-                      std::pair<std::string, std::string>, bool special);
+                      std::pair<std::string, std::string>, std::string & titleAppend);
 
 void AddStateToFSM( unsigned int currentState, 
                     std::vector<std::pair<unsigned int, std::string> > & nextStates, 

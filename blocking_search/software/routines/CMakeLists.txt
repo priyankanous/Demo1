@@ -8,9 +8,12 @@ include_directories(
 set(test_Sources
   ${sources_localdir}
 )
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
+add_definitions(-DPARAM_IN=13)
 
 add_executable(BlockingSearch src/blocking.cpp)
-add_definitions(-DPARAM_IN=13)
+
 target_link_libraries(BlockingSearch
   FSM_library
 )
@@ -26,6 +29,7 @@ target_link_libraries(PrintParComp
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
 
 set_target_properties(BlockingSearch PROPERTIES LINKER_LANGUAGE CXX)
 

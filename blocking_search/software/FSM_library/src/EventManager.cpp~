@@ -2,7 +2,25 @@
 
 using namespace std;
 
-const char * EventTypeNamesArray[7] = {"NO_EVENTS", "VARIABLE_EVENT","EXOGENOUS_EVENT","ALL_EVENTS","DC_ONLY","DC_AND_VARIABLE", "DC_AND_EXOGENOUS"};
+const char * EventTypeNamesArray[16] = {  
+  "NO_EVENTS_MASK",//   = 0x0,  
+  "VARIABLE_EVENT",//   = 0x1,
+  "EXOGENOUS_EVENT",//  = 0x2,
+  "EXO_AND_VAR_MASK",// = 0x3,
+  "DC_EVENT",//        = 0x4,
+  "DC_AND_VAR_MASK",// = 0x5,
+  "DC_AND_EXO_MASK",//  = 0x6,
+  "NOT_DDC_MASK",//    = 0x7;
+  "DDC_EVENT",//       = 0x8,
+  "DDC_AND_VAR_MASK",// = 0x9,
+  "DDC_AND_EXO_MASK",// = 0xA,
+  "NOT_DC_MASK",//     = 0xB,
+  "DC_AND_DDC_MASK",// = 0xC,
+  "NOT_EXO_MASK",//    = 0xD,
+  "NOT_VAR_MASK",//   = 0xE,
+  "ALL_EVENTS_MASK"// = 0xF
+};
+
 
 EventManager::EventManager(vector<FSM_struct> & FSMArray)
   :encoder(FSMArray)
@@ -50,11 +68,11 @@ EventTypeMask EventManager::AssignMask(string eventString)
   
   if( !eventString.compare("DC") )
   {
-    return DC_AND_EXOGENOUS;  
+    return DC_EVENT;  
   }
   else if( !eventString.compare("DDC") )
   {
-    return DDC_AND_EXOGENOUS;  
+    return DDC_EVENT;  
   } 
   else
   {
@@ -70,11 +88,10 @@ EventTypeMask EventManager::AssignMask(string eventString)
   }
 }
 
-void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int restriction)
+void EventManager::AddTransitions(State & state, int fsmIndex, EventTypeMask restriction)
 {
   //Iterate through all transitions in state
   const int numberOfTransitions = state.transitions.size();
-if(restriction == DC_ONLY) cout << "FSM: " << fsmIndex << " "<<numberOfTransitions << endl;
   for(int i=0; i < numberOfTransitions; i++)
   {
     //Find event entry
@@ -84,7 +101,6 @@ if(restriction == DC_ONLY) cout << "FSM: " << fsmIndex << " "<<numberOfTransitio
     map<string, EventTypeMask>::iterator it1 = EventTypeMap.find( NewTransition.event );
   
     //Do not consider events which don't match restriction
-if(restriction == DC_ONLY) cout << (*it1).first << " " << (*it1).second << endl;
     if( !(restriction & (*it1).second) )
     {
       continue;

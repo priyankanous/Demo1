@@ -18,8 +18,10 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o: ../softw
 software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o: ../software/FSM_library/inc/StateEncoder.h
 software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o: ../software/FSM_library/src/IO_Utilities.cpp
 
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/inc/EventManager.h
 software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/inc/FSMDataStructures.h
 software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/inc/MemoryManager.h
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/inc/StateEncoder.h
 software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/src/MemoryManager.cpp
 
 software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o: ../software/FSM_library/inc/EventManager.h

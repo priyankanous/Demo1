@@ -2,7 +2,25 @@
 
 using namespace std;
 
-const char * EventTypeNamesArray[7] = {"NO_EVENTS", "VARIABLE_EVENT","EXOGENOUS_EVENT","ALL_EVENTS","DC_ONLY","DC_AND_VARIABLE", "DC_AND_EXOGENOUS"};
+const char * EventTypeNamesArray[16] = {  
+  "NO_EVENTS_MASK",//   = 0x0,  
+  "VARIABLE_EVENT",//   = 0x1,
+  "EXOGENOUS_EVENT",//  = 0x2,
+  "EXO_AND_VAR_MASK",// = 0x3,
+  "DC_EVENT",//        = 0x4,
+  "DC_AND_VAR_MASK",// = 0x5,
+  "DC_AND_EXO_MASK",//  = 0x6,
+  "NOT_DDC_MASK",//    = 0x7;
+  "DDC_EVENT",//       = 0x8,
+  "DDC_AND_VAR_MASK",// = 0x9,
+  "DDC_AND_EXO_MASK",// = 0xA,
+  "NOT_DC_MASK",//     = 0xB,
+  "DC_AND_DDC_MASK",// = 0xC,
+  "NOT_EXO_MASK",//    = 0xD,
+  "NOT_VAR_MASK",//   = 0xE,
+  "ALL_EVENTS_MASK"// = 0xF
+};
+
 
 EventManager::EventManager(vector<FSM_struct> & FSMArray)
   :encoder(FSMArray)
@@ -50,11 +68,11 @@ EventTypeMask EventManager::AssignMask(string eventString)
   
   if( !eventString.compare("DC") )
   {
-    return DC_AND_EXOGENOUS;  
+    return DC_EVENT;  
   }
   else if( !eventString.compare("DDC") )
   {
-    return DDC_AND_EXOGENOUS;  
+    return DDC_EVENT;  
   } 
   else
   {
@@ -70,7 +88,7 @@ EventTypeMask EventManager::AssignMask(string eventString)
   }
 }
 
-void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int restriction)
+void EventManager::AddTransitions(State & state, int fsmIndex, EventTypeMask restriction)
 {
   //Iterate through all transitions in state
   const int numberOfTransitions = state.transitions.size();
@@ -114,7 +132,7 @@ void EventManager::AddTransitions(State & state, int fsmIndex, unsigned int rest
   }
 }
 
-void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<unsigned int, std::string> > & nextStates )
+void EventManager::GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates )
 {
   //Iterate through each event, determining the transitions that must be added
   map<string, Event>::iterator it; 
@@ -135,7 +153,7 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
     else if( (*it).second.UniqueFSMcount == (*it).second.transitions.size() )
     {
       unsigned int newState = encoder.UpdateStateWithTransitions( currentState, (*it).second.transitions );
-			nextStates.push_back( make_pair(newState, it->first) );    
+			nextStates.push_back( Trans(newState, it->first) );    
     }
     
     //In this case, the event has multiple instances, 
@@ -213,7 +231,7 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
 				}
 				
         unsigned int newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
-			  nextStates.push_back( make_pair(newState, it->first) ); 
+			  nextStates.push_back( Trans(newState, it->first) ); 
 			}
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     }
