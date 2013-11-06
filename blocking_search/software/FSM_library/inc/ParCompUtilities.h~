@@ -1,0 +1,39 @@
+#ifndef _PAR_COMP_UTILITIES_H_
+#define _PAR_COMP_UTILITIES_H_
+
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
+#include <algorithm>
+#include <stack>
+#include <bitset>
+#include <cmath>
+#include <map>
+
+#include "FSMDataStructures.h"
+#include "MemoryManager.h"
+#include "EventManager.h"
+#include "StateEncoder.h"
+
+#include "IO_Utilities.h"
+
+enum Direction{
+  FORWARD = 0,
+  BACKWARD = 1
+};
+
+unsigned long int GetUpperBoundStateSpace(std::vector<FSM_struct>& FSMArr);
+
+unsigned int DepthFirstSearch(std::vector<FSM_struct>& FSMArr, MemoryManager & memory, 
+  EventManager & event, StateEncoder & encoder, unsigned int worstcase, 
+  std::string outputDirectory, FSM_struct * fsm, Direction dir );
+
+unsigned int FullParCompWithOutput( std::vector<FSM_struct> & FSMArray,  std::string filepath , FSM_struct * fsm);
+
+unsigned int OnTheFlyParComp( std::vector<FSM_struct> & FSMArray );
+
+#endif
