@@ -7,7 +7,7 @@ using namespace std;
  * @brief Multiply state spaces of all components
  * @return worst-case state space
  */
-unsigned long int GetUpperBoundStateSpace ( vector<FSM_struct> & FSMArray )
+unsigned long int GetUpperBoundStateSpace ( const vector<FSM_struct> & FSMArray )
 {
   unsigned long int worstcase = 1;
   for(int i=0; i<FSMArray.size(); i++)
@@ -21,7 +21,7 @@ unsigned long int GetUpperBoundStateSpace ( vector<FSM_struct> & FSMArray )
  * @brief Perform on-the-fly parComp, not storing copy of resulting FSM
  * @return Number of blocking states
  */
-unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
+unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
 {
   /******** Calculate Worstcase ****************************/
   unsigned int worstcase = GetUpperBoundStateSpace(FSMArray);
@@ -35,7 +35,7 @@ unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
   EventManager event(FSMArray);
   StateEncoder encoder(FSMArray);
   
-  unsigned int totalStatesAccessed = DepthFirstSearch(FSMArray, memory, event, encoder, worstcase, "", NULL, FORWARD );
+  unsigned int totalStatesAccessed = DepthFirstSearch(FSMArray, memory, event, encoder, worstcase, "./", NULL, FORWARD );
   
   cout << "~~~~~~~~~~~~~" << endl;
   memory.PrintStatistics();
@@ -46,7 +46,6 @@ unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
   cout << "Inverting transitions in all sub-automata." << endl;
   vector<FSM_struct> InverseArray;
   InvertTransitions(FSMArray, InverseArray);
-  FSMArray.clear();
   cout << "Done inverting transitions. " << endl;
   cout << "~~~~~~~~~~~~~" << endl;
   /*********************************************************/
@@ -56,6 +55,7 @@ unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
   cout << endl << "~~~~~~~~~~~~~"<<endl;
   cout << "Starting coaccessibility search of " << totalStatesAccessed << " accessed states." << endl;
   
+  
   //Reset certain components of memory in order to limit search space
   memory.FlipBits();
   memory.LimitSearchSpaceOfCreatedStates();
@@ -64,13 +64,28 @@ unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
   EventManager event_inv(InverseArray);
   StateEncoder encoder_inv(InverseArray);
   
-  unsigned int totalStatesCoaccessed = DepthFirstSearch(InverseArray, memory, event_inv, encoder_inv, worstcase, "CO_ACC_", NULL , BACKWARD);
-  
+  unsigned int totalStatesCoaccessed = DepthFirstSearch(InverseArray, memory, event_inv, encoder_inv, worstcase, "", NULL , BACKWARD);
+  InverseArray.clear();
   memory.PrintStatistics();
+  
+  memory.FlipBits();
+  unsigned int numberOfBlockingEvents = memory.GetNumberOfSetBits();
+  cout << "~~~~~~~~~~~~~" << endl << endl;
+  /************************************************************/
+  
+  /****** Accessibility Search to find blocking transitions****/ 
   cout << "~~~~~~~~~~~~~" << endl;
-   
-  return memory.GetNumberOfUnsetBits(); //Number of blocking states
-  /************************************************************/      
+  cout << "Running accessibility search to identify blocking transitions." << endl;
+  
+  
+  MemoryManager newMemory(FSMArray);
+  
+  FindBlockingEvents(FSMArray, newMemory, event, encoder, memory); 
+  
+  /************************************************************/
+  
+  return numberOfBlockingEvents;
+        
 }
 
 /*
@@ -78,7 +93,7 @@ unsigned int OnTheFlyParComp( vector<FSM_struct> & FSMArray )
  *        in file, fsm_struct object, or both
  * @return number Of States accessed
  */
-unsigned int FullParCompWithOutput( vector<FSM_struct> & FSMArray, string filepath, FSM_struct * fsm )
+unsigned int FullParCompWithOutput( const vector<FSM_struct> & FSMArray, string filepath, FSM_struct * fsm )
 {
   //Declare necessary structures
   MemoryManager memory(FSMArray);
@@ -99,7 +114,7 @@ unsigned int FullParCompWithOutput( vector<FSM_struct> & FSMArray, string filepa
  *        composite state.
  * @return Number of states accessed
  */
-unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder,
+unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder,
   unsigned int worstcase, string outputDirectory,  FSM_struct * fsm, Direction dir)
 {
   int numberFSMs = FSMArray.size();
@@ -139,6 +154,20 @@ unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArray, MemoryManager & memo
     fsm->fsmName = name;    
   }
   /******************************************************/
+  
+  /****** Open Log File to Store Information ************/
+  ofstream log;
+  unsigned int DeadlockCount=0;
+  string logfilename = (dir==FORWARD ? "log-acc.txt":"log-coacc.txt");
+  log.open(logfilename.c_str());
+  if(!log.is_open())
+    cerr << "log.txt failed to open!" << endl;
+  else{
+    log << setw(8) << "CORRUPT";
+    log << " dead-end states found." << endl << endl;
+  }
+  /******************************************************/
+  
   
   //Count the number of intially set bits
   unsigned int InitialBitCount = memory.GetNumberOfSetBits();
@@ -221,6 +250,11 @@ unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArray, MemoryManager & memo
     //Push states onto stack
     if(dir == FORWARD)
     {
+      //Write deadlock state to file
+      if(!nextStates.size() && log.is_open() ){
+        log << encoder.GenerateStateName(currentState) << titleAppend << endl;
+        DeadlockCount++;
+      }
       //Push next states onto stack
       for( int i=0; i<nextStates.size(); i++)
       {
@@ -293,14 +327,269 @@ unsigned int DepthFirstSearch(vector<FSM_struct>& FSMArray, MemoryManager & memo
 	cout << "Max size of stack: "<< maxStackSize << endl;
 	
 	//Add number of states to the top of the file
-	if(outfile.is_open())
-  {
+	if(outfile.is_open()){
     outfile.seekp(0, ios::beg);
     outfile << setw(8) << counter;
     outfile.close();
   }  
   
+  //Add total number of deadlock states to log file header
+  if(log.is_open()){
+    log.seekp(0, ios::beg);
+    log << setw(8) << setfill('0') << DeadlockCount;
+    log.close();
+  }
+  
 	return counter;
 }
+
+
+
+/*
+ * @brief Performs accessibility search on graph, printing events which lead to blocking states
+ * @note This is a specialized version of DFS
+ */
+void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates)
+{
+  int numberFSMs = FSMArray.size();
+
+  /****** Open Log File to Print Blocking Events ************/
+  ofstream log;
+  unsigned int BlockingEventsFound=0, SpecialBlockingEventsFound=0;
+  
+  log.open("blocking-events.txt");
+  if(!log.is_open())
+    cerr << "blocking-events.txt failed to open!" << endl;
+  else{
+    log << setw(8) << "CORRUPT";
+    log << " blocking events found." << endl << endl;
+  }
+  /******************************************************/
+  
+  /********* Open file if one is included *************/
+  ofstream outfile;
+
+  //~~~~Generate fsmName~~~~~~~~~~~~~~~~~~~~~/
+  string filename;
+  for(int i=0; i<numberFSMs; i++){
+    filename += (FSMArray[i].fsmName + ",");
+  }
+  filename.erase(filename.end()-1);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  
+  //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  string filepath = filename + "-nonBlocking.fsm";
+  outfile.open(filepath.c_str());
+  if(!outfile.is_open()){
+    cerr << "File "<< filepath << " failed to open!" << endl;
+  }
+  else
+    outfile << setw(8) << "CORRUPT" << endl << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  
+  /******************************************************/
+  
+  
+  //Check the number of intially set bits
+  if( memory.GetNumberOfSetBits() )
+  {
+    cerr << "Memory is not cleared. Exiting." << endl;
+  }
+  
+	//Initialize search stack for depth-first search, add initial state
+	//Note that this assumes the 0th state in each file is the marked state
+	unsigned currentState = 0;
+	unsigned int counter = 0;
+	unsigned int maxStackSize = 0;
+
+  //Exception states to be accounted for after search
+  map<unsigned int, State> specialStates;
+  const pair<string,string> specialEvent = make_pair("DDC","_DDC");
+	
+	//Initialize Stack
+	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	
+	
+	while( !memory.IsStackEmpty() )
+	{	
+		//Get current state off top of stack
+		pair<unsigned int, EventTypeMask> currentPair = memory.PopOffStack();
+		
+		currentState = currentPair.first;
+		EventTypeMask currentMask = currentPair.second;
+		bool currentMarked = false; 
+    string titleAppend = "";
+	
+	
+	  //Assign mask and marked status
+	  switch(currentMask)
+	  {	
+	    case DEFAULT_EVENT_MASK:
+		    //  If doing accessibility search,  and if ALL states are marked ("proper" states),
+		    //  consider all events from all states, assign mask ALL_EVENTS_MASK.
+		    //  Otherwise, assign mask VARIABLE_EVENT, only considering lowercase events 
+		    //  In a coaccessibility search, the same rules apply, but DDC should never be allowed
+		    //  without being preceded by a DC
+		    currentMarked = !encoder.CheckForUnmarkedStates(currentState);
+		    currentMask = ( currentMarked ? ALL_EVENTS_MASK : VARIABLE_EVENT );      
+		    break;
+		 
+		  case DC_EVENT:
+		    //  This state was reached in an accessibility search by event DDC,
+		    //  only event DC is allowed to occur.
+		    currentMarked = false;
+		    titleAppend = "_DDC";
+		    break;
+		    
+		  case DDC_EVENT:
+		    //  This state was reached in a co-accessibility search by event DC,
+		    //  only event DDC is allowed to occur
+		    currentMarked = false;
+		    titleAppend = "_DC";
+		    break;
+		  
+		  default:
+		    //  This state should not be reached in the current implementation
+		    cerr << "An unsupported EventType (\""<<(int)currentMask<<"\")";
+		    cerr << "was pulled off the stack at state " << currentState<<". Exiting.";
+		    exit(1);
+		}
+		
+		// Loop through each FSM, examining the current state's transitions, subject to mask restrictions
+    for(int i=0; i<numberFSMs; i++)
+    {
+	    //Extract state index from encoded composite state
+	    int stateIndex = encoder.FindStateIndex(currentState, i);
+	    
+      //Add events, passing currentMask to filter events
+      event.AddTransitions( FSMArray[i].states[stateIndex], i, currentMask);        
+    }
+        
+		//Get next states
+		vector<Trans> nextStates, goodStates;
+    event.GetNextStates( currentState, nextStates );
+    
+    //Push next states onto stack
+    for( int i=0; i<nextStates.size(); i++)
+    {
+      //If next state is blocking, print and do not push it.
+      /*if(blockingStates.IsBlockingState(nextStates[i].dest, nextStates[i].event))
+      {
+        log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
+        log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest);
+        if(!nextStates[i].event.compare("DDC")) log << "_DDC" << endl;
+        
+        nextStates.erase(nextStates.begin() + i );
+        i--;
+      }*/
+      if(!nextStates[i].event.compare("DDC"))
+      {
+        if (blockingStates.stateMasks.find(nextStates[i].dest)->second.accessed == false){
+          log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
+          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) << endl;
+          SpecialBlockingEventsFound++;
+        }
+        else{
+          memory.PushOnStack(nextStates[i].dest, DC_EVENT);
+          nextStates[i].mask = DC_EVENT;
+          goodStates.push_back(nextStates[i]);
+        }
+      }
+      else
+      {
+        if (blockingStates.GetBit(nextStates[i].dest)){
+          BlockingEventsFound++;
+          log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
+          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) << endl;
+        }
+        else{
+          memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);
+          goodStates.push_back(nextStates[i]);
+        }
+      }
+    }     
+    
+    //Write current state to .FSM file
+    if( outfile.is_open() )
+    {
+      WriteStateToFile( currentState, goodStates, currentMarked, outfile, encoder, specialEvent, titleAppend );
+    }
+    
+    //Update stack statistics
+    counter++;
+		if(!(counter % 1000))
+		{
+		  memory.UpdateStatistics(counter);
+		  if(memory.GetSizeOfStack() > maxStackSize )
+		  {
+		    maxStackSize = memory.GetSizeOfStack();
+		  }
+			cout << counter << " states accessed. ";
+			cout << " Stack size: " << memory.GetSizeOfStack() << "         \r";
+			cout.flush();
+		}
+	}
+	
+	//Print summary statistics
+	cout << "Total states accessed :   " << counter;
+	cout << "                                             "<<endl;
+	cout << "Standard states visited: " << memory.GetNumberOfSetBits() << endl;
+	cout << "States created:    " << memory.GetNumberOfCreatedStates() << endl;
+	cout << "Max size of stack: "<< maxStackSize << endl;
+	cout << "Number of blocking events found: " << BlockingEventsFound << endl;
+	cout << "Number of special blocking events found: " << SpecialBlockingEventsFound << endl;
+ 
+  //Add total number of deadlock states to log file header
+  if(log.is_open()){
+    log.seekp(0, ios::beg);
+    log << setw(8) << setfill('0') << (BlockingEventsFound+SpecialBlockingEventsFound);
+    log.close();
+  }
+  
+  //Add number of states to the top of the file
+	if(outfile.is_open()){
+    outfile.seekp(0, ios::beg);
+    outfile << setw(8) << counter;
+    outfile.close();
+  }  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

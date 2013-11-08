@@ -22,7 +22,7 @@ const char * EventTypeNamesArray[16] = {
 };
 
 
-EventManager::EventManager(vector<FSM_struct> & FSMArray)
+EventManager::EventManager(const vector<FSM_struct> & FSMArray)
   :encoder(FSMArray)
 {
   //Iterate through each FSM
@@ -88,7 +88,7 @@ EventTypeMask EventManager::AssignMask(string eventString)
   }
 }
 
-void EventManager::AddTransitions(State & state, int fsmIndex, EventTypeMask restriction)
+void EventManager::AddTransitions(const State & state, int fsmIndex, EventTypeMask restriction)
 {
   //Iterate through all transitions in state
   const int numberOfTransitions = state.transitions.size();

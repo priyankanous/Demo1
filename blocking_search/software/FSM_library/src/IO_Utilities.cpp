@@ -264,7 +264,7 @@ int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
 }
 
 
-void InvertTransitions(vector<FSM_struct>& FSMArray, vector<FSM_struct>& FSMArray_inv)
+void InvertTransitions( const vector<FSM_struct>& FSMArray, vector<FSM_struct>& FSMArray_inv)
 {
   //Invert transitions, making new FSMs
   

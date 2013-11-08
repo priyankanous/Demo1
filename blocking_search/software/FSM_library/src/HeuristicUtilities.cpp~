@@ -2,7 +2,7 @@
 
 using namespace std;
 
-pair<int, int> MapCommonEvents(vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printMap)
+pair<int, int> MapCommonEvents(const vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printMap)
 {
   vector< vector<int> > sharedEvents;
   int bestMetric = 0, bestStateSpace = 0;
@@ -47,7 +47,10 @@ pair<int, int> MapCommonEvents(vector<FSM_struct> & FSMArray, unsigned int Upper
       sort(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end());
       
       vector<string> intersection(FSMArray[i].alphabet.size() + FSMArray[j].alphabet.size());
-      vector<string>::iterator it = set_intersection(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), intersection.begin());
+      vector<string>::iterator it = set_intersection(FSMArray[i].alphabet.begin(), 
+                                                     FSMArray[i].alphabet.end(), 
+                                                     FSMArray[j].alphabet.begin(), 
+                                                     FSMArray[j].alphabet.end(), intersection.begin());
       
       intersection.resize(it-intersection.begin());
       int sharedEvents = 100 * intersection.size()/( FSMArray[i].alphabet.size() + FSMArray[j].alphabet.size() - intersection.size() );
@@ -84,12 +87,10 @@ pair<int, int> MapCommonEvents(vector<FSM_struct> & FSMArray, unsigned int Upper
   }
   if(printMap) cout << endl;
   
-  cout << FSMArray[bestFSMs.first].fsmName << " and " << FSMArray[bestFSMs.second].fsmName << " will be composed. ("<< bestMetric;
-  cout << "\% of events are shared. Worstcase statespace: "<< bestStateSpace << ")" << endl;
   return bestFSMs;
 }
 
-void GenerateOptimalSubgroups(vector<FSM_struct> & FSMArr)
+void GenerateOptimalSubgroups(const vector<FSM_struct> & FSMArr)
 {
 	/* Optimization Parameters */
 	long unsigned int BestMetricSoFar = -1;

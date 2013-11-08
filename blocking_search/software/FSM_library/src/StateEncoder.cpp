@@ -2,7 +2,7 @@
 
 using namespace std;
 
-StateEncoder::StateEncoder( vector<FSM_struct> & FSMArray )
+StateEncoder::StateEncoder( const vector<FSM_struct> & FSMArray )
 {
   /* Resize all vectors to have proper size */
   int numberOfStateMachines = FSMArray.size();

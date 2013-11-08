@@ -20,6 +20,10 @@
  */
 #define WORSTCASE_NUMBER_OF_STATES 1800000000
 
+/*
+ * Structure for storing search data about special state
+ * Intended to be stored in unordered_map<>
+ */
 struct SpecialState{
   EventTypeMask mask;
   bool popped;
@@ -28,6 +32,9 @@ struct SpecialState{
     :mask(m), popped(0), accessed(1){};
 };
 
+/*
+ * Snapshot of memory structure at a given time
+ */
 struct StatsPoint{
   unsigned int statesAccessed;
   unsigned int stackSize;
@@ -36,6 +43,9 @@ struct StatsPoint{
     :statesAccessed(a), stackSize(s), statesCreated(c){};
 };
 
+/*
+ * Stores meta-data about the memory usage 
+ */
 struct StatsObject{
   unsigned int maxStackSize;
   const unsigned int sampleSize;
@@ -51,7 +61,7 @@ private:
   /* DFS memory structures */
   std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
-  std::unordered_map<unsigned int, SpecialState> stateMasks;
+  
   StatsObject stats;
   
   /*Search space flag */
@@ -69,24 +79,37 @@ private:
   unsigned int IndexToEncodedState(unsigned int index);
 
 public:
+  /* Object management */
   MemoryManager(std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
+  std::unordered_map<unsigned int, SpecialState> stateMasks;
   
+  /* General Use */
+  bool IsBlockingState(unsigned int, std::string);
+  
+  /* Bitset interaction functions */
   bool GetBit(unsigned int encodedState);
   void SetBit(unsigned int encodedState);
   void FlipBits(void);
   unsigned int GetNumberOfSetBits(void);
   unsigned int GetNumberOfUnsetBits(void);
   
+  /* Stack interaction functions */
   std::pair<unsigned int, EventTypeMask> PopOffStack(void);
   void PushOnStack(unsigned int encodedState, EventTypeMask);
   unsigned int GetSizeOfStack(void);
   bool IsStackEmpty(void);
   
+  /* Created states map */
   void LimitSearchSpaceOfCreatedStates(void);
   unsigned int GetNumberOfCreatedStates(void);
   void ClearAllCreatedStates(void);
+  bool IsCreatedState(unsigned int, EventTypeMask);
+  unsigned int GetNumberOfUnsetCreatedStates(void);
   
+  
+  
+  /* Stats functions */
   void ClearStatistics(void);
   void UpdateStatistics(unsigned int numberOfStatesAccessed);
   void PrintStatistics(void);

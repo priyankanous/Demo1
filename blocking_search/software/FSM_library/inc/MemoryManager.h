@@ -61,7 +61,7 @@ private:
   /* DFS memory structures */
   std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
   std::stack<unsigned int> searchStack;
-  std::unordered_map<unsigned int, SpecialState> stateMasks;
+  
   StatsObject stats;
   
   /*Search space flag */
@@ -80,8 +80,12 @@ private:
 
 public:
   /* Object management */
-  MemoryManager(std::vector<FSM_struct> & FSMArray);
+  MemoryManager(const std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
+  std::unordered_map<unsigned int, SpecialState> stateMasks;
+  
+  /* General Use */
+  bool IsBlockingState(unsigned int, std::string);
   
   /* Bitset interaction functions */
   bool GetBit(unsigned int encodedState);
@@ -100,6 +104,10 @@ public:
   void LimitSearchSpaceOfCreatedStates(void);
   unsigned int GetNumberOfCreatedStates(void);
   void ClearAllCreatedStates(void);
+  bool IsCreatedState(unsigned int, EventTypeMask);
+  unsigned int GetNumberOfUnsetCreatedStates(void);
+  
+  
   
   /* Stats functions */
   void ClearStatistics(void);

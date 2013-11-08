@@ -10,7 +10,7 @@
 
 std::pair<int, int> MapCommonEvents(std::vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printState);
 
-void GenerateOptimalSubgroups(std::vector<FSM_struct> & FSMArray);
+void GenerateOptimalSubgroups( const std::vector<FSM_struct> & FSMArray);
 
 
 

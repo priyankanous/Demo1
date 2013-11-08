@@ -6,7 +6,7 @@ using namespace std;
  * @brief Constructor for memory manager
  * @param numStates Vector corresponding to number of states in each FSM
  */
-MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
+MemoryManager::MemoryManager( const vector<FSM_struct> & FSMArray)
 {
   /* Resize all vectors to have proper size */
   numberOfStateMachines = FSMArray.size();
@@ -27,7 +27,7 @@ MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
 	  else
 	  {
 	    offset[i] = offset[i+1] + numbits[i+1];
-	    accumulator[i] = accumulator[i+1] * FSMArray[i+1].GetNumberOfStates();
+	    accumulator[i] = accumulator[i+1] * (FSMArray[i+1].GetNumberOfStates());
 	  }
 		
 		numbits[i] = ceil( log2( FSMArray[i].GetNumberOfStates() ) );
@@ -36,6 +36,10 @@ MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
 	actualStateSpace = accumulator[0]*FSMArray[0].GetNumberOfStates();
 }
 
+/*
+ * @brief Destructor for memory manager
+ *        Delete bitset pointer. All other memory is on the stack
+ */
 MemoryManager::~MemoryManager(void)
 {
   delete accessed;
@@ -311,15 +315,69 @@ unsigned int MemoryManager::GetNumberOfCreatedStates(void)
 }
 
 /*
+ * @brief Return the number of entries in the map accessed in the search
+ * @returns count of entries where accessed == true
+ */
+unsigned int MemoryManager::GetNumberOfUnsetCreatedStates(void)
+{
+  unsigned int counter = 0;
+  for(unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.begin();
+    it != stateMasks.end(); it++)
+  {
+    if(!it->second.accessed)
+    {
+      counter++;
+    }
+  }
+  return counter;
+}
+
+
+/*
  * @brief Clear the special states set
  */
 void MemoryManager::ClearAllCreatedStates(void)
 {
   stateMasks.clear();
 }
+
+
+/*
+ * @brief Tests whether a state is a blocking state
+ * @note This should not be implemented as such... NEEDS TO BE PROTECTED MORE
+ */
+bool MemoryManager::IsBlockingState(unsigned int destination, string event)
+{
+  if(event.compare("DDC"))
+  {
+    return GetBit(destination);
+  }
+  else
+  {
+    unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.find(destination);
+    if(it == stateMasks.end())
+    {
+      return false;
+    }
+    if(!it->second.accessed)
+    {
+      return true;
+    }
+    return false;
+  }
+}
 /***********************************************************************************/
 
 /*************** STATISTICS FUNCTIONS **********************************************/
+// NOTE: Although access to these functions is needed by users of MemoryManager,
+//       these functions may be more appropriately implemented in StatsObject
+//       S. Lanham 11/6/13
+
+/*
+ * @brief Update maximum stack size, increment amount of points seen
+ *        and maintain random sample.
+ *
+ */
 void MemoryManager::UpdateStatistics(unsigned int numberOfStatesAccessed)
 {
   //Update the max stack value
@@ -331,12 +389,14 @@ void MemoryManager::UpdateStatistics(unsigned int numberOfStatesAccessed)
   //Increment the points seen
   stats.numberOfPointsSeen++;
   
+  //If points seen are less than sample size, add to buffer
   if(stats.sample.size() < stats.sampleSize)
   {
     stats.sample.push_back(StatsPoint(numberOfStatesAccessed, GetSizeOfStack(), GetNumberOfCreatedStates())); 
   }
   else
-  {
+  { 
+    //Otherwise, with probability = sampleSize/pointsSeen, select random element to be replaced 
     if( (rand()%stats.numberOfPointsSeen) < stats.sampleSize )
     {
       stats.sample[rand()%stats.sampleSize] = StatsPoint(numberOfStatesAccessed, GetSizeOfStack(), GetNumberOfCreatedStates());
@@ -344,6 +404,9 @@ void MemoryManager::UpdateStatistics(unsigned int numberOfStatesAccessed)
   }
 }
 
+/*
+ * @brief Reset all statistics
+ */
 void MemoryManager::ClearStatistics(void)
 {
   stats.maxStackSize = 0;
@@ -351,9 +414,12 @@ void MemoryManager::ClearStatistics(void)
   stats.sample.clear();
 }
 
+/*
+ * @brief Print statistics, namely a memory profile
+ */
 void MemoryManager::PrintStatistics(void)
 {
-
+  /******* Calculate plot parameters ***********************/
   unsigned int widthInChars = 100, heightInChars = 20;
   unsigned int MaxX = 0, MinX = 0, MaxY = stats.maxStackSize, MinY = 0;
   for(int n=0; n<stats.sample.size(); n++)
@@ -362,10 +428,12 @@ void MemoryManager::PrintStatistics(void)
     {
       MaxX = stats.sample[n].statesAccessed;
     }
-  }
-  
+  }  
   unsigned int ResX = (MaxX-MinX)/widthInChars, ResY = (MaxY-MinY)/heightInChars;
+  /********************************************************/
   
+  /******* Populate 2-D vector with plot data *************/
+  // NOTE: If desired, data about created states may be added here also
   vector<vector<bool> > plot(widthInChars, vector<bool>(heightInChars,0));
   for(int n=0; n<stats.sample.size(); n++)
   {
@@ -376,13 +444,19 @@ void MemoryManager::PrintStatistics(void)
       plot[stats.sample[n].statesAccessed/ResX][stats.sample[n].stackSize/ResY] = 1;
     }
   }
+  /********************************************************/
   
+  /************* PRINT Graph - ASCII art ******************/
+  //~~~~~~~~~~~~ Meta Data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   if(MaxY > 1000){
     cout << " Stack Size (x1000) " << endl;
   }
   else{
     cout << " Stack Size " << endl;
-  }        
+  }  
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  
+  //~~~~~~~~~~~ Chart Area ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/      
   for(int y = heightInChars-1; y>=0; y--)
   {
     if(!((y+1)%4)){
@@ -395,12 +469,10 @@ void MemoryManager::PrintStatistics(void)
       cout << "   |";
     for(int x=0; x<widthInChars; x++)
     {
-      if(plot[x][y])
-      {
+      if(plot[x][y]){
         cout << '#';
       }
-      else if( (y < (heightInChars-1)) && plot[x][y+1] )
-      {
+      else if( (y < (heightInChars-1)) && plot[x][y+1] ){
         plot[x][y] = 1;
         cout << '#';
       }
@@ -409,9 +481,11 @@ void MemoryManager::PrintStatistics(void)
     }
     cout << endl;
   }
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  
+  //~~~~~~~~~~~~ X-axis ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/  
   cout <<"   ";
-  for(int x=0; x<=widthInChars; x++)
-  {
+  for(int x=0; x<=widthInChars; x++){
     if(!(x%10))
       cout << '+';
     else
@@ -419,10 +493,8 @@ void MemoryManager::PrintStatistics(void)
   }
   cout<<endl<<"   ";
   
-  for(int x=0; x<widthInChars; x++)
-  {
-    if(!((x+2)%10))
-    {
+  for(int x=0; x<widthInChars; x++){
+    if(!((x+2)%10)){
       cout<<setw(4)<<(int)(MaxX*double((double)x/(double)widthInChars/1000));
       x+=3;
     }
@@ -430,8 +502,9 @@ void MemoryManager::PrintStatistics(void)
       cout << ' ';
    }
   cout<<endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
 }
-
+/***********************************************************************************/
 
 
 

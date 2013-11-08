@@ -2,7 +2,7 @@
 
 using namespace std;
 
-State::State(std::string& str)
+State::State(const std::string& str)
 	:stateName(str)
 {};
 
@@ -17,7 +17,7 @@ FSM_struct::FSM_struct(void)
 
 
 
-int FSM_struct::GetNumberOfStates(void)
+int FSM_struct::GetNumberOfStates(void) const
 {
   return states.size();
 }

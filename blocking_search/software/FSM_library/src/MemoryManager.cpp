@@ -6,7 +6,7 @@ using namespace std;
  * @brief Constructor for memory manager
  * @param numStates Vector corresponding to number of states in each FSM
  */
-MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
+MemoryManager::MemoryManager( const vector<FSM_struct> & FSMArray)
 {
   /* Resize all vectors to have proper size */
   numberOfStateMachines = FSMArray.size();
@@ -27,7 +27,7 @@ MemoryManager::MemoryManager( vector<FSM_struct> & FSMArray)
 	  else
 	  {
 	    offset[i] = offset[i+1] + numbits[i+1];
-	    accumulator[i] = accumulator[i+1] * FSMArray[i+1].GetNumberOfStates();
+	    this->accumulator[i] = this->accumulator[i+1] * (FSMArray[i+1].GetNumberOfStates());
 	  }
 		
 		numbits[i] = ceil( log2( FSMArray[i].GetNumberOfStates() ) );
@@ -315,11 +315,56 @@ unsigned int MemoryManager::GetNumberOfCreatedStates(void)
 }
 
 /*
+ * @brief Return the number of entries in the map accessed in the search
+ * @returns count of entries where accessed == true
+ */
+unsigned int MemoryManager::GetNumberOfUnsetCreatedStates(void)
+{
+  unsigned int counter = 0;
+  for(unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.begin();
+    it != stateMasks.end(); it++)
+  {
+    if(!it->second.accessed)
+    {
+      counter++;
+    }
+  }
+  return counter;
+}
+
+
+/*
  * @brief Clear the special states set
  */
 void MemoryManager::ClearAllCreatedStates(void)
 {
   stateMasks.clear();
+}
+
+
+/*
+ * @brief Tests whether a state is a blocking state
+ * @note This should not be implemented as such... NEEDS TO BE PROTECTED MORE
+ */
+bool MemoryManager::IsBlockingState(unsigned int destination, string event)
+{
+  if(event.compare("DDC"))
+  {
+    return GetBit(destination);
+  }
+  else
+  {
+    unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.find(destination);
+    if(it == stateMasks.end())
+    {
+      return false;
+    }
+    if(!it->second.accessed)
+    {
+      return true;
+    }
+    return false;
+  }
 }
 /***********************************************************************************/
 

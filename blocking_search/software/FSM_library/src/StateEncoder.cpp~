@@ -31,7 +31,6 @@ StateEncoder::StateEncoder( vector<FSM_struct> & FSMArray )
 	  for(int j=0; j<FSMArray[i].GetNumberOfStates(); j++)
 	  {
 	     stateNamesRow.push_back( make_pair(FSMArray[i].states[j].stateName, FSMArray[i].states[j].marked) );
-if(i==1 && !FSMArray[i].states[j].stateName.compare("WAidle")) cout << "HEY NOW: " << FSMArray[i].states[j].marked << " " << j << " " << FSMArray[i].states[j].transitions.size() << endl;
 	  }
 	  
 	  stateNames.push_back(stateNamesRow);

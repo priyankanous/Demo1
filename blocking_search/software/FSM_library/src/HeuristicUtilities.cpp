@@ -2,7 +2,7 @@
 
 using namespace std;
 
-pair<int, int> MapCommonEvents(vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printMap)
+pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printMap)
 {
   vector< vector<int> > sharedEvents;
   int bestMetric = 0, bestStateSpace = 0;
@@ -90,7 +90,7 @@ pair<int, int> MapCommonEvents(vector<FSM_struct> & FSMArray, unsigned int Upper
   return bestFSMs;
 }
 
-void GenerateOptimalSubgroups(vector<FSM_struct> & FSMArr)
+void GenerateOptimalSubgroups(const vector<FSM_struct> & FSMArr)
 {
 	/* Optimization Parameters */
 	long unsigned int BestMetricSoFar = -1;

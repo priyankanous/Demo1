@@ -19,7 +19,7 @@
 #define UMDES_PRINT_FORMAT 0
 #define SPECIAL_EVENTS_FORMAT !UMDES_PRINT_FORMAT
 
-int readFSM(std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]);
+int readFSM( std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]);
 
 void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
 
@@ -35,6 +35,6 @@ void AddStateToFSM( unsigned int currentState,
                     bool marked, FSM_struct * fsm, StateEncoder & encoder,
                     std::pair<std::string, std::string>, bool special);
                       
-void InvertTransitions(std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
+void InvertTransitions( const std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
 
 #endif

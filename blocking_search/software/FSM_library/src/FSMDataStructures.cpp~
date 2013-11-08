@@ -17,7 +17,7 @@ FSM_struct::FSM_struct(void)
 
 
 
-int FSM_struct::GetNumberOfStates(void)
+int FSM_struct::GetNumberOfStates(void) const
 {
   return states.size();
 }

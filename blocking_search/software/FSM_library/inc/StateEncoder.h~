@@ -17,7 +17,7 @@ public:
   unsigned int UpdateStateWithTransitions( unsigned int currentState, std::vector< std::pair<int, int> > transitions);
   int FindStateIndex( unsigned int currentState, int fsmIndex);
   std::string GenerateStateName( unsigned int currentState );
-    
+  bool CheckForUnmarkedStates( unsigned int currentState ); 
 private:
   std::vector<int> numbits;
   std::vector<int> offset;

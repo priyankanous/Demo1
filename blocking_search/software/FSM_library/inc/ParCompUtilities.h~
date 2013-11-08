@@ -26,14 +26,41 @@ enum Direction{
   BACKWARD = 1
 };
 
+/*
+ * @brief Multiply state spaces of all components
+ * @return worst-case state space
+ */
 unsigned long int GetUpperBoundStateSpace(std::vector<FSM_struct>& FSMArr);
 
+/*
+ * @brief Perform on-the-fly parComp, not storing copy of resulting FSM
+ * @return Number of blocking states
+ */
+unsigned int OnTheFlyParComp( std::vector<FSM_struct> & FSMArray );
+
+/*
+ * @brief The meat of the program. Perform DFS of ParComp
+ *        composite state.
+ * @return Number of states accessed
+ */
 unsigned int DepthFirstSearch(std::vector<FSM_struct>& FSMArr, MemoryManager & memory, 
   EventManager & event, StateEncoder & encoder, unsigned int worstcase, 
   std::string outputDirectory, FSM_struct * fsm, Direction dir );
 
+/*
+ * @brief Perform on-the-fly accessibility search, storing copy
+ *        in file, fsm_struct object, or both
+ * @return number Of States accessed
+ */
 unsigned int FullParCompWithOutput( std::vector<FSM_struct> & FSMArray,  std::string filepath , FSM_struct * fsm);
 
-unsigned int OnTheFlyParComp( std::vector<FSM_struct> & FSMArray );
+/*
+ * @brief Performs accessibility search on graph, printing events which lead to blocking states
+ * @note This is a specialized version of DFS
+ */
+void FindBlockingEvents(std::vector<FSM_struct>& FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates);
+
+
+
 
 #endif

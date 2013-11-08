@@ -22,7 +22,7 @@ const char * EventTypeNamesArray[16] = {
 };
 
 
-EventManager::EventManager(vector<FSM_struct> & FSMArray)
+EventManager::EventManager(const vector<FSM_struct> & FSMArray)
   :encoder(FSMArray)
 {
   //Iterate through each FSM
@@ -132,7 +132,7 @@ void EventManager::AddTransitions(State & state, int fsmIndex, EventTypeMask res
   }
 }
 
-void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<unsigned int, std::string> > & nextStates )
+void EventManager::GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates )
 {
   //Iterate through each event, determining the transitions that must be added
   map<string, Event>::iterator it; 
@@ -153,7 +153,7 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
     else if( (*it).second.UniqueFSMcount == (*it).second.transitions.size() )
     {
       unsigned int newState = encoder.UpdateStateWithTransitions( currentState, (*it).second.transitions );
-			nextStates.push_back( make_pair(newState, it->first) );    
+			nextStates.push_back( Trans(newState, it->first) );    
     }
     
     //In this case, the event has multiple instances, 
@@ -231,7 +231,7 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<pair<un
 				}
 				
         unsigned int newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
-			  nextStates.push_back( make_pair(newState, it->first) ); 
+			  nextStates.push_back( Trans(newState, it->first) ); 
 			}
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     }

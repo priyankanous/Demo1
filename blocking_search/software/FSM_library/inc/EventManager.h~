@@ -43,9 +43,9 @@ struct Event
 class EventManager
 {
 public:
-  EventManager(std::vector<FSM_struct> & FSMArray);
+  EventManager(const std::vector<FSM_struct> & FSMArray);
   void AddTransitions(State & state, int fsmIndex, EventTypeMask restriction);
-  void GetNextStates( unsigned int currentState, std::vector<std::pair<unsigned int, std::string> > & nextStates );
+  void GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates );
   EventTypeMask AssignMask(std::string event);
   
 private:

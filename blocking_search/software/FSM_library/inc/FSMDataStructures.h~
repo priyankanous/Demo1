@@ -23,7 +23,8 @@ public:
 	bool obs;
 	bool con;
 	int mask;
-	Trans(std::string e, unsigned int d)
+	Trans(){};
+	Trans(unsigned int d, std::string e)
 	  :event(e), dest(d), obs(1), con(1), mask(0){};
 };
 
@@ -43,7 +44,7 @@ public:
 	};
 	std::string stateName;
 	std::vector<Trans> transitions;
-	State(std::string& str);
+	State(const std::string& str);
 };
 
 /*
@@ -53,7 +54,7 @@ struct FSM_struct
 {
 public:
 	std::string fsmName;
-	int GetNumberOfStates(void);
+	
 	int numEvents;
 	std::vector<std::string> alphabet;
 	std::vector<State> states;
@@ -61,6 +62,7 @@ public:
 	FSM_struct(void);
 	void addEvent(std::string& str);
 	int getStateIndex(std::string& str);
+	int GetNumberOfStates(void) const;
 };
 
 

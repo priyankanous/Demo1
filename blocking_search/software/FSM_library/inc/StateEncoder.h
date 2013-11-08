@@ -12,7 +12,7 @@
 class StateEncoder
 {
 public:
-  StateEncoder( std::vector<FSM_struct> & FSMArray );
+  StateEncoder( const std::vector<FSM_struct> & FSMArray );
   unsigned int StatesToEncodedValue( std::vector<int> & states );
   unsigned int UpdateStateWithTransitions( unsigned int currentState, std::vector< std::pair<int, int> > transitions);
   int FindStateIndex( unsigned int currentState, int fsmIndex);
