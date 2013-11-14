@@ -34,7 +34,7 @@ void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
 }
 
 
-void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<string,string> specialEvent, string & titleAppend)
+void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<EventTypeMask,string> specialEvent, string & titleAppend)
 {
   /****************For use with UMDES conventions **********************
    *
@@ -49,13 +49,16 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
     
     for(int i=0; i<nextStates.size(); i++)
     {
-      outfile << nextStates[i].event << "\t"<< nextStates[i].dest;
-      if(nextStates[i].mask)
+      if(nextStates[i].mask != NO_EVENTS_MASK)
       {
-        outfile << specialEvent.second;
+        outfile << nextStates[i].event << "\t"<< nextStates[i].dest;
+        if(nextStates[i].mask == specialEvent.first)
+        {
+          outfile << specialEvent.second;
+        }
+        outfile << "\t";
+        outfile << "c\to" << endl;
       }
-      outfile << "\t";
-      outfile << "c\to" << endl;
     }
   }
   /*******************************************************************/
@@ -68,26 +71,22 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
   if(SPECIAL_EVENTS_FORMAT)
   {
     outfile << encoder.GenerateStateName( currentState ) << titleAppend << "\t";
-    if(marked)
-    {
-      outfile << 1 << "\t";
-    }
-    else
-    {
-      outfile << 0 << "\t";
-    }
+    outfile << (marked?1:0) << "\t"; 
     outfile << nextStates.size() << "\t" << endl;
     
     for(int i=0; i<nextStates.size(); i++)
     {
-      outfile << nextStates[i].event << "\t";
-      outfile << encoder.GenerateStateName( nextStates[i].dest );
-      if(!nextStates[i].event.compare(specialEvent.first))
+      if(nextStates[i].mask != NO_EVENTS_MASK)
       {
-        outfile << specialEvent.second;
+        outfile << nextStates[i].event << "\t";
+        outfile << encoder.GenerateStateName( nextStates[i].dest );
+        if(nextStates[i].mask == specialEvent.first)
+        {
+          outfile << specialEvent.second;
+        }
+        outfile << "\t";
+        outfile << "c\to" << endl;
       }
-      outfile << "\t";
-      outfile << "c\to" << endl;
     } 
   }
   /*******************************************************************/

@@ -61,6 +61,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   memory.LimitSearchSpaceOfCreatedStates();
   memory.ClearStatistics();
   
+  MemoryManager mem_inv(InverseArray);
   EventManager event_inv(InverseArray);
   StateEncoder encoder_inv(InverseArray);
   
@@ -118,6 +119,13 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
   unsigned int worstcase, string outputDirectory,  FSM_struct * fsm, Direction dir)
 {
   int numberFSMs = FSMArray.size();
+
+/* SPECIAL REQUEST FOR YI-CHIN
+string s = "temp1trevC";
+assert( !s.compare(FSMArray[6].fsmName) );
+unsigned int specialCounter = 0;
+cout << endl << "WARNING: SEARCH IS WRITING ONLY SPECIAL STATES TO FILE."<<endl<<endl;
+*/
 
   /********* Open file if one is included *************/
   ofstream outfile;
@@ -180,7 +188,7 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 
   //Exception states to be accounted for after search
   map<unsigned int, State> specialStates;
-  const pair<string,string> specialEvent = make_pair((dir == FORWARD)?"DDC":"DC", (dir == FORWARD)?"_DDC":"_DC");
+  const pair<EventTypeMask,string> specialEvent = make_pair((dir == FORWARD)?DC_EVENT:DDC_EVENT, (dir == FORWARD)?"_DDC":"_DC");
 	
 	//Initialize Stack
 	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	
@@ -205,16 +213,29 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 		    //  Otherwise, assign mask VARIABLE_EVENT, only considering lowercase events 
 		    //  In a coaccessibility search, the same rules apply, but DDC should never be allowed
 		    //  without being preceded by a DC
-		    currentMarked = !encoder.CheckForUnmarkedStates(currentState);
-		    if(dir == FORWARD)
+		    
+		    if(dir == FORWARD){
+		      currentMarked = !encoder.CheckForUnmarkedStates(currentState);
 		      currentMask = ( currentMarked ? ALL_EVENTS_MASK : VARIABLE_EVENT );
-		    else if(dir == BACKWARD)
-		      currentMask = ( currentMarked ? NOT_DDC_MASK : DC_AND_VAR_MASK );	      
+		    }
+		    else if(dir == BACKWARD){
+		      //  Marked status of current state does not matter. 
+		      //  DDC shall not occur.
+		      //  Transitions to unmarked states with exogenous events will be disallowed.
+		      //  This check is performed once states are generated.
+		      currentMarked = !encoder.CheckForUnmarkedStates(currentState);
+		      currentMask = NOT_DDC_MASK;	   
+		    }   
 		    break;
 		 
 		  case DC_EVENT:
 		    //  This state was reached in an accessibility search by event DDC,
 		    //  only event DC is allowed to occur.
+		    if(dir == BACKWARD){
+		      cerr << "A DC-only mask was pulled off the stack in a coaccessibility search."<<endl;
+		      cerr << "This is disallowed. Search has been corrupted at state "<< currentState<<". Exiting.";
+		      exit(1);
+		    }
 		    currentMarked = false;
 		    titleAppend = "_DDC";
 		    break;
@@ -222,6 +243,11 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 		  case DDC_EVENT:
 		    //  This state was reached in a co-accessibility search by event DC,
 		    //  only event DDC is allowed to occur
+		    if(dir == FORWARD){
+		      cerr << "A DDC-only mask was pulled off the stack in an accessibility search."<<endl;
+		      cerr << "This is disallowed. Search has been corrupted at state "<< currentState<<". Exiting.";
+		      exit(1);
+		    }
 		    currentMarked = false;
 		    titleAppend = "_DC";
 		    break;
@@ -260,7 +286,6 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
       {
         if(!nextStates[i].event.compare("DDC"))
         {
-
           memory.PushOnStack(nextStates[i].dest, DC_EVENT);
           nextStates[i].mask = DC_EVENT;
         }
@@ -285,12 +310,54 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
           newTrans.mask = DDC_EVENT;
           nextStates.push_back(newTrans);    
         }
+        else if (event.GetEventMask(nextStates[i].event) == EXOGENOUS_EVENT)
+        {
+          //If the destination is an unmarked state, no exogenous event should reach it
+          if( encoder.CheckForUnmarkedStates(nextStates[i].dest) )
+          {
+            nextStates[i].mask = NO_EVENTS_MASK;
+          }
+          else
+          {
+            memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);
+          }
+        }
         else
         {
           memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK); 
         }
       } 
     }      
+    /*
+    cout << "Current State: ";
+    for(int j=0; j<FSMArray.size(); j++)
+    {
+      cout << hex << setw(3) << setfill('0') << encoder.FindStateIndex(currentState, j) << " ";
+    } 
+    cout << endl << "Transitions: "<<endl;
+    for(int i=0; i<nextStates.size(); i++)
+    {
+      cout << ' ' << setw(10) << setfill(' ') << nextStates[i].event << ' ';
+      for(int j=0; j<FSMArray.size(); j++)
+      {
+        cout << hex << setw(3) << setfill('0') << encoder.FindStateIndex(nextStates[i].dest, j) << " ";
+      }
+      cout << endl;
+    }
+    char c;
+    cin >> c;*/
+    
+/* SPECIAL REQUEST FOR YI-CHIN
+//Is the temp1trevC.fsm in q1265,q2745?
+string s = "temp1trevC";
+assert( !s.compare(FSMArray[6].fsmName) );
+bool specialFlag = false;
+if(!FSMArray[6].states[encoder.FindStateIndex(currentState, 6)].stateName.compare("q1265,q2745"))
+{
+  specialCounter++;
+  specialFlag = true;
+}
+*/
     
     //Write current state to .FSM file
     if( outfile.is_open() )
@@ -329,6 +396,12 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 	//Add number of states to the top of the file
 	if(outfile.is_open()){
     outfile.seekp(0, ios::beg);
+    
+/* SPECIAL REQUEST FOR YI-CHIN
+string s = "temp1trevC";
+assert( !s.compare(FSMArray[6].fsmName) );
+*/
+
     outfile << setw(8) << counter;
     outfile.close();
   }  
@@ -404,7 +477,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
 
   //Exception states to be accounted for after search
   map<unsigned int, State> specialStates;
-  const pair<string,string> specialEvent = make_pair("DDC","_DDC");
+  const pair<EventTypeMask,string> specialEvent = make_pair(DC_EVENT,"_DDC");
 	
 	//Initialize Stack
 	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	

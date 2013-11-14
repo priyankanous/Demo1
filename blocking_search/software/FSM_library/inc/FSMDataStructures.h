@@ -25,7 +25,7 @@ public:
 	int mask;
 	Trans(){};
 	Trans(unsigned int d, std::string e)
-	  :event(e), dest(d), obs(1), con(1), mask(0){};
+	  :event(e), dest(d), obs(1), con(1), mask(15){};
 };
 
 

@@ -44,9 +44,10 @@ class EventManager
 {
 public:
   EventManager(const std::vector<FSM_struct> & FSMArray);
-  void AddTransitions(State & state, int fsmIndex, EventTypeMask restriction);
+  void AddTransitions(const State & state, int fsmIndex, EventTypeMask restriction);
   void GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates );
-  EventTypeMask AssignMask(std::string event);
+  EventTypeMask GetEventMask(std::string event);
+  EventTypeMask
   
 private:
   std::map<std::string, int> EventFrequency;

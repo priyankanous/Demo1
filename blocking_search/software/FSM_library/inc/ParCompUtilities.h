@@ -13,6 +13,7 @@
 #include <bitset>
 #include <cmath>
 #include <map>
+#include <assert.h>
 
 #include "FSMDataStructures.h"
 #include "MemoryManager.h"

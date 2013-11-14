@@ -33,7 +33,7 @@ EventManager::EventManager(const vector<FSM_struct> & FSMArray)
 		{
 		  string eventName = FSMArray[i].alphabet[j];
 		  
-		  EventTypeMask mask = AssignMask(eventName);
+		  EventTypeMask mask = AssignEventMask(eventName);
 		  
 		  //Look for event name in frequency map
 			map<string, int>::iterator it = EventFrequency.find(eventName);
@@ -62,7 +62,7 @@ EventManager::EventManager(const vector<FSM_struct> & FSMArray)
 	
 }
 
-EventTypeMask EventManager::AssignMask(string eventString)
+EventTypeMask EventManager::AssignEventMask(const string & eventString)
 {
   const char * event = eventString.c_str();
   
@@ -87,6 +87,24 @@ EventTypeMask EventManager::AssignMask(string eventString)
     return VARIABLE_EVENT;
   }
 }
+
+
+/*
+ * @brief Return the event mask stored for a given event
+ *        Exits if event not found
+ * @return EventTypeMask of given event
+ */ 
+EventTypeMask EventManager::GetEventMask(const string & eventString)
+{
+  map<string, EventTypeMask>::iterator it = EventTypeMap.find(eventString);
+  if( it != EventTypeMap.end() )
+  {
+    return EventTypeMap.find(eventString)->second;
+  }
+  cerr << "Requested event: " << eventString << " not found in event map. Exiting."<< endl;
+  exit(1);
+}
+
 
 void EventManager::AddTransitions(const State & state, int fsmIndex, EventTypeMask restriction)
 {
