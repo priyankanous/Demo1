@@ -52,11 +52,15 @@ int main(int argc, char * argv[])
     tempArray.push_back(FSMArray[nextFSMs.second]);
 
     FSM_struct fsm;
-    unsigned int totalStatesAccessed = FullParCompWithOutput(tempArray, "", &fsm);
+    unsigned int totalStatesAccessed = FullParCompWithOutput(tempArray, "composed", &fsm);
        
     FSMArray.erase(FSMArray.begin()+ max(nextFSMs.first, nextFSMs.second));
     FSMArray.erase(FSMArray.begin()+ min(nextFSMs.first, nextFSMs.second));
     
+ofstream outfile;
+outfile.open("composed2.fsm");
+printFSM(fsm, outfile, 0);
+
     FSMArray.push_back(fsm);
     
   }
@@ -67,6 +71,8 @@ int main(int argc, char * argv[])
   
   return 0;
 }
+
+
 
 
 

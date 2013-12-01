@@ -2,11 +2,32 @@
 
 using namespace std;
 
-pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned int UpperBound, bool printMap)
+pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned long int UpperBound, bool printMap)
 {
   vector< vector<int> > sharedEvents;
   int bestMetric = 0, bestStateSpace = 0;
   pair<int, int> bestFSMs = make_pair(-1, -1);
+/*  
+  //~~~~~~~~Find union of all events~~~~~~~~~~~~
+  vector<string> allEvents;
+  for(int i=1; i<FSMArray.size(); i++)
+  {
+    vector<string> temp(allEvents.size() + FSMArray[i].alphabet.size());
+    sort(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end());
+    vector<string>::iterator it = set_union(allEvents.begin(), 
+                                            allEvents.end(),
+                                            FSMArray[i].alphabet.begin(), 
+                                            FSMArray[i].alphabet.end(),
+                                            temp.begin());
+    temp.resize(it-temp.begin());
+    allEvents = temp;
+  }
+  for(int i=0; i<allEvents.size(); i++)
+  {
+    cout << allEvents[i] << " 0 c o" << endl;
+  }
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/ 
   
   if(printMap) 
   {
@@ -73,12 +94,15 @@ pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned int Uppe
       row.push_back(sharedEvents); 
       if(sharedEvents > bestMetric)
       {
-        unsigned int statespace = FSMArray[i].GetNumberOfStates() * FSMArray[j].GetNumberOfStates();
-        if( statespace <= UpperBound )
-        {
-          bestStateSpace = statespace;
-          bestMetric = sharedEvents;
-          bestFSMs = make_pair(i, j);
+        if( find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "DDC") == FSMArray[i].alphabet.end() && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "DDC") == FSMArray[j].alphabet.end() )
+        {  
+          unsigned int statespace = FSMArray[i].GetNumberOfStates() * FSMArray[j].GetNumberOfStates();
+          if( statespace <= UpperBound )
+          {
+            bestStateSpace = statespace;
+            bestMetric = sharedEvents;
+            bestFSMs = make_pair(i, j);
+          }
         }
       }
     }

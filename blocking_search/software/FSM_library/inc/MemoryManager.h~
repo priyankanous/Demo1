@@ -18,7 +18,7 @@
 /* This number is needed at compile time.
  * It will vary based on your system constraints and state space.
  */
-#define WORSTCASE_NUMBER_OF_STATES 1800000000
+#define WORSTCASE_NUMBER_OF_STATES 5200000000UL
 
 /*
  * Structure for storing search data about special state
@@ -80,7 +80,7 @@ private:
 
 public:
   /* Object management */
-  MemoryManager(std::vector<FSM_struct> & FSMArray);
+  MemoryManager(const std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
   std::unordered_map<unsigned int, SpecialState> stateMasks;
   

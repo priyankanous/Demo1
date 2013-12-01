@@ -18,7 +18,7 @@
 /* This number is needed at compile time.
  * It will vary based on your system constraints and state space.
  */
-#define WORSTCASE_NUMBER_OF_STATES 1800000000
+#define WORSTCASE_NUMBER_OF_STATES 4294967296
 
 /*
  * Structure for storing search data about special state

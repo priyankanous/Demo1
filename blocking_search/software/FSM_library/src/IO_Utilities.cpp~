@@ -49,13 +49,16 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
     
     for(int i=0; i<nextStates.size(); i++)
     {
-      outfile << nextStates[i].event << "\t"<< nextStates[i].dest;
-      if(nextStates[i].mask == specialEvent.first)
+      if(nextStates[i].mask != NO_EVENTS_MASK)
       {
-        outfile << specialEvent.second;
+        outfile << nextStates[i].event << "\t"<< nextStates[i].dest;
+        if(nextStates[i].mask == specialEvent.first)
+        {
+          outfile << specialEvent.second;
+        }
+        outfile << "\t";
+        outfile << "c\to" << endl;
       }
-      outfile << "\t";
-      outfile << "c\to" << endl;
     }
   }
   /*******************************************************************/
@@ -93,74 +96,39 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
 }
 
 
-void AddStateToFSM( unsigned int currentState, vector<pair<unsigned int, string> > & nextStates, bool marked, FSM_struct * fsm, StateEncoder & encoder, pair<string,string> specialEvent, bool special)
+void AddStateToFSM( unsigned int currentState, vector<Trans> & nextStates, bool marked, FSM_struct * fsm, StateEncoder & encoder, pair<EventTypeMask,string> specialEvent, string & titleAppend)
 {
-  if(UMDES_PRINT_FORMAT)
+  //Name state
+  string statename = encoder.GenerateStateName(currentState); 
+  statename += titleAppend;
+  
+  //Get (or assign) state index  
+  int stateindex = fsm->getStateIndex(statename);
+  fsm->states[stateindex].marked = marked;
+  
+  //Populate with transitions
+  for(int i=0; i<nextStates.size(); i++)
   {
-    string statename = encoder.GenerateStateName(currentState); 
-    if(special) 
+    if(nextStates[i].mask != NO_EVENTS_MASK)
     {
-      statename += specialEvent.second;
-    }
-     
-    int stateindex = fsm->getStateIndex(statename);
-    fsm->states[stateindex].marked = marked;
-    
-    for(int i=0; i<nextStates.size(); i++)
-    {
-      string nextname = encoder.GenerateStateName( nextStates[i].first );
-      if(!nextStates[i].second.compare(specialEvent.first))
+      string nextname = encoder.GenerateStateName( nextStates[i].dest );
+      if(nextStates[i].mask == specialEvent.first)
       {
         nextname += specialEvent.second;
       }
       
       Trans trans;
-      trans.event = nextStates[i].second;
+      trans.event = nextStates[i].event;
       trans.dest = fsm->getStateIndex(nextname);
       trans.obs = true;
       trans.con = true;
       
       //Add eventName to alphabet if necessary
       fsm->addEvent(trans.event);
-				
-      fsm->states[stateindex].transitions.push_back(trans); 
-    } 
-  }
-  
-  if(SPECIAL_EVENTS_FORMAT)
-  {
-    stringstream ss;
-    ss << currentState;
-          
-    if(special) 
-    {
-      ss << specialEvent.second;
-    }
-    string statename = ss.str();
-    int stateindex = fsm->getStateIndex(statename);
-    fsm->states[stateindex].marked = !currentState;
-    
-    for(int i=0; i<nextStates.size(); i++)
-    {
-      stringstream ns;
-      ns <<  nextStates[i].first;
-      if(!nextStates[i].second.compare(specialEvent.first))
-      {
-        ns << specialEvent.second;
-      }
-      statename = ns.str();
-      Trans trans;
-      trans.event = nextStates[i].second;
-      trans.dest = fsm->getStateIndex(statename);
-      trans.obs = true;
-      trans.con = true;
-      
-      //Add eventName to alphabet if necessary
-      fsm->addEvent(trans.event);
 			
-      fsm->states[stateindex].transitions.push_back(trans);
+      fsm->states[stateindex].transitions.push_back(trans); 
     }
-  }
+  } 
 }
 
 

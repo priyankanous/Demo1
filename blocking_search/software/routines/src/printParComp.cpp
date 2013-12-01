@@ -35,13 +35,17 @@ int main(int argc, char * argv[])
     
     unsigned long int stateSpace = GetUpperBoundStateSpace(FSMArray);
     cout <<"GB currently needed: "<< (stateSpace >> 30) << endl;
-    cout << nextFSMs.first << "\t" << nextFSMs.second << "\t" << stateSpace << endl;
     
     if((nextFSMs.first == -1) || ((stateSpace>>30) < 4) )
     {
       cout << "Memory is now sufficent to perform on-the-fly composition." << endl;
       break;
-    }    
+    }
+    else
+    {
+      cout << FSMArray[nextFSMs.first].fsmName << " and " << FSMArray[nextFSMs.second].fsmName;
+      cout << " will be composed." << endl; 
+    }
     
     vector<FSM_struct> tempArray;
     tempArray.push_back(FSMArray[nextFSMs.first]);
@@ -53,17 +57,11 @@ int main(int argc, char * argv[])
     FSMArray.erase(FSMArray.begin()+ max(nextFSMs.first, nextFSMs.second));
     FSMArray.erase(FSMArray.begin()+ min(nextFSMs.first, nextFSMs.second));
     
-    FSMArray.push_back(fsm);
-    
+    FSMArray.push_back(fsm);   
   }
   
   //Temp output 
   FullParCompWithOutput(FSMArray, "./", NULL);
-/*  
-  cout << "Starting ON-THE-FLY parcomp with "<< FSMArray.size() << " remaining FSMs" << endl;
-  unsigned int totalBlockingStatesFound = OnTheFlyParComp(FSMArray);
-  cout << "PARCOMP complete. " << totalBlockingStatesFound << " blocking states found." << endl;
-*/
   
   return 0;
 }

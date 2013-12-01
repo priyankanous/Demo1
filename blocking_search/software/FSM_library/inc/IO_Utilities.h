@@ -32,9 +32,9 @@ void WriteStateToFile( unsigned int currentState,
                       std::pair<EventTypeMask, std::string>, std::string & titleAppend);
 
 void AddStateToFSM( unsigned int currentState, 
-                    std::vector<std::pair<unsigned int, std::string> > & nextStates, 
-                    bool marked, FSM_struct * fsm, StateEncoder & encoder,
-                    std::pair<std::string, std::string>, bool special);
+                      std::vector<Trans> & nextStates, 
+                      bool marked, FSM_struct * fsm, StateEncoder & encoder, 
+                      std::pair<EventTypeMask, std::string>, std::string & titleAppend);
                       
 void InvertTransitions( const std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
 

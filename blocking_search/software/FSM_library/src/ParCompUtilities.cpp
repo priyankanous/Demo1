@@ -70,7 +70,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   memory.PrintStatistics();
   
   memory.FlipBits();
-  unsigned int numberOfBlockingEvents = memory.GetNumberOfSetBits();
+  unsigned int numberOfBlockingStates = memory.GetNumberOfSetBits() + memory.GetNumberOfUnsetCreatedStates();
   cout << "~~~~~~~~~~~~~" << endl << endl;
   /************************************************************/
   
@@ -85,7 +85,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   
   /************************************************************/
   
-  return numberOfBlockingEvents;
+  return numberOfBlockingStates;
         
 }
 
@@ -120,15 +120,12 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 {
   int numberFSMs = FSMArray.size();
 
-/* SPECIAL REQUEST FOR YI-CHIN
-string s = "temp1trevC";
-assert( !s.compare(FSMArray[6].fsmName) );
-unsigned int specialCounter = 0;
-cout << endl << "WARNING: SEARCH IS WRITING ONLY SPECIAL STATES TO FILE."<<endl<<endl;
-*/
 
   /********* Open file if one is included *************/
-  ofstream outfile;
+  ofstream outfile;  
+  ofstream log;
+  unsigned int DeadlockCount=0;
+  
   if( !outputDirectory.empty() )
   {
     //~~~~Generate fsmName~~~~~~~~~~~~~~~~~~~~~/
@@ -147,7 +144,21 @@ cout << endl << "WARNING: SEARCH IS WRITING ONLY SPECIAL STATES TO FILE."<<endl<
     }
     else
       outfile << setw(8) << "CORRUPT" << endl << endl;
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/  
+    
+    //~~~~~~~~~~~~~ Open deadlock log ~~~~~~~~~~/
+    if( dir == FORWARD )
+    {
+      string logfilename = (filename + "-deadlockStates.txt");
+      log.open(logfilename.c_str());
+      if(!log.is_open())
+        cerr << "log.txt failed to open!" << endl;
+      else{
+        log << setw(8) << "CORRUPT";
+        log << " dead-end states found." << endl << endl;
+      }
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   }
   /******************************************************/
   
@@ -162,20 +173,7 @@ cout << endl << "WARNING: SEARCH IS WRITING ONLY SPECIAL STATES TO FILE."<<endl<
     fsm->fsmName = name;    
   }
   /******************************************************/
-  
-  /****** Open Log File to Store Information ************/
-  ofstream log;
-  unsigned int DeadlockCount=0;
-  string logfilename = (dir==FORWARD ? "log-acc.txt":"log-coacc.txt");
-  log.open(logfilename.c_str());
-  if(!log.is_open())
-    cerr << "log.txt failed to open!" << endl;
-  else{
-    log << setw(8) << "CORRUPT";
-    log << " dead-end states found." << endl << endl;
-  }
-  /******************************************************/
-  
+ 
   
   //Count the number of intially set bits
   unsigned int InitialBitCount = memory.GetNumberOfSetBits();
@@ -328,36 +326,6 @@ cout << endl << "WARNING: SEARCH IS WRITING ONLY SPECIAL STATES TO FILE."<<endl<
         }
       } 
     }      
-    /*
-    cout << "Current State: ";
-    for(int j=0; j<FSMArray.size(); j++)
-    {
-      cout << hex << setw(3) << setfill('0') << encoder.FindStateIndex(currentState, j) << " ";
-    } 
-    cout << endl << "Transitions: "<<endl;
-    for(int i=0; i<nextStates.size(); i++)
-    {
-      cout << ' ' << setw(10) << setfill(' ') << nextStates[i].event << ' ';
-      for(int j=0; j<FSMArray.size(); j++)
-      {
-        cout << hex << setw(3) << setfill('0') << encoder.FindStateIndex(nextStates[i].dest, j) << " ";
-      }
-      cout << endl;
-    }
-    char c;
-    cin >> c;*/
-    
-/* SPECIAL REQUEST FOR YI-CHIN
-//Is the temp1trevC.fsm in q1265,q2745?
-string s = "temp1trevC";
-assert( !s.compare(FSMArray[6].fsmName) );
-bool specialFlag = false;
-if(!FSMArray[6].states[encoder.FindStateIndex(currentState, 6)].stateName.compare("q1265,q2745"))
-{
-  specialCounter++;
-  specialFlag = true;
-}
-*/
     
     //Write current state to .FSM file
     if( outfile.is_open() )
@@ -366,10 +334,10 @@ if(!FSMArray[6].states[encoder.FindStateIndex(currentState, 6)].stateName.compar
     }
         
     //Add state to new FSM
-    /*if( fsm )
+    if( fsm )
     {
-      AddStateToFSM( currentState, nextStates, currentMarked, fsm, encoder, specialEvent, 0 );
-    }*/
+      AddStateToFSM( currentState, nextStates, currentMarked, fsm, encoder, specialEvent, titleAppend );
+    }
     
     //Update stack statistics
     counter++;
@@ -396,12 +364,6 @@ if(!FSMArray[6].states[encoder.FindStateIndex(currentState, 6)].stateName.compar
 	//Add number of states to the top of the file
 	if(outfile.is_open()){
     outfile.seekp(0, ios::beg);
-    
-/* SPECIAL REQUEST FOR YI-CHIN
-string s = "temp1trevC";
-assert( !s.compare(FSMArray[6].fsmName) );
-*/
-
     outfile << setw(8) << counter;
     outfile.close();
   }  
@@ -419,28 +381,15 @@ assert( !s.compare(FSMArray[6].fsmName) );
 
 
 /*
- * @brief Performs accessibility search on graph, printing events which lead to blocking states
+ * @brief Performs accessibility search on graph,
+          - Prints non-blocking portion of graph to ,,,.fsm
+          - Prints events which lead to blocking states to blocking-events.txt
+          - Prints blocking states to blocking.fsm
  * @note This is a specialized version of DFS
  */
 void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates)
 {
   int numberFSMs = FSMArray.size();
-
-  /****** Open Log File to Print Blocking Events ************/
-  ofstream log;
-  unsigned int BlockingEventsFound=0, SpecialBlockingEventsFound=0;
-  
-  log.open("blocking-events.txt");
-  if(!log.is_open())
-    cerr << "blocking-events.txt failed to open!" << endl;
-  else{
-    log << setw(8) << "CORRUPT";
-    log << " blocking events found." << endl << endl;
-  }
-  /******************************************************/
-  
-  /********* Open file if one is included *************/
-  ofstream outfile;
 
   //~~~~Generate fsmName~~~~~~~~~~~~~~~~~~~~~/
   string filename;
@@ -450,14 +399,45 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
   filename.erase(filename.end()-1);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   
+  /****** Open Log File to Print Blocking Events ************/
+  ofstream log;
+  unsigned int BlockingEventsFound=0, SpecialBlockingEventsFound=0;
+  
+  string filepath = filename + "-blockingEvents.txt";
+  log.open(filepath.c_str());
+  if(!log.is_open())
+    cerr << "blocking-events.txt failed to open!" << endl;
+  else{
+    log << setw(8) << "CORRUPT";
+    log << " blocking events found." << endl << endl;
+  }
+  /******************************************************/
+  
+  /********* Open file for non-blocking *************/
+  ofstream nonBlockingFile;
   //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
-  string filepath = filename + "-nonBlocking.fsm";
-  outfile.open(filepath.c_str());
-  if(!outfile.is_open()){
+  filepath = filename + "-nonBlocking.fsm";
+  nonBlockingFile.open(filepath.c_str());
+  if(!nonBlockingFile.is_open()){
     cerr << "File "<< filepath << " failed to open!" << endl;
   }
   else
-    outfile << setw(8) << "CORRUPT" << endl << endl;
+    nonBlockingFile << setw(8) << "CORRUPT" << endl << endl;
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  
+  /******************************************************/
+  
+  /********* Open file for blocking *************/
+  ofstream blockingFile;
+
+  //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+  filepath = filename + "-Blocking.fsm";
+  blockingFile.open(filepath.c_str());
+  if(!blockingFile.is_open()){
+    cerr << "File "<< filepath << " failed to open!" << endl;
+  }
+  else
+    blockingFile << setw(8) << "CORRUPT" << endl << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   
   /******************************************************/
@@ -472,12 +452,12 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
 	unsigned currentState = 0;
-	unsigned int counter = 0;
+	unsigned int counter = 0, nonBlockingCounter = 0, blockingCounter = 0;
 	unsigned int maxStackSize = 0;
 
   //Exception states to be accounted for after search
   map<unsigned int, State> specialStates;
-  const pair<EventTypeMask,string> specialEvent = make_pair(DC_EVENT,"_DDC");
+  const pair<EventTypeMask,string> specialEvent = make_pair(DC_EVENT , "_DDC");
 	
 	//Initialize Stack
 	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	
@@ -512,13 +492,6 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
 		    currentMarked = false;
 		    titleAppend = "_DDC";
 		    break;
-		    
-		  case DDC_EVENT:
-		    //  This state was reached in a co-accessibility search by event DC,
-		    //  only event DDC is allowed to occur
-		    currentMarked = false;
-		    titleAppend = "_DC";
-		    break;
 		  
 		  default:
 		    //  This state should not be reached in the current implementation
@@ -541,50 +514,66 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
 		vector<Trans> nextStates, goodStates;
     event.GetNextStates( currentState, nextStates );
     
+    //Determine if current state is blocking
+    bool CurrentStateIsBlocking;
+    if(currentMask == DC_EVENT)
+    {
+      CurrentStateIsBlocking = !(blockingStates.stateMasks.find(currentState)->second.accessed);
+    }
+    else
+    {
+      CurrentStateIsBlocking = blockingStates.GetBit(currentState);
+    }
+    
     //Push next states onto stack
     for( int i=0; i<nextStates.size(); i++)
     {
-      //If next state is blocking, print and do not push it.
-      /*if(blockingStates.IsBlockingState(nextStates[i].dest, nextStates[i].event))
-      {
-        log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
-        log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest);
-        if(!nextStates[i].event.compare("DDC")) log << "_DDC" << endl;
-        
-        nextStates.erase(nextStates.begin() + i );
-        i--;
-      }*/
       if(!nextStates[i].event.compare("DDC"))
       {
-        if (blockingStates.stateMasks.find(nextStates[i].dest)->second.accessed == false){
-          log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
-          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) << endl;
+        //This is a DDC transition from a non-blocking portion to a blocking portion of the graph
+        if ( !CurrentStateIsBlocking && (blockingStates.stateMasks.find(nextStates[i].dest)->second.accessed == false) )
+        {
+          log << "\t" << encoder.GenerateStateName(currentState) << "\t";
+          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) <<"_DDC" << endl;
           SpecialBlockingEventsFound++;
         }
-        else{
-          memory.PushOnStack(nextStates[i].dest, DC_EVENT);
+        else
+        { //This is a DDC transition within the blocking subgraph or within the non-blocking subgraph
           nextStates[i].mask = DC_EVENT;
           goodStates.push_back(nextStates[i]);
         }
+        
+        memory.PushOnStack(nextStates[i].dest, DC_EVENT);
       }
+      
       else
       {
-        if (blockingStates.GetBit(nextStates[i].dest)){
+        //This is a transition from a non-blocking portion to a blocking portion of the graph
+        if ( !CurrentStateIsBlocking && blockingStates.GetBit(nextStates[i].dest) )
+        {
           BlockingEventsFound++;
-          log <<setw(8)<<setfill('0')<< currentState << "\t" << encoder.GenerateStateName(currentState) << "\t";
+          log << "\t" << encoder.GenerateStateName(currentState) << "\t";
           log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) << endl;
         }
-        else{
-          memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);
+        else
+        { //This is a transition within the blocking subgraph or within the non-blocking subgraph
           goodStates.push_back(nextStates[i]);
         }
+        
+        memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);
       }
     }     
     
-    //Write current state to .FSM file
-    if( outfile.is_open() )
+    //Write current state to .FSM files
+    if( !CurrentStateIsBlocking && nonBlockingFile.is_open() )
     {
-      WriteStateToFile( currentState, goodStates, currentMarked, outfile, encoder, specialEvent, titleAppend );
+      nonBlockingCounter++;
+      WriteStateToFile( currentState, goodStates, currentMarked, nonBlockingFile, encoder, specialEvent, titleAppend );
+    }
+    else if( CurrentStateIsBlocking && blockingFile.is_open() )
+    {
+      blockingCounter++;
+      WriteStateToFile( currentState, nextStates, currentMarked, blockingFile, encoder, specialEvent, titleAppend );
     }
     
     //Update stack statistics
@@ -619,11 +608,18 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
   }
   
   //Add number of states to the top of the file
-	if(outfile.is_open()){
-    outfile.seekp(0, ios::beg);
-    outfile << setw(8) << counter;
-    outfile.close();
+	if(nonBlockingFile.is_open()){
+    nonBlockingFile.seekp(0, ios::beg);
+    nonBlockingFile << setw(8) << nonBlockingCounter;
+    nonBlockingFile.close();
   }  
+  
+  //Add number of states to the top of the file
+	if(blockingFile.is_open()){
+    blockingFile.seekp(0, ios::beg);
+    blockingFile << setw(8) << blockingCounter;
+    blockingFile.close();
+  } 
   
 }
 
