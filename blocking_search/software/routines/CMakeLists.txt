@@ -28,6 +28,11 @@ target_link_libraries(PrintParComp
   FSM_library
 )
 
+add_executable(DivideEvents src/division.cpp)
+target_link_libraries(DivideEvents
+  FSM_library
+)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 

@@ -1,0 +1,148 @@
+      34
+
+7,WAidle	0	1	
+s_ula1	19,WAidle	c	o
+
+4,WAidle	0	1	
+s_uld1	19,WAidle	c	o
+
+19,WAidle	0	1	
+s_retry1_t	9,WAidle	c	o
+
+11,WAidle	0	1	
+s_lad1	28,WAidle	c	o
+
+9,WAidle	0	1	
+s_fsext1_t	PEextScan,WAidle	c	o
+
+PEidle,7	0	1	
+s_wlks2_t	PEidle,8	c	o
+
+28,WAidle	0	1	
+s_fsreg1_t	PEintScan,WAidle	c	o
+
+PEextScan,WAidle	1	5	
+DA	PEextScan,1	c	o
+DC	PEextScan,3	c	o
+LSTMO	PEextScan,WAidle	c	o
+MTMO	PEextScan,WAidle	c	o
+PTMO	PEextScan,WAidle	c	o
+
+PEintScan,WAidle	1	5	
+DA	PEintScan,1	c	o
+DC	PEintScan,3	c	o
+LSTMO	PEintScan,WAidle	c	o
+MTMO	PEintScan,WAidle	c	o
+PTMO	PEintScan,WAidle	c	o
+
+31,7	0	2	
+c_ula1_t	PEidle,7	c	o
+s_wlks2_t	31,8	c	o
+
+PEidle,8	0	1	
+s_nddwa2	PEidle,WAInitReg	c	o
+
+PEextScan,3	0	2	
+da2	PEextScan,WAidle	c	o
+nda2	PEextScan,4	c	o
+
+31,8	0	2	
+c_ula1_t	PEidle,8	c	o
+s_nddwa2	31,WAInitReg	c	o
+
+PEidle,WAInitReg	1	9	
+DC	PEidle,WAInitReg	c	o
+DDC	31,WAInitReg_DDC	c	o
+EFD2	PEidle,WAInitReg	c	o
+KWTMO	74,WAInitReg	c	o
+MTMO	PEidle,WAInitReg	c	o
+PTMO	PEidle,WAInitReg	c	o
+igoff2	PEidle,WAInitReg	c	o
+nEFD2	PEidle,WAInitReg	c	o
+nddl2	PEidle,WAInitReg	c	o
+
+PEintScan,1	0	2	
+dda2	PEintScan,2	c	o
+ndda2	PEintScan,WAidle	c	o
+
+PEintScan,3	0	2	
+da2	PEintScan,WAidle	c	o
+nda2	PEintScan,4	c	o
+
+PEextScan,1	0	2	
+dda2	PEextScan,2	c	o
+ndda2	PEextScan,WAidle	c	o
+
+PEextScan,4	0	2	
+ddwa2	PEextScan,5	c	o
+nddwa2	PEextScan,WAidle	c	o
+
+31,WAInitReg_DDC	0	1	
+DC	31,WAInitReg	c	o
+
+PEintScan,4	0	2	
+ddwa2	PEintScan,5	c	o
+nddwa2	PEintScan,WAidle	c	o
+
+PEextScan,2	0	1	
+s_ddwa2	PEextScan,WAidle	c	o
+
+31,WAInitReg	0	3	
+c_ula1_t	PEidle,WAInitReg	c	o
+igoff2	31,WAInitReg	c	o
+nddl2	31,WAInitReg	c	o
+
+PEintScan,2	0	1	
+s_ddwa2	PEintScan,WAidle	c	o
+
+74,WAInitReg	0	3	
+igoff2	74,WAInitReg	c	o
+nddl2	74,WAInitReg	c	o
+nkivwarn_f	PEidle,WAInitReg	c	o
+
+PEextScan,5	0	2	
+igoff2	PEextScan,6	c	o
+nigoff2	PEextScan,WAidle	c	o
+
+PEintScan,5	0	2	
+igoff2	PEintScan,6	c	o
+nigoff2	PEintScan,WAidle	c	o
+
+PEextScan,6	0	2	
+ddl2	PEextScan,WAidle	c	o
+nddl2	PEextScan,7	c	o
+
+PEintScan,6	0	2	
+ddl2	PEintScan,WAidle	c	o
+nddl2	PEintScan,7	c	o
+
+PEextScan,7	0	1	
+s_wlks2_t	PEextScan,8	c	o
+
+PEintScan,7	0	1	
+s_wlks2_t	PEintScan,8	c	o
+
+PEextScan,8	0	1	
+s_nddwa2	PEextScan,WAInitReg	c	o
+
+PEintScan,8	0	1	
+s_nddwa2	PEintScan,WAInitReg	c	o
+
+PEextScan,WAInitReg	1	7	
+DC	PEextScan,WAInitReg	c	o
+EFD2	PEextScan,WAInitReg	c	o
+MTMO	PEextScan,WAInitReg	c	o
+PTMO	PEextScan,WAInitReg	c	o
+igoff2	PEextScan,WAInitReg	c	o
+nEFD2	PEextScan,WAInitReg	c	o
+nddl2	PEextScan,WAInitReg	c	o
+
+PEintScan,WAInitReg	1	7	
+DC	PEintScan,WAInitReg	c	o
+EFD2	PEintScan,WAInitReg	c	o
+MTMO	PEintScan,WAInitReg	c	o
+PTMO	PEintScan,WAInitReg	c	o
+igoff2	PEintScan,WAInitReg	c	o
+nEFD2	PEintScan,WAInitReg	c	o
+nddl2	PEintScan,WAInitReg	c	o
+

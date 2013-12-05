@@ -19,6 +19,7 @@
 #include "MemoryManager.h"
 #include "EventManager.h"
 #include "StateEncoder.h"
+#include "DjikstraMemoryManager.h"
 
 #include "IO_Utilities.h"
 
@@ -59,7 +60,7 @@ unsigned int FullParCompWithOutput( const std::vector<FSM_struct> & FSMArray,  s
  * @brief Performs accessibility search on graph, printing events which lead to blocking states
  * @note This is a specialized version of DFS
  */
-void FindBlockingEvents( const std::vector<FSM_struct>& FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates);
+void FindBlockingEvents( const std::vector<FSM_struct>& FSMArray, DjikstraMemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates);
 
 
 

@@ -6,6 +6,26 @@
 
 #IncludeRegexTransform: 
 
+../software/FSM_library/inc/DjikstraMemoryManager.h
+stdlib.h
+-
+iostream
+-
+queue
+-
+unordered_map
+-
+bitset
+-
+string
+-
+iomanip
+-
+FSMDataStructures.h
+../software/FSM_library/inc/FSMDataStructures.h
+EventManager.h
+../software/FSM_library/inc/EventManager.h
+
 ../software/FSM_library/inc/EventManager.h
 vector
 -
@@ -139,6 +159,8 @@ EventManager.h
 ../software/FSM_library/inc/EventManager.h
 StateEncoder.h
 ../software/FSM_library/inc/StateEncoder.h
+DjikstraMemoryManager.h
+../software/FSM_library/inc/DjikstraMemoryManager.h
 IO_Utilities.h
 ../software/FSM_library/inc/IO_Utilities.h
 
@@ -155,6 +177,10 @@ sstream
 -
 FSMDataStructures.h
 ../software/FSM_library/inc/FSMDataStructures.h
+
+/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/DjikstraMemoryManager.cpp
+DjikstraMemoryManager.h
+/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/DjikstraMemoryManager.h
 
 /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/EventManager.cpp
 EventManager.h

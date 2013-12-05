@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -26,48 +25,28 @@ int main(int argc, char * argv[])
 	//Change second parameter to "0" to not print update
 	int worstcase = readFSM(FSMArray, 0, argc, argv);
 	
-
-	bool printFlag = true;
-	while(1)
-	{
-    pair<int, int> nextFSMs = MapCommonEvents(FSMArray, WORSTCASE_NUMBER_OF_STATES, printFlag);
-    printFlag = false;
-    
-    unsigned long int stateSpace = GetUpperBoundStateSpace(FSMArray);
-    cout <<"GB currently needed: "<< (stateSpace >> 30) << endl;
-    
-    if((nextFSMs.first == -1) || ((stateSpace>>30) < 4) )
+  map<string, pair<int,int> > division;
+  
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    for(int j=0; j<FSMArray[i].states.size(); j++)
     {
-      cout << "Memory is now sufficent to perform on-the-fly composition." << endl;
-      break;
+      for(int k=0; k<FSMArray[i].states[j].transitions.size(); k++)
+      {
+        int newdest = FSMArray[i].states[j].transitions[k].dest;
+        string newevent = FSMArray[i].states[j].transitions[k].event;
+        
+        if(FSMArray[i].states[newdest].marked)
+        {
+          division[newevent].first++;
+        }
+        else
+        {
+          division[newevent].second++;
+        }
+      }
     }
-    else
-    {
-      cout << FSMArray[nextFSMs.first].fsmName << " and " << FSMArray[nextFSMs.second].fsmName;
-      cout << " will be composed." << endl; 
-    }
-    
-    vector<FSM_struct> tempArray;
-    tempArray.push_back(FSMArray[nextFSMs.first]);
-    tempArray.push_back(FSMArray[nextFSMs.second]);
-
-    FSM_struct fsm;
-    unsigned int totalStatesAccessed = FullParCompWithOutput(tempArray, "composed", &fsm);
-       
-    FSMArray.erase(FSMArray.begin()+ max(nextFSMs.first, nextFSMs.second));
-    FSMArray.erase(FSMArray.begin()+ min(nextFSMs.first, nextFSMs.second));
-    
-ofstream outfile;
-outfile.open("composed2.fsm");
-printFSM(fsm, outfile, 0);
-
-    FSMArray.push_back(fsm);
-    
   }
- 
-  cout << "Starting ON-THE-FLY parcomp with "<< FSMArray.size() << " remaining FSMs" << endl;
-  unsigned int totalBlockingStatesFound = OnTheFlyParComp(FSMArray);
-  cout << "PARCOMP complete. " << totalBlockingStatesFound << " blocking states found." << endl;
   
   return 0;
 }

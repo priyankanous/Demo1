@@ -113,6 +113,20 @@ BlockingSearch/fast:
 .PHONY : BlockingSearch/fast
 
 # Convenience name for target.
+software/routines/CMakeFiles/DivideEvents.dir/rule:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f CMakeFiles/Makefile2 software/routines/CMakeFiles/DivideEvents.dir/rule
+.PHONY : software/routines/CMakeFiles/DivideEvents.dir/rule
+
+# Convenience name for target.
+DivideEvents: software/routines/CMakeFiles/DivideEvents.dir/rule
+.PHONY : DivideEvents
+
+# fast build rule for target.
+DivideEvents/fast:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/routines/CMakeFiles/DivideEvents.dir/build.make software/routines/CMakeFiles/DivideEvents.dir/build
+.PHONY : DivideEvents/fast
+
+# Convenience name for target.
 software/routines/CMakeFiles/FSMsort.dir/rule:
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f CMakeFiles/Makefile2 software/routines/CMakeFiles/FSMsort.dir/rule
 .PHONY : software/routines/CMakeFiles/FSMsort.dir/rule
@@ -163,6 +177,30 @@ src/blocking.s: src/blocking.cpp.s
 src/blocking.cpp.s:
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/routines/CMakeFiles/BlockingSearch.dir/build.make software/routines/CMakeFiles/BlockingSearch.dir/src/blocking.cpp.s
 .PHONY : src/blocking.cpp.s
+
+src/division.o: src/division.cpp.o
+.PHONY : src/division.o
+
+# target to build an object file
+src/division.cpp.o:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/routines/CMakeFiles/DivideEvents.dir/build.make software/routines/CMakeFiles/DivideEvents.dir/src/division.cpp.o
+.PHONY : src/division.cpp.o
+
+src/division.i: src/division.cpp.i
+.PHONY : src/division.i
+
+# target to preprocess a source file
+src/division.cpp.i:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/routines/CMakeFiles/DivideEvents.dir/build.make software/routines/CMakeFiles/DivideEvents.dir/src/division.cpp.i
+.PHONY : src/division.cpp.i
+
+src/division.s: src/division.cpp.s
+.PHONY : src/division.s
+
+# target to generate assembly for a file
+src/division.cpp.s:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/routines/CMakeFiles/DivideEvents.dir/build.make software/routines/CMakeFiles/DivideEvents.dir/src/division.cpp.s
+.PHONY : src/division.cpp.s
 
 src/printParComp.o: src/printParComp.cpp.o
 .PHONY : src/printParComp.o
@@ -219,6 +257,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... BlockingSearch"
+	@echo "... DivideEvents"
 	@echo "... FSMsort"
 	@echo "... PrintParComp"
 	@echo "... edit_cache"
@@ -226,6 +265,9 @@ help:
 	@echo "... src/blocking.o"
 	@echo "... src/blocking.i"
 	@echo "... src/blocking.s"
+	@echo "... src/division.o"
+	@echo "... src/division.i"
+	@echo "... src/division.s"
 	@echo "... src/printParComp.o"
 	@echo "... src/printParComp.i"
 	@echo "... src/printParComp.s"

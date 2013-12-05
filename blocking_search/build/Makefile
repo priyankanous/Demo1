@@ -125,6 +125,19 @@ BlockingSearch/fast:
 .PHONY : BlockingSearch/fast
 
 #=============================================================================
+# Target rules for targets named DivideEvents
+
+# Build rule for target.
+DivideEvents: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 DivideEvents
+.PHONY : DivideEvents
+
+# fast build rule for target.
+DivideEvents/fast:
+	$(MAKE) -f software/routines/CMakeFiles/DivideEvents.dir/build.make software/routines/CMakeFiles/DivideEvents.dir/build
+.PHONY : DivideEvents/fast
+
+#=============================================================================
 # Target rules for targets named FSMsort
 
 # Build rule for target.
@@ -160,6 +173,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... FSM_library"
 	@echo "... BlockingSearch"
+	@echo "... DivideEvents"
 	@echo "... FSMsort"
 	@echo "... PrintParComp"
 .PHONY : help

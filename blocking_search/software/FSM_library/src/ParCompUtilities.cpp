@@ -35,7 +35,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   EventManager event(FSMArray);
   StateEncoder encoder(FSMArray);
   
-  unsigned int totalStatesAccessed = DepthFirstSearch(FSMArray, memory, event, encoder, worstcase, "./", NULL, FORWARD );
+  unsigned int totalStatesAccessed = DepthFirstSearch(FSMArray, memory, event, encoder, worstcase, "", NULL, FORWARD );
   
   cout << "~~~~~~~~~~~~~" << endl;
   memory.PrintStatistics();
@@ -79,7 +79,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   cout << "Running accessibility search to identify blocking transitions." << endl;
   
   
-  MemoryManager newMemory(FSMArray);
+  DjikstraMemoryManager newMemory;
   
   FindBlockingEvents(FSMArray, newMemory, event, encoder, memory); 
   
@@ -387,7 +387,7 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
           - Prints blocking states to blocking.fsm
  * @note This is a specialized version of DFS
  */
-void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & memory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates)
+void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManager & dMemory, EventManager & event, StateEncoder & encoder, MemoryManager & blockingStates)
 {
   int numberFSMs = FSMArray.size();
 
@@ -417,7 +417,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
   ofstream nonBlockingFile;
   //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   filepath = filename + "-nonBlocking.fsm";
-  nonBlockingFile.open(filepath.c_str());
+  //nonBlockingFile.open(filepath.c_str());
   if(!nonBlockingFile.is_open()){
     cerr << "File "<< filepath << " failed to open!" << endl;
   }
@@ -432,7 +432,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
 
   //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   filepath = filename + "-Blocking.fsm";
-  blockingFile.open(filepath.c_str());
+  //blockingFile.open(filepath.c_str());
   if(!blockingFile.is_open()){
     cerr << "File "<< filepath << " failed to open!" << endl;
   }
@@ -441,17 +441,11 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   
   /******************************************************/
-  
-  
-  //Check the number of intially set bits
-  if( memory.GetNumberOfSetBits() )
-  {
-    cerr << "Memory is not cleared. Exiting." << endl;
-  }
+
   
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
-	unsigned currentState = 0;
+	unsigned int currentState = 0;
 	unsigned int counter = 0, nonBlockingCounter = 0, blockingCounter = 0;
 	unsigned int maxStackSize = 0;
 
@@ -460,12 +454,17 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
   const pair<EventTypeMask,string> specialEvent = make_pair(DC_EVENT , "_DDC");
 	
 	//Initialize Stack
-	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	
+	dMemory.Push( currentState , "", DEFAULT_EVENT_MASK );	
 	
-	while( !memory.IsStackEmpty() )
+	while( !dMemory.IsEmpty() )
 	{	
 		//Get current state off top of stack
-		pair<unsigned int, EventTypeMask> currentPair = memory.PopOffStack();
+		bool empty = false;
+		const pair<unsigned int, EventTypeMask> currentPair = dMemory.Pop(empty);
+		if(empty)
+		{
+		  break;
+		}
 		
 		currentState = currentPair.first;
 		EventTypeMask currentMask = currentPair.second;
@@ -533,9 +532,10 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
         //This is a DDC transition from a non-blocking portion to a blocking portion of the graph
         if ( !CurrentStateIsBlocking && (blockingStates.stateMasks.find(nextStates[i].dest)->second.accessed == false) )
         {
-          log << "\t" << encoder.GenerateStateName(currentState) << "\t";
-          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) <<"_DDC" << endl;
-          SpecialBlockingEventsFound++;
+          SpecialBlockingEventsFound++; 
+          
+          log << hex << setw(8) << setfill('0') << nextStates[i].dest << " <-"<<nextStates[i].event<<"-> ";
+          log << hex << setw(8) << setfill('0') << dMemory.PrintPath(currentState, currentMask) << endl;         
         }
         else
         { //This is a DDC transition within the blocking subgraph or within the non-blocking subgraph
@@ -543,7 +543,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
           goodStates.push_back(nextStates[i]);
         }
         
-        memory.PushOnStack(nextStates[i].dest, DC_EVENT);
+        dMemory.Push(nextStates[i].dest, nextStates[i].event, DC_EVENT);
       }
       
       else
@@ -552,15 +552,16 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
         if ( !CurrentStateIsBlocking && blockingStates.GetBit(nextStates[i].dest) )
         {
           BlockingEventsFound++;
-          log << "\t" << encoder.GenerateStateName(currentState) << "\t";
-          log << nextStates[i].event << "\t" << encoder.GenerateStateName(nextStates[i].dest) << endl;
+          
+          log << hex << setw(8) << setfill('0') << nextStates[i].dest << " <-"<<nextStates[i].event<<"-> ";
+          log << hex << setw(8) << setfill('0') << dMemory.PrintPath(currentState, currentMask) << endl;
         }
         else
         { //This is a transition within the blocking subgraph or within the non-blocking subgraph
           goodStates.push_back(nextStates[i]);
         }
         
-        memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);
+        dMemory.Push(nextStates[i].dest, nextStates[i].event, DEFAULT_EVENT_MASK);
       }
     }     
     
@@ -580,23 +581,20 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, MemoryManager & mem
     counter++;
 		if(!(counter % 1000))
 		{
-		  memory.UpdateStatistics(counter);
-		  if(memory.GetSizeOfStack() > maxStackSize )
+		  if(dMemory.GetSize() > maxStackSize )
 		  {
-		    maxStackSize = memory.GetSizeOfStack();
+		    maxStackSize = dMemory.GetSize();
 		  }
 			cout << counter << " states accessed. ";
-			cout << " Stack size: " << memory.GetSizeOfStack() << "         \r";
+			cout << " Stack size: " << dMemory.GetSize() << "         \r";
 			cout.flush();
 		}
 	}
 	
 	//Print summary statistics
-	cout << "Total states accessed :   " << counter;
+	cout << "Total states accessed :   " << counter << "(" << dMemory.GetNumberOfStates() << ")";
 	cout << "                                             "<<endl;
-	cout << "Standard states visited: " << memory.GetNumberOfSetBits() << endl;
-	cout << "States created:    " << memory.GetNumberOfCreatedStates() << endl;
-	cout << "Max size of stack: "<< maxStackSize << endl;
+	cout << "Max size of stack: " << maxStackSize << endl;
 	cout << "Number of blocking events found: " << BlockingEventsFound << endl;
 	cout << "Number of special blocking events found: " << SpecialBlockingEventsFound << endl;
  

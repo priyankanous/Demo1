@@ -112,6 +112,30 @@ FSM_library/fast:
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/build
 .PHONY : FSM_library/fast
 
+src/DjikstraMemoryManager.o: src/DjikstraMemoryManager.cpp.o
+.PHONY : src/DjikstraMemoryManager.o
+
+# target to build an object file
+src/DjikstraMemoryManager.cpp.o:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o
+.PHONY : src/DjikstraMemoryManager.cpp.o
+
+src/DjikstraMemoryManager.i: src/DjikstraMemoryManager.cpp.i
+.PHONY : src/DjikstraMemoryManager.i
+
+# target to preprocess a source file
+src/DjikstraMemoryManager.cpp.i:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.i
+.PHONY : src/DjikstraMemoryManager.cpp.i
+
+src/DjikstraMemoryManager.s: src/DjikstraMemoryManager.cpp.s
+.PHONY : src/DjikstraMemoryManager.s
+
+# target to generate assembly for a file
+src/DjikstraMemoryManager.cpp.s:
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build && $(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.s
+.PHONY : src/DjikstraMemoryManager.cpp.s
+
 src/EventManager.o: src/EventManager.cpp.o
 .PHONY : src/EventManager.o
 
@@ -289,6 +313,9 @@ help:
 	@echo "... FSM_library"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... src/DjikstraMemoryManager.o"
+	@echo "... src/DjikstraMemoryManager.i"
+	@echo "... src/DjikstraMemoryManager.s"
 	@echo "... src/EventManager.o"
 	@echo "... src/EventManager.i"
 	@echo "... src/EventManager.s"

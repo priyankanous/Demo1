@@ -73,33 +73,9 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o.prov
 software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o
 .PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o.provides.build
 
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/src/MemoryManager.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o"
-	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp
-
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i"
-	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp > CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i
-
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s"
-	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp -o CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s
-
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires:
-.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
-
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
-	$(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build
-.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides
-
-software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o
-.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build
-
 software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
 software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o: ../software/FSM_library/src/EventManager.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o"
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/EventManager.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/EventManager.cpp
 
@@ -120,6 +96,30 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o.provides:
 
 software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o
 .PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o.provides.build
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o: ../software/FSM_library/src/MemoryManager.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp > CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.i
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/MemoryManager.cpp -o CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.s
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires:
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
+	$(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.provides.build
 
 software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
 software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o: ../software/FSM_library/src/StateEncoder.cpp
@@ -145,9 +145,33 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o.provides:
 software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o
 .PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o.provides.build
 
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o: ../software/FSM_library/src/DjikstraMemoryManager.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_5)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/DjikstraMemoryManager.cpp
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.i"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/DjikstraMemoryManager.cpp > CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.i
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.s"
+	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/DjikstraMemoryManager.cpp -o CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.s
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.requires:
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.requires
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.provides: software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.requires
+	$(MAKE) -f software/FSM_library/CMakeFiles/FSM_library.dir/build.make software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.provides.build
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.provides
+
+software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.provides.build: software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o
+.PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.provides.build
+
 software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
 software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o: ../software/FSM_library/src/IO_Utilities.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o"
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/IO_Utilities.cpp
 
@@ -171,7 +195,7 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o.provides.
 
 software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
 software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o: ../software/FSM_library/src/ParCompUtilities.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o"
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/ParCompUtilities.cpp
 
@@ -195,7 +219,7 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o.provi
 
 software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o: software/FSM_library/CMakeFiles/FSM_library.dir/flags.make
 software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o: ../software/FSM_library/src/HeuristicUtilities.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o"
 	cd /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o -c /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/FSM_library/src/HeuristicUtilities.cpp
 
@@ -220,9 +244,10 @@ software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o.pro
 # Object files for target FSM_library
 FSM_library_OBJECTS = \
 "CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o" \
-"CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o" \
 "CMakeFiles/FSM_library.dir/src/EventManager.cpp.o" \
+"CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o" \
 "CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o" \
+"CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o" \
 "CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o" \
 "CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o" \
 "CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o"
@@ -231,9 +256,10 @@ FSM_library_OBJECTS = \
 FSM_library_EXTERNAL_OBJECTS =
 
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o
-software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o
+software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o
+software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o
 software/FSM_library/libFSM_library.a: software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o
@@ -248,9 +274,10 @@ software/FSM_library/CMakeFiles/FSM_library.dir/build: software/FSM_library/libF
 .PHONY : software/FSM_library/CMakeFiles/FSM_library.dir/build
 
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/FSMDataStructures.cpp.o.requires
-software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/EventManager.cpp.o.requires
+software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/MemoryManager.cpp.o.requires
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/StateEncoder.cpp.o.requires
+software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/DjikstraMemoryManager.cpp.o.requires
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/IO_Utilities.cpp.o.requires
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o.requires
 software/FSM_library/CMakeFiles/FSM_library.dir/requires: software/FSM_library/CMakeFiles/FSM_library.dir/src/HeuristicUtilities.cpp.o.requires
