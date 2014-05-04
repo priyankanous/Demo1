@@ -15,8 +15,8 @@
 /*
  *  Define a datatype to store an encoded state
  */
-typedef unsigned long int EncodedStateType;
- 
+typedef uint32_t EncodedStateType;
+#define MAX_STATE_ENCODING (uint64_t)0xFFFFFFFF
  
 /*
  * A simple struct to store a transition
@@ -69,6 +69,7 @@ public:
 	void addEvent(std::string& str);
 	int getStateIndex(std::string& str);
 	int GetNumberOfStates(void) const;
+  void Clear(void);
 };
 
 

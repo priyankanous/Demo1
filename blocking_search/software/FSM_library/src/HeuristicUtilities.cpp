@@ -2,7 +2,10 @@
 
 using namespace std;
 
-pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned long int UpperBound, bool printMap)
+void printHeader(const vector<FSM_struct> & FSMArray);
+
+
+pair<int, int> MapCommonEvents( const vector<FSM_struct> & FSMArray, const unsigned long int UpperBound, bool printMap)
 {
   vector< vector<int> > sharedEvents;
   int bestMetric = 0, bestStateSpace = 0;
@@ -30,103 +33,75 @@ pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned long int
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */ 
   
-  if(printMap) 
-  {
-    cout << "Index" << endl;
-    for(int i=0; i<FSMArray.size(); i++)
-    {
-      cout << i << "\t" << FSMArray[i].fsmName << "\t" << FSMArray[i].alphabet.size() << " events\t" << FSMArray[i].GetNumberOfStates() << " states" << endl;
-    }
-    cout << endl<<"   ";
-    for(int i=0; i<FSMArray.size(); i++)
-    {
-      if(i<10)
-        cout << i << "  ";
-      else
-        cout << i << " ";
-    }
-    cout<<endl;
-  }
+  //Print header 
+  if(printMap) printHeader(FSMArray);
   
+  //Examine each pair of FSM to find most similar pairs
   for(int i=0; i<(FSMArray.size()-1); i++)
   {
-    if(printMap)
-    {
-      if(i<10)
-        cout << i << "  ";
-      else
-        cout << i << " ";
-    }
+    //Print indent
+    if(printMap) cout << i << (i<10)?"  ":" ";
+
+    //Make a row to store pairs
     vector<int> row;
     for(int j=0; j<=i; j++)
     {
       if(printMap) cout << "...";
       row.push_back(0);
     }
+    
+    //Calculate pair similarity
     for(int j=i+1; j<FSMArray.size(); j++)
     {
-      sort(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end());
-      sort(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end());
+      //Allocate copies of the event sets to be sorted
+      vector<string> eventSet1(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end());
+      vector<string> eventSet2(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end());
       
-      vector<string> intersection(FSMArray[i].alphabet.size() + FSMArray[j].alphabet.size());
-      vector<string>::iterator it = set_intersection(FSMArray[i].alphabet.begin(), 
-                                                     FSMArray[i].alphabet.end(), 
-                                                     FSMArray[j].alphabet.begin(), 
-                                                     FSMArray[j].alphabet.end(), intersection.begin());
+      //Sort the event set copies
+      sort(eventSet1.begin(), eventSet1.end());
+      sort(eventSet2.begin(), eventSet2.end());
       
+      //Find the intersection of these sets
+      vector<string> intersection(eventSet1.size() + eventSet2.size());
+      vector<string>::iterator it = set_intersection(eventSet1.begin(), eventSet1.end(), 
+                                                     eventSet2.begin(), eventSet2.end(), intersection.begin());
       intersection.resize(it-intersection.begin());
-      int sharedEvents = 100 * intersection.size()/( FSMArray[i].alphabet.size() + FSMArray[j].alphabet.size() - intersection.size() );
-      //int sharedEvents = instersection.size();
       
+      //Calculate and store the similarity of the FSM's
+      int eventSimilarity = 100 * intersection.size()/( eventSet1.size() + eventSet2.size() - intersection.size() );
+      row.push_back(eventSimilarity);
+         
+      //Print the new statistic
       if(printMap)
       {
-        if(sharedEvents == 0)
-        {
-          cout << "-  ";
-        }
-        else
-        {
-          if(sharedEvents >= 10 )
-            cout << sharedEvents << " ";
-          else
-            cout << sharedEvents << "  ";
-        }
+        if(eventSimilarity == 0)        cout << "-  ";
+        else if(eventSimilarity >= 10 ) cout << eventSimilarity << " ";
+        else                         cout << eventSimilarity << "  ";
       }
-      row.push_back(sharedEvents); 
-      if(sharedEvents > bestMetric)
+ 
+      //Record the best pair so far
+      if(eventSimilarity > bestMetric)
       {
-        if(find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "DDC") == FSMArray[i].alphabet.end() 
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "fddl") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "fpdl") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "nddl1_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "ddl1_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "ddl2_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "pdl1_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "pdl2_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "npdl1_f") == FSMArray[i].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "DDC") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "fddl") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "fpdl") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "nddl1_f") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "ddl1_f") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "ddl2_f") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "pdl1_f") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "pdl2_f") == FSMArray[j].alphabet.end()
-        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "npdl1_f") == FSMArray[j].alphabet.end())
+        //Calculate the maximum possible state space
+        unsigned int statespace = FSMArray[i].GetNumberOfStates() * FSMArray[j].GetNumberOfStates();
+        
+        //
+        if(find(eventSet1.begin(), eventSet1.end(), "DDC") == eventSet1.end() 
+        && find(eventSet1.begin(), eventSet1.end(), "DDC") == eventSet1.end()
+        && statespace <= UpperBound )
         {
-          unsigned int statespace = FSMArray[i].GetNumberOfStates() * FSMArray[j].GetNumberOfStates();
-          if( statespace <= UpperBound )
-          {
-            bestStateSpace = statespace;
-            bestMetric = sharedEvents;
-            bestFSMs = make_pair(i, j);
-          }
+          bestStateSpace = statespace;
+          bestMetric = eventSimilarity;
+          bestFSMs = make_pair(i, j);
         }
       }
     }
+    
     if(printMap) cout << endl;
     sharedEvents.push_back(row);
+    
   }
+  
   if(printMap) cout << endl;
   
   return bestFSMs;
@@ -215,6 +190,27 @@ void GenerateOptimalSubgroups(const vector<FSM_struct> & FSMArr)
 	
 }
 
+/*
+ * @brief Helper function to reduce code length
+ */
+void printHeader(const vector<FSM_struct> & FSMArray)
+{
+  cout << "Index" << endl;
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    cout << i << "\t" << FSMArray[i].fsmName << "\t" << FSMArray[i].alphabet.size() << " events\t" << FSMArray[i].GetNumberOfStates() << " states" << endl;
+  }
+  cout << endl<<"   ";
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    if(i<10)
+      cout << i << "  ";
+    else
+      cout << i << " ";
+  }
+  cout<<endl;
+}
+  
 
 
 

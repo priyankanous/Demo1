@@ -13,6 +13,12 @@
 #include <cmath>
 
 /*
+ *  Define a datatype to store an encoded state
+ */
+typedef uint32_t EncodedStateType;
+#define MAX_STATE_ENCODING 0xFFFFFFFF
+ 
+/*
  * A simple struct to store a transition
  */
 struct Trans
@@ -25,7 +31,7 @@ public:
 	int mask;
 	Trans(){};
 	Trans(unsigned int d, std::string e)
-	  :event(e), dest(d), obs(1), con(1), mask(ALL_EVENTS_MASK){};
+	  :event(e), dest(d), obs(1), con(1), mask(15){};
 };
 
 
@@ -63,6 +69,7 @@ public:
 	void addEvent(std::string& str);
 	int getStateIndex(std::string& str);
 	int GetNumberOfStates(void) const;
+  void Clear(void);
 };
 
 

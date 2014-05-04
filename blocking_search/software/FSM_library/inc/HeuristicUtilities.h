@@ -8,7 +8,7 @@
 
 #include "FSMDataStructures.h"
 
-std::pair<int, int> MapCommonEvents(std::vector<FSM_struct> & FSMArray, unsigned long int UpperBound, bool printState);
+std::pair<int, int> MapCommonEvents(const std::vector< FSM_struct >& FSMArray, const long unsigned int UpperBound, bool printMap);
 
 void GenerateOptimalSubgroups( const std::vector<FSM_struct> & FSMArray);
 

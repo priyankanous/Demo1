@@ -14,13 +14,21 @@ FSM_struct::FSM_struct(void)
 	:numEvents(0)
 {};
 
-
-
+/*
+ * Used to clear a struct of all information 
+ */
+void FSM_struct::Clear(void)
+{
+  this->fsmName.clear();;
+  this->alphabet.clear();
+  this->states.clear();
+  this->numEvents = 0;
+};
 
 int FSM_struct::GetNumberOfStates(void) const
 {
   return states.size();
-}
+};
 
 
 

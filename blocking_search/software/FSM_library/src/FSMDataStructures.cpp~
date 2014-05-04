@@ -2,7 +2,7 @@
 
 using namespace std;
 
-State::State(std::string& str)
+State::State(const std::string& str)
 	:stateName(str)
 {};
 
@@ -14,13 +14,18 @@ FSM_struct::FSM_struct(void)
 	:numEvents(0)
 {};
 
-
-
+/*
+ * Used to clear a struct of all information 
+ */
+void FSM_struct::Clear(void)
+{
+  this->fsmName = "";
+};
 
 int FSM_struct::GetNumberOfStates(void) const
 {
   return states.size();
-}
+};
 
 
 

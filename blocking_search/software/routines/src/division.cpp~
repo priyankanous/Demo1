@@ -23,10 +23,31 @@ int main(int argc, char * argv[])
 	
 	//Read in .fsm files
 	//Change second parameter to "0" to not print update
-	int worstcase = readFSM(FSMArray, 0, argc, argv);
+  //Declare vector of FSM_structs
+  vector<FSM_struct> FSMArray;
+  
+  //Loop through inputs, reading .fsm files into vector
+  //Each successive call will append one FSM to vector
+  for(int filenum=1; filenum<argc; filenum++)
+  {
+    //Get filepath of .fsm file
+    string filePath(argv[filenum]);
+    
+    //Read in file and error check
+    FSM_struct FSM;
+    if( false == IO_Utilities::ReadFsmFileIntoStruct(FSM, filePath) )
+    {
+      cout << "main: Encountered an error when reading in " << filePath << ". Exiting application." << endl;
+      return 1;
+    }
+    
+    //Append new FSM to array
+    FSMArray.push_back(FSM);
+  }
 	
   map<string, pair<int,int> > division;
   
+  int counter = 0;
   for(int i=0; i<FSMArray.size(); i++)
   {
     for(int j=0; j<FSMArray[i].states.size(); j++)
@@ -44,6 +65,7 @@ int main(int argc, char * argv[])
         {
           division[newevent].second++;
         }
+        counter++;
       }
     }
   }
@@ -52,5 +74,6 @@ int main(int argc, char * argv[])
   {
     cout << it->first << "\t" << it->second.first << "\t" << it->second.second << endl;
   }
+  cout << "Total: " << counter << " transitions." << endl;
   return 0;
 }

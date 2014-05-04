@@ -14,6 +14,7 @@
 #include <cmath>
 #include <sstream>
 
+
 #include "FSMDataStructures.h"
 #include "StateEncoder.h"
 #include "EventManager.h"
@@ -23,7 +24,7 @@
 
 namespace IO_Utilities
 {
-  void readFSM( std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[] );
+  bool ReadFsmFileIntoStruct(FSM_struct & FSMstruct, std::string filePath);
 
   void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
 

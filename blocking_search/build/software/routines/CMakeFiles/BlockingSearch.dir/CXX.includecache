@@ -191,6 +191,8 @@ string
 -
 stdlib.h
 -
+string.h
+-
 FSMDataStructures.h
 /home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/FSMDataStructures.h
 MemoryManager.h

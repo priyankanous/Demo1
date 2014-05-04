@@ -167,95 +167,90 @@ string IO_Utilities::GetNameFromPath (const std::string& filepath)
 
 /*
  * @brief Reads each of the included .fsm files into a FSM_struct. Adds these to a vector of FSM_structs
- * @param FSMArray Vector of FSMs.
- * @param print True if verbose output is desired
- * @param argc Number of command line args
- * @param argv Command line args
+ * @param FSMstruct FSM struct to be filled
+ * @param filePath The path to the .fsm to be read into the struct
+ * @returns true if successful, false otherwise
  */
 
-void IO_Utilities::readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
+bool IO_Utilities::ReadFsmFileIntoStruct(FSM_struct & FSM, string filePath)
 {	
-	//Loop through input FSM files, read into structs
-	for(int filenum=1; filenum<argc; filenum++)
-	{
-		//Open up fsm
-		ifstream infile;
-		infile.open(argv[filenum]);
-		if(infile.fail()){
-			cout<<argv[filenum]<<" does not exist in this directory. Exiting.\n";
-			exit(1);
-		}
-		int numStates;
-		string junk;
-		infile >> numStates;
-		getline(infile, junk); 
-	
-		//Build FSM Struct
-		FSM_struct FSM1;
-		string name = argv[filenum];
-		FSM1.fsmName = GetNameFromPath(name);
-	
-		//Loop through states
-		for(int i=0; i<numStates; i++){
-			//Read in state name
-			string stateName;
-			infile >> stateName;
-		
-			//Find state entry for this state, insert if necessary 
-			int stateindex = FSM1.getStateIndex(stateName);
-			infile >> FSM1.states[stateindex].marked;
-			
-			int numTransIn;
-			infile >> numTransIn;
-		
-			//Loop for events
-			for(int j=0; j<numTransIn; j++){
-				//Create new transistion, fill from file
-				Trans newtrans;
-				string dest;
-				string c, o;
-				infile >> newtrans.event >> dest >> c >> o;
-				if(!c.compare("c"))
-					newtrans.con = 1;
-				else
-					newtrans.con = 0;
-				if(!o.compare("o"))
-					newtrans.obs = 1;
-				else
-					newtrans.obs = 0;
-				
-				newtrans.dest = FSM1.getStateIndex(dest);
-			
-				//Add eventName to alphabet if necessary
-				FSM1.addEvent(newtrans.event);
-			
-				//Add transition to state
-				FSM1.states[stateindex].transitions.push_back(newtrans);	
-			}
-	
-			getline(infile, junk);
-		}	
-		infile.close();	
-		FSMArray.push_back(FSM1);
-	}
-	
-	//Print update
-	if(print)
-	{
-	  cout<<FSMArray.size()<<" automata read in: "<<endl;
-	  unsigned long int worstcase = 1;
+  //Clear FSMstruct in case it has been initialized previously
+  FSM.Clear();
+  
+  //Open up file, error check
+  ifstream infile;
+  infile.open(filePath.c_str());
+  if(infile.fail())
+  {
+    cout << "readFSM: "<< filePath << " does not exist in this directory. Exiting." << endl;
+    return false;
+  }
+  
+  //Get number of states
+  int numStates;
+  string junk;
+  infile >> numStates;
+  getline(infile, junk); 
 
-	  for(int i=0; i<FSMArray.size(); i++)
-	  {
-		  cout<<FSMArray[i].fsmName<<"\t"<<FSMArray[i].GetNumberOfStates()<<" states\t";
-		  cout<<FSMArray[i].numEvents<<" events\t";
-		  cout<<ceil(log2(FSMArray[i].GetNumberOfStates()))<<" bits\n";
-		  worstcase *= FSMArray[i].GetNumberOfStates();
-	  }
+  //Build FSM Struct
+  FSM.fsmName = GetNameFromPath(filePath);
 
-		cout<<"Worst case (shuffle) is "<<worstcase;
-		cout<<" states after parallel composition."<<endl;
-	}
+  //Loop through states
+  for(int i=0; i<numStates; i++)
+  {
+    //If anything has gone wrong, stop reading and exit
+    if(!infile.good())
+    {
+      cout << "readFSM: Failed to parse " << filePath << ". Exiting." << endl;
+      infile.close(); 
+      return false;
+    }
+    
+    //Read in state name
+    string stateName;
+    infile >> stateName;
+
+    //Find state entry for this state, insert if necessary 
+    int stateindex = FSM.getStateIndex(stateName);
+    infile >> FSM.states[stateindex].marked;
+    
+    int numTransIn;
+    infile >> numTransIn;
+
+    //Loop for events
+    for(int j=0; j<numTransIn; j++)
+    {
+      //Create new transistion, fill from file
+      Trans newtrans;
+      string dest, c, o;
+      infile >> newtrans.event >> dest >> c >> o;
+      if(!c.compare("c"))
+        newtrans.con = 1;
+      else
+        newtrans.con = 0;
+      if(!o.compare("o"))
+        newtrans.obs = 1;
+      else
+        newtrans.obs = 0;
+      
+      //Get the state index associated with this state
+      newtrans.dest = FSM.getStateIndex(dest);
+    
+      //Add eventName to alphabet if necessary
+      FSM.addEvent(newtrans.event);
+    
+      //Add transition to state
+      FSM.states[stateindex].transitions.push_back(newtrans);	
+    }
+
+    //Get whatever junk exists at end of line
+    getline(infile, junk);
+  }	
+  
+  //Close out the file
+  infile.close();	
+	
+  return true;
 }
 
 /*

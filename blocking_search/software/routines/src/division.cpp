@@ -20,10 +20,25 @@ int main(int argc, char * argv[])
 {
 	//Declare vector of FSM_structs
 	vector<FSM_struct> FSMArray;
-	
-	//Read in .fsm files
-	//Change second parameter to "0" to not print update
-	IO_Utilities::readFSM(FSMArray, 0, argc, argv);
+  
+  //Loop through inputs, reading .fsm files into vector
+  //Each successive call will append one FSM to vector
+  for(int filenum=1; filenum<argc; filenum++)
+  {
+    //Get filepath of .fsm file
+    string filePath(argv[filenum]);
+    
+    //Read in file and error check
+    FSM_struct FSM;
+    if( false == IO_Utilities::ReadFsmFileIntoStruct(FSM, filePath) )
+    {
+      cout << "main: Encountered an error when reading in " << filePath << ". Exiting application." << endl;
+      return 1;
+    }
+    
+    //Append new FSM to array
+    FSMArray.push_back(FSM);
+  }
 	
   map<string, pair<int,int> > division;
   
