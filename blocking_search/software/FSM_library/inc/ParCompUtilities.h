@@ -35,6 +35,12 @@ enum Direction{
 unsigned long int GetUpperBoundStateSpace(const std::vector<FSM_struct>& FSMArr);
 
 /*
+ * @brief Add up number of bits needed to encode each state
+ * @return number of bits needed
+ */
+int GetNumberOfBitsToEncodeUncompressed( const std::vector<FSM_struct> & FSMArray );
+
+/*
  * @brief Perform on-the-fly parComp, not storing copy of resulting FSM
  * @return Number of blocking states
  */

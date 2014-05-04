@@ -1,1 +1,1 @@
-/usr/bin/c++    -std=c++0x -g  -fPIC CMakeFiles/PrintParComp.dir/src/printParComp.cpp.o  -o ../../../bin/PrintParComp -rdynamic ../FSM_library/libFSM_library.a 
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/PrintParComp.dir/src/printParComp.cpp.o  -o ../../../bin/PrintParComp -rdynamic ../FSM_library/libFSM_library.a 

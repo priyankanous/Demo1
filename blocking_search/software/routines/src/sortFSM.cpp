@@ -48,7 +48,7 @@ int main(int argc, char * argv[])
 	
 	//Read in .fsm files
 	//Change second parameter to "0" to not print update
-	int worstcase = readFSM(FSMArray, 0, argc, argv);
+	IO_Utilities::readFSM(FSMArray, 0, argc, argv);
 	
 	for(int i=0; i<FSMArray.size(); i++)
 	{ 	  
@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
     }
     else
     {
-      printFSM(FSMArray[i], outfile, 0);
+      IO_Utilities::printFSM(FSMArray[i], outfile, 0);
       outfile.close();
     }
 	}

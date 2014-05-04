@@ -150,7 +150,7 @@ void EventManager::AddTransitions(const State & state, int fsmIndex, EventTypeMa
   }
 }
 
-void EventManager::GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates )
+void EventManager::GetNextStates( EncodedStateType currentState, std::vector<CompositeTransition> & nextStates )
 {
   //Iterate through each event, determining the transitions that must be added
   map<string, Event>::iterator it; 
@@ -170,8 +170,8 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<Trans> 
     //then we have no duplicate events (DFA case)
     else if( (*it).second.UniqueFSMcount == (*it).second.transitions.size() )
     {
-      unsigned int newState = encoder.UpdateStateWithTransitions( currentState, (*it).second.transitions );
-			nextStates.push_back( Trans(newState, it->first) );    
+      EncodedStateType newState = encoder.UpdateStateWithTransitions( currentState, (*it).second.transitions );
+			nextStates.push_back( CompositeTransition(it->first, newState) );    
     }
     
     //In this case, the event has multiple instances, 
@@ -248,8 +248,8 @@ void EventManager::GetNextStates( unsigned int currentState, std::vector<Trans> 
 					runningSum += instances[i];
 				}
 				
-        unsigned int newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
-			  nextStates.push_back( Trans(newState, it->first) ); 
+        EncodedStateType newState = encoder.UpdateStateWithTransitions( currentState, temporaryEvent.transitions );
+			  nextStates.push_back( CompositeTransition(it->first,newState) ); 
 			}
 			/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
     }

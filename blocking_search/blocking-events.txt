@@ -1,8 +1,0 @@
-00000006 blocking events found.
-
-00000096	29,WAidle	pdl1	7,WAidle
-00000192	10,WAidle	nda1	11,WAidle
-00000128	30,WAidle	ddl1	4,WAidle
-00000160	6,WAidle	ula1_t	7,WAidle
-00000070	31,6	nddl2	31,7
-00000006	PEidle,6	nddl2	PEidle,7

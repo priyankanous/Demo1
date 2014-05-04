@@ -71,6 +71,8 @@ FSMDataStructures.h
 ../software/routines/../FSM_library/inc/IO_Utilities.h
 iostream
 -
+iomanip
+-
 fstream
 -
 vector
@@ -178,7 +180,7 @@ sstream
 FSMDataStructures.h
 ../software/routines/../FSM_library/inc/FSMDataStructures.h
 
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/division.cpp
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/division.cpp
 iostream
 -
 iomanip
@@ -190,17 +192,17 @@ string
 stdlib.h
 -
 FSMDataStructures.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/FSMDataStructures.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/FSMDataStructures.h
 MemoryManager.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/MemoryManager.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/MemoryManager.h
 EventManager.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/EventManager.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/EventManager.h
 StateEncoder.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/StateEncoder.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/StateEncoder.h
 HeuristicUtilities.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/HeuristicUtilities.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/HeuristicUtilities.h
 IO_Utilities.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/IO_Utilities.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/IO_Utilities.h
 ParCompUtilities.h
-/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software/routines/src/ParCompUtilities.h
+/home/lanham/TRW/cloaked-archer/blocking_search/software/routines/src/ParCompUtilities.h
 

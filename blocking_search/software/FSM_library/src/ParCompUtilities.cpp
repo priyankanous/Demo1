@@ -18,6 +18,20 @@ unsigned long int GetUpperBoundStateSpace ( const vector<FSM_struct> & FSMArray 
 }
 
 /*
+ * @brief Add up number of bits needed to encode each state
+ * @return number of bits needed
+ */
+int GetNumberOfBitsToEncodeUncompressed( const vector<FSM_struct> & FSMArray )
+{
+  int runningSum = 0;
+  for(int i=0; i<FSMArray.size(); i++)
+  {
+    runningSum += ceil(log2(FSMArray[i].GetNumberOfStates()));
+  }
+  return runningSum;
+}
+
+/*
  * @brief Perform on-the-fly parComp, not storing copy of resulting FSM
  * @return Number of blocking states
  */
@@ -29,7 +43,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
     
   /******** Accessibility Search  ***************************/
   cout << endl << "~~~~~~~~~~~~~" << endl;
-  cout << "Starting accessibility search of " << worstcase << " states." << endl;
+  cout << "Starting accessibility search of " << worstcase << " states. (" << FSMArray.size() << " automata)" << endl;
   
   MemoryManager memory(FSMArray);
   EventManager event(FSMArray);
@@ -45,7 +59,7 @@ unsigned int OnTheFlyParComp( const vector<FSM_struct> & FSMArray )
   cout << endl << "~~~~~~~~~~~~~" << endl;
   cout << "Inverting transitions in all sub-automata." << endl;
   vector<FSM_struct> InverseArray;
-  InvertTransitions(FSMArray, InverseArray);
+  IO_Utilities::InvertTransitions(FSMArray, InverseArray);
   cout << "Done inverting transitions. " << endl;
   cout << "~~~~~~~~~~~~~" << endl;
   /*********************************************************/
@@ -180,12 +194,12 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
   
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
-	unsigned currentState = 0;
+	EncodedStateType currentState = 0;
 	unsigned int counter = 0;
 	unsigned int maxStackSize = 0;
 
   //Exception states to be accounted for after search
-  map<unsigned int, State> specialStates;
+  map<EncodedStateType, State> specialStates;
   const pair<EventTypeMask,string> specialEvent = make_pair((dir == FORWARD)?DC_EVENT:DDC_EVENT, (dir == FORWARD)?"_DDC":"_DC");
 	
 	//Initialize Stack
@@ -194,7 +208,7 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
 	while( !memory.IsStackEmpty() )
 	{	
 		//Get current state off top of stack
-		pair<unsigned int, EventTypeMask> currentPair = memory.PopOffStack();
+		pair<EncodedStateType, EventTypeMask> currentPair = memory.PopOffStack();
 		
 		currentState = currentPair.first;
 		EventTypeMask currentMask = currentPair.second;
@@ -268,7 +282,7 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
     }
         
 		//Get next states
-		vector<Trans> nextStates;
+		vector<CompositeTransition> nextStates;
     event.GetNextStates( currentState, nextStates );
   
     //Push states onto stack
@@ -276,7 +290,8 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
     {
       //Write deadlock state to file
       if(!nextStates.size() && log.is_open() ){
-        log << encoder.GenerateStateName(currentState) << titleAppend << endl;
+        log << hex << currentState;
+        log << titleAppend << endl;
         DeadlockCount++;
       }
       //Push next states onto stack
@@ -304,7 +319,7 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
           //Spilt destination into two different states
           memory.PushOnStack(nextStates[i].dest, DDC_EVENT);
           memory.PushOnStack(nextStates[i].dest, DEFAULT_EVENT_MASK);  
-          Trans newTrans = nextStates[i];
+          CompositeTransition newTrans = nextStates[i];
           newTrans.mask = DDC_EVENT;
           nextStates.push_back(newTrans);    
         }
@@ -330,13 +345,13 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
     //Write current state to .FSM file
     if( outfile.is_open() )
     {
-      WriteStateToFile( currentState, nextStates, currentMarked, outfile, encoder, specialEvent, titleAppend );
+      IO_Utilities::WriteStateToFile( currentState, nextStates, currentMarked, outfile, encoder, specialEvent, titleAppend );
     }
         
     //Add state to new FSM
     if( fsm )
     {
-      AddStateToFSM( currentState, nextStates, currentMarked, fsm, encoder, specialEvent, titleAppend );
+      IO_Utilities::AddStateToFSM( currentState, nextStates, currentMarked, fsm, encoder, specialEvent, titleAppend );
     }
     
     //Update stack statistics
@@ -408,7 +423,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
   if(!log.is_open())
     cerr << "blocking-events.txt failed to open!" << endl;
   else{
-    log << setw(8) << "CORRUPT";
+    log << setw(12) << setfill(' ') << "CORRUPT";
     log << " blocking events found." << endl << endl;
   }
   /******************************************************/
@@ -417,12 +432,12 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
   ofstream nonBlockingFile;
   //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   filepath = filename + "-nonBlocking.fsm";
-  //nonBlockingFile.open(filepath.c_str());
+  nonBlockingFile.open(filepath.c_str());
   if(!nonBlockingFile.is_open()){
     cerr << "File "<< filepath << " failed to open!" << endl;
   }
   else
-    nonBlockingFile << setw(8) << "CORRUPT" << endl << endl;
+    nonBlockingFile << setw(12) << setfill(' ') << "CORRUPT" << endl << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   
   /******************************************************/
@@ -432,12 +447,12 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
 
   //~~~~~Open file~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   filepath = filename + "-Blocking.fsm";
-  //blockingFile.open(filepath.c_str());
+  blockingFile.open(filepath.c_str());
   if(!blockingFile.is_open()){
     cerr << "File "<< filepath << " failed to open!" << endl;
   }
   else
-    blockingFile << setw(8) << "CORRUPT" << endl << endl;
+    blockingFile << setw(12) << setfill(' ') << "CORRUPT" << endl << endl;
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
   
   /******************************************************/
@@ -445,12 +460,12 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
   
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
-	unsigned int currentState = 0;
+	EncodedStateType currentState = 0;
 	unsigned int counter = 0, nonBlockingCounter = 0, blockingCounter = 0;
 	unsigned int maxStackSize = 0;
 
   //Exception states to be accounted for after search
-  map<unsigned int, State> specialStates;
+  map<EncodedStateType, State> specialStates;
   const pair<EventTypeMask,string> specialEvent = make_pair(DC_EVENT , "_DDC");
 	
 	//Initialize Stack
@@ -460,7 +475,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
 	{	
 		//Get current state off top of stack
 		bool empty = false;
-		const pair<unsigned int, EventTypeMask> currentPair = dMemory.Pop(empty);
+		const pair<EncodedStateType, EventTypeMask> currentPair = dMemory.Pop(empty);
 		if(empty)
 		{
 		  break;
@@ -510,7 +525,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
     }
         
 		//Get next states
-		vector<Trans> nextStates, goodStates;
+		vector<CompositeTransition> nextStates, goodStates;
     event.GetNextStates( currentState, nextStates );
     
     //Determine if current state is blocking
@@ -527,6 +542,13 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
     //Push next states onto stack
     for( int i=0; i<nextStates.size(); i++)
     {
+/*    
+if(!FSMArray[0].states[encoder.FindStateIndex(nextStates[i].dest, 0)].stateName.compare("1") )
+    //&& !FSMArray[0].states[encoder.FindStateIndex(currentState, 0)].stateName.compare("pda_ddaState"))
+{
+cout << "YO! Event: " << nextStates[i].event << endl;
+char c; cin>>c;
+}*/
       if(!nextStates[i].event.compare("DDC"))
       {
         //This is a DDC transition from a non-blocking portion to a blocking portion of the graph
@@ -552,9 +574,8 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
         if ( !CurrentStateIsBlocking && blockingStates.GetBit(nextStates[i].dest) )
         {
           BlockingEventsFound++;
-          
-          log << hex << setw(8) << setfill('0') << nextStates[i].dest << " <-"<<nextStates[i].event<<"-> ";
-          log << hex << setw(8) << setfill('0') << dMemory.PrintPath(currentState, currentMask) << endl;
+          log << dMemory.PrintPath(currentState, currentMask) << nextStates[i].event << " ->";
+          log << /*hex << setw(8) << setfill('0') <<*/ encoder.GenerateStateName(nextStates[i].dest) << endl;
         }
         else
         { //This is a transition within the blocking subgraph or within the non-blocking subgraph
@@ -565,21 +586,43 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
       }
     }     
     
+    if(nextStates.size() == 0)
+    {
+      log << dMemory.PrintPath(currentState, currentMask);
+      log << hex << setw(8) << setfill('0') << encoder.GenerateStateName(currentState) << "DEADLOCK" << endl;
+    }
     //Write current state to .FSM files
     if( !CurrentStateIsBlocking && nonBlockingFile.is_open() )
     {
       nonBlockingCounter++;
-      WriteStateToFile( currentState, goodStates, currentMarked, nonBlockingFile, encoder, specialEvent, titleAppend );
+      IO_Utilities::WriteStateToFile( currentState, goodStates, currentMarked, nonBlockingFile, encoder, specialEvent, titleAppend );
     }
     else if( CurrentStateIsBlocking && blockingFile.is_open() )
     {
       blockingCounter++;
-      WriteStateToFile( currentState, nextStates, currentMarked, blockingFile, encoder, specialEvent, titleAppend );
+      IO_Utilities::WriteStateToFile( currentState, nextStates, currentMarked, blockingFile, encoder, specialEvent, titleAppend );
+ 
+ /*     
+      if(!nextStates.size())
+      {
+        for(int i=0; i<FSMArray.size(); i++)
+        {
+          int stateindex =  encoder.FindStateIndex(currentState, i);
+          if(!FSMArray[i].states[stateindex].marked)
+          {
+            cout << "FSM: " << FSMArray[i].fsmName << "\t Index: " << i << endl;
+            cout << "\t State:" << FSMArray[i].states[stateindex].stateName << "\tindex" << stateindex << endl;
+          }
+        }
+        cout << "~~~" << endl;      
+      }
+      
+ */
     }
     
     //Update stack statistics
     counter++;
-		if(!(counter % 1000))
+		/*if(!(counter % 1000))
 		{
 		  if(dMemory.GetSize() > maxStackSize )
 		  {
@@ -588,7 +631,7 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
 			cout << counter << " states accessed. ";
 			cout << " Stack size: " << dMemory.GetSize() << "         \r";
 			cout.flush();
-		}
+		}*/
 	}
 	
 	//Print summary statistics
@@ -601,21 +644,21 @@ void FindBlockingEvents(const vector<FSM_struct> & FSMArray, DjikstraMemoryManag
   //Add total number of deadlock states to log file header
   if(log.is_open()){
     log.seekp(0, ios::beg);
-    log << setw(8) << setfill('0') << (BlockingEventsFound+SpecialBlockingEventsFound);
+    log << dec << left << setw(12) << setfill(' ') << (BlockingEventsFound+SpecialBlockingEventsFound);
     log.close();
   }
   
   //Add number of states to the top of the file
 	if(nonBlockingFile.is_open()){
     nonBlockingFile.seekp(0, ios::beg);
-    nonBlockingFile << setw(8) << nonBlockingCounter;
+    nonBlockingFile << dec << left << setw(12) << setfill(' ') << nonBlockingCounter;
     nonBlockingFile.close();
   }  
   
   //Add number of states to the top of the file
 	if(blockingFile.is_open()){
     blockingFile.seekp(0, ios::beg);
-    blockingFile << setw(8) << blockingCounter;
+    blockingFile << dec << left << setw(12) << setfill(' ') << blockingCounter;
     blockingFile.close();
   } 
   

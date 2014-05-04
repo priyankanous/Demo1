@@ -37,13 +37,13 @@ int main(void)
       s.push(event.substr(2,event.size()-4));
       infile >> state;
     }
-    outfile << "00000000" << "->";
+    outfile << "00000000" << " -> ";
     while(!s.empty())
     {     
       outfile << s.top() << ", ";
       s.pop();
     }
-    outfile << end << endl; 
+    outfile << "-> " << end << endl; 
   }
   
   cout << endl;

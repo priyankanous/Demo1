@@ -3,7 +3,11 @@
 
 using namespace std;
 
-void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
+/* 
+ * @brief Prints the FSM to outfile
+ * @param verbose If true, content will be in human-readable form. Otherwise, will be in .fsm format
+ */
+void IO_Utilities::printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
 {	
   if(verbose) outfile << FSM.fsmName << endl;
 	
@@ -33,8 +37,17 @@ void printFSM(FSM_struct & FSM, ostream & outfile, bool verbose)
 	}
 }
 
-
-void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bool marked, ofstream & outfile, StateEncoder & encoder, pair<EventTypeMask,string> specialEvent, string & titleAppend)
+/*
+ * @brief Used for writing to a .fsm file
+ * @note For conventional fsm format, use UMDES_PRINT_FORMAT
+ */
+void IO_Utilities::WriteStateToFile( EncodedStateType currentState, 
+                                     vector<CompositeTransition> & nextStates, 
+                                     bool marked, 
+                                     ofstream & outfile, 
+                                     StateEncoder & encoder, 
+                                     pair<EventTypeMask,string> specialEvent, 
+                                     string & titleAppend)
 {
   /****************For use with UMDES conventions **********************
    *
@@ -43,15 +56,17 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
    */
   if(UMDES_PRINT_FORMAT)
   {
-    outfile <<  currentState  << titleAppend << "\t"; //State name
+    outfile << hex << setw(8) << setfill('0') <<  currentState;
+    outfile << titleAppend << "\t"; //State name
     outfile << (currentState?0:1) << "\t";        //Marked
-    outfile << nextStates.size() << "\t" << endl; //Number of transitions
+    outfile << dec << nextStates.size() << "\t" << endl; //Number of transitions
     
     for(int i=0; i<nextStates.size(); i++)
     {
       if(nextStates[i].mask != NO_EVENTS_MASK)
       {
-        outfile << nextStates[i].event << "\t"<< nextStates[i].dest;
+        outfile << nextStates[i].event;
+        outfile << "\t"<< hex << setw(8) << setfill('0') << nextStates[i].dest;
         if(nextStates[i].mask == specialEvent.first)
         {
           outfile << specialEvent.second;
@@ -95,8 +110,16 @@ void WriteStateToFile( unsigned int currentState, vector<Trans> & nextStates, bo
   outfile.flush();
 }
 
-
-void AddStateToFSM( unsigned int currentState, vector<Trans> & nextStates, bool marked, FSM_struct * fsm, StateEncoder & encoder, pair<EventTypeMask,string> specialEvent, string & titleAppend)
+/*
+ * @brief Add a state to an FSM_struct
+ */
+void IO_Utilities::AddStateToFSM( EncodedStateType currentState, 
+                                  vector<CompositeTransition> & nextStates, 
+                                  bool marked, 
+                                  FSM_struct * fsm, 
+                                  StateEncoder & encoder, 
+                                  pair<EventTypeMask,string> specialEvent, 
+                                  string & titleAppend)
 {
   //Name state
   string statename = encoder.GenerateStateName(currentState); 
@@ -131,22 +154,30 @@ void AddStateToFSM( unsigned int currentState, vector<Trans> & nextStates, bool 
   } 
 }
 
-
-
-string GetNameFromPath (const std::string& str)
+/*
+ * @brief Extract the fsm name from a filepath
+ */
+string IO_Utilities::GetNameFromPath (const std::string& filepath)
 {
-  unsigned slashPos = str.find_last_of("/\\");
-  unsigned extensionPos = str.find_last_of(".");
+  unsigned slashPos = filepath.find_last_of("/\\");
+  unsigned extensionPos = filepath.find_last_of(".");
   
-  return str.substr(slashPos+1, extensionPos-slashPos - 1);
+  return filepath.substr(slashPos+1, extensionPos-slashPos - 1);
 }
 
+/*
+ * @brief Reads each of the included .fsm files into a FSM_struct. Adds these to a vector of FSM_structs
+ * @param FSMArray Vector of FSMs.
+ * @param print True if verbose output is desired
+ * @param argc Number of command line args
+ * @param argv Command line args
+ */
 
-
-int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
+void IO_Utilities::readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
 {	
 	//Loop through input FSM files, read into structs
-	for(int filenum=1; filenum<argc; filenum++){
+	for(int filenum=1; filenum<argc; filenum++)
+	{
 		//Open up fsm
 		ifstream infile;
 		infile.open(argv[filenum]);
@@ -209,26 +240,28 @@ int readFSM(vector<FSM_struct>& FSMArray, bool print, int argc, char* argv[])
 	}
 	
 	//Print update
-	if(print){cout<<FSMArray.size()<<" automata read in: "<<endl;}
-	unsigned long int worstcase = 1;
+	if(print)
+	{
+	  cout<<FSMArray.size()<<" automata read in: "<<endl;
+	  unsigned long int worstcase = 1;
 
-	for(int i=0; i<FSMArray.size(); i++){
-		if(print){
-			cout<<FSMArray[i].fsmName<<"\t"<<FSMArray[i].GetNumberOfStates()<<" states\t";
-			cout<<FSMArray[i].numEvents<<" events\t";
-			cout<<ceil(log2(FSMArray[i].GetNumberOfStates()))<<" bits\n";}
-		worstcase *= FSMArray[i].GetNumberOfStates();
-	}
-	if(print){
+	  for(int i=0; i<FSMArray.size(); i++)
+	  {
+		  cout<<FSMArray[i].fsmName<<"\t"<<FSMArray[i].GetNumberOfStates()<<" states\t";
+		  cout<<FSMArray[i].numEvents<<" events\t";
+		  cout<<ceil(log2(FSMArray[i].GetNumberOfStates()))<<" bits\n";
+		  worstcase *= FSMArray[i].GetNumberOfStates();
+	  }
+
 		cout<<"Worst case (shuffle) is "<<worstcase;
 		cout<<" states after parallel composition."<<endl;
 	}
-	
-	return worstcase;
 }
 
-
-void InvertTransitions( const vector<FSM_struct>& FSMArray, vector<FSM_struct>& FSMArray_inv)
+/*
+ * @brief Inverts the transitions from each FSM in FSMArray and inserts the new FSM in FSMArray_inv
+ */
+void IO_Utilities::InvertTransitions( const vector<FSM_struct>& FSMArray, vector<FSM_struct>& FSMArray_inv)
 {
   //Invert transitions, making new FSMs
   
@@ -244,6 +277,7 @@ void InvertTransitions( const vector<FSM_struct>& FSMArray, vector<FSM_struct>& 
       state_inv.marked = FSMArray[i].states[j].marked;
       inv.states.push_back(state_inv);
     }
+    
     for(int j=0; j<inv.GetNumberOfStates(); j++)
     {
       for(int k=0; k<FSMArray[i].states[j].GetNumberOfTransitions(); k++)

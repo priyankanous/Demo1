@@ -1,4 +1,4 @@
-# Install script for directory: /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search
+# Install script for directory: /home/lanham/TRW/cloaked-archer/blocking_search
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,12 +29,12 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT)
 
 # Install shared libraries without execute permission?
 IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  SET(CMAKE_INSTALL_SO_NO_EXE "0")
+  SET(CMAKE_INSTALL_SO_NO_EXE "1")
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/cmake_install.cmake")
+  INCLUDE("/home/lanham/TRW/cloaked-archer/blocking_search/build/software/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
@@ -44,7 +44,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/lanham/TRW/cloaked-archer/blocking_search/build/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/lanham/TRW/cloaked-archer/blocking_search/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

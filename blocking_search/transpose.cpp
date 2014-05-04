@@ -2,16 +2,23 @@
 #include <iomanip>
 #include <fstream>
 #include <stack>
+#include <stdlib.h>
 
 using namespace std;
 
-int main(void)
+int main(int argc, char ** argv)
 {
+  if(argc != 3)
+  {
+    cout << "Usage: ./transpose <input_file> <output_file>" << endl;
+    exit(1);
+  }
+  
   ifstream infile;
-  infile.open("da_v4,kivl_v3,lp_v3,retry_v3,temp1trevC,temp2tmin,temp5min,ula_v4,faultFSM_no_dl2,lkp_v3,subsys3min-blockingEvents.txt");
+  infile.open(argv[1]);
   
   ofstream outfile;
-  outfile.open("blockingEvents-short.txt");
+  outfile.open(argv[2]);
   
   int numEvents;
   string junk;
@@ -22,6 +29,7 @@ int main(void)
 
 
   outfile << numEvents << " events." << endl << endl; 
+  int counter = 0;
   while(!infile.eof() && infile.good())
   {
     stack<string> s;
@@ -29,14 +37,18 @@ int main(void)
     infile >>  state;
     string end = state;
 
+    if(!infile.good())
+      break;
+      
     while( state.compare("00000000") )
     {
       string event;
       infile >> event;
-      //cout << event << endl;
+
       s.push(event.substr(2,event.size()-4));
       infile >> state;
     }
+    counter++;
     outfile << "00000000" << " -> ";
     while(!s.empty())
     {     
@@ -45,10 +57,8 @@ int main(void)
     }
     outfile << "-> " << end << endl; 
   }
-  
-  cout << endl;
+
   infile.close();
   outfile.close();
   
 }
-

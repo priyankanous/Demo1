@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
 	
 	//Read in .fsm files
 	//Change second parameter to "0" to not print update
-	int worstcase = readFSM(FSMArray, 0, argc, argv);
+	IO_Utilities::readFSM(FSMArray, 0, argc, argv);
 	
   map<string, pair<int,int> > division;
   

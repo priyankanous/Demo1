@@ -10,7 +10,7 @@ DjikstraMemoryManager::DjikstraMemoryManager(void)
   currentMask = DEFAULT_EVENT_MASK;
   
   //Initialize memory structures
-  nodes = new unordered_map<pair<unsigned int, unsigned int>, DjikstraNode>;
+  nodes = new unordered_map<pair<EncodedStateType, unsigned int>, DjikstraNode>;
   pQueue = new priority_queue<DjikstraNode>;
 };
 
@@ -20,10 +20,10 @@ DjikstraMemoryManager::DjikstraMemoryManager(void)
  *        Returns null if queue empties.
  * @returns pointer to (next encoded state, mask for that state)
  */
-const pair<unsigned int, EventTypeMask> DjikstraMemoryManager::Pop(bool & empty)
+const pair<EncodedStateType, EventTypeMask> DjikstraMemoryManager::Pop(bool & empty)
 {
   //Pop events until an unexplored one has been found
-  unordered_map<pair<unsigned int, unsigned int>, DjikstraNode>::iterator it;
+  unordered_map<pair<EncodedStateType, unsigned int>, DjikstraNode>::iterator it;
   bool success = false;
   DjikstraNode nextNode;
   
@@ -48,7 +48,7 @@ const pair<unsigned int, EventTypeMask> DjikstraMemoryManager::Pop(bool & empty)
   }
   
   //Generate composite key
-  pair<unsigned int, unsigned int> key = make_pair(nextNode.state,(unsigned int)nextNode.mask);
+  pair<EncodedStateType, unsigned int> key = make_pair(nextNode.state,(unsigned int)nextNode.mask);
   
   //Update parameters and hash table with new node
   currentState = nextNode.state;
@@ -65,7 +65,7 @@ const pair<unsigned int, EventTypeMask> DjikstraMemoryManager::Pop(bool & empty)
  *        then enqueues the node in priority queue
  * @returns nothing
  */
-void DjikstraMemoryManager::Push(unsigned int encodedState, string event, EventTypeMask mask)
+void DjikstraMemoryManager::Push(EncodedStateType encodedState, string event, EventTypeMask mask)
 {
   //~~Enforce convention that initial state must be zero~~//
   if(currentCost < 0)
@@ -79,8 +79,8 @@ void DjikstraMemoryManager::Push(unsigned int encodedState, string event, EventT
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
   
   //~~~~~~~~~~Check for state in hash maps~~~~~~~~~~~~~~~//
-  pair<unsigned int, unsigned int> key = make_pair(encodedState, (unsigned int)mask);
-  unordered_map<pair<unsigned int, unsigned int>, DjikstraNode>::iterator it;  
+  pair<EncodedStateType, unsigned int> key = make_pair(encodedState, (unsigned int)mask);
+  unordered_map<pair<EncodedStateType, unsigned int>, DjikstraNode>::iterator it;  
   it = nodes->find(key);
   
   //If state has been found already, do not enqueue
@@ -117,14 +117,14 @@ bool DjikstraMemoryManager::IsEmpty(void)
   return (pQueue->size() <= 0);
 };
 
-string DjikstraMemoryManager::PrintPath( unsigned int encodedState, EventTypeMask mask)
+string DjikstraMemoryManager::PrintPath( EncodedStateType encodedState, EventTypeMask mask )
 {
-  stringstream ss;
-  pair<unsigned int, unsigned int> current = make_pair(encodedState, (unsigned int)mask);
-  unordered_map<pair<unsigned int, unsigned int>, DjikstraNode>::iterator it;
+  stack<string> events;
+  pair<EncodedStateType, unsigned int> current = make_pair(encodedState, (unsigned int)mask);
+  unordered_map<pair<EncodedStateType, unsigned int>, DjikstraNode>::iterator it;
   while(true)
   {
-  
+    
     //Update current event mask 
     if(current.second != DC_EVENT)
     {
@@ -134,23 +134,36 @@ string DjikstraMemoryManager::PrintPath( unsigned int encodedState, EventTypeMas
     //Origin
     if(current.first == 0)
     {
-      //We have reached origin. Print 0 and return.
-      ss << hex << setw(8) << setfill('0') << current.first;
+      //We have reached the origin. Unload the stack
+      stringstream ss;
+      ss << "00000000 -> ";
+      while(!events.empty())
+      {
+        string e = events.top();
+        events.pop();
+        ss << e << ", ";
+      }
       return ss.str();
     }
     
     it = nodes->find(current);
     if(it == nodes->end() )
     {
-      ss.clear();
+      stringstream ss;
       ss << "Path back to origin could not be found for state " << encodedState;
       return ss.str();
     }
     else
     {
-      ss << hex << setw(8) << setfill('0') << current.first;
-      ss << (it->second.mask==DEFAULT_EVENT_MASK?"":"_DDC");
-      ss << " <-" << it->second.event << "-> ";
+      //ss << hex << setw(8) << setfill('0') << current.first;
+      //ss << (it->second.mask==DEFAULT_EVENT_MASK?"":"_DDC");
+      string event = it->second.event;
+      EncodedStateType parent = it->second.parent.first;
+      if( (parent|0x7) == 4 )
+      {
+       event += "_TRANS"; 
+      }
+      events.push(event);
       current = it->second.parent;
     }
   }

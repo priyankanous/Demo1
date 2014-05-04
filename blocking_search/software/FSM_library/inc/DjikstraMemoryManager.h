@@ -16,8 +16,8 @@
 struct DjikstraNode
 {
   public:
-    unsigned int state;
-    std::pair<unsigned int, EventTypeMask> parent;
+    EncodedStateType state;
+    std::pair<EncodedStateType, EventTypeMask> parent;
     std::string event;
     int pathCost;
     EventTypeMask mask;
@@ -29,7 +29,7 @@ struct DjikstraNode
       pathCost(-1),
       mask(DEFAULT_EVENT_MASK){};
       
-    DjikstraNode(unsigned int state_, std::pair<unsigned int, EventTypeMask> parent_, std::string event_, int cost_, EventTypeMask mask_)
+    DjikstraNode(EncodedStateType state_, std::pair<EncodedStateType, EventTypeMask> parent_, std::string event_, int cost_, EventTypeMask mask_)
       :state(state_),
       parent(parent_),
       event(event_),
@@ -51,18 +51,18 @@ class DjikstraMemoryManager
 {
   public:
     DjikstraMemoryManager(); 
-    const std::pair<unsigned int, EventTypeMask> Pop(bool &);
-    void Push(unsigned int, std::string event, EventTypeMask);
+    const std::pair<EncodedStateType, EventTypeMask> Pop(bool &);
+    void Push(EncodedStateType, std::string event, EventTypeMask);
     unsigned int GetSize(void);
     bool IsEmpty(void);
     unsigned int GetNumberOfStates(void);
-    std::string PrintPath( unsigned int encodedState, EventTypeMask mask );
+    std::string PrintPath( EncodedStateType encodedState, EventTypeMask mask );
     
   private:
-    std::unordered_map<std::pair<unsigned int, unsigned int>, DjikstraNode> * nodes;
+    std::unordered_map<std::pair<EncodedStateType, unsigned int>, DjikstraNode> * nodes;
     std::priority_queue<DjikstraNode> * pQueue;
     
-    unsigned int currentState;
+    EncodedStateType currentState;
     int currentCost;
     EventTypeMask currentMask;
 };

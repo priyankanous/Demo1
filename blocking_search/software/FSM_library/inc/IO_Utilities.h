@@ -2,6 +2,7 @@
 #define _IO_UTILITIES_H_
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -17,25 +18,27 @@
 #include "StateEncoder.h"
 #include "EventManager.h"
 
-#define UMDES_PRINT_FORMAT 0
+#define UMDES_PRINT_FORMAT 1
 #define SPECIAL_EVENTS_FORMAT !UMDES_PRINT_FORMAT
 
-int readFSM( std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[]);
+namespace IO_Utilities
+{
+  void readFSM( std::vector<FSM_struct>& FSMArr, bool print, int argc, char* argv[] );
 
-void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
+  void printFSM(FSM_struct & FSM, std::ostream & outfile, bool verbose);
 
-std::string GetNameFromPath (const std::string& str);
+  std::string GetNameFromPath (const std::string& str);
 
-void WriteStateToFile( unsigned int currentState, 
-                      std::vector<Trans> & nextStates, 
-                      bool marked, std::ofstream & outfile, StateEncoder & encoder, 
-                      std::pair<EventTypeMask, std::string>, std::string & titleAppend);
+  void WriteStateToFile( EncodedStateType currentState, 
+                        std::vector<CompositeTransition> & nextStates, 
+                        bool marked, std::ofstream & outfile, StateEncoder & encoder, 
+                        std::pair<EventTypeMask, std::string>, std::string & titleAppend);
 
-void AddStateToFSM( unsigned int currentState, 
-                      std::vector<Trans> & nextStates, 
-                      bool marked, FSM_struct * fsm, StateEncoder & encoder, 
-                      std::pair<EventTypeMask, std::string>, std::string & titleAppend);
-                      
-void InvertTransitions( const std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
-
+  void AddStateToFSM( EncodedStateType currentState, 
+                        std::vector<CompositeTransition> & nextStates, 
+                        bool marked, FSM_struct * fsm, StateEncoder & encoder, 
+                        std::pair<EventTypeMask, std::string>, std::string & titleAppend);
+                        
+  void InvertTransitions( const std::vector<FSM_struct>& FSMArr, std::vector<FSM_struct>& FSMArr_inv);
+}
 #endif

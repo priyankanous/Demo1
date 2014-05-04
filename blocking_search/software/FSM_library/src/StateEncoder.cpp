@@ -38,7 +38,7 @@ StateEncoder::StateEncoder( const vector<FSM_struct> & FSMArray )
 }
 
 
-unsigned int StateEncoder::StatesToEncodedValue( std::vector<int> & states )
+EncodedStateType StateEncoder::StatesToEncodedValue( std::vector<int> & states )
 {
   //Value to be returned
   unsigned int encodedValue = 0;
@@ -51,10 +51,10 @@ unsigned int StateEncoder::StatesToEncodedValue( std::vector<int> & states )
   return encodedValue;
 }
 
-unsigned int StateEncoder::UpdateStateWithTransitions( unsigned int currentState, std::vector< pair<int, int> > transitionList)
+EncodedStateType StateEncoder::UpdateStateWithTransitions( EncodedStateType currentState, std::vector< pair<int, int> > transitionList)
 {
   //Update state encoding mask
-  unsigned int newState = currentState;
+  EncodedStateType newState = currentState;
   
   //Iterate through transitions, modifying mask
 	for(int i=0; i<transitionList.size(); i++)
@@ -63,8 +63,8 @@ unsigned int StateEncoder::UpdateStateWithTransitions( unsigned int currentState
 	  int fsmIndex = transitionList[i].first;
 		int destinationState = transitionList[i].second;
 		
-		unsigned int mask = ( ((1<<numbits[fsmIndex])-1) << offset[fsmIndex] );
-    unsigned int newbits = destinationState << offset[fsmIndex];
+		EncodedStateType mask = ( ((1<<numbits[fsmIndex])-1) << offset[fsmIndex] );
+    EncodedStateType newbits = destinationState << offset[fsmIndex];
     
 		newState = (~mask & newState) | (mask & newbits);
 	} 
@@ -74,7 +74,7 @@ unsigned int StateEncoder::UpdateStateWithTransitions( unsigned int currentState
 
 
 
-int StateEncoder::FindStateIndex( unsigned int currentState, int fsmIndex)
+int StateEncoder::FindStateIndex( EncodedStateType currentState, int fsmIndex)
 {
   return (currentState>>offset[fsmIndex])&((1<<numbits[fsmIndex])-1);
 }
@@ -82,7 +82,7 @@ int StateEncoder::FindStateIndex( unsigned int currentState, int fsmIndex)
 
 
 
-string StateEncoder::GenerateStateName( unsigned int currentState )
+string StateEncoder::GenerateStateName( EncodedStateType currentState )
 {
   stringstream ss;
   int stateIndex;
@@ -107,7 +107,7 @@ string StateEncoder::GenerateStateName( unsigned int currentState )
 
 
 
-bool StateEncoder::CheckForUnmarkedStates(unsigned int currentState)
+bool StateEncoder::CheckForUnmarkedStates(EncodedStateType currentState)
 {
   int stateIndex;
 

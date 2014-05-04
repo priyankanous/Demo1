@@ -10,7 +10,7 @@ ndda	ndaState	c	o
 DA	npda_ddaState	c	o
 PDA	pda_nddaState	c	o
 
-0	0	1
+0_state	0	1
 DC	ndaState	c	o
 
 1	0	1
@@ -23,7 +23,7 @@ da2	npda_ddaState	c	o
 da3	npda_ddaState	c	o
 dda2	npda_ddaState	c	o
 dda	npda_ddaState	c	o
-DDC	0	c	o
+DDC	0_state	c	o
 PDA	pda_ddaState	c	o
 
 pda_ddaState	1	8

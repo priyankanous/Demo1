@@ -13,11 +13,11 @@ class StateEncoder
 {
 public:
   StateEncoder( const std::vector<FSM_struct> & FSMArray );
-  unsigned int StatesToEncodedValue( std::vector<int> & states );
-  unsigned int UpdateStateWithTransitions( unsigned int currentState, std::vector< std::pair<int, int> > transitions);
-  int FindStateIndex( unsigned int currentState, int fsmIndex);
-  std::string GenerateStateName( unsigned int currentState );
-  bool CheckForUnmarkedStates( unsigned int currentState ); 
+  EncodedStateType StatesToEncodedValue( std::vector<int> & states );
+  EncodedStateType UpdateStateWithTransitions( EncodedStateType currentState, std::vector< std::pair<int, int> > transitions);
+  int FindStateIndex( EncodedStateType currentState, int fsmIndex);
+  std::string GenerateStateName( EncodedStateType currentState );
+  bool CheckForUnmarkedStates( EncodedStateType currentState ); 
 private:
   std::vector<int> numbits;
   std::vector<int> offset;

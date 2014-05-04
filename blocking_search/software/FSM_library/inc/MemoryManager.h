@@ -60,7 +60,7 @@ class MemoryManager
 private:
   /* DFS memory structures */
   std::bitset<WORSTCASE_NUMBER_OF_STATES> * accessed; 
-  std::stack<unsigned int> searchStack;
+  std::stack<EncodedStateType> searchStack;
   
   StatsObject stats;
   
@@ -75,28 +75,28 @@ private:
   std::vector<int> accumulator;
   
   /* Conversion functions */
-  unsigned int EncodedStateToIndex(unsigned int encodedState);
-  unsigned int IndexToEncodedState(unsigned int index);
+  unsigned int EncodedStateToIndex(EncodedStateType encodedState);
+  EncodedStateType IndexToEncodedState(unsigned int index);
 
 public:
   /* Object management */
   MemoryManager(const std::vector<FSM_struct> & FSMArray);
   ~MemoryManager();
-  std::unordered_map<unsigned int, SpecialState> stateMasks;
+  std::unordered_map<EncodedStateType, SpecialState> stateMasks;
   
   /* General Use */
-  bool IsBlockingState(unsigned int, std::string);
+  bool IsBlockingState(EncodedStateType, std::string);
   
   /* Bitset interaction functions */
-  bool GetBit(unsigned int encodedState);
-  void SetBit(unsigned int encodedState);
+  bool GetBit(EncodedStateType encodedState);
+  void SetBit(EncodedStateType encodedState);
   void FlipBits(void);
   unsigned int GetNumberOfSetBits(void);
   unsigned int GetNumberOfUnsetBits(void);
   
   /* Stack interaction functions */
-  std::pair<unsigned int, EventTypeMask> PopOffStack(void);
-  void PushOnStack(unsigned int encodedState, EventTypeMask);
+  std::pair<EncodedStateType, EventTypeMask> PopOffStack(void);
+  void PushOnStack(EncodedStateType encodedState, EventTypeMask);
   unsigned int GetSizeOfStack(void);
   bool IsStackEmpty(void);
   
@@ -104,7 +104,7 @@ public:
   void LimitSearchSpaceOfCreatedStates(void);
   unsigned int GetNumberOfCreatedStates(void);
   void ClearAllCreatedStates(void);
-  bool IsCreatedState(unsigned int, EventTypeMask);
+  bool IsCreatedState(EncodedStateType, EventTypeMask);
   unsigned int GetNumberOfUnsetCreatedStates(void);
   
   

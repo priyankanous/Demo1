@@ -39,13 +39,25 @@ struct Event
 	std::vector<std::pair<int, int> > transitions;
 };
 
+struct CompositeTransition
+{
+  std::string event;
+  EncodedStateType dest;
+  EventTypeMask mask;
+  CompositeTransition(std::string event_, EncodedStateType dest_)
+  {
+    event = event_;
+    dest = dest_;
+  }
+};
+
 
 class EventManager
 {
 public:
   EventManager(const std::vector<FSM_struct> & FSMArray);
   void AddTransitions(const State & state, int fsmIndex, EventTypeMask restriction);
-  void GetNextStates( unsigned int currentState, std::vector<Trans> & nextStates );
+  void GetNextStates( EncodedStateType currentState, std::vector<CompositeTransition> & nextStates );
   EventTypeMask AssignEventMask(const std::string & event);
   EventTypeMask GetEventMask(const std::string & eventString);
   

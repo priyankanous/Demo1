@@ -51,9 +51,9 @@ MemoryManager::~MemoryManager(void)
  * @param index A composite state's index in the bitset
  * @returns The state encoding
  */
-unsigned int MemoryManager::IndexToEncodedState(unsigned int index)
+EncodedStateType MemoryManager::IndexToEncodedState(unsigned int index)
 {	
-	unsigned int encodedState = 0;
+	EncodedStateType encodedState = 0;
 	unsigned int scalar;
 	
 	for(unsigned int i=0; i < numberOfStateMachines; i++)
@@ -72,7 +72,7 @@ unsigned int MemoryManager::IndexToEncodedState(unsigned int index)
  * @param encodedState A composite state encoding
  * @returns The bitset index for a composite state
  */
-unsigned int MemoryManager::EncodedStateToIndex(unsigned int encodedState)
+unsigned int MemoryManager::EncodedStateToIndex(EncodedStateType encodedState)
 {	
 	unsigned int index = 0;
 	unsigned int scalar;
@@ -91,7 +91,7 @@ unsigned int MemoryManager::EncodedStateToIndex(unsigned int encodedState)
  * @param encodedState A composite state encoding
  * @returns bit entry in bitset
  */
-bool  MemoryManager::GetBit(unsigned int encodedValue)
+bool  MemoryManager::GetBit(EncodedStateType encodedValue)
 {
   try
   {
@@ -109,7 +109,7 @@ bool  MemoryManager::GetBit(unsigned int encodedValue)
  * @param encodedState A composite state encoding
  * @returns bit entry in bitset
  */
-void  MemoryManager::SetBit(unsigned int encodedValue)
+void  MemoryManager::SetBit(EncodedStateType encodedValue)
 {
   try
   {
@@ -164,7 +164,7 @@ unsigned int MemoryManager::GetNumberOfSetBits(void)
  * @param encodedState A composite state encoding
  * @param mask The mask with which this states will add events
  */
-void MemoryManager::PushOnStack(unsigned int encodedState, EventTypeMask mask)
+void MemoryManager::PushOnStack(EncodedStateType encodedState, EventTypeMask mask)
 {
   //  The following logic is fairly implementation-specific:
   //  In order to enforce arc constraints (DDC->DC), we must generate new states.
@@ -175,7 +175,7 @@ void MemoryManager::PushOnStack(unsigned int encodedState, EventTypeMask mask)
   //    hash table.
   if( mask == DC_EVENT || mask == DDC_EVENT ) 
   {
-    unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.find(encodedState);
+    unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.find(encodedState);
     if( !limitedSearchSpaceFlag && (it == stateMasks.end()) )
     {      
       //Push event onto the search stack
@@ -213,14 +213,14 @@ void MemoryManager::PushOnStack(unsigned int encodedState, EventTypeMask mask)
  *        If no entry exists, assign default mask
  * @returns (Encoded state , event mask for that state)
  */
-pair<unsigned int, EventTypeMask> MemoryManager::PopOffStack(void)
+pair<EncodedStateType, EventTypeMask> MemoryManager::PopOffStack(void)
 {
   //Pop event off top
-  unsigned int nextState = searchStack.top();
+  EncodedStateType nextState = searchStack.top();
   searchStack.pop();
   
   //Look for mask in hash table
-  unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.find(nextState);
+  unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.find(nextState);
   if(it != stateMasks.end())
   {
     if(it->second.accessed && !it->second.popped)
@@ -272,13 +272,13 @@ void MemoryManager::LimitSearchSpaceOfCreatedStates(void)
   }
   
 
-  for(unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.begin();
+  for(unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.begin();
       it != stateMasks.end(); it++)
   {
     if( !it->second.popped || !it->second.accessed )
     {
       //If unset popped value is found, undo all flag unsetting, and print error.
-      for(unordered_map<unsigned int, SpecialState>::iterator it2 = stateMasks.begin();
+      for(unordered_map<EncodedStateType, SpecialState>::iterator it2 = stateMasks.begin();
          it2 != it; it2++ )
       {
         it2->second.popped = true;
@@ -303,7 +303,7 @@ void MemoryManager::LimitSearchSpaceOfCreatedStates(void)
 unsigned int MemoryManager::GetNumberOfCreatedStates(void)
 {
   unsigned int counter = 0;
-  for(unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.begin();
+  for(unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.begin();
     it != stateMasks.end(); it++)
   {
     if(it->second.accessed)
@@ -321,7 +321,7 @@ unsigned int MemoryManager::GetNumberOfCreatedStates(void)
 unsigned int MemoryManager::GetNumberOfUnsetCreatedStates(void)
 {
   unsigned int counter = 0;
-  for(unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.begin();
+  for(unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.begin();
     it != stateMasks.end(); it++)
   {
     if(!it->second.accessed)
@@ -346,7 +346,7 @@ void MemoryManager::ClearAllCreatedStates(void)
  * @brief Tests whether a state is a blocking state
  * @note This should not be implemented as such... NEEDS TO BE PROTECTED MORE
  */
-bool MemoryManager::IsBlockingState(unsigned int destination, string event)
+bool MemoryManager::IsBlockingState(EncodedStateType destination, string event)
 {
   if(event.compare("DDC"))
   {
@@ -354,7 +354,7 @@ bool MemoryManager::IsBlockingState(unsigned int destination, string event)
   }
   else
   {
-    unordered_map<unsigned int, SpecialState>::iterator it = stateMasks.find(destination);
+    unordered_map<EncodedStateType, SpecialState>::iterator it = stateMasks.find(destination);
     if(it == stateMasks.end())
     {
       return false;

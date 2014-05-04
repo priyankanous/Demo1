@@ -13,6 +13,12 @@
 #include <cmath>
 
 /*
+ *  Define a datatype to store an encoded state
+ */
+typedef unsigned long int EncodedStateType;
+ 
+ 
+/*
  * A simple struct to store a transition
  */
 struct Trans

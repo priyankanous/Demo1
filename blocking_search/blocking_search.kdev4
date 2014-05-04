@@ -1,0 +1,3 @@
+[Project]
+Manager=KDevCMakeManager
+Name=blocking_search

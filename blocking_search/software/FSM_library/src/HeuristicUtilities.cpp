@@ -7,10 +7,11 @@ pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned long int
   vector< vector<int> > sharedEvents;
   int bestMetric = 0, bestStateSpace = 0;
   pair<int, int> bestFSMs = make_pair(-1, -1);
-/*  
+
+/*
   //~~~~~~~~Find union of all events~~~~~~~~~~~~
   vector<string> allEvents;
-  for(int i=1; i<FSMArray.size(); i++)
+  for(int i=0; i<FSMArray.size(); i++)
   {
     vector<string> temp(allEvents.size() + FSMArray[i].alphabet.size());
     sort(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end());
@@ -94,8 +95,25 @@ pair<int, int> MapCommonEvents( vector<FSM_struct> & FSMArray, unsigned long int
       row.push_back(sharedEvents); 
       if(sharedEvents > bestMetric)
       {
-        if( find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "DDC") == FSMArray[i].alphabet.end() && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "DDC") == FSMArray[j].alphabet.end() )
-        {  
+        if(find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "DDC") == FSMArray[i].alphabet.end() 
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "fddl") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "fpdl") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "nddl1_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "ddl1_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "ddl2_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "pdl1_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "pdl2_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[i].alphabet.begin(), FSMArray[i].alphabet.end(), "npdl1_f") == FSMArray[i].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "DDC") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "fddl") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "fpdl") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "nddl1_f") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "ddl1_f") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "ddl2_f") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "pdl1_f") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "pdl2_f") == FSMArray[j].alphabet.end()
+        && find(FSMArray[j].alphabet.begin(), FSMArray[j].alphabet.end(), "npdl1_f") == FSMArray[j].alphabet.end())
+        {
           unsigned int statespace = FSMArray[i].GetNumberOfStates() * FSMArray[j].GetNumberOfStates();
           if( statespace <= UpperBound )
           {

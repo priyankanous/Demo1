@@ -1,4 +1,4 @@
-# Install script for directory: /afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/software
+# Install script for directory: /home/lanham/TRW/cloaked-archer/blocking_search/software
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,13 +29,13 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT)
 
 # Install shared libraries without execute permission?
 IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  SET(CMAKE_INSTALL_SO_NO_EXE "0")
+  SET(CMAKE_INSTALL_SO_NO_EXE "1")
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/FSM_library/cmake_install.cmake")
-  INCLUDE("/afs/umich.edu/user/l/a/lanhamsm/DES_research/TRW/cloaked-archer/blocking_search/build/software/routines/cmake_install.cmake")
+  INCLUDE("/home/lanham/TRW/cloaked-archer/blocking_search/build/software/FSM_library/cmake_install.cmake")
+  INCLUDE("/home/lanham/TRW/cloaked-archer/blocking_search/build/software/routines/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
