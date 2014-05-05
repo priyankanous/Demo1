@@ -31,6 +31,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# Escaping for special characters.
+EQUALS = =
+
 # The program to use to edit the cache.
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
@@ -80,8 +83,8 @@ PrintParComp_OBJECTS = \
 PrintParComp_EXTERNAL_OBJECTS =
 
 ../bin/PrintParComp: software/routines/CMakeFiles/PrintParComp.dir/src/printParComp.cpp.o
-../bin/PrintParComp: software/FSM_library/libFSM_library.a
 ../bin/PrintParComp: software/routines/CMakeFiles/PrintParComp.dir/build.make
+../bin/PrintParComp: software/FSM_library/libFSM_library.a
 ../bin/PrintParComp: software/routines/CMakeFiles/PrintParComp.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../../../bin/PrintParComp"
 	cd /home/lanham/TRW/cloaked-archer/blocking_search/build/software/routines && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/PrintParComp.dir/link.txt --verbose=$(VERBOSE)

@@ -31,6 +31,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# Escaping for special characters.
+EQUALS = =
+
 # The program to use to edit the cache.
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
@@ -80,8 +83,8 @@ DivideEvents_OBJECTS = \
 DivideEvents_EXTERNAL_OBJECTS =
 
 ../bin/DivideEvents: software/routines/CMakeFiles/DivideEvents.dir/src/division.cpp.o
-../bin/DivideEvents: software/FSM_library/libFSM_library.a
 ../bin/DivideEvents: software/routines/CMakeFiles/DivideEvents.dir/build.make
+../bin/DivideEvents: software/FSM_library/libFSM_library.a
 ../bin/DivideEvents: software/routines/CMakeFiles/DivideEvents.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../../../bin/DivideEvents"
 	cd /home/lanham/TRW/cloaked-archer/blocking_search/build/software/routines && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/DivideEvents.dir/link.txt --verbose=$(VERBOSE)

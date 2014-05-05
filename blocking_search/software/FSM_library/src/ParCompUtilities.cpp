@@ -189,31 +189,31 @@ unsigned int DepthFirstSearch(const vector<FSM_struct>& FSMArray, MemoryManager 
   /******************************************************/
  
   
-  //Count the number of intially set bits
-  unsigned int InitialBitCount = memory.GetNumberOfSetBits();
-  
+	//Count the number of intially set bits
+	unsigned int InitialBitCount = memory.GetNumberOfSetBits();
+
 	//Initialize search stack for depth-first search, add initial state
 	//Note that this assumes the 0th state in each file is the marked state
 	EncodedStateType currentState = 0;
 	unsigned int counter = 0;
 	unsigned int maxStackSize = 0;
 
-  //Exception states to be accounted for after search
-  map<EncodedStateType, State> specialStates;
-  const pair<EventTypeMask,string> specialEvent = make_pair((dir == FORWARD)?DC_EVENT:DDC_EVENT, (dir == FORWARD)?"_DDC":"_DC");
-	
+	//Exception states to be accounted for after search
+	map<EncodedStateType, State> specialStates;
+	const pair<EventTypeMask,string> specialEvent = make_pair((dir == FORWARD)?DC_EVENT:DDC_EVENT, (dir == FORWARD)?"_DDC":"_DC");
+
 	//Initialize Stack
 	memory.PushOnStack( currentState , DEFAULT_EVENT_MASK );	
 	
 	while( !memory.IsStackEmpty() )
 	{	
-		//Get current state off top of stack
-		pair<EncodedStateType, EventTypeMask> currentPair = memory.PopOffStack();
-		
-		currentState = currentPair.first;
-		EventTypeMask currentMask = currentPair.second;
-		bool currentMarked = false; 
-    string titleAppend = "";
+	  //Get current state off top of stack
+	  pair<EncodedStateType, EventTypeMask> currentPair = memory.PopOffStack();
+
+	  currentState = currentPair.first;
+	  EventTypeMask currentMask = currentPair.second;
+	  bool currentMarked = false; 
+	  string titleAppend = "";
 	
 	
 	  //Assign mask and marked status
