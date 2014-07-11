@@ -32,4 +32,4 @@ EXAMPLE: lanham@lanham-G750JX: $ ./bin/BlockingSearch -v FSM_files/abstracted/*.
 
 7) Outputs will appear in the directory from which the call was made.
 
-test!
+test! test2!
