@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/InvertAutomata.dir/src/InvertTransitions.cpp.o  -o ../../../bin/InvertAutomata -rdynamic ../FSM_library/libFSM_library.a 

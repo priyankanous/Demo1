@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/CompareAutomata.dir/src/CompareAutomata.cpp.o  -o ../../../bin/CompareAutomata -rdynamic ../FSM_library/libFSM_library.a 

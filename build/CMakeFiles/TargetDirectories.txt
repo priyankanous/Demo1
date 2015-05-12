@@ -1,0 +1,6 @@
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/routines/CMakeFiles/CompareAutomata.dir
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/routines/CMakeFiles/CountBlockingStates.dir
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/FSM_library/CMakeFiles/FSM_library.dir
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/routines/CMakeFiles/InvertAutomata.dir
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/routines/CMakeFiles/RawCountBlockingStates.dir
+/usr/local/google/home/slan/trw_temp_delete_me/build/software/routines/CMakeFiles/RunAutoTests.dir

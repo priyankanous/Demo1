@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/FSMsort.dir/src/sortFSM.cpp.o  -o ../../../bin/FSMsort -rdynamic ../FSM_library/libFSM_library.a 

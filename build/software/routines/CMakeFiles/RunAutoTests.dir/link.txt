@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/RunAutoTests.dir/src/automated_tests.cpp.o  -o ../../../bin/RunAutoTests -rdynamic ../FSM_library/libFSM_library.a 

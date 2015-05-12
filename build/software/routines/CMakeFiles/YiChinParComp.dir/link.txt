@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/YiChinParComp.dir/src/main.cpp.o  -o ../../../bin/YiChinParComp -rdynamic ../FSM_library/libFSM_library.a 

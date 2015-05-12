@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/BlockingSearch.dir/src/blocking.cpp.o  -o ../../../bin/BlockingSearch -rdynamic ../FSM_library/libFSM_library.a 

@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/SmartStackTest.dir/src/SmartStackTest.cpp.o  -o ../../../bin/SmartStackTest -rdynamic ../FSM_library/libFSM_library.a 

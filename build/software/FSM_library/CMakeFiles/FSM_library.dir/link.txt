@@ -1,0 +1,2 @@
+/usr/bin/ar cr libFSM_library.a  CMakeFiles/FSM_library.dir/src/FSM.cpp.o CMakeFiles/FSM_library.dir/src/ParCompUtilities.cpp.o CMakeFiles/FSM_library.dir/src/SmartStack.cpp.o CMakeFiles/FSM_library.dir/src/TRWSpecialUtilities.cpp.o CMakeFiles/FSM_library.dir/src/SmartHeap.cpp.o
+/usr/bin/ranlib libFSM_library.a

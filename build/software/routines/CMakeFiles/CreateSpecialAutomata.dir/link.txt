@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++0x -g    CMakeFiles/CreateSpecialAutomata.dir/src/createSpecialAutomata.cpp.o  -o ../../../bin/CreateSpecialAutomata -rdynamic ../FSM_library/libFSM_library.a 
