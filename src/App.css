@@ -1,0 +1,128 @@
+
+.Navbar{
+  padding-left: 50%;
+}
+
+/* .Modal {
+  position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+  width: 200px;
+  height: 500px;
+  opacity:0.9 !important;
+
+}
+
+.Overlay {
+  position: fixed;
+  top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+  background-color: pink;
+} */
+
+.form-container .btn:hover,
+.open-button:hover {
+  opacity: 7;
+}
+
+.form-popup {
+  width: 370px;
+  height: 750px;
+  left: 100px;
+}
+
+.image {
+  width: 100px;
+  height: 50px;
+  padding-top: 10%;
+  padding-left: 20%;
+}
+
+.page {
+  background-color: #efefef;
+  max-width: 600px;
+  padding: 60px;
+  margin-left: 25%;
+}
+
+.button {
+  background-color: #0a8b9c;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  padding: 15px 32px;
+  float: right;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+table {
+  border-collapse: collapse;
+  width: 900px;
+  margin-left: 25%;
+}
+
+th {
+  text-align: left;
+  color: white;
+  padding: 8px;
+  padding-left: 50px;
+  background-color: #052635;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+  padding-left: 50px;
+}
+
+tr:nth-child(even) {
+  background-color: #D6EEEE;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #7396db;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
