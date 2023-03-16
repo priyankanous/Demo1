@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { AiFillPlusSquare } from "react-icons/ai";
-import ReactModal from 'react-modal';
+import Modal from 'react-modal';
 
-function Region() {
-
+function BuisnessUnit() {
     const [data, setData] = useState(null);
-    const [setLoading] = useState(true);
-    const [setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/users`)
             .then((response) => {
@@ -28,10 +26,12 @@ function Region() {
     }, []);
 
     return (
-        <div>
-            <table><td><b>Administration - Region</b></td><td></td>
-                <td><button class="button" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button></td>
-            </table>
+        <div className="table_container" >
+            <div style={{ display: "inline-block", padding: "7px" }}>
+                <h3>Administration - Region</h3>
+                <button class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
+            </div>
+
             <table>
                 <tr>
                     <th>Region Name</th>
@@ -39,17 +39,34 @@ function Region() {
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
-            <ReactModal
+
+            <Modal
                 isOpen={isOpen}
                 contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
-                className="Modal"
-                overlayClassName="Overlay"
+                style={
+                    {
+                        overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
+                        content: {
+                            position: 'absolute',
+                            top: '20%',
+                            left: '40%',
+                            border: 'none',
+                            overflow: 'auto',
+                            outline: 'none',
+                            padding: '20px',
+                            width: 'max-content',
+                            margin: '0',
+                            height: 'max-content',
+                            background: 'none'
+                        }
+                    }
+                }
             >
                 <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                            <h3>Setup Region</h3>
+                            <h3>Setup Business Unit</h3>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -62,15 +79,15 @@ function Region() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="button" value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{console.log('in here');setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                        <input type="submit" value="Save" id="create-account" class="button" />
+                                        <input type="submit" value="Cancel" id="create-account" class="button" />
                                     </label>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            </ReactModal>
+            </Modal>
         </div>
     );
 
@@ -90,4 +107,4 @@ function Tr({ name, username, email }) {
 }
 
 
-export default Region;
+export default BuisnessUnit;

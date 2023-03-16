@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { AiFillPlusSquare } from "react-icons/ai";
 import Modal from 'react-modal';
 
-
-
 function BuisnessUnit() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -28,18 +26,21 @@ function BuisnessUnit() {
     }, []);
 
     return (
-        <div class="div">
-            <table><td><b>Administration - BU</b></td><td></td>
-                <td><button class="button" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup SBU</button></td>
-            </table>
+        <div className="table_container" >
+            <div style={{ display: "inline-block", padding: "6px" }}>
+                <h3>Administration - BU</h3>
+                <button class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup SBU</button>
+            </div>
+
             <table>
                 <tr>
-                    <th>BusinessUnitName</th>
-                    <th>BuisnessUnit DisplayName</th>
-                    <th>ChildOfOrganization</th>
+                    <th>Business Unit  Name</th>
+                    <th>BuisnessUnit Display Name</th>
+                    <th>Child Of Organization</th>
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
+
             <Modal
                 isOpen={isOpen}
                 contentLabel="Example Modal"
@@ -48,21 +49,20 @@ function BuisnessUnit() {
                     {
                         overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
                         content: {
-                            position:'absolute',
-                            top:'20%',
-                            left:'40%',
+                            position: 'absolute',
+                            top: '20%',
+                            left: '40%',
                             border: 'none',
-                            overflow: 'auto',                            
+                            overflow: 'auto',
                             outline: 'none',
                             padding: '20px',
-                            width:'max-content',
-                            margin:'0',
-                            height:'max-content',
-                            background:'none'
+                            width: 'max-content',
+                            margin: '0',
+                            height: 'max-content',
+                            background: 'none'
                         }
                     }
                 }
-
             >
                 <div>
                     <div class="main" className="ModalContainer">
@@ -84,15 +84,14 @@ function BuisnessUnit() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                        <input type="submit" value="Save" id="create-account" class="button" />
+                                        <input type="submit" value="Cancel" id="create-account" class="button" />
                                     </label>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                {/* <h2>TITLE HERE</h2> */}
             </Modal>
         </div>
     );
