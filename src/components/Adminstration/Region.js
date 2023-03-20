@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
-import Modal from 'react-modal';
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
-
+import { Dropdown, Navbar } from "react-bootstrap";
+import { AiFillCloseSquare, AiFillPlusSquare } from "react-icons/ai";
+import ReactModal from 'react-modal';
 
 function Region() {
-
     const [data, setData] = useState(null);
     const [setLoading] = useState(true);
     const [setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/users`)
             .then((response) => {
@@ -42,17 +38,17 @@ function Region() {
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
-            <Modal
+            <ReactModal
                 isOpen={isOpen}
                 contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
-                style={modalStyleObject}
+                className="Modal"
+                overlayClassName="Overlay"
             >
                 <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                        <ModalHeading>Setup Region</ModalHeading>
-                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose/></ModalIcon>
+                            <h3>Setup Region</h3>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -65,15 +61,15 @@ function Region() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="button" value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{console.log('in here');setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                        <input type="submit" value="Save" id="create-account" class="button" />
+                                        <input type="submit" value="Cancel" id="create-account" class="button" />
                                     </label>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-            </Modal>
+            </ReactModal>
         </div>
     );
 

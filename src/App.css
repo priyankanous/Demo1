@@ -1,5 +1,4 @@
-
-.Navbar{
+.Navbar {
   padding-left: 50%;
 }
 
@@ -68,14 +67,22 @@ table {
   border-collapse: collapse;
   width: 900px;
   margin-left: 25%;
+  max-height: 10%;
+  overflow-y: auto;
 }
-
+.table_container {
+  max-height: 350px;
+  border-radius: 5%;
+  overflow-y: auto;
+}
 th {
   text-align: left;
   color: white;
   padding: 8px;
   padding-left: 50px;
   background-color: #052635;
+  position: sticky;
+  top: 0;
 }
 
 td {
@@ -85,7 +92,7 @@ td {
 }
 
 tr:nth-child(even) {
-  background-color: #D6EEEE;
+  background-color: #d6eeee;
 }
 
 .App {
