@@ -29,21 +29,23 @@ function BuisnessUnit() {
     }, []);
 
     return (
-        <div class="div">
-            <table><td><b>Administration - BU</b></td><td></td>
-                <td><button class="button" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup SBU</button></td>
-            </table>
+        <div className="table_container" >
+            <div style={{ display: "inline-block", padding: "6px" }}>
+                <h3>Administration - BU</h3>
+                <button  style={{float:'right'}} class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup SBU</button>
+            </div>
+
             <table>
                 <tr>
-                    <th>BusinessUnitName</th>
-                    <th>BuisnessUnit DisplayName</th>
+                    <th>Business Unit  Name</th>
+                    <th>BuisnessUnit Display Name</th>
                     <th>Child Of Organization</th>
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
+
             <Modal
                 isOpen={isOpen}
-                contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
                 style={modalStyleObject}
             >
@@ -51,7 +53,7 @@ function BuisnessUnit() {
                     <div class="main" className="ModalContainer">
                         <div class="register">
                             <ModalHeading>Setup Business Unit</ModalHeading>
-                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose/></ModalIcon>
+                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose></AiOutlineClose></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -68,8 +70,9 @@ function BuisnessUnit() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Save" id="create-account" class="button" />
+                                    <input type="button" value="Save" id="create-account" class="button" />
                                         <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+
                                     </label>
                                 </div>
                             </form>

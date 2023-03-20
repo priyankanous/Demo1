@@ -7,11 +7,12 @@ export const SidebarLink = styled(Link)`
   color: white;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 5%;
+  padding-left: 2rem;
   list-style: none;
-  height: 10px;
+  height: 1%;
   text-decoration: none;
-  font-size: medium;
+  font-size: small;
 
   &:hover {
     background: #0a8b9c;
@@ -20,19 +21,19 @@ export const SidebarLink = styled(Link)`
 `;
 
 export const SidebarLabel = styled.span`
-  margin-left: 16px;
+  margin-left: 1rem;
 `;
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
-  padding-left:3rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
+  padding-left: 4rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   display: flex;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: medium;
+  font-size: small;
 
   &:hover {
     background: #0a8b9c;
@@ -42,12 +43,11 @@ export const DropdownLink = styled(Link)`
 
 export const SidebarNav = styled.nav`
   background:  #072e3a;
-  width: 230px;
-  height: 100%;
+  width: 17%;
+  height: 105%;
   display: flex;
   justify-content: center;
-  position: fixed;
-  overflow-y:auto;
+  position: absolute;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
@@ -59,21 +59,20 @@ export const SidebarWrap = styled.div`
 `;
 
 export const PrimaryNav = styled.nav`
-  z-index: 14;
-  height: 90px;
+  height: 5rem;
   display: flex;
-  background: #0a8b9c;
+  background:  #072e3a;
+  margin-left: 14.3%;
+  padding-left: 2.7%;
+  font-size: large;
   justify-content: space-between;
-  padding: 0.18rem calc((100vw - 1000px) / 2);
+  border-color: #052635;
 `
 export const MenuLink = styled(Link)`
-  color: #fff;
+  color: white;
   display: flex;
   cursor: pointer;
   align-items: center;
-  font-weight: 100px;
-  text-decoration: none;
-  padding: 0 1.2rem;
   height: 100%;
   &.active {
     color: #000000;
@@ -96,8 +95,6 @@ export const Menu = styled.div`
   display: flex;
   align-items: center;
   font-weight: 100px;
-  margin-right: -25px;
-  margin-Left: 80px;
   @media screen and (max-width: 768px) {
     display: none;
   }

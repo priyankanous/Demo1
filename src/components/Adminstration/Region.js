@@ -6,12 +6,10 @@ import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
 
 
 function Region() {
-
     const [data, setData] = useState(null);
-    const [setLoading] = useState(true);
-    const [setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-
     useEffect(() => {
         fetch(`https://jsonplaceholder.typicode.com/users`)
             .then((response) => {
@@ -31,10 +29,11 @@ function Region() {
     }, []);
 
     return (
-        <div>
-            <table><td><b>Administration - Region</b></td><td></td>
-                <td><button class="button" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button></td>
-            </table>
+        <div className="table_container" >
+            <div style={{ display: "flex",width:'100%',justifyContent:'space-between' }}>
+                <div style={{margin:'25px'}}>Administration - Region</div>
+                <button style={{margin:'10px'}}  class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
+            </div>
             <table>
                 <tr>
                     <th>Region Name</th>
@@ -44,7 +43,6 @@ function Region() {
             </table>
             <Modal
                 isOpen={isOpen}
-                contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
                 style={modalStyleObject}
             >
@@ -52,7 +50,7 @@ function Region() {
                     <div class="main" className="ModalContainer">
                         <div class="register">
                         <ModalHeading>Setup Region</ModalHeading>
-                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose/></ModalIcon>
+                        <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose></AiOutlineClose></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -65,8 +63,9 @@ function Region() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="button" value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{console.log('in here');setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                    <input type="button" value="Save" id="create-account" class="button" />
+                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+
                                     </label>
                                 </div>
                             </form>
