@@ -5,6 +5,7 @@ import BuisnessUnit from "./components/Adminstration/BusinessUnit";
 import HomePage from "./components/Home/HomePage";
 import "./css/style.scss"
 import Region from "./components/Adminstration/Region";
+import Organization from "./components/Adminstration/Organization";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/administration/bu" component={BuisnessUnit} />
         <Route path="/dashboard" component={HomePage}/>
         <Route path="/admistration/region" component={Region}/>
+        <Route path="/administration/organization" component={Organization}/>
         <Route path="/services" />
         <Route path="/services/services1" />
         <Route path="/services/services2" />

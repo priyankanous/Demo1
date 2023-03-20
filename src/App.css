@@ -1,5 +1,4 @@
-h1 {
-  position: absolute;
+/* h1 {
   width: 20%;
   height: 10%;
   left: 20%;
@@ -9,7 +8,7 @@ h1 {
   font-weight: 600;
   font-size: 32px;
   color: #072a3a;
-}
+} */
 
 .Modal {
   position: absolute;
@@ -100,8 +99,8 @@ h3 {
   position: absolute;
   width: 76%;
   height: 78%;
-  left: 19%;
-  top: 17%;
+  left: 20%;
+  top:13%;
   box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
   border-radius: 20px;
 }
@@ -144,30 +143,37 @@ tr:nth-child(even) {
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    height: 40vmin;
+    pointer-events: none;
   }
-}
-
-.App-header {
-  background-color: #7396db;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
   }
-  to {
-    transform: rotate(360deg);
+  
+  .App-header {
+    background-color: #7396db;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
   }
-}
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }}
+  

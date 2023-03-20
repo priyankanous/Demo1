@@ -22,15 +22,13 @@ $green-border: #72B372;
 .register {
 	opacity: 2;
 	width: 400px;
-	height: 400px;
+	height: max-content;
 	margin: 10px auto;
 	border-radius: 10px;
-	padding: 10px;
+	padding: 25px;
 	border-radius: 25px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-color: white;
-	box-shadow: 0 0 20px 0 #000000;
-
 	h3 {
 		margin: 10px 15px 20px;
 		padding: 5px 10px 5px 0;
@@ -55,16 +53,26 @@ $green-border: #72B372;
 		margin: 10px;
 	}
 
-	input[type=text],
-	input[type=password] {
-		width: 50%;
-		font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
-		padding: 4px;
-		font-size: 0.9em;
-		border-radius: 10px;
-		border-color: 1px solid rgba(26, 132, 143, 0.13);
-		background: white;
-		box-shadow:0px 4px 4px rgba(0, 0, 0, 0.25);
+	// input[type=text],
+	// input[type=password] {
+	// 	width: 50%;
+	// 	font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Sans-Serif;
+	// 	padding: 4px;
+	// 	font-size: 0.9em;
+	// 	border-radius: 10px;
+	// 	background: white;
+	// 	outline:white;
+	// 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	// 	outline:none;
+	// }
+	input[type=text]{
+		width:50%;
+		outline:none;
+		border-radius:10px;
+		padding:5px;
+		box-shadow:0px 2px 5px grey ;
+		border:blue;
+		
 	}
 
 	input[type=text]:focus {

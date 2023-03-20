@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { AiFillPlusSquare } from "react-icons/ai";
+import { TableHeadingSection,TableHeading,TableHeadingButton,TableHeadingButtonPlusIcon } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
   return (
     <div className="table_container">
-      <div className="subDiv">
-        <h3>Administration - {props.field}</h3>
-        <button class="button1" onClick={props.setIsOpen}>
-          <AiFillPlusSquare></AiFillPlusSquare> {props.actionButtonName}
-        </button>
-      </div>
+      <TableHeadingSection>
+                <TableHeading>Administration - {props.field}</TableHeading>
+                <TableHeadingButton onClick={props.setIsOpen}><TableHeadingButtonPlusIcon><AiFillPlusSquare></AiFillPlusSquare></TableHeadingButtonPlusIcon>{props.actionButtonName}</TableHeadingButton>
+      </TableHeadingSection>
       <table>
         <tr>
           <th>{props.firstHeader}</th>
