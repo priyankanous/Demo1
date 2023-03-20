@@ -99,6 +99,17 @@ export const Menu = styled.div`
     display: none;
   }
 `
+
+export const ModalHeading = styled.h3`
+  display:inline;
+`
+
+export const ModalIcon = styled.i`
+float:right;
+color:rgb(10, 139, 156);
+font-size:1.2rem;
+`
+
 // export const ModalContainer = styled.div`
 //   position: absolute;
 //   top: 0;
@@ -115,5 +126,5 @@ export const Menu = styled.div`
 //   right: calc(50% - 100px);
 //   border: 1px solid #000;
 //   padding: 20px;
-//   min-height: 200px; 
+//   min-height: 200px;
 // `;

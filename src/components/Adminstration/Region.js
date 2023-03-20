@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
+import { modalStyleObject } from "../../utils/constantsValue";
+import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
 
-function BuisnessUnit() {
+
+function Region() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,11 +30,10 @@ function BuisnessUnit() {
 
     return (
         <div className="table_container" >
-            <div style={{ display: "inline-block", padding: "7px" }}>
-                <h3>Administration - Region</h3>
-                <button class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
+            <div style={{ display: "flex",width:'100%',justifyContent:'space-between' }}>
+                <div style={{margin:'25px'}}>Administration - Region</div>
+                <button style={{margin:'10px'}}  class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
             </div>
-
             <table>
                 <tr>
                     <th>Region Name</th>
@@ -39,34 +41,16 @@ function BuisnessUnit() {
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
-
             <Modal
                 isOpen={isOpen}
-                contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
-                style={
-                    {
-                        overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
-                        content: {
-                            position: 'absolute',
-                            top: '20%',
-                            left: '40%',
-                            border: 'none',
-                            overflow: 'auto',
-                            outline: 'none',
-                            padding: '20px',
-                            width: 'max-content',
-                            margin: '0',
-                            height: 'max-content',
-                            background: 'none'
-                        }
-                    }
-                }
+                style={modalStyleObject}
             >
                 <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                            <h3>Setup Business Unit</h3>
+                        <ModalHeading>Setup Region</ModalHeading>
+                        <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose></AiOutlineClose></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -79,8 +63,9 @@ function BuisnessUnit() {
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="submit" value="Save" id="create-account" class="button" />
-                                        <input type="submit" value="Cancel" id="create-account" class="button" />
+                                    <input type="button" value="Save" id="create-account" class="button" />
+                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+
                                     </label>
                                 </div>
                             </form>
@@ -107,4 +92,4 @@ function Tr({ name, username, email }) {
 }
 
 
-export default BuisnessUnit;
+export default Region;
