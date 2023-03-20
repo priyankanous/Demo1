@@ -1,27 +1,23 @@
-.Navbar {
-  padding-left: 50%;
+h1 {
+  position: absolute;
+  width: 20%;
+  height: 10%;
+  left: 20%;
+  top: 0px;
+  font-family: "Roboto Serif";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 32px;
+  color: #072a3a;
 }
 
-/* .Modal {
+.Modal {
   position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -100px;
-	margin-left: -100px;
+  top: 70%;
+  left: 50%;
   width: 200px;
   height: 500px;
-  opacity:0.9 !important;
-
 }
-
-.Overlay {
-  position: fixed;
-  top: 50%;
-	left: 50%;
-	margin-top: -100px;
-	margin-left: -100px;
-  background-color: pink;
-} */
 
 .form-container .btn:hover,
 .open-button:hover {
@@ -37,8 +33,8 @@
 .image {
   width: 100px;
   height: 50px;
-  padding-top: 10%;
-  padding-left: 20%;
+  padding-top: 6%;
+  padding-left: 26%;
 }
 
 .page {
@@ -48,11 +44,41 @@
   margin-left: 25%;
 }
 
+.nav {
+  background-color: white;
+  border-top-left-radius: 35px;
+  width: 100%;
+  height: 100%;
+}
+
+h3 {
+  padding-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.button1 {
+  background-color: #0a8b9c;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  margin-left: 30rem;
+}
+
 .button {
   background-color: #0a8b9c;
   border: none;
   border-radius: 30px;
   color: white;
+  margin-bottom: 10%;
   padding: 15px 32px;
   float: right;
   text-align: center;
@@ -62,32 +88,44 @@
   margin: 4px 2px;
   cursor: pointer;
 }
-
-table {
-  border-collapse: collapse;
-  width: 900px;
-  margin-left: 25%;
-  max-height: 10%;
-  overflow-y: auto;
+.subDiv {
+  top: 0;
+  position: static;
+  display: "inline-block";
+  padding: "6px";
 }
 .table_container {
-  max-height: 350px;
-  border-radius: 5%;
   overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  width: 76%;
+  height: 78%;
+  left: 19%;
+  top: 17%;
+  box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
+  border-radius: 20px;
 }
+
+table {
+  padding-top: 10px;
+  border-collapse: collapse;
+  width: 94%;
+  margin-left: 3%;
+}
+
 th {
+  position: sticky;
+  top: 0;
   text-align: left;
   color: white;
   padding: 8px;
   padding-left: 50px;
   background-color: #052635;
-  position: sticky;
-  top: 0;
 }
 
 td {
   text-align: left;
-  padding: 8px;
+  padding: 6px;
   padding-left: 50px;
 }
 

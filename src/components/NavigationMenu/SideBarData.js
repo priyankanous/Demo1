@@ -1,19 +1,17 @@
 import React from "react";
-import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
-import * as IoIcons from "react-icons/io";
-import * as RiIcons from "react-icons/ri";
 
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
     icon: <AiIcons.AiFillHome />,
+    subNav: [],
   },
   {
     title: "Revenue",
     path: "/revenue",
-    icon: < AiIcons.AiFillSignal/>,
+    icon: <AiIcons.AiFillSignal />,
 
     subNav: [
       {
@@ -36,23 +34,22 @@ export const SidebarData = [
   {
     title: "Reports",
     path: "/reports",
-    icon: < AiIcons.AiFillSchedule/>
+    icon: <AiIcons.AiFillSchedule />,
   },
   {
     title: "Settings",
     path: "/settings",
-    icon: < AiIcons.AiFillSetting/>
+    icon: <AiIcons.AiFillSetting />,
   },
   {
     title: "Calendar",
     path: "/calender",
-    icon: <AiIcons.AiFillCalendar/>
-   
+    icon: <AiIcons.AiFillCalendar />,
   },
   {
     title: "Administration",
     path: "/administration",
-    icon: <AiIcons.AiFillAccountBook/>,
+    icon: <AiIcons.AiFillAccountBook />,
 
     subNav: [
       {
