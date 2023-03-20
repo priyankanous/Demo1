@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
-
+import { modalStyleObject } from "../../utils/constantsValue";
+import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
 
 
 function BuisnessUnit() {
@@ -36,7 +37,7 @@ function BuisnessUnit() {
                 <tr>
                     <th>BusinessUnitName</th>
                     <th>BuisnessUnit DisplayName</th>
-                    <th>ChildOfOrganization</th>
+                    <th>Child Of Organization</th>
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
@@ -44,30 +45,13 @@ function BuisnessUnit() {
                 isOpen={isOpen}
                 contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
-                style={
-                    {
-                        overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
-                        content: {
-                            position:'absolute',
-                            top:'20%',
-                            left:'40%',
-                            border: 'none',
-                            overflow: 'auto',                            
-                            outline: 'none',
-                            padding: '20px',
-                            width:'max-content',
-                            margin:'0',
-                            height:'max-content',
-                            background:'none'
-                        }
-                    }
-                }
-
+                style={modalStyleObject}
             >
                 <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                            <h3>Setup Business Unit</h3>
+                            <ModalHeading>Setup Business Unit</ModalHeading>
+                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose/></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -92,7 +76,6 @@ function BuisnessUnit() {
                         </div>
                     </div>
                 </div>
-                {/* <h2>TITLE HERE</h2> */}
             </Modal>
         </div>
     );

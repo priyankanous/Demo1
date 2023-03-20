@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { AiFillPlusSquare } from "react-icons/ai";
-import ReactModal from 'react-modal';
+import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
+import Modal from 'react-modal';
+import { modalStyleObject } from "../../utils/constantsValue";
+import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
+
 
 function Region() {
 
@@ -39,17 +42,17 @@ function Region() {
                 </tr>
                 <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
             </table>
-            <ReactModal
+            <Modal
                 isOpen={isOpen}
                 contentLabel="Example Modal"
                 onRequestClose={() => setIsOpen(false)}
-                className="Modal"
-                overlayClassName="Overlay"
+                style={modalStyleObject}
             >
                 <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                            <h3>Setup Region</h3>
+                        <ModalHeading>Setup Region</ModalHeading>
+                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose/></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
@@ -70,7 +73,7 @@ function Region() {
                         </div>
                     </div>
                 </div>
-            </ReactModal>
+            </Modal>
         </div>
     );
 
