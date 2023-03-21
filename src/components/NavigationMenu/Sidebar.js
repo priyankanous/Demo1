@@ -2,7 +2,7 @@ import React, { useState,useEffect } from "react";
 import { SidebarData } from "./SideBarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
-import { SidebarNav, SidebarWrap } from "./Value";
+import { LoggedInUserImage, LoggedInUserName, NavBarHeading, SidebarNav, SidebarWrap, UserLoggedInSection } from "./Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
 import { Menu, MenuLink, PrimaryNav } from "../NavigationMenu/Value";
 import { Navbar,Image } from "react-bootstrap";
@@ -34,11 +34,11 @@ const Sidebar = () => {
           <div>
             <PrimaryNav>
               <Menu className="nav">
-                <div style={{margin:'20px 60px',fontSize:'2rem',fontFamily:'sans-serif',fontWeight:'700'}}>Rolling Revenue</div>
-                <div style={{marginRight:'2rem'}}>
-                  <img style={{borderRadius:'50%',position:'relative',top:'20%',marginRight:'1rem'}} src={userObj?.picture?.thumbnail}/> 
-                  <span>KUNAL TIWARI</span>
-                </div>
+                <NavBarHeading>Rolling Revenue</NavBarHeading>
+                <UserLoggedInSection>
+                  <LoggedInUserImage  src={userObj?.picture?.thumbnail}/> 
+                  <LoggedInUserName >KUNAL TIWARI</LoggedInUserName>
+                </UserLoggedInSection>
               </Menu>
             </PrimaryNav>
           </div>

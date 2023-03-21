@@ -139,3 +139,23 @@ export const TableHeadingButtonPlusIcon = styled.i`
 margin:0.4rem;
 vertical-align:middle;
 `
+export const NavBarHeading = styled.div`
+margin:20px 60px;
+font-size:2rem;
+font-family:sans-serif;
+font-weight:700;
+`
+
+export const UserLoggedInSection = styled.div`
+margin-right:5rem;
+`
+export const LoggedInUserImage = styled.img`
+border-radius:50%;
+position:relative;
+top:20%;
+margin-right:1rem
+`
+export const LoggedInUserName = styled.span`
+font-weight:500;
+color:rgb(7,46,58);
+`
