@@ -64,32 +64,32 @@ export const SidebarData = [
       },
       {
         title: "Region",
-        path: "/admistration/region",
+        path: "/administration/region",
         cName: "sub-nav",
       },
       {
         title: "SBU",
-        path: "/admistration/sbu",
+        path: "/administration/sbu",
         cName: "sub-nav",
       },
       {
         title: "SBU Head",
-        path: "/admistration/sbuhead",
+        path: "/administration/sbuhead",
         cName: "sub-nav",
       },
       {
         title: "Location",
-        path: "/admistration/location",
+        path: "/administration/location",
         cName: "sub-nav",
       },
       {
         title: "BDM",
-        path: "/admistration/bdm",
+        path: "/administration/bdm",
         cName: "sub-nav",
       },
       {
         title: "Probability Type",
-        path: "/admistration/probabilitytype",
+        path: "/administration/probabilitytype",
         cName: "sub-nav",
       },
       {
