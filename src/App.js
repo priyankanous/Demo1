@@ -11,6 +11,12 @@ import SbuHead from "./components/Adminstration/SbuHead";
 import Location from "./components/Adminstration/Location";
 import Bdm from "./components/Adminstration/BDM";
 import Probability from "./components/Adminstration/ProbabilityType";
+import BusinessType from "./components/Adminstration/BusinessType";
+import CocPractice from "./components/Adminstration/CocPractice";
+import PricingType from "./components/Adminstration/PricingType";
+import WorkOrderStatus from "./components/Adminstration/WorkOrderStatus";
+import Status from "./components/Adminstration/Status";
+import FinancialYear from "./components/Adminstration/FinancialYear";
 
 function App() {
   return (
@@ -26,6 +32,12 @@ function App() {
         <Route path="/administration/location" component={Location} />
         <Route path="/administration/bdm" component={Bdm} />
         <Route path="/administration/probabilitytype" component={Probability} />
+        <Route path="/administration/businesstype" component={BusinessType}/>
+        <Route path="/administration/cocPractice" component={CocPractice}/>
+        <Route path="/administration/pricingType" component={PricingType}/>
+        <Route path="/administration/wostatus" component={WorkOrderStatus}/>
+        <Route path="/administration/status" component={Status}/>
+        <Route path="/administration/financialYear" component={FinancialYear}/>
       </Switch>
     </Router>
   );

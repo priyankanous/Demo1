@@ -14,6 +14,7 @@ const Sidebar = () => {
   const [userObj,setUserObj] = useState(null);
 
   const handleSubMenuClick = (index) => {
+    console.log('11',index);
     setOpenSubmenu(index === openSubmenu ? null : index);
   };
 
@@ -56,7 +57,8 @@ const Sidebar = () => {
                   item={item}
                   key={index}
                   isOpen={openSubmenu === index}
-                  onClick={() => handleSubMenuClick(index)}
+                  handleSubMenuClick={handleSubMenuClick}
+                  index={index}
                 />
               );
             })}

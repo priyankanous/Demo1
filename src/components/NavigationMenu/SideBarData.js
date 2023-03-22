@@ -94,32 +94,32 @@ export const SidebarData = [
       },
       {
         title: "Business Type",
-        path: "/admistration/businesstype",
+        path: "/administration/businesstype",
         cName: "sub-nav",
       },
       {
         title: "CoC Practice",
-        path: "/admistration/cocpractice",
+        path: "/administration/cocPractice",
         cName: "sub-nav",
       },
       {
         title: "Pricing Type",
-        path: "/admistration/pricingtype",
+        path: "/administration/pricingType",
         cName: "sub-nav",
       },
       {
         title: "Status",
-        path: "/admistration/status",
+        path: "/administration/status",
         cName: "sub-nav",
       },
       {
         title: "WO Status",
-        path: "/admistration/wostatus",
+        path: "/administration/wostatus",
         cName: "sub-nav",
       },
       {
         title: "Financial Year",
-        path: "/admistration/financialyear",
+        path: "/administration/financialYear",
         cName: "sub-nav",
       },
       {
