@@ -31,7 +31,7 @@ function Region() {
     return (
         <div className="table_container" >
             <div style={{ display: "flex",width:'100%',justifyContent:'space-between' }}>
-                <div style={{margin:'25px'}}>Administration - Region</div>
+                <h3 style={{margin:'25px'}}>Administration - Region</h3>
                 <button style={{margin:'10px'}}  class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
             </div>
             <table>

@@ -8,7 +8,7 @@ export const SidebarLink = styled(Link)`
   justify-content: space-between;
   align-items: center;
   padding: 5%;
-  padding-left: 2rem;
+  padding-left: 1.5rem;
   list-style: none;
   height: 1%;
   text-decoration: none;
@@ -18,6 +18,11 @@ export const SidebarLink = styled(Link)`
     background: #0a8b9c;
     cursor: pointer;
   }
+
+  .active {
+    background: #0a8b9c;
+    padding: 3.5%;
+  }
 `;
 
 export const SidebarLabel = styled.span`
@@ -26,10 +31,11 @@ export const SidebarLabel = styled.span`
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
-  padding-left: 4rem;
+  margin-left: 3.5rem;
+  padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  display: flex;
+  display: inline-block;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
@@ -37,8 +43,21 @@ export const DropdownLink = styled(Link)`
 
   &:hover {
     background: #0a8b9c;
+    border-radius: 5.5rem;
     cursor: pointer;
   }
+
+  .active{
+    background: #0a8b9c;
+    border-radius: 5.5rem;;
+    margin-left: 0.5rem;
+    marging-right: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
 `;
 
 export const SidebarNav = styled.nav`
@@ -52,6 +71,7 @@ export const SidebarNav = styled.nav`
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
   z-index: 10;
+
 `;
 
 export const SidebarWrap = styled.div`

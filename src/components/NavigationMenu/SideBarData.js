@@ -1,16 +1,20 @@
 import React from "react";
 import * as AiIcons from "react-icons/ai";
+import * as RiIcons from "react-icons/ri";
 
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
     icon: <AiIcons.AiFillHome />,
+ 
   },
   {
     title: "Revenue",
     path: "/revenue",
     icon: < AiIcons.AiFillSignal/>,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
 
     subNav: [
       {
@@ -33,23 +37,104 @@ export const SidebarData = [
   {
     title: "Reports",
     path: "/reports",
-    icon: < AiIcons.AiFillSchedule/>
+    icon: < AiIcons.AiFillSchedule/>,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+
+    subNav: [
+      {
+        title: "Business type wise view",
+        path: "/reports/businesstypewiseview",
+        cName: "sub-nav",
+      },
+      {
+        title: "SBU-Client wise view",
+        path: "/reports/sbuclientwiseview",
+        cName: "sub-nav",
+      },
+      {
+        title: "Probability type view",
+        path: "/reports/probabilitytypeview",
+        cName: "sub-nav",
+      },
+      {
+        title: "Region-wise view",
+        path: "/reports/regionwiseview",
+        cName: "sub-nav",
+      },
+      {
+        title: "BU-wise view",
+        path: "/reports/buwiseview",
+        cName: "sub-nav",
+      },
+      {
+        title: "Client-wise view",
+        path: "/reports/clientwiseview",
+        cName: "sub-nav",
+      },
+      {
+        title: "Archive",
+        path: "/reports/archive",
+        cName: "sub-nav",
+      },
+    ],
   },
   {
     title: "Settings",
     path: "/settings",
-    icon: < AiIcons.AiFillSetting/>
+    icon: < AiIcons.AiFillSetting/>,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+
+    subNav: [
+      {
+        title: "Account",
+        path: "/settings/account",
+        cName: "sub-nav",
+      },
+      {
+        title: "Opportunity",
+        path: "/settings/opportunity",
+        cName: "sub-nav",
+      },
+      {
+        title: "Roles",
+        path: "/settings/roles",
+        cName: "sub-nav",
+      },
+    ],
   },
   {
     title: "Calendar",
     path: "/calender",
-    icon: <AiIcons.AiFillCalendar/>
+    icon: <AiIcons.AiFillCalendar/>,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+    subNav: [
+      {
+        title: "Holiday Calender",
+        path: "/calender/holidaycalender",
+        cName: "sub-nav",
+      },
+      {
+        title: "Fortnightly meetings",
+        path: "/calender/fortnightlymeeting",
+        cName: "sub-nav",
+      },
+      {
+        title: "Monthly BDM Meetings",
+        path: "/calender/monthlybdmmeetings",
+        cName: "sub-nav",
+      },
+    ],
    
   },
   {
     title: "Administration",
     path: "/administration",
     icon: <AiIcons.AiFillAccountBook/>,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
 
     subNav: [
       {

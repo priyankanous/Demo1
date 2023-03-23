@@ -36,7 +36,14 @@ h1{
     padding-top: 6%;
     padding-left: 26%;
   }
-  
+
+  .sideBarIcon {
+    font-size: 170%;
+    position:absolute;
+    line-height: 2px;
+    padding-left: 5px;
+  }
+
   .page {
     background-color: #efefef;
     max-width: 600px;
