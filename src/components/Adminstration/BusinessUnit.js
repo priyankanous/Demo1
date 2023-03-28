@@ -1,50 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
-
+import BaseComponent from "../CommonComponent/BaseComponent";
 
 function BuisnessUnit() {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
-    useEffect(() => {
-        fetch(`https://jsonplaceholder.typicode.com/users`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((actualData) => {
-                setData(actualData);
-                setError(null);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setData(null);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-    return (
-        <div className="table_container" >
-            <div style={{ display: "inline-block", padding: "6px" }}>
-                <h3>Administration - BU</h3>
-                <button  style={{float:'right'}} class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup SBU</button>
-            </div>
-
-            <table>
-                <tr>
-                    <th>Business Unit  Name</th>
-                    <th>BuisnessUnit Display Name</th>
-                    <th>Child Of Organization</th>
-                </tr>
-                <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
-            </table>
-
-            <Modal
+  useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/users`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => {
+        setData(actualData);
+      });
+  }, []);
+  return (
+    <div>
+      <BaseComponent
+        field="BU"
+        actionButtonName="Setup BU"
+        firstHeader="BusinessUnit Name"
+        secondHeader="BusinessUnit Display Name"
+        thirdHeader="Child Of Organization"
+        fourthHeader="Test"
+        data={data}
+        Tr={Tr}
+        setIsOpen={setIsOpen}
+      />
+      <Modal
                 isOpen={isOpen}
                 onRequestClose={() => setIsOpen(false)}
                 style={modalStyleObject}
@@ -80,26 +69,27 @@ function BuisnessUnit() {
                     </div>
                 </div>
             </Modal>
-        </div>
-    );
-
+    </div>
+  );
 }
 
-function Tr({ name, username, email }) {
-    return (
-        <tr>
-            <td>
-                <span>{name || "Unknown"}</span>
-            </td>
-            <td>
-                <span>{username || "Unknown"}</span>
-            </td>
-            <td>
-                <span>{email || "Unknown"}</span>
-            </td>
-        </tr>
-    );
+function Tr({ userId, id, title, completed }) {
+  return (
+    <tr>
+      <td>
+        <span>{id || "Unknown"}</span>
+      </td>
+      <td>
+        <span>{userId || "Unknown"}</span>
+      </td>
+      <td>
+        <span>{title || "Unknown"}</span>
+      </td>
+      <td>
+        <span>{completed || "Unknown"}</span>
+      </td>
+    </tr>
+  );
 }
-
 
 export default BuisnessUnit;

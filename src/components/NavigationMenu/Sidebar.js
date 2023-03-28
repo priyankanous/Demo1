@@ -1,20 +1,32 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { SidebarData } from "./SideBarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
-import { SidebarNav, SidebarWrap } from "./Value";
+import { LoggedInUserImage, LoggedInUserName, NavBarHeading, SidebarNav, SidebarWrap, UserLoggedInSection } from "./Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
 import { Menu, MenuLink, PrimaryNav } from "../NavigationMenu/Value";
-import { Navbar } from "react-bootstrap";
-import { AiFillProfile } from "react-icons/ai";
+import { Navbar,Image } from "react-bootstrap";
+import axios from "axios";
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(null);
+  const [userObj,setUserObj] = useState(null);
 
   const handleSubMenuClick = (index) => {
+    console.log('11',index);
     setOpenSubmenu(index === openSubmenu ? null : index);
   };
+
+  useEffect(()=>{
+    console.log('loading api here ---');
+    const dataFetach = async ()=>{
+      const data = await axios.get('https://randomuser.me/api/?gender=male');
+      setUserObj(data.data.results[0])
+    }
+    dataFetach();
+  },[])
+
 
   return (
     <>
@@ -23,7 +35,11 @@ const Sidebar = () => {
           <div>
             <PrimaryNav>
               <Menu className="nav">
-                <h1>Rolling Revenue</h1>
+                <NavBarHeading>Rolling Revenue</NavBarHeading>
+                <UserLoggedInSection>
+                  <LoggedInUserImage  src={userObj?.picture?.thumbnail}/> 
+                  <LoggedInUserName >KUNAL TIWARI</LoggedInUserName>
+                </UserLoggedInSection>
               </Menu>
             </PrimaryNav>
           </div>
@@ -41,7 +57,8 @@ const Sidebar = () => {
                   item={item}
                   key={index}
                   isOpen={openSubmenu === index}
-                  onClick={() => handleSubMenuClick(index)}
+                  handleSubMenuClick={handleSubMenuClick}
+                  index={index}
                 />
               );
             })}

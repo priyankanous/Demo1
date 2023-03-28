@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { FaBars } from 'react-icons/fa';
+import { FaBars } from "react-icons/fa";
 
 export const SidebarLink = styled(Link)`
   display: flex;
@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: small;
+  font-size: 1.2rem;
 
   &:hover {
     background: #0a8b9c;
@@ -39,7 +39,7 @@ export const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: small;
+  font-size: 1rem;
 
   &:hover {
     background: #0a8b9c;
@@ -61,12 +61,13 @@ export const DropdownLink = styled(Link)`
 `;
 
 export const SidebarNav = styled.nav`
-  background:  #072e3a;
+  background: #072e3a;
   width: 17%;
   height: 105%;
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: fixed;
+  overflow-y: auto;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
@@ -81,13 +82,14 @@ export const SidebarWrap = styled.div`
 export const PrimaryNav = styled.nav`
   height: 5rem;
   display: flex;
-  background:  #072e3a;
+  background: #072e3a;
   margin-left: 14.3%;
   padding-left: 2.7%;
   font-size: large;
   justify-content: space-between;
   border-color: #052635;
-`
+`;
+
 export const MenuLink = styled(Link)`
   color: white;
   display: flex;
@@ -97,7 +99,7 @@ export const MenuLink = styled(Link)`
   &.active {
     color: #000000;
   }
-`
+`;
 export const Hamburger = styled(FaBars)`
   display: none;
   color: #ffffff;
@@ -110,15 +112,15 @@ export const Hamburger = styled(FaBars)`
     cursor: pointer;
     transform: translate(-100%, 75%);
   }
-`
+`;
 export const Menu = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-between;
   font-weight: 100px;
   @media screen and (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 export const ModalHeading = styled.h3`
   display:inline;
@@ -130,21 +132,50 @@ color:rgb(10, 139, 156);
 font-size:1.2rem;
 `
 
-// export const ModalContainer = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100vw;
-//   height: 100vh;
-//   background: rgba(0, 0, 0, 0.5);
-// `;
+export const TableHeadingSection = styled.div`
+display:flex;
+width:100%;
+justify-content:space-between;
+`
 
-// export const Modal = styled.div`
-//   background: #fff;
-//   position: absolute;
-//   top: 50px;
-//   right: calc(50% - 100px);
-//   border: 1px solid #000;
-//   padding: 20px;
-//   min-height: 200px;
-// `;
+export const TableHeading = styled.div`
+margin:25px 50px;
+font-weight:500;
+font-size:1.3rem;
+color: #072a3a;
+`
+
+export const TableHeadingButton = styled.button`
+  background-color: #0a8b9c;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  padding: 12px 26px;
+  font-size: 16px;
+  margin: 12px;
+  cursor: pointer;
+`
+export const TableHeadingButtonPlusIcon = styled.i`
+margin:0.4rem;
+vertical-align:middle;
+`
+export const NavBarHeading = styled.div`
+margin:20px 60px;
+font-size:2rem;
+font-family:sans-serif;
+font-weight:700;
+`
+
+export const UserLoggedInSection = styled.div`
+margin-right:5rem;
+`
+export const LoggedInUserImage = styled.img`
+border-radius:50%;
+position:relative;
+top:20%;
+margin-right:1rem
+`
+export const LoggedInUserName = styled.span`
+font-weight:500;
+color:rgb(7,46,58);
+`

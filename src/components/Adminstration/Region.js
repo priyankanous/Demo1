@@ -3,45 +3,34 @@ import { AiFillPlusSquare,AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
-
+import BaseComponent from "../CommonComponent/BaseComponent";
 
 function Region() {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
-    useEffect(() => {
-        fetch(`https://jsonplaceholder.typicode.com/users`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((actualData) => {
-                setData(actualData);
-                setError(null);
-            })
-            .catch((err) => {
-                setError(err.message);
-                setData(null);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+  const [data, setData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-    return (
-        <div className="table_container" >
-            <div style={{ display: "flex",width:'100%',justifyContent:'space-between' }}>
-                <h3 style={{margin:'25px'}}>Administration - Region</h3>
-                <button style={{margin:'10px'}}  class="button1" onClick={setIsOpen}><AiFillPlusSquare></AiFillPlusSquare> Setup Region</button>
-            </div>
-            <table>
-                <tr>
-                    <th>Region Name</th>
-                    <th>Region Display Name</th>
-                </tr>
-                <tbody>{data && data.map((obj, id) => <Tr {...obj} key={id} />)}</tbody>
-            </table>
-            <Modal
+  useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/users`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((actualData) => {
+        setData(actualData);
+      });
+  }, []);
+
+  return (
+    <div>
+      <BaseComponent
+        field="Region"
+        actionButtonName="Setup Region"
+        firstHeader="Region Name"
+        secondHeader="Region Display Name"
+        data={data}
+        Tr={Tr}
+        setIsOpen={setIsOpen}
+      />
+       <Modal
                 isOpen={isOpen}
                 onRequestClose={() => setIsOpen(false)}
                 style={modalStyleObject}
@@ -73,23 +62,20 @@ function Region() {
                     </div>
                 </div>
             </Modal>
-        </div>
-    );
+    </div>
+  );
 
 }
-
-function Tr({ name, username, email }) {
-    return (
-        <tr>
-            <td>
-                <span>{name || "Unknown"}</span>
-            </td>
-            <td>
-                <span>{username || "Unknown"}</span>
-            </td>
-        </tr>
-    );
+function Tr({ name, username }) {
+  return (
+    <tr>
+      <td>
+        <span>{name || "Unknown"}</span>
+      </td>
+      <td>
+        <span>{username || "Unknown"}</span>
+      </td>
+    </tr>
+  );
 }
-
-
 export default Region;

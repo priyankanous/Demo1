@@ -7,7 +7,7 @@ export const SidebarData = [
     title: "Dashboard",
     path: "/dashboard",
     icon: <AiIcons.AiFillHome />,
- 
+    subNav: [],
   },
   {
     title: "Revenue",
@@ -149,62 +149,62 @@ export const SidebarData = [
       },
       {
         title: "Region",
-        path: "/admistration/region",
+        path: "/administration/region",
         cName: "sub-nav",
       },
       {
         title: "SBU",
-        path: "/admistration/sbu",
+        path: "/administration/sbu",
         cName: "sub-nav",
       },
       {
         title: "SBU Head",
-        path: "/admistration/sbuhead",
+        path: "/administration/sbuhead",
         cName: "sub-nav",
       },
       {
         title: "Location",
-        path: "/admistration/location",
+        path: "/administration/location",
         cName: "sub-nav",
       },
       {
         title: "BDM",
-        path: "/admistration/bdm",
+        path: "/administration/bdm",
         cName: "sub-nav",
       },
       {
         title: "Probability Type",
-        path: "/admistration/probabilitytype",
+        path: "/administration/probabilitytype",
         cName: "sub-nav",
       },
       {
         title: "Business Type",
-        path: "/admistration/businesstype",
+        path: "/administration/businesstype",
         cName: "sub-nav",
       },
       {
         title: "CoC Practice",
-        path: "/admistration/cocpractice",
+        path: "/administration/cocPractice",
         cName: "sub-nav",
       },
       {
         title: "Pricing Type",
-        path: "/admistration/pricingtype",
+        path: "/administration/pricingType",
         cName: "sub-nav",
       },
       {
         title: "Status",
-        path: "/admistration/status",
+        path: "/administration/status",
         cName: "sub-nav",
       },
       {
         title: "WO Status",
-        path: "/admistration/wostatus",
+        path: "/administration/wostatus",
         cName: "sub-nav",
       },
       {
         title: "Financial Year",
-        path: "/admistration/financialyear",
+        path: "/administration/financialYear",
         cName: "sub-nav",
       },
       {
