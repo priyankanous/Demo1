@@ -124,7 +124,7 @@ export const SidebarData = [
       },
       {
         title: "Currency",
-        path: "/admistration/currency",
+        path: "/administration/currency",
         cName: "sub-nav",
       },
       {
@@ -134,7 +134,7 @@ export const SidebarData = [
       },
       {
         title: "Global Leave Loss Factor",
-        path: "/admistration/globalleavelossfactor",
+        path: "/administration/globalleavelossfactor",
         cName: "sub-nav",
       },
     ],
