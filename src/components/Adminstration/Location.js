@@ -24,8 +24,7 @@ function Location() {
       <BaseComponent
         field="Location"
         actionButtonName="Setup Location"
-        firstHeader="Location Name"
-        secondHeader="Location Display Name"
+        columns={["Location Name", "Location Display Name"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

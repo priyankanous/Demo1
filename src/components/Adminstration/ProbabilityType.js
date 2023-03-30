@@ -24,8 +24,7 @@ function Probability() {
       <BaseComponent
         field="Probability Type"
         actionButtonName="Setup Probability"
-        firstHeader="Probability Type Name"
-        secondHeader="Percentage"
+        columns={["Probability Type Name", "Percentage"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

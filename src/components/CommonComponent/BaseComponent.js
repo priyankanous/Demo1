@@ -19,18 +19,34 @@ function BaseComponent(props) {
           {props.actionButtonName}
         </TableHeadingButton>
       </TableHeadingSection>
-      <table>
-        <tr>
-          <th>{props.firstHeader}</th>
-          <th>{props.secondHeader}</th>
-          <th>{props.thirdHeader}</th>
-          <th>{props.fourthHeader}</th>
-          <th>{props.fifthHeader}</th>
-        </tr>
-        <tbody>
-          {props.data && props.data.map((obj, id) => props.Tr({ ...obj }))}
-        </tbody>
-      </table>
+      {props.globalLeave ? (
+        <React.Fragment>
+          Financial Year:
+          <table>
+            <tr>
+              {props.columns.map((header) => {
+                return <th>{header}</th>;
+              })}
+            </tr>
+            <tbody>
+              {props.data && props.data.map((obj, id) => props.Tr({ ...obj }))}
+            </tbody>
+          </table>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <table>
+            <tr>
+              {props.columns.map((header) => {
+                return <th>{header}</th>;
+              })}
+            </tr>
+            <tbody>
+              {props.data && props.data.map((obj, id) => props.Tr({ ...obj }))}
+            </tbody>
+          </table>
+        </React.Fragment>
+      )}
     </div>
   );
 }
