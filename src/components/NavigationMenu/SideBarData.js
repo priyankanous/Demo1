@@ -129,7 +129,7 @@ export const SidebarData = [
       },
       {
         title: "Notification Config",
-        path: "/admistration/notificationconfig",
+        path: "/administration/notificationConfig",
         cName: "sub-nav",
       },
       {

@@ -159,3 +159,20 @@ export const LoggedInUserName = styled.span`
 font-weight:500;
 color:rgb(7,46,58);
 `
+export const ModalFormButton = styled.div`
+display:flex;
+justify-content:center;
+margin-top:50px;
+padding:2px;
+width:100%;
+`
+
+export const NotificationArrowIcons = styled.div`
+width:20%;
+height:300px;
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:5rem;
+color:#0a8B9c
+`

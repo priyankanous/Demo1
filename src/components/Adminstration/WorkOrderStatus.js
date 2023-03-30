@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
 import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
+import { ModalFormButton, ModalHeading,ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 
 function WorkOrderStatus() {
@@ -51,12 +51,10 @@ function WorkOrderStatus() {
                                     <label for="email">Work order status display name</label>
                                     <input type="text" id="email" spellcheck="false" />
                                 </div>
-                                <div>
-                                    <label>
+                                <ModalFormButton>
                                     <input type="button" value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
-                                    </label>
-                                </div>
+                                    <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                </ModalFormButton>
                             </form>
                         </div>
                     </div>
