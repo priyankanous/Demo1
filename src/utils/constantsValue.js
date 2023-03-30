@@ -14,3 +14,16 @@ export const modalStyleObject = {
         background: 'none'
     }
 }
+
+export const notificationModalStyleObj = {
+    overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
+    content:{
+        width:'1300px',
+        height:'650px',
+        position:'absolute',
+        top:'13%',
+        left:'20%',
+        background:'white',
+        borderRadius:'10px'
+    }
+}

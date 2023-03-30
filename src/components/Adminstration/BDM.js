@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon,ModalFormButton } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 
 function Bdm() {
@@ -61,8 +61,7 @@ function Bdm() {
                   <label for="email">BDM__</label>
                   <input type="text" id="email" spellcheck="false" />
                 </div>
-                <div>
-                  <label>
+                <ModalFormButton>
                     <input
                       type="button"
                       value="Save"
@@ -78,8 +77,7 @@ function Bdm() {
                       id="create-account"
                       class="button"
                     />
-                  </label>
-                </div>
+                </ModalFormButton>
               </form>
             </div>
           </div>

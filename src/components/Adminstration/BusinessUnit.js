@@ -60,8 +60,7 @@ function BuisnessUnit() {
                                 <div>
                                     <label>
                                     <input type="button" value="Save" id="create-account" class="button" />
-                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
-
+                                    <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
                                     </label>
                                 </div>
                             </form>
