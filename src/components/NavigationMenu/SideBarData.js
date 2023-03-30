@@ -214,7 +214,7 @@ export const SidebarData = [
       },
       {
         title: "Notification Config",
-        path: "/admistration/notificationconfig",
+        path: "/administration/notificationconfig",
         cName: "sub-nav",
       },
       {

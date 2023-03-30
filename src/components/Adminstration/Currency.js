@@ -10,6 +10,7 @@ function Currency() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCurrency, setIsCurrency] = useState(true);
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/users`)
@@ -25,13 +26,11 @@ function Currency() {
       <BaseComponent
         field="Currency"
         actionButtonName="Setup Currency"
-        firstHeader="Currency"
-        secondHeader="Name"
-        thirdHeader="Symbol"
-        fourthHeader="Conversion Rate"
+        columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
+        currency={isCurrency}
       />
       <Modal
                 isOpen={isOpen}
@@ -91,6 +90,10 @@ function Tr({ userId, id, title, completed }) {
       </td>
       <td>
         <span>{completed || "Unknown"}</span>
+      </td>
+      <td>
+        <button>Edit</button>
+        <button>Delete</button>
       </td>
     </tr>
   );

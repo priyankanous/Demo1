@@ -19,10 +19,15 @@ function BaseComponent(props) {
           {props.actionButtonName}
         </TableHeadingButton>
       </TableHeadingSection>
-      {props.globalLeave ? (
+      {props.globalLeave || props.currency ? (
         <React.Fragment>
-          Financial Year:
-          <table>
+        <div class="filter">
+          <span style={{paddingRight: '2%'}}>Financial year: <input type="text" id="email" spellcheck="false"/> </span>
+          <span style={{display: props.globalLeave ?"none" :"",paddingRight: '2%'}}>Base Currency: <input type="text" id="email" spellcheck="false"/> </span>
+          <span style={{paddingRight: '2%'}}>Copy From: <input type="text" id="email" spellcheck="false"/> </span>
+          <span style={{paddingRight: '2%'}}><TableHeadingButton>Apply</TableHeadingButton></span>
+        </div>
+          <table id="style">
             <tr>
               {props.columns.map((header) => {
                 return <th>{header}</th>;

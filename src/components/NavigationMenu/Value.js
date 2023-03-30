@@ -12,11 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-<<<<<<< HEAD
-  font-size: small;
-=======
   font-size: 0.9rem;
->>>>>>> RRR-BaseComponent
 
   &:hover {
     background: #0a8b9c;
@@ -30,7 +26,7 @@ export const SidebarLabel = styled.span`
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
-  margin-left: 3.5rem;
+  margin-left: 3.7rem;
   padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -38,11 +34,7 @@ export const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-<<<<<<< HEAD
-  font-size: 0.85rem;
-=======
-  font-size: 0.5rem;
->>>>>>> RRR-BaseComponent
+  font-size: 0.8rem;
 
   &:hover {
     background: #0a8b9c;
@@ -70,7 +62,6 @@ export const SidebarNav = styled.nav`
   display: flex;
   justify-content: center;
   position: fixed;
-  overflow-y: auto;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
