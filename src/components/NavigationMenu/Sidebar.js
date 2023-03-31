@@ -45,7 +45,7 @@ const Sidebar = () => {
           </div>
         </>
       </Navbar>
-      <hr style={{ width: "75%", marginRight: "5rem" }} />
+      <hr style={{ width: "75%", marginRight: "4rem" }} />
       <IconContext.Provider value={{ color: "#fff" }}>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>

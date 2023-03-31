@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+import Modal from 'react-modal';
 import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 
-function BuisnessUnit() {
+function Currency() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCurrency, setIsCurrency] = useState(true);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/todos`)
+    fetch(`https://jsonplaceholder.typicode.com/users`)
       .then((response) => {
         return response.json();
       })
@@ -23,67 +24,54 @@ function BuisnessUnit() {
   return (
     <div>
       <BaseComponent
-        field="BU"
-        actionButtonName="Setup BU"
-        columns={[
-          "BusinessUnit Name",
-          "BusinessUnit Display Name",
-          "Child Of Organization",
-        ]}
+        field="Currency"
+        actionButtonName="Setup Currency"
+        columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
+        currency={isCurrency}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
-      >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Business Unit</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
+                isOpen={isOpen}
+                onRequestClose={() => setIsOpen(false)}
+                style={modalStyleObject}
+            >
+                <div>
                     <div class="main" className="ModalContainer">
                         <div class="register">
-                            <ModalHeading>Setup Business Unit</ModalHeading>
+                            <ModalHeading>Setup Currency</ModalHeading>
                             <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose></AiOutlineClose></ModalIcon>
                             <hr color="#62bdb8"></hr>
                             <form id="reg-form">
                                 <div>
-                                    <label for="name">Business Unit Name</label>
+                                    <label for="name">Currency</label>
                                     <input type="text" id="name" spellcheck="false" />
                                 </div>
                                 <div>
-                                    <label for="email">BusinessUnit Display Name</label>
+                                    <label for="email">Name</label>
                                     <input type="text" id="email" spellcheck="false" />
                                 </div>
                                 <div>
-                                    <label for="username">Child Of Organization</label>
+                                    <label for="username">Symbol</label>
+                                    <input type="text" id="email" spellcheck="false" />
+                                </div>
+                                <div>
+                                    <label for="username">Conversion Rate</label>
                                     <input type="text" id="email" spellcheck="false" />
                                 </div>
                                 <div>
                                     <label>
                                     <input type="button" value="Save" id="create-account" class="button" />
-                                    <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+                                        <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
+
                                     </label>
                                 </div>
                             </form>
                         </div>
                     </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </Modal>
+                </div>
+            </Modal>
     </div>
   );
 }
@@ -103,8 +91,12 @@ function Tr({ userId, id, title, completed }) {
       <td>
         <span>{completed || "Unknown"}</span>
       </td>
+      <td>
+        <button>Edit</button>
+        <button>Delete</button>
+      </td>
     </tr>
   );
 }
 
-export default BuisnessUnit;
+export default Currency;

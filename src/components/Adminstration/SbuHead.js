@@ -24,11 +24,12 @@ function SbuHead() {
       <BaseComponent
         field="SBU Head"
         actionButtonName="Setup SBU Head"
-        firstHeader="SBU Head Name"
-        secondHeader="SBU Head Display Name"
-        thirdHeader="SBU Name"
-        fourthHeader="Active From"
-        fifthHeader="Active Untill"
+        columns={[
+          "SBU Head Name",
+          "SBU Head Display Name",
+          "Active From",
+          "Active Untill",
+        ]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

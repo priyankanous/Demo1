@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
 
   &:hover {
     background: #0a8b9c;
@@ -26,10 +26,11 @@ export const SidebarLabel = styled.span`
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
-  padding-left: 4rem;
+  margin-left: 1.8rem;
+  padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  display: flex;
+  display: inline-block;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
@@ -37,8 +38,21 @@ export const DropdownLink = styled(Link)`
 
   &:hover {
     background: #0a8b9c;
+    border-radius: 5.5rem;
     cursor: pointer;
   }
+
+  .active{
+    background: #0a8b9c;
+    border-radius: 5.5rem;;
+    margin-left: 0.5rem;
+    marging-right: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
 `;
 
 export const SidebarNav = styled.nav`
@@ -48,11 +62,11 @@ export const SidebarNav = styled.nav`
   display: flex;
   justify-content: center;
   position: fixed;
-  overflow-y: auto;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
   z-index: 10;
+
 `;
 
 export const SidebarWrap = styled.div`
@@ -103,27 +117,27 @@ export const Menu = styled.div`
 `;
 
 export const ModalHeading = styled.h3`
-  display:inline;
-`
+  display: inline;
+`;
 
 export const ModalIcon = styled.i`
-float:right;
-color:rgb(10, 139, 156);
-font-size:1.2rem;
-`
+  float: right;
+  color: rgb(10, 139, 156);
+  font-size: 1.2rem;
+`;
 
 export const TableHeadingSection = styled.div`
-display:flex;
-width:100%;
-justify-content:space-between;
-`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+`;
 
 export const TableHeading = styled.div`
-margin:25px 50px;
-font-weight:500;
-font-size:1.3rem;
-color: #072a3a;
-`
+  margin: 25px 50px;
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: #072a3a;
+`;
 
 export const TableHeadingButton = styled.button`
   background-color: #0a8b9c;
@@ -134,27 +148,27 @@ export const TableHeadingButton = styled.button`
   font-size: 16px;
   margin: 12px;
   cursor: pointer;
-`
+`;
 export const TableHeadingButtonPlusIcon = styled.i`
-margin:0.4rem;
-vertical-align:middle;
-`
+  margin: 0.4rem;
+  vertical-align: middle;
+`;
 export const NavBarHeading = styled.div`
-margin:20px 60px;
-font-size:2rem;
-font-family:sans-serif;
-font-weight:700;
-`
+  margin: 20px 60px;
+  font-size: 2rem;
+  font-family: sans-serif;
+  font-weight: 700;
+`;
 
 export const UserLoggedInSection = styled.div`
-margin-right:5rem;
-`
+  margin-right: 5rem;
+`;
 export const LoggedInUserImage = styled.img`
-border-radius:50%;
-position:relative;
-top:20%;
-margin-right:1rem
-`
+  border-radius: 50%;
+  position: relative;
+  top: 20%;
+  margin-right: 1rem;
+`;
 export const LoggedInUserName = styled.span`
 font-weight:500;
 color:rgb(7,46,58);

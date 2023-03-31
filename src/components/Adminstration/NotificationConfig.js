@@ -30,10 +30,7 @@ const NotificationConfig = ()=>{
       <BaseComponent
         field="Notification Templates"
         actionButtonName="Create new Email Templates"
-        firstHeader="Id"
-        secondHeader="Templ. Code"
-        thirdHeader="Name"
-        fourthHeader=" "
+        columns={["Id", "Templ. Code", "Name"," "]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
