@@ -4,21 +4,42 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function Sbu() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [sbuName, setSbuName] = useState(null);
+  const [sbuDisplayName, setSbuDisplayName] = useState(null);
+  const [buDisplayName, setBuDisplayName] = useState(null);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllSbuData();
   }, []);
+  const getAllSbuData = () => {
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu`)
+      .then((response) => {
+        console.log("this is resp", response);
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
 
+  const AddDataToSbu = async (e) => {
+    const post = {
+      sbuName: sbuName,
+      sbuDisplayName: sbuDisplayName,
+      buDisplayName: buDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu",
+        post
+      );
+      console.log("this is the response", response.data);
+    } catch {}
+  };
   return (
     <div>
       <BaseComponent
@@ -49,15 +70,36 @@ function Sbu() {
               <form id="reg-form">
                 <div>
                   <label for="name">SBU Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setSbuName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">SBU Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setSbuDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Child of BU</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setBuDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -66,6 +108,7 @@ function Sbu() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToSbu}
                     />
                     <input
                       type="button"
@@ -86,14 +129,17 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ name, username }) {
+function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{sbuName || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
+        <span>{sbuDisplayName || "Unknown"}</span>
+      </td>
+      <td>
+        <span>{buDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );
