@@ -24,9 +24,7 @@ function Bdm() {
       <BaseComponent
         field="BDM"
         actionButtonName="Setup BDM"
-        firstHeader="BDM Name"
-        secondHeader="BDM Display Name"
-        thirdHeader="BDM__"
+        columns={["BDM Name", "BDM Display Name", "BDM__"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

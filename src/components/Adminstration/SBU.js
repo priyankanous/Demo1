@@ -24,9 +24,7 @@ function Sbu() {
       <BaseComponent
         field="SBU"
         actionButtonName="Setup SBU"
-        firstHeader="SBU Name"
-        secondHeader="SBU Display Name"
-        thirdHeader="Child of BU"
+        columns={["SBU Name", "SBU Display Name", "Child of BU"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

@@ -136,22 +136,20 @@ $green-border: #72B372;
 
 			.email-input {
 				width: 85%;
-				padding: 2px 0px;
+				padding: 2px 2px;
 				margin: 4px 0px;
-
+				border-radius: 5px;
+				// box-shadow: none;
 				select {
 					padding: 2px 0px;
 					display: inline-block;
 				}
-
 				.email-icons {
 					vertical-align: middle;
 					margin: 0px 5px;
-
 					i {
 						margin: 0px 10px;
 					}
-
 					i:last-child {
 						float: right;
 					}
