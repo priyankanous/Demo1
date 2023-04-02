@@ -2,7 +2,7 @@ import React,{useEffect, useState} from "react";
 import { SidebarLabel, SidebarLink, DropdownLink } from "./Value";
 import { useLocation } from "react-router";
 
-const SubMenu = ({ item, isOpen, handleSubMenuClick,index }) => {
+const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
   const location = useLocation();
   const [isMainmenuactive,setMainmenuactive] = useState(false);
   const [subDropDownActive, setsubDropDownActive] = useState(null)
@@ -13,8 +13,17 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index }) => {
     if(item && location.pathname.split('/').includes(item.path.substring(1))){
       setMainmenuactive(true);
     }
+    if(item?.subNav && location){
+      for(let i=0; i<item?.subNav.length;i++){
+        if(item?.subNav[i].path === location?.pathname){
+          setsubDropDownActive(item?.subNav[i].path);
+          handleSubMenuClick(index);
+          break;
+        }
+      }
+    }
   },[item,location])
-  
+
   return (
     <>
       <SidebarLink style={{background:isMainmenuactive && '#0a8b9c'}}   to={item.path} onClick={()=>{item.subNav && handleSubMenuClick(index);}}>
@@ -25,12 +34,12 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index }) => {
           </SidebarLabel>
         </div>
       </SidebarLink>
-      {isOpen &&
+      {isOpen  &&
         item.subNav.map((item, index) => {
           return (
             <DropdownLink to={item.path} key={index}> 
               <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <SidebarLabel onClick={() => setsubDropDownActive(item.path)} className={subDropDownActive == item.path && 'active'}>{item.title}</SidebarLabel>
+              <SidebarLabel onClick={() => {setsubDropDownActive(item.path);setOpenSubmenu(index)}} className={subDropDownActive == item.path && 'active'}>{item.title}</SidebarLabel>
             </DropdownLink>
           );
         })}

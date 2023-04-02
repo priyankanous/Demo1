@@ -4,8 +4,8 @@ import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
 import { LoggedInUserImage, LoggedInUserName, NavBarHeading, SidebarNav, SidebarWrap, UserLoggedInSection } from "./Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
-import { Menu, MenuLink, PrimaryNav } from "../NavigationMenu/Value";
-import { Navbar,Image } from "react-bootstrap";
+import { Menu,PrimaryNav } from "../NavigationMenu/Value";
+import { Navbar } from "react-bootstrap";
 import axios from "axios";
 
 const Sidebar = () => {
@@ -14,7 +14,6 @@ const Sidebar = () => {
   const [userObj,setUserObj] = useState(null);
 
   const handleSubMenuClick = (index) => {
-    console.log('11',index);
     setOpenSubmenu(index === openSubmenu ? null : index);
   };
 
@@ -59,6 +58,7 @@ const Sidebar = () => {
                   isOpen={openSubmenu === index}
                   handleSubMenuClick={handleSubMenuClick}
                   index={index}
+                  setOpenSubmenu={setOpenSubmenu}
                 />
               );
             })}
