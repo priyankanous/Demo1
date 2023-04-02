@@ -40,18 +40,6 @@ function BuisnessUnit() {
         style={modalStyleObject}
       >
         <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Business Unit</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
                     <div class="main" className="ModalContainer">
                         <div class="register">
                             <ModalHeading>Setup Business Unit</ModalHeading>
@@ -78,11 +66,7 @@ function BuisnessUnit() {
                                 </div>
                             </form>
                         </div>
-                    </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                    </div></div>
       </Modal>
     </div>
   );
