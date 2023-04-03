@@ -7,12 +7,12 @@ export const SidebarLink = styled(Link)`
   color: white;
   justify-content: space-between;
   align-items: center;
-  padding: 5%;
+  padding: 4%;
   padding-left: 1.5rem;
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 
   &:hover {
     background: #0a8b9c;
@@ -26,7 +26,7 @@ export const SidebarLabel = styled.span`
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
-  margin-left: 3.7rem;
+  margin-left: 3.9rem;
   padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;

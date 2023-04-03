@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import * as AiIcons from "react-icons/ai";
 
 function GlobalLeaveLossFactor() {
   const [data, setData] = useState(null);
@@ -87,6 +88,7 @@ function GlobalLeaveLossFactor() {
 }
 
 function Tr({ name, id, username, email }) {
+  const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [responseData, setResponseData] = useState({
     name: name,
@@ -100,6 +102,9 @@ function Tr({ name, id, username, email }) {
     //refatch the data using the get API
   };
 
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -113,15 +118,13 @@ function Tr({ name, id, username, email }) {
       </td>
       <td>
         <span>{email || "Unknown"}</span>
-      </td>
-      <td>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          Edit
-        </button>
+      <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
       <Modal
         isOpen={isOpen}

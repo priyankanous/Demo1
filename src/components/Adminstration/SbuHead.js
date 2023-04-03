@@ -4,10 +4,13 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import * as AiIcons from "react-icons/ai";
 
 function SbuHead() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const options = ['One', 'Two', 'Three', 'Four', 'Five'];
+  const onOptionChangeHandler = (event) => {}
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/users`)
@@ -62,7 +65,14 @@ function SbuHead() {
                 </div>
                 <div>
                   <label for="email">SBU Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <select onChange={onOptionChangeHandler}>
+                    <option>Please choose one option</option>
+                    {options.map((option, index) => {
+                        return <option key={index} >
+                            {option}
+                        </option>
+                    })}
+                </select>
                 </div>
                 <div>
                   <label for="email">Active From</label>
@@ -100,6 +110,11 @@ function SbuHead() {
   );
 }
 function Tr({ name, username }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -107,6 +122,13 @@ function Tr({ name, username }) {
       </td>
       <td>
         <span>{username || "Unknown"}</span>
+        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
     </tr>
   );

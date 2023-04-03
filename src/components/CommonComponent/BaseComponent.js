@@ -1,5 +1,5 @@
 import React from "react";
-import { AiFillPlusSquare } from "react-icons/ai";
+import { AiFillPlusSquare ,AiOutlineMore} from "react-icons/ai";
 import {
   TableHeadingSection,
   TableHeading,
@@ -8,6 +8,8 @@ import {
 } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
+  const options = ['One', 'Two', 'Three', 'Four', 'Five'];
+  const onOptionChangeHandler = (event) => {}
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -22,10 +24,24 @@ function BaseComponent(props) {
       {props.globalLeave || props.currency ? (
         <React.Fragment>
         <div class="filter">
-          <span style={{paddingRight: '2%'}}>Financial year: <input type="text" id="email" spellcheck="false"/> </span>
+          <span style={{paddingRight: '2%'}}>Financial year: <select id="filterSelect" onChange={onOptionChangeHandler}>
+                    <option>Choose Year</option>
+                    {options.map((option, index) => {
+                        return <option key={index} >
+                            {option}
+                        </option>
+                    })}
+                </select> </span>
           <span style={{display: props.globalLeave ?"none" :"",paddingRight: '2%'}}>Base Currency: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{paddingRight: '2%'}}>Copy From: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{paddingRight: '2%'}}><TableHeadingButton>Apply</TableHeadingButton></span>
+          <span style={{paddingRight: '2%'}}>Copy From: <select id="filterSelect" onChange={onOptionChangeHandler}>
+                    <option>Choose Year</option>
+                    {options.map((option, index) => {
+                        return <option key={index} >
+                            {option}
+                        </option>
+                    })}
+                </select>  </span>
+          <span style={{paddingRight: '2%'}}><button id="filterButton">Apply</button></span>
         </div>
           <table id="style">
             <tr>

@@ -105,7 +105,7 @@ h3 {
   background-color: white;
   position: absolute;
   width: 76%;
-  height: 80%;
+  height: 82%;
   left: 20%;
   top:15%;
   box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
@@ -166,28 +166,83 @@ tr:nth-child(even) {
     color: white;
   }
 
+  select {
+    width:53%;
+    outline:none;
+    border-radius:10px;
+    padding:5px;
+    box-shadow:0px 2px 5px grey ;
+    border:blue;
+   }
+   
   .filter { 
     padding-left: 4%;
     padding-bottom: 1%;
     margin-top: -2%;
+  } 
+
+  filter .dropdown{
+    width:53%;
+    outline:none;
+    border-radius:10px;
+    padding:5px;
+    box-shadow:0px 2px 5px grey ;
+    border:blue;
+  }
+
+  #filterSelect {
+    width: 16%;
+    border-radius: 15px;
+    padding: 5px;
+  }
+  
+  #filterButton{
+    background-color:white;
+    border: none;
+    border-radius: 15px;
+    color: black;
+    padding: 7px 20px;
+    font-size: 13px;
+    margin: 20px;
+    cursor: pointer;
+    box-shadow:0px 2px 5px grey ;
   }
 
   input[type="text"] {
 		outline:none;
-		border-radius:10px;
+		border-radius:15px;
 		padding:5px;
 		box-shadow:0px 2px 5px grey ;
 		border:blue;  
-  }
-
-  input[type=text]:focus {
-		background: rgb(193, 222, 231);
   }
   
   .App-link {
     color: #61dafb;
   }
 
+
+.dropdown-content {
+    display: block;
+    position: absolute;
+    background-color: #f9f9f9;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    width: 9%;
+    font-size: small;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown a:hover {background-color:#0a8b9c}
+
+.show {display:block;}
+  
   @keyframes App-logo-spin {
     from {
       transform: rotate(0deg);

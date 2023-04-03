@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import * as AiIcons from "react-icons/ai";
 
 function WorkOrderStatus() {
   const [data, setData] = useState(null);
@@ -85,6 +86,11 @@ function WorkOrderStatus() {
 }
 
 function Tr({ userId, id, title, completed }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -98,6 +104,13 @@ function Tr({ userId, id, title, completed }) {
       </td>
       <td>
         <span>{completed || "Unknown"}</span>
+        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
     </tr>
   );

@@ -4,12 +4,15 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import * as AiIcons from "react-icons/ai";
 
 function BuisnessUnit() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const options = ['One', 'Two', 'Three', 'Four', 'Five'];
+  const onOptionChangeHandler = (event) => {}
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/todos`)
@@ -61,8 +64,15 @@ function BuisnessUnit() {
                   <input type="text" id="email" spellcheck="false" />
                 </div>
                 <div>
-                  <label for="username">Child Of Organization</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <label for="username">Parent Organization</label>
+                  <select onChange={onOptionChangeHandler}>
+                    <option>Please choose one option</option>
+                    {options.map((option, index) => {
+                        return <option key={index} >
+                            {option}
+                        </option>
+                    })}
+                </select>
                 </div>
                 <div>
                   <label>
@@ -93,6 +103,11 @@ function BuisnessUnit() {
 }
 
 function Tr({ userId, id, title, completed }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -103,9 +118,13 @@ function Tr({ userId, id, title, completed }) {
       </td>
       <td>
         <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
     </tr>
   );
