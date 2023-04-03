@@ -1,31 +1,36 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SidebarData } from "./SideBarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
-import { LoggedInUserImage, LoggedInUserName, NavBarHeading, SidebarNav, SidebarWrap, UserLoggedInSection } from "./Value";
+import {
+  LoggedInUserImage,
+  LoggedInUserName,
+  NavBarHeading,
+  SidebarNav,
+  SidebarWrap,
+  UserLoggedInSection,
+} from "./Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
-import { Menu,PrimaryNav } from "../NavigationMenu/Value";
-import { Navbar } from "react-bootstrap";
+import { Menu, MenuLink, PrimaryNav } from "../NavigationMenu/Value";
+import { Navbar, Image } from "react-bootstrap";
 import axios from "axios";
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [userObj,setUserObj] = useState(null);
+  const [userObj, setUserObj] = useState(null);
 
   const handleSubMenuClick = (index) => {
     setOpenSubmenu(index === openSubmenu ? null : index);
   };
 
-  useEffect(()=>{
-    console.log('loading api here ---');
-    const dataFetach = async ()=>{
-      const data = await axios.get('https://randomuser.me/api/?gender=male');
-      setUserObj(data.data.results[0])
-    }
+  useEffect(() => {
+    const dataFetach = async () => {
+      const data = await axios.get("https://randomuser.me/api/?gender=male");
+      setUserObj(data.data.results[0]);
+    };
     dataFetach();
-  },[])
-
+  }, []);
 
   return (
     <>
@@ -36,8 +41,8 @@ const Sidebar = () => {
               <Menu className="nav">
                 <NavBarHeading>Rolling Revenue</NavBarHeading>
                 <UserLoggedInSection>
-                  <LoggedInUserImage  src={userObj?.picture?.thumbnail}/> 
-                  <LoggedInUserName >KUNAL TIWARI</LoggedInUserName>
+                  <LoggedInUserImage src={userObj?.picture?.thumbnail} />
+                  <LoggedInUserName>KUNAL TIWARI</LoggedInUserName>
                 </UserLoggedInSection>
               </Menu>
             </PrimaryNav>

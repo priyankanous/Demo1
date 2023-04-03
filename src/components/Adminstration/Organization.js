@@ -4,22 +4,42 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function Organization() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [orgName, setOrgName] = useState(null);
+  const [orgDisplayName, setOrgDisplayName] = useState(null);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllOrganizationData();
   }, []);
+
+  const getAllOrganizationData = () => {
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
+      .then((response) => {
+        console.log("this is resp", response);
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+  const AddDataToOrganization = async (e) => {
+    const post = {
+      orgName: orgName,
+      orgDisplayName: orgDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization",
+        post
+      );
+      console.log("this is the response", response.data);
+    } catch {}
+  };
   return (
     <div>
       <BaseComponent
@@ -50,11 +70,25 @@ function Organization() {
               <form id="reg-form">
                 <div>
                   <label for="name">Organization Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOrgName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Organization Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOrgDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -63,6 +97,7 @@ function Organization() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToOrganization}
                     />
                     <input
                       type="button"
@@ -84,20 +119,14 @@ function Organization() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ orgName, orgDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{orgName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{orgDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );

@@ -4,20 +4,40 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function Region() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [regionName, setRegionName] = useState(null);
+  const [regionDisplayName, setRegionDisplayName] = useState(null);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllRegionData();
   }, []);
+  const getAllRegionData = () => {
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
+      .then((response) => {
+        console.log("this is resp", response);
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+
+  const AddDataToRegion = async (e) => {
+    const post = {
+      regionName: regionName,
+      regionDisplayName: regionDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
+        post
+      );
+      console.log("this is the response", response.data);
+    } catch {}
+  };
 
   return (
     <div>
@@ -49,11 +69,25 @@ function Region() {
               <form id="reg-form">
                 <div>
                   <label for="name">Region Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setRegionName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Region Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setRegionDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -62,6 +96,7 @@ function Region() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToRegion}
                     />
                     <input
                       type="button"
@@ -82,14 +117,14 @@ function Region() {
     </div>
   );
 }
-function Tr({ name, username }) {
+function Tr({ regionName, regionDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{regionName || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
+        <span>{regionDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );
