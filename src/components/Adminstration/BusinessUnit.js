@@ -118,7 +118,10 @@ function Tr({ userId, id, title, completed }) {
       </td>
       <td>
         <span>{title || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+      </td>
+      <td>
+        <span>{completed || "Unknown"}</span>
+      <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
         {isDropdown && <div style={{float:'right'}} class="dropdown-content">
                         <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
                         <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
