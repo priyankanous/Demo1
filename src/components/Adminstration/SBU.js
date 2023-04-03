@@ -8,19 +8,30 @@ import axios from "axios";
 
 function Sbu() {
   const [data, setData] = useState(null);
+  const [buNameData, setBuNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [sbuName, setSbuName] = useState(null);
   const [sbuDisplayName, setSbuDisplayName] = useState(null);
   const [buDisplayName, setBuDisplayName] = useState(null);
-
   useEffect(() => {
     getAllSbuData();
   }, []);
+
+  const getAllBuNameData = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setBuNameData(actualDataObject);
+      });
+  };
   const getAllSbuData = () => {
+    getAllBuNameData();
     axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu`)
       .then((response) => {
-        console.log("this is resp", response);
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
@@ -92,14 +103,17 @@ function Sbu() {
                 </div>
                 <div>
                   <label for="email">Child of BU</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
+                  <select
                     onChange={(e) => {
                       setBuDisplayName(e.target.value);
                     }}
-                  />
+                  >
+                    <option>Please choose one option</option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      return <option key={index}>{buNameData}</option>;
+                    })}
+                  </select>
                 </div>
                 <div>
                   <label>

@@ -8,6 +8,7 @@ import axios from "axios";
 
 function BuisnessUnit() {
   const [data, setData] = useState(null);
+  const [orgNameData, setOrgNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [businessUnitName, setBusinessUnitName] = useState(null);
   const [businessUnitDisplayName, setBusinessUnitDisplayName] = useState(null);
@@ -18,17 +19,24 @@ function BuisnessUnit() {
   }, []);
 
   const getAllBuData = () => {
+    getAllOrgNameData();
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
       )
       .then((response) => {
-        console.log("this is resp", response);
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
   };
-
+  const getAllOrgNameData = () => {
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setOrgNameData(actualDataObject);
+      });
+  };
   const AddDataToBu = async (e) => {
     const post = {
       businessUnitName: businessUnitName,
@@ -40,7 +48,6 @@ function BuisnessUnit() {
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit",
         post
       );
-      console.log("this is the response", response.data);
     } catch {}
   };
   return (
@@ -101,14 +108,17 @@ function BuisnessUnit() {
                     </div>
                     <div>
                       <label for="username">Child Of Organization</label>
-                      <input
-                        type="text"
-                        id="email"
-                        spellcheck="false"
+                      <select
                         onChange={(e) => {
                           setChildOfOrganization(e.target.value);
                         }}
-                      />
+                      >
+                        <option>Please choose one option</option>
+                        {orgNameData.map((orgDataName, index) => {
+                          const orgName = orgDataName.orgName;
+                          return <option key={index}>{orgName}</option>;
+                        })}
+                      </select>
                     </div>
                     <div>
                       <label>
