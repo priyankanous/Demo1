@@ -63,6 +63,7 @@ const Sidebar = () => {
                   isOpen={openSubmenu === index}
                   handleSubMenuClick={handleSubMenuClick}
                   index={index}
+                  setOpenSubmenu={setOpenSubmenu}
                 />
               );
             })}

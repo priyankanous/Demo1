@@ -17,6 +17,7 @@ import PricingType from "./components/Adminstration/PricingType";
 import WorkOrderStatus from "./components/Adminstration/WorkOrderStatus";
 import Status from "./components/Adminstration/Status";
 import FinancialYear from "./components/Adminstration/FinancialYear";
+import NotificationConfig from "./components/Adminstration/NotificationConfig";
 import Currency from "./components/Adminstration/Currency";
 import GlobalLeaveLossFactor from "./components/Adminstration/GlobalLeaveLossFactor";
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/administration/wostatus" component={WorkOrderStatus}/>
         <Route path="/administration/status" component={Status}/>
         <Route path="/administration/financialYear" component={FinancialYear}/>
+        <Route path="/administration/notificationConfig" component={NotificationConfig}/>
         <Route path="/administration/currency" component={Currency}/>
         <Route path="/administration/globalleavelossfactor" component={GlobalLeaveLossFactor}/>
       </Switch>
