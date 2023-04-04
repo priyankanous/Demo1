@@ -13,9 +13,7 @@ function WorkOrderStatus() {
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
+      .then((response) => {})
       .then((actualData) => {
         setData(actualData);
       });
