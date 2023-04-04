@@ -4,29 +4,39 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function BusinessType() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [businessType, setBusinessType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [businessTypeFormData,setbusinessTypeFormData] = useState({businessTypeName:"",businessTypeDisplayName:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchBusinessTypeData = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type');
+    setBusinessType(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchBusinessTypeData();
   }, []);
+
+  const setBusinessTypeData = async ()=>{
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type',businessTypeFormData);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchBusinessTypeData();
+    }
+  }
+
+
   return (
     <div>
       <BaseComponent
         field="Business Type"
         actionButtonName="Setup Business Type"
         columns={["Business Type Name", "Business Type Display Name"]}
-        data={data}
+        data={businessType}
         Tr={Tr}
         setIsOpen={setIsOpen}
       />
@@ -50,11 +60,11 @@ function BusinessType() {
               <form id="reg-form">
                 <div>
                   <label for="name">Business Type Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input type="text" id="business-type-name" value={businessTypeFormData?.businessTypeName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeName:e.target.value})}}  />
                 </div>
                 <div>
                   <label for="email">Business Type Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="text" id="business-type-display-name" value={businessTypeFormData?.businessTypeDisplayName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeDisplayName:e.target.value})}}  />
                 </div>
                 <div>
                   <label>
@@ -63,6 +73,7 @@ function BusinessType() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setBusinessTypeData()}}
                     />
                     <input
                       type="button"
@@ -84,20 +95,14 @@ function BusinessType() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ businessTypeName, businessTypeDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{businessTypeName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{businessTypeDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );

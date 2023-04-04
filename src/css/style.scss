@@ -54,7 +54,7 @@ $green-border: #72B372;
 		margin: 10px;
 	}
 
-	input[type=text] {
+	input[type=text],input[type=date] {
 		width: 50%;
 		outline: none;
 		border-radius: 10px;
@@ -72,7 +72,7 @@ $green-border: #72B372;
 		border: none;
 	}
 
-	input[type=text]:focus {
+	input[type=text]:focus,input[type=date]:focus {
 		background: rgb(193, 222, 231);
 	}
 
