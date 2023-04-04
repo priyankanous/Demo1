@@ -57,10 +57,6 @@ function BusinessType() {
                   <input type="text" id="email" spellcheck="false" />
                 </div>
                 <div>
-                  <label for="username">Child Of Organization</label>
-                  <input type="text" id="email" spellcheck="false" />
-                </div>
-                <div>
                   <label>
                     <input
                       type="button"

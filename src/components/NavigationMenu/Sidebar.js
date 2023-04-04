@@ -13,18 +13,23 @@ const Sidebar = () => {
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [userObj,setUserObj] = useState(null);
 
-  const handleSubMenuClick = (index) => {
-    setOpenSubmenu(index === openSubmenu ? null : index);
+  const handleSubMenuClick = (index,isFromNewComp = true) => {
+    console.log('qwerty',index)
+    // debugger;
+    if(isFromNewComp)setOpenSubmenu(index === openSubmenu ? null : index);
   };
 
   useEffect(()=>{
-    console.log('loading api here ---');
     const dataFetach = async ()=>{
       const data = await axios.get('https://randomuser.me/api/?gender=male');
       setUserObj(data.data.results[0])
     }
     dataFetach();
   },[])
+
+  useEffect(()=>{
+    console.log(openSubmenu);
+  },[openSubmenu])
 
 
   return (
