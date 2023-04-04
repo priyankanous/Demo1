@@ -4,21 +4,30 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
-import * as AiIcons from "react-icons/ai";
+import axios from "axios";
 
 function Location() {
-  const [data, setData] = useState(null);
+  const [locationName, setLocationName] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [locationFormData,setLocationFormData] = useState({locationName:"",locationDisplayName:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchLocationName = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/location');
+    setLocationName(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchLocationName();
   }, []);
+
+  const setlocationDetails = async ()=>{
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/location',locationFormData);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchLocationName();
+    }
+  }
 
   return (
     <div>
@@ -26,7 +35,7 @@ function Location() {
         field="Location"
         actionButtonName="Setup Location"
         columns={["Location Name", "Location Display Name"]}
-        data={data}
+        data={locationName}
         Tr={Tr}
         setIsOpen={setIsOpen}
       />
@@ -50,11 +59,11 @@ function Location() {
               <form id="reg-form">
                 <div>
                   <label for="name">Location Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input type="text" id="loc-name" value={locationFormData?.locationName} onChange={(e)=>{setLocationFormData({...locationFormData,locationName:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Location Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="text" id="loc-disp-name" value={locationFormData?.locationDisplayName} onChange={(e)=>{setLocationFormData({...locationFormData,locationDisplayName:e.target.value})}} />
                 </div>
                 <div>
                   <label>
@@ -63,6 +72,7 @@ function Location() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setlocationDetails()}}
                     />
                     <input
                       type="button"
@@ -83,26 +93,14 @@ function Location() {
     </div>
   );
 }
-function Tr({ name, username }) {
-  const [isDropdown, setDropdown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
-  };
+function Tr({ locationName, locationDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{locationName || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
-                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
-                    </div>} </span>
+        <span>{locationDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );

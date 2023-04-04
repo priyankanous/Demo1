@@ -4,24 +4,53 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
-import * as AiIcons from "react-icons/ai";
+import axios from "axios";
 
 function Sbu() {
   const [data, setData] = useState(null);
+  const [buNameData, setBuNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const options = ['One', 'Two', 'Three', 'Four', 'Five'];
-  const onOptionChangeHandler = (event) => {}
-
+  const [sbuName, setSbuName] = useState(null);
+  const [sbuDisplayName, setSbuDisplayName] = useState(null);
+  const [buDisplayName, setBuDisplayName] = useState(null);
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllSbuData();
   }, []);
 
+  const getAllBuNameData = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setBuNameData(actualDataObject);
+      });
+  };
+  const getAllSbuData = () => {
+    getAllBuNameData();
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+
+  const AddDataToSbu = async (e) => {
+    const post = {
+      sbuName: sbuName,
+      sbuDisplayName: sbuDisplayName,
+      buDisplayName: buDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu",
+        post
+      );
+      console.log("this is the response", response.data);
+    } catch {}
+  };
   return (
     <div>
       <BaseComponent
@@ -52,22 +81,39 @@ function Sbu() {
               <form id="reg-form">
                 <div>
                   <label for="name">SBU Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setSbuName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">SBU Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setSbuDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Child of BU</label>
-                  <select onChange={onOptionChangeHandler}>
+                  <select
+                    onChange={(e) => {
+                      setBuDisplayName(e.target.value);
+                    }}
+                  >
                     <option>Please choose one option</option>
-                    {options.map((option, index) => {
-                        return <option key={index} >
-                            {option}
-                        </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      return <option key={index}>{buNameData}</option>;
                     })}
-                </select>
+                  </select>
                 </div>
                 <div>
                   <label>
@@ -76,6 +122,7 @@ function Sbu() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToSbu}
                     />
                     <input
                       type="button"
@@ -96,31 +143,20 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ name, username }) {
-  const [isDropdown, setDropdown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
-  };
+function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{sbuName || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
+        <span>{sbuDisplayName || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
-                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
-                    </div>} </span>
+        <span>{buDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );
 }
 export default Sbu;
+

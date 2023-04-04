@@ -7,6 +7,7 @@ export const SidebarLink = styled(Link)`
   color: white;
   justify-content: space-between;
   align-items: center;
+<<<<<<< HEAD
   padding: 4%;
   padding-left: 1.5rem;
   list-style: none;
@@ -18,6 +19,14 @@ export const SidebarLink = styled(Link)`
     background: #0a8b9c;
     cursor: pointer;
   }
+=======
+  padding: 5%;
+  padding-left: 2rem;
+  list-style: none;
+  height: 1%;
+  text-decoration: none;
+  font-size: 0.9rem;
+>>>>>>> 0f3257f2a5f2f26a65e1618f7d8b2897b84e033f
 `;
 
 export const SidebarLabel = styled.span`
@@ -26,7 +35,11 @@ export const SidebarLabel = styled.span`
 
 export const DropdownLink = styled(Link)`
   background: #0a8b9;
+<<<<<<< HEAD
   margin-left: 3.9rem;
+=======
+  margin-left: 1.8rem;
+>>>>>>> 0f3257f2a5f2f26a65e1618f7d8b2897b84e033f
   padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -34,13 +47,7 @@ export const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 0.8rem;
-
-  &:hover {
-    background: #0a8b9c;
-    border-radius: 5.5rem;
-    cursor: pointer;
-  }
+  font-size: 1rem;
 
   .active{
     background: #0a8b9c;
@@ -170,6 +177,23 @@ export const LoggedInUserImage = styled.img`
   margin-right: 1rem;
 `;
 export const LoggedInUserName = styled.span`
-  font-weight: 500;
-  color: rgb(7, 46, 58);
-`;
+font-weight:500;
+color:rgb(7,46,58);
+`
+export const ModalFormButton = styled.div`
+display:flex;
+justify-content:center;
+margin-top:50px;
+padding:2px;
+width:100%;
+`
+
+export const NotificationArrowIcons = styled.div`
+width:20%;
+height:300px;
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:5rem;
+color:#0a8B9c
+`
