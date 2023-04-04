@@ -4,29 +4,38 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function Status() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [statusType, setstatusType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [statusTypeFormData,setstatusTypeFormData] = useState({statusName:"",statusDisplayName:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchstatusTypeData = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status');
+    setstatusType(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchstatusTypeData();
   }, []);
+
+  const setstatusTypeData = async ()=>{
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status',statusTypeFormData);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchstatusTypeData();
+    }
+  }
+
   return (
     <div>
       <BaseComponent
         field="Status"
         actionButtonName="Setup status"
         columns={["Status name", "Status display name"]}
-        data={data}
+        data={statusType}
         Tr={Tr}
         setIsOpen={setIsOpen}
       />
@@ -50,11 +59,11 @@ function Status() {
               <form id="reg-form">
                 <div>
                   <label for="name">Status name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input type="text" id="status-name" value={statusTypeFormData?.statusName} onChange={(e)=>{setstatusTypeFormData({...statusTypeFormData,statusName:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Status display name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="text" id="status-display-name" value={statusTypeFormData?.statusDisplayName} onChange={(e)=>{setstatusTypeFormData({...statusTypeFormData,statusDisplayName:e.target.value})}} />
                 </div>
                 <div>
                   <label>
@@ -63,6 +72,7 @@ function Status() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setstatusTypeData()}}
                     />
                     <input
                       type="button"
@@ -84,20 +94,14 @@ function Status() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ statusName,statusDisplayName}) {
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{statusName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{statusDisplayName || "Unknown"}</span>
       </td>
     </tr>
   );

@@ -18,6 +18,7 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
         if(item?.subNav[i].path === location?.pathname){
           setsubDropDownActive(item?.subNav[i].path);
           handleSubMenuClick(index);
+          setOpenSubmenu(index)
           break;
         }
       }
@@ -26,7 +27,7 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
 
   return (
     <>
-      <SidebarLink style={{background:isMainmenuactive && '#0a8b9c'}}   to={item.path} onClick={()=>{item.subNav && handleSubMenuClick(index);}}>
+      <SidebarLink key={index} style={{background:isMainmenuactive && '#0a8b9c'}}   to={item.path} onClick={()=>{item.subNav && handleSubMenuClick(index);}}>
         <div>
           {item.icon}
           <SidebarLabel>{item.title}
@@ -35,11 +36,11 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
         </div>
       </SidebarLink>
       {isOpen  &&
-        item.subNav.map((item, index) => {
+        item.subNav.map((item, index1) => {
           return (
-            <DropdownLink to={item.path} key={index}> 
+            <DropdownLink onClick={() => {console.log(index1,item.path);setsubDropDownActive(item.path)}} to={item.path} key={index1}> 
               <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <SidebarLabel onClick={() => {setsubDropDownActive(item.path);setOpenSubmenu(index)}} className={subDropDownActive == item.path && 'active'}>{item.title}</SidebarLabel>
+              <SidebarLabel  className={subDropDownActive == item.path && 'active'}>{item.title}</SidebarLabel>
             </DropdownLink>
           );
         })}

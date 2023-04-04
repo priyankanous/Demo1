@@ -4,29 +4,37 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function PricingType() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [pricingType, setpricingType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [pricingTypeFormData,setpricingTypeFormData] = useState({pricingTypeName:"",pricingTypeDisplayName:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchpricingTypeData = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type');
+    setpricingType(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchpricingTypeData();
   }, []);
+
+  const setpricingTypeData = async ()=>{
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type',pricingTypeFormData);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchpricingTypeData();
+    }
+  }
   return (
     <div>
       <BaseComponent
         field="Pricing Type"
         actionButtonName="Setup Pricing type"
         columns={["Pricing Type Name", "Pricing type display name"]}
-        data={data}
+        data={pricingType}
         Tr={Tr}
         setIsOpen={setIsOpen}
       />
@@ -50,11 +58,11 @@ function PricingType() {
               <form id="reg-form">
                 <div>
                   <label for="name">Pricing type name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input type="text" id="pricing-type-name" value={pricingTypeFormData?.pricingTypeName} onChange={(e)=>{setpricingTypeFormData({...pricingTypeFormData,pricingTypeName:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Pricing type display name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="text" id="pricing-type-display-name" value={pricingTypeFormData?.pricingTypeDisplayName} onChange={(e)=>{setpricingTypeFormData({...pricingTypeFormData,pricingTypeDisplayName:e.target.value})}} />
                 </div>
                 <div>
                   <label>
@@ -63,6 +71,7 @@ function PricingType() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setpricingTypeData()}}
                     />
                     <input
                       type="button"
@@ -84,20 +93,14 @@ function PricingType() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ pricingTypeName, pricingTypeDisplayName }) {
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{pricingTypeName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{pricingTypeDisplayName  || "Unknown"}</span>
       </td>
     </tr>
   );

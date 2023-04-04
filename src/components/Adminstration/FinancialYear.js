@@ -4,22 +4,33 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 
 function FinancialYear() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [financialYear, setfinancialYear] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [financialYearFormData,setfinancialYearFormData] = useState({financialYearName:"",financialYearCustomName:"",startingFrom:"",endingOn:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchFinancialYearData = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year');
+    setfinancialYear(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchFinancialYearData();
   }, []);
+
+  const setFinancialYearData = async ()=>{
+    const financialYearFormDataFinal = {...financialYearFormData,startingFrom:financialYearFormData?.startingFrom.split('-').reverse().join('/'),endingOn:financialYearFormData?.endingOn.split('-').reverse().join('/')};
+    console.log(financialYearFormDataFinal);
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year',financialYearFormDataFinal);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchFinancialYearData();
+    }
+  }
+
   return (
     <div>
       <BaseComponent
@@ -31,7 +42,7 @@ function FinancialYear() {
           "Finanical year starting from",
           "Financial Year Ending On",
         ]}
-        data={data}
+        data={financialYear}
         Tr={Tr}
         setIsOpen={setIsOpen}
       />
@@ -55,19 +66,19 @@ function FinancialYear() {
               <form id="reg-form">
                 <div>
                   <label for="name">Name of financial year</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <input type="text" id="financial-year-name" value={financialYearFormData?.financialYearName} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,financialYearName:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Custom name of Finanical year</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="text" id="financial-year-custom-name" value={financialYearFormData?.financialYearCustomName} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,financialYearCustomName:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Financial year starting from</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="date"  id="financial-year-starting-date"  value={financialYearFormData?.startingFrom} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,startingFrom:e.target.value})}} />
                 </div>
                 <div>
                   <label for="email">Financial year ending On</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input type="date" id="financial-year-ending-date" value={financialYearFormData?.endingOn} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,endingOn:e.target.value})}}/>
                 </div>
                 <div>
                   <label>
@@ -76,6 +87,7 @@ function FinancialYear() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setFinancialYearData()}}
                     />
                     <input
                       type="button"
@@ -97,20 +109,20 @@ function FinancialYear() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ financialYearName, financialYearCustomName, startingFrom, endingOn }) {
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{financialYearName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
+        <span>{financialYearCustomName || "Unknown"}</span>
       </td>
       <td>
-        <span>{title || "Unknown"}</span>
+        <span>{startingFrom || "Unknown"}</span>
       </td>
       <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{endingOn || "Unknown"}</span>
       </td>
     </tr>
   );
