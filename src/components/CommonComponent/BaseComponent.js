@@ -34,7 +34,7 @@ function BaseComponent(props) {
                 </select> </span>
           <span style={{display: props.globalLeave ?"none" :"",paddingRight: '2%'}}>Base Currency: <input type="text" id="email" spellcheck="false"/> </span>
           <span style={{paddingRight: '2%'}}>Copy From: <select id="filterSelect" onChange={onOptionChangeHandler}>
-                    <option>Choose Year</option>
+                    <option value="" disabled selected hidden >Choose Year</option>
                     {options.map((option, index) => {
                         return <option key={index} >
                             {option}

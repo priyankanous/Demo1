@@ -5,6 +5,7 @@ import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function BuisnessUnit() {
   const [data, setData] = useState(null);
@@ -113,7 +114,7 @@ function BuisnessUnit() {
                           setChildOfOrganization(e.target.value);
                         }}
                       >
-                        <option>Please choose one option</option>
+                        <option value="" disabled selected hidden >Please choose one option</option>
                         {orgNameData.map((orgDataName, index) => {
                           const orgName = orgDataName.orgName;
                           return <option key={index}>{orgName}</option>;
@@ -154,6 +155,11 @@ function BuisnessUnit() {
 }
 
 function Tr({ businessUnitName, businessUnitDisplayName, childOfOrg }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -164,6 +170,13 @@ function Tr({ businessUnitName, businessUnitDisplayName, childOfOrg }) {
       </td>
       <td>
         <span>{childOfOrg || "Unknown"}</span>
+        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
     </tr>
   );
