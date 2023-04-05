@@ -1,5 +1,6 @@
-import React from "react";
-import { AiFillPlusSquare ,AiOutlineMore} from "react-icons/ai";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { AiFillPlusSquare } from "react-icons/ai";
 import {
   TableHeadingSection,
   TableHeading,
@@ -8,8 +9,6 @@ import {
 } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
-  const options = ['One', 'Two', 'Three', 'Four', 'Five'];
-  const onOptionChangeHandler = (event) => {}
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -23,26 +22,34 @@ function BaseComponent(props) {
       </TableHeadingSection>
       {props.globalLeave || props.currency ? (
         <React.Fragment>
-        <div class="filter">
-          <span style={{paddingRight: '2%'}}>Financial year: <select id="filterSelect" onChange={onOptionChangeHandler}>
-                    <option>Choose Year</option>
-                    {options.map((option, index) => {
-                        return <option key={index} >
-                            {option}
-                        </option>
-                    })}
-                </select> </span>
-          <span style={{display: props.globalLeave ?"none" :"",paddingRight: '2%'}}>Base Currency: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{paddingRight: '2%'}}>Copy From: <select id="filterSelect" onChange={onOptionChangeHandler}>
-                    <option value="" disabled selected hidden >Choose Year</option>
-                    {options.map((option, index) => {
-                        return <option key={index} >
-                            {option}
-                        </option>
-                    })}
-                </select>  </span>
-          <span style={{paddingRight: '2%'}}><button id="filterButton">Apply</button></span>
-        </div>
+          <div class="filter">
+            <span style={{ paddingRight: "2%" }}>
+              Financial year:
+              <select id="filterSelect">
+                <option value="" disabled selected hidden>
+                  Please choose one option
+                </option>
+                {props.financialYearData.map((fyData, index) => {
+                  const fyNameData = fyData.financialYearName;
+                  return <option key={index}>{fyNameData}</option>;
+                })}
+              </select>
+            </span>
+            <span
+              style={{
+                display: props.globalLeave ? "none" : "",
+                paddingRight: "2%",
+              }}
+            >
+              Base Currency: <input type="text" id="email" spellcheck="false" />{" "}
+            </span>
+            <span style={{ paddingRight: "2%" }}>
+              Copy From: <input type="text" id="email" spellcheck="false" />{" "}
+            </span>
+            <span style={{ paddingRight: "2%" }}>
+              <button id="filterButton">Apply</button>
+            </span>
+          </div>
           <table id="style">
             <tr>
               {props.columns.map((header) => {

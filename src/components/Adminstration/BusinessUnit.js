@@ -20,7 +20,7 @@ function BuisnessUnit() {
   }, []);
 
   const getAllBuData = () => {
-    getAllOrgNameData();
+    getOrgNameData();
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
@@ -30,7 +30,7 @@ function BuisnessUnit() {
         setData(actualDataObject);
       });
   };
-  const getAllOrgNameData = () => {
+  const getOrgNameData = () => {
     axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
       .then((response) => {
@@ -56,13 +56,9 @@ function BuisnessUnit() {
       {data ? (
         <div>
           <BaseComponent
-            field="BU"
-            actionButtonName="Setup BU"
-            columns={[
-              "BusinessUnit Name",
-              "BusinessUnit Display Name",
-              "Child Of Organization",
-            ]}
+            field="Business Unit"
+            actionButtonName="Setup Business Unit"
+            columns={["Name", "Display Name", "Parent Organization"]}
             data={data}
             Tr={Tr}
             setIsOpen={setIsOpen}
@@ -97,7 +93,7 @@ function BuisnessUnit() {
                       />
                     </div>
                     <div>
-                      <label for="email">BusinessUnit Display Name</label>
+                      <label for="email">Business Unit Display Name</label>
                       <input
                         type="text"
                         id="email"
@@ -108,13 +104,15 @@ function BuisnessUnit() {
                       />
                     </div>
                     <div>
-                      <label for="username">Child Of Organization</label>
+                      <label for="username">Parent Organization</label>
                       <select
                         onChange={(e) => {
                           setChildOfOrganization(e.target.value);
                         }}
                       >
-                        <option value="" disabled selected hidden >Please choose one option</option>
+                        <option value="" disabled selected hidden>
+                          Please choose one option
+                        </option>
                         {orgNameData.map((orgDataName, index) => {
                           const orgName = orgDataName.orgName;
                           return <option key={index}>{orgName}</option>;
@@ -158,7 +156,7 @@ function Tr({ businessUnitName, businessUnitDisplayName, childOfOrg }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
+    isopen ? setDropdown(false) : setDropdown(true);
   };
   return (
     <tr>
@@ -170,17 +168,35 @@ function Tr({ businessUnitName, businessUnitDisplayName, childOfOrg }) {
       </td>
       <td>
         <span>{childOfOrg || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
-                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
-                    </div>} </span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );
 }
 
 export default BuisnessUnit;
-

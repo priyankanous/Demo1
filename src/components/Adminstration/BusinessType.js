@@ -58,7 +58,7 @@ function BusinessType() {
                   <input type="text" id="email" spellcheck="false" />
                 </div>
                 <div>
-                  <label for="username">Child Of Organization</label>
+                  <label for="username">Parent Organization</label>
                   <input type="text" id="email" spellcheck="false" />
                 </div>
                 <div>
@@ -93,7 +93,7 @@ function Tr({ userId, id, title, completed }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
+    isopen ? setDropdown(false) : setDropdown(true);
   };
   return (
     <tr>
@@ -108,13 +108,32 @@ function Tr({ userId, id, title, completed }) {
       </td>
       <td>
         <span>{completed || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
-                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
-                    </div>} </span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );
