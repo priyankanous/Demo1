@@ -106,15 +106,38 @@ function GlobalLeaveLossFactor() {
                 </div>
                 <div>
                   <label for="email">Month</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setMonth(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
-                  <label for="email">Onshore</label>
-                  <input type="number" id="email" spellcheck="false" /> %
+                  <label for="email">OnSite</label>
+                  <input
+                    type="number"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOnSite(e.target.value);
+                    }}
+                  />{" "}
+                  %
                 </div>
                 <div>
                   <label for="email">OffShore</label>
-                  <input type="number" id="email" spellcheck="false" /> %
+                  <input
+                    type="number"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOffShore(e.target.value);
+                    }}
+                  />{" "}
+                  %
                 </div>
                 <div>
                   <label>
@@ -275,7 +298,7 @@ function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
                         onSite: e.target.value,
                       })
                     }
-                  />{" "}
+                  />
                   %
                 </div>
                 <div>
