@@ -2,28 +2,52 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalFormButton, ModalHeading,ModalIcon } from "../NavigationMenu/Value";
+import {
+  ModalFormButton,
+  ModalHeading,
+  ModalIcon,
+} from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function WorkOrderStatus() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [woStatusName, setWorkOrderStatusName] = useState(null);
+  const [woStatusDisplayName, setWorkOrderStatusDisplayName] = useState(null);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {})
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllWorkOrderData();
   }, []);
+  const getAllWorkOrderData = () => {
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+  const AddDataToWorkOrderStatus = async (e) => {
+    const post = {
+      woStatusName: woStatusName,
+      woStatusDisplayName: woStatusDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus",
+        post
+      );
+    } catch {}
+  };
   return (
     <div>
       <BaseComponent
         field="Work Order status"
         actionButtonName="Setup Work order status"
-        columns={["Work order status name", "Work order status display name"]}
+        columns={["Name", "Display Name"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -36,7 +60,7 @@ function WorkOrderStatus() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Work Order Status</ModalHeading>
+              <ModalHeading>Setup Status</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -47,31 +71,26 @@ function WorkOrderStatus() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                    <div class="main" className="ModalContainer">
-                        <div class="register">
-                            <ModalHeading>Setup Work Order Status</ModalHeading>
-                            <ModalIcon onClick={()=>{setIsOpen(false)}}><AiOutlineClose></AiOutlineClose></ModalIcon>
-                            <hr color="#62bdb8"></hr>
-                            <form id="reg-form">
-                                <div>
-                                    <label for="name">Work order status name</label>
-                                    <input type="text" id="name" spellcheck="false" />
-                                </div>
-                                <div>
-                                    <label for="email">Work order status display name</label>
-                                    <input type="text" id="email" spellcheck="false" />
-                                </div>
-                                <ModalFormButton>
-                                    <input type="button" value="Save" id="create-account" class="button" />
-                                    <input type="button" onClick={()=>{setIsOpen(false)}} value="Cancel" id="create-account" class="button" />
-                                </ModalFormButton>
-                            </form>
-                        </div>
-                    </div>
+                  <label for="name">Work Order Status Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setWorkOrderStatusName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
-                  <label for="email">Work order status display name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <label for="email">Work Order Status Display Name</label>
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setWorkOrderStatusDisplayName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -80,6 +99,7 @@ function WorkOrderStatus() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToWorkOrderStatus}
                     />
                     <input
                       type="button"
@@ -101,20 +121,45 @@ function WorkOrderStatus() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ woStatusName, woStatusDisplayName }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen ? setDropdown(false) : setDropdown(true);
+  };
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{woStatusName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{woStatusDisplayName || "Unknown"}</span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );

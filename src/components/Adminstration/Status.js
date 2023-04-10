@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function Status() {
   const [statusType, setstatusType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [statusTypeFormData,setstatusTypeFormData] = useState({statusName:"",statusDisplayName:""})
+  const [statusTypeFormData, setstatusTypeFormData] = useState({ statusName: "", statusDisplayName: "" })
 
 
-  const fetchstatusTypeData = async ()=>{
-    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status');
+  const fetchstatusTypeData = async () => {
+    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status');
     setstatusType(data?.data)
   }
 
-  useEffect(() => {  
+  useEffect(() => {
     fetchstatusTypeData();
   }, []);
 
-  const setstatusTypeData = async ()=>{
-    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status',statusTypeFormData);
-    if(data?.message === 'Success' && data?.responseCode === 200){
+  const setstatusTypeData = async () => {
+    const { data } = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status', statusTypeFormData);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
       setIsOpen(false);
       fetchstatusTypeData();
     }
@@ -34,9 +35,9 @@ function Status() {
       <BaseComponent
         field="Status"
         actionButtonName="Setup status"
-        columns={["Status name", "Status display name"]}
+        columns={["Name", "Display name"," "]}
         data={statusType}
-        Tr={Tr}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -58,12 +59,12 @@ function Status() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Status name</label>
-                  <input type="text" id="status-name" value={statusTypeFormData?.statusName} onChange={(e)=>{setstatusTypeFormData({...statusTypeFormData,statusName:e.target.value})}} />
+                  <label for="name">Name</label>
+                  <input type="text" id="status-name" value={statusTypeFormData?.statusName} onChange={(e) => { setstatusTypeFormData({ ...statusTypeFormData, statusName: e.target.value }) }} />
                 </div>
                 <div>
-                  <label for="email">Status display name</label>
-                  <input type="text" id="status-display-name" value={statusTypeFormData?.statusDisplayName} onChange={(e)=>{setstatusTypeFormData({...statusTypeFormData,statusDisplayName:e.target.value})}} />
+                  <label for="email">Display name</label>
+                  <input type="text" id="status-display-name" value={statusTypeFormData?.statusDisplayName} onChange={(e) => { setstatusTypeFormData({ ...statusTypeFormData, statusDisplayName: e.target.value }) }} />
                 </div>
                 <div>
                   <label>
@@ -72,7 +73,7 @@ function Status() {
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={()=>{setstatusTypeData()}}
+                      onClick={() => { setstatusTypeData() }}
                     />
                     <input
                       type="button"
@@ -94,14 +95,44 @@ function Status() {
   );
 }
 
-function Tr({ statusName,statusDisplayName}) {
+
+function Tr({ data:{statusName, statusDisplayName} }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown  ? setDropdown(false) : setDropdown(true)
+  };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{statusName || "Unknown"}</span>
       </td>
       <td>
         <span>{statusDisplayName || "Unknown"}</span>
+      </td>
+      <td>
+        <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+          {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
+            <a style={{ padding: '5px' }}><AiIcons.AiOutlineEdit onClick={() => { setIsOpen(true); }} /> Edit</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
+          </div>} </span>
       </td>
     </tr>
   );

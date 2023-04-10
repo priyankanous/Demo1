@@ -4,40 +4,21 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
-import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function Region() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [regionName, setRegionName] = useState(null);
-  const [regionDisplayName, setRegionDisplayName] = useState(null);
 
   useEffect(() => {
-    getAllRegionData();
-  }, []);
-  const getAllRegionData = () => {
-    axios
-      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
+    fetch(`https://jsonplaceholder.typicode.com/users`)
       .then((response) => {
-        console.log("this is resp", response);
-        const actualDataObject = response.data.data;
-        setData(actualDataObject);
+        return response.json();
+      })
+      .then((actualData) => {
+        setData(actualData);
       });
-  };
-
-  const AddDataToRegion = async (e) => {
-    const post = {
-      regionName: regionName,
-      regionDisplayName: regionDisplayName,
-    };
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
-        post
-      );
-      console.log("this is the response", response.data);
-    } catch {}
-  };
+  }, []);
 
   return (
     <div>
@@ -69,25 +50,11 @@ function Region() {
               <form id="reg-form">
                 <div>
                   <label for="name">Region Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setRegionName(e.target.value);
-                    }}
-                  />
+                  <input type="text" id="name" spellcheck="false" />
                 </div>
                 <div>
                   <label for="email">Region Display Name</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setRegionDisplayName(e.target.value);
-                    }}
-                  />
+                  <input type="text" id="email" spellcheck="false" />
                 </div>
                 <div>
                   <label>
@@ -96,7 +63,6 @@ function Region() {
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={AddDataToRegion}
                     />
                     <input
                       type="button"
@@ -117,14 +83,26 @@ function Region() {
     </div>
   );
 }
-function Tr({ regionName, regionDisplayName }) {
+function Tr({ name, username }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
-        <span>{regionName || "Unknown"}</span>
+        <span>{name || "Unknown"}</span>
       </td>
       <td>
-        <span>{regionDisplayName || "Unknown"}</span>
+        <span>{username || "Unknown"}</span>
+        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span>
       </td>
     </tr>
   );

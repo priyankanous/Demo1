@@ -54,7 +54,8 @@ $green-border: #72B372;
 		margin: 10px;
 	}
 
-	input[type=text],input[type=date] {
+	input[type=text],
+	input[type=date] {
 		width: 50%;
 		outline: none;
 		border-radius: 10px;
@@ -72,7 +73,18 @@ $green-border: #72B372;
 		border: none;
 	}
 
-	input[type=text]:focus,input[type=date]:focus {
+	input[type=text] {
+		width: 50%;
+		outline: none;
+		border-radius: 10px;
+		padding: 5px;
+		box-shadow: 0px 2px 5px grey;
+		border: blue;
+
+	}
+
+	input[type=text]:focus,
+	input[type=date]:focus {
 		background: rgb(193, 222, 231);
 	}
 
@@ -90,6 +102,7 @@ $green-border: #72B372;
 		border: 1px solid rgb(185, 217, 228);
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 		@include linear-gradient(#96d0d4, #94d7db);
+
 	}
 }
 
@@ -189,4 +202,10 @@ $green-border: #72B372;
 	}
 
 
+}
+.basic-single{
+	background-color: #72B372;
+	height: 10px;
+	width: 400px;
+	border:1px solid black !important;
 }

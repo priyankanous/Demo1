@@ -17,9 +17,9 @@ import PricingType from "./components/Adminstration/PricingType";
 import WorkOrderStatus from "./components/Adminstration/WorkOrderStatus";
 import Status from "./components/Adminstration/Status";
 import FinancialYear from "./components/Adminstration/FinancialYear";
-import NotificationConfig from "./components/Adminstration/NotificationConfig";
 import Currency from "./components/Adminstration/Currency";
 import GlobalLeaveLossFactor from "./components/Adminstration/GlobalLeaveLossFactor";
+import NotificationConfig from "./components/Adminstration/NotificationConfig";
 
 function App() {
   return (

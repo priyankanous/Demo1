@@ -4,33 +4,71 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function GlobalLeaveLossFactor() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isGlobalLeave, setIsGlobalLeave] = useState(true);
+  const [isGlobalLeave] = useState(true);
+  const [month, setMonth] = useState(null);
+  const [onSite, setOnSite] = useState(null);
+  const [offShore, setOffShore] = useState(null);
+  const [financialYear, setFinancialYear] = useState(null);
+  const [financialYearData, setFinancialYearData] = useState([]);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllGlobalLLF();
+    getFinancialYearNameData();
   }, []);
+  const getAllGlobalLLF = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor`
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+  const AddDataToGlobalLLF = async (e) => {
+    const post = {
+      month: month,
+      onSite: onSite,
+      offShore: offShore,
+      financialYear: financialYear,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
+        post
+      );
+    } catch {}
+  };
+  const getFinancialYearNameData = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
+      )
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setFinancialYearData(actualDataObject);
+      });
+  };
   return (
     <div>
       <BaseComponent
         field="#"
-        actionButtonName="Apply"
+        actionButtonName="Setup Global Leave Loss Factor"
         columns={["#", "Month", "Offshore", "Onshore", ""]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
         globalLeave={isGlobalLeave}
+        financialYearData={financialYearData}
       />
       <Modal
         isOpen={isOpen}
@@ -40,7 +78,7 @@ function GlobalLeaveLossFactor() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Location</ModalHeading>
+              <ModalHeading>Setup Leave Loss Factor for a Month</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -51,12 +89,55 @@ function GlobalLeaveLossFactor() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Location Name</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <label for="name">Financial Year</label>
+                  <select
+                    onChange={(e) => {
+                      setFinancialYear(e.target.value);
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {financialYearData.map((fyData, index) => {
+                      const fyNameData = fyData.financialYearName;
+                      return <option key={index}>{fyNameData}</option>;
+                    })}
+                  </select>
                 </div>
                 <div>
-                  <label for="email">Location Display Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <label for="email">Month</label>
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setMonth(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="email">OnSite</label>
+                  <input
+                    type="number"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOnSite(e.target.value);
+                    }}
+                  />{" "}
+                  %
+                </div>
+                <div>
+                  <label for="email">OffShore</label>
+                  <input
+                    type="number"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setOffShore(e.target.value);
+                    }}
+                  />{" "}
+                  %
                 </div>
                 <div>
                   <label>
@@ -65,6 +146,7 @@ function GlobalLeaveLossFactor() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToGlobalLLF}
                     />
                     <input
                       type="button"
@@ -86,13 +168,14 @@ function GlobalLeaveLossFactor() {
   );
 }
 
-function Tr({ name, id, username, email }) {
+function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
+  const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [responseData, setResponseData] = useState({
-    name: name,
-    id: id,
-    username: username,
-    email: email,
+    leaveLossFactorId: leaveLossFactorId,
+    month: month,
+    onSite: onSite,
+    offShore: offShore,
   });
 
   const OnSubmit = () => {
@@ -100,28 +183,49 @@ function Tr({ name, id, username, email }) {
     //refatch the data using the get API
   };
 
+  const closeDropDown = (isopen) => {
+    isopen ? setDropdown(false) : setDropdown(true);
+  };
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{leaveLossFactorId || "Unknown"}</span>
       </td>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{month || "Unknown"}</span>
       </td>
       <td>
-        <span>{username || "Unknown"}</span>
+        <span>{offShore || "Unknown"}</span>
       </td>
       <td>
-        <span>{email || "Unknown"}</span>
-      </td>
-      <td>
-        <button
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          Edit
-        </button>
+        <span>{onSite || "Unknown"}</span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a
+                style={{ padding: "5px" }}
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              >
+                <AiIcons.AiOutlineEdit />
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}
+        </span>
       </td>
       <Modal
         isOpen={isOpen}
@@ -147,7 +251,7 @@ function Tr({ name, id, username, email }) {
                     type="text"
                     id="id"
                     spellcheck="false"
-                    value={responseData.id}
+                    value={responseData.leaveLossFactorId}
                   />
                 </div>
                 <div>
@@ -156,9 +260,12 @@ function Tr({ name, id, username, email }) {
                     type="text"
                     id="email"
                     spellcheck="false"
-                    value={responseData.name}
+                    value={responseData.month}
                     onChange={(e) =>
-                      setResponseData({ ...responseData, name: e.target.value })
+                      setResponseData({
+                        ...responseData,
+                        month: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -168,14 +275,15 @@ function Tr({ name, id, username, email }) {
                     type="text"
                     id="email"
                     spellcheck="false"
-                    value={responseData.email}
+                    value={responseData.offShore}
                     onChange={(e) =>
                       setResponseData({
                         ...responseData,
-                        email: e.target.value,
+                        offShore: e.target.value,
                       })
                     }
-                  />
+                  />{" "}
+                  %
                 </div>
                 <div>
                   <label for="email">OnSite</label>
@@ -183,14 +291,15 @@ function Tr({ name, id, username, email }) {
                     type="text"
                     id="email"
                     spellcheck="false"
-                    value={responseData.username}
+                    value={responseData.onSite}
                     onChange={(e) =>
                       setResponseData({
                         ...responseData,
-                        username: e.target.value,
+                        onSite: e.target.value,
                       })
                     }
                   />
+                  %
                 </div>
                 <div>
                   <label>

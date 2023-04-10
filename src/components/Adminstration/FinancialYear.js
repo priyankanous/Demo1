@@ -5,6 +5,7 @@ import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function FinancialYear() {
   const [financialYear, setfinancialYear] = useState([]);
@@ -37,10 +38,11 @@ function FinancialYear() {
         field="Financial Year"
         actionButtonName="Setup Financial yearr"
         columns={[
-          "Name of financial year",
-          "Custom name of financial year",
-          "Finanical year starting from",
-          "Financial Year Ending On",
+          "Name",
+          "Custom name",
+          "Starting on",
+          "Ending on",
+          " "
         ]}
         data={financialYear}
         Tr={Tr}
@@ -65,19 +67,19 @@ function FinancialYear() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Name of financial year</label>
+                  <label for="name">Name</label>
                   <input type="text" id="financial-year-name" value={financialYearFormData?.financialYearName} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,financialYearName:e.target.value})}} />
                 </div>
                 <div>
-                  <label for="email">Custom name of Finanical year</label>
+                  <label for="email">Custom name</label>
                   <input type="text" id="financial-year-custom-name" value={financialYearFormData?.financialYearCustomName} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,financialYearCustomName:e.target.value})}} />
                 </div>
                 <div>
-                  <label for="email">Financial year starting from</label>
+                  <label for="email">Starting on</label>
                   <input type="date"  id="financial-year-starting-date"  value={financialYearFormData?.startingFrom} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,startingFrom:e.target.value})}} />
                 </div>
                 <div>
-                  <label for="email">Financial year ending On</label>
+                  <label for="email">Ending on</label>
                   <input type="date" id="financial-year-ending-date" value={financialYearFormData?.endingOn} onChange={(e)=>{setfinancialYearFormData({...financialYearFormData,endingOn:e.target.value})}}/>
                 </div>
                 <div>
@@ -110,6 +112,11 @@ function FinancialYear() {
 }
 
 function Tr({ financialYearName, financialYearCustomName, startingFrom, endingOn }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen  ? setDropdown(false) : setDropdown(true)
+  };
   return (
     <tr>
       <td>
@@ -123,6 +130,15 @@ function Tr({ financialYearName, financialYearCustomName, startingFrom, endingOn
       </td>
       <td>
         <span>{endingOn || "Unknown"}</span>
+      </td>
+      <td>
+      <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
+                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
+                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
+                    </div>} </span> 
       </td>
     </tr>
   );

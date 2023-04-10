@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function BusinessType() {
   const [businessType, setBusinessType] = useState([]);
@@ -35,9 +36,9 @@ function BusinessType() {
       <BaseComponent
         field="Business Type"
         actionButtonName="Setup Business Type"
-        columns={["Business Type Name", "Business Type Display Name"]}
+        columns={["Name", "Display Name"]}
         data={businessType}
-        Tr={Tr}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -59,11 +60,11 @@ function BusinessType() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Business Type Name</label>
+                  <label for="name">Name</label>
                   <input type="text" id="business-type-name" value={businessTypeFormData?.businessTypeName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeName:e.target.value})}}  />
                 </div>
                 <div>
-                  <label for="email">Business Type Display Name</label>
+                  <label for="email">Display Name</label>
                   <input type="text" id="business-type-display-name" value={businessTypeFormData?.businessTypeDisplayName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeDisplayName:e.target.value})}}  />
                 </div>
                 <div>
@@ -96,13 +97,61 @@ function BusinessType() {
 }
 
 function Tr({ businessTypeName, businessTypeDisplayName }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown  ? setDropdown(false) : setDropdown(true)
+  };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{businessTypeName || "Unknown"}</span>
       </td>
       <td>
         <span>{businessTypeDisplayName || "Unknown"}</span>
+      </td>
+      <td>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );

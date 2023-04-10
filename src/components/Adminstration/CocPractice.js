@@ -4,32 +4,62 @@ import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function CocPractice() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [buNameData, setBuNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [buDisplayName, setBuDisplayName] = useState(null);
+  const [cocPracticeName, setCocPracticeName] = useState(null);
+  const [cocPracticeDisplayName, setCocPracticeDisplayName] = useState(null);
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+    getAllCocData();
   }, []);
+
+  const getAllCocData = () => {
+    getAllBuNameData();
+    axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
+  };
+  const getAllBuNameData = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setBuNameData(actualDataObject);
+      });
+  };
+  const AddDataToCocPractice = async (e) => {
+    const post = {
+      cocPracticeName: cocPracticeName,
+      cocPracticeDisplayName: cocPracticeDisplayName,
+      buDisplayName: buDisplayName,
+    };
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice",
+        post
+      );
+      console.log("this is the response", response.data);
+    } catch {}
+  };
   return (
     <div>
       <BaseComponent
         field="Coc Practice"
         actionButtonName="Setup Coc Practice"
-        columns={[
-          "Child of BU",
-          "CoC Practice name",
-          "Coc practice display name",
-        ]}
+        columns={["Name", " Display Name", "Parent BU"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -53,16 +83,40 @@ function CocPractice() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Child of BU</label>
-                  <input type="text" id="name" spellcheck="false" />
-                </div>
-                <div>
                   <label for="email">CoC Practice Name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setCocPracticeName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div>
-                  <label for="username">CoC practice display name</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <label for="username">CoC Practice Display name</label>
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setCocPracticeDisplayName(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="name">Parent Business Unit</label>
+                  <select
+                    onChange={(e) => {
+                      setBuDisplayName(e.target.value);
+                    }}
+                  >
+                    <option>Please choose one option</option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      return <option key={index}>{buNameData}</option>;
+                    })}
+                  </select>
                 </div>
                 <div>
                   <label>
@@ -71,6 +125,7 @@ function CocPractice() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={AddDataToCocPractice}
                     />
                     <input
                       type="button"
@@ -92,20 +147,50 @@ function CocPractice() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ cocPracticeName, cocPracticeDisplayName, buDisplayName }) {
+  const [isDropdown, setDropdown] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeDropDown = (isopen) => {
+    isopen ? setDropdown(false) : setDropdown(true);
+  };
   return (
     <tr>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{cocPracticeName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
+        <span>{cocPracticeDisplayName || "Unknown"}</span>
       </td>
       <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
+        <span>{buDisplayName || "Unknown"}</span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );
