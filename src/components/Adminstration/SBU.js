@@ -18,8 +18,8 @@ function Sbu() {
     getAllSbuData();
   }, []);
 
-  const getBuNameData = () => {
-    axios
+  const getBuNameData = async () => {
+    await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
       )
@@ -29,9 +29,9 @@ function Sbu() {
         setBuNameData(actualDataObject);
       });
   };
-  const getAllSbuData = () => {
+  const getAllSbuData = async () => {
     getBuNameData();
-    axios
+    await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu`)
       .then((response) => {
         const actualDataObject = response.data.data;
@@ -82,7 +82,7 @@ function Sbu() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Strategic Business Unit Name</label>
+                  <label for="name">Name</label>
                   <input
                     type="text"
                     id="name"
@@ -93,9 +93,7 @@ function Sbu() {
                   />
                 </div>
                 <div>
-                  <label for="email">
-                    Strategic Business Unit Display Name
-                  </label>
+                  <label for="email">Display Name</label>
                   <input
                     type="text"
                     id="email"
@@ -106,7 +104,7 @@ function Sbu() {
                   />
                 </div>
                 <div>
-                  <label for="email">Parent BU</label>
+                  <label for="email">Parent Business Unit</label>
                   <select
                     onChange={(e) => {
                       setBuDisplayName(e.target.value);

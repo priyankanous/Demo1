@@ -20,13 +20,14 @@ function GlobalLeaveLossFactor() {
   const [financialYearData, setFinancialYearData] = useState([]);
 
   useEffect(() => {
-    getAllGlobalLLF();
     getFinancialYearNameData();
   }, []);
-  const getAllGlobalLLF = () => {
-    axios
+
+  const getAllGlobalLLF = async (e) => {
+    console.log("in the getALLGlobalLLF");
+    await axios
       .get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor`
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${e}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
@@ -40,6 +41,7 @@ function GlobalLeaveLossFactor() {
       offShore: offShore,
       financialYear: financialYear,
     };
+
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
@@ -47,8 +49,8 @@ function GlobalLeaveLossFactor() {
       );
     } catch {}
   };
-  const getFinancialYearNameData = () => {
-    axios
+  const getFinancialYearNameData = async () => {
+    await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
       )
@@ -58,18 +60,23 @@ function GlobalLeaveLossFactor() {
         setFinancialYearData(actualDataObject);
       });
   };
+
   return (
     <div>
       <BaseComponent
-        field="#"
+        field="Global Leave Loss Factor"
         actionButtonName="Setup Global Leave Loss Factor"
         columns={["#", "Month", "Offshore", "Onshore", ""]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
         globalLeave={isGlobalLeave}
         financialYearData={financialYearData}
+        getAllGlobalLLF={getAllGlobalLLF}
       />
+
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
@@ -168,7 +175,9 @@ function GlobalLeaveLossFactor() {
   );
 }
 
-function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
+function Tr({
+  data: { leaveLossFactorId, month, onSite, offShore, financialYear },
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [responseData, setResponseData] = useState({
@@ -176,11 +185,19 @@ function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
     month: month,
     onSite: onSite,
     offShore: offShore,
+    financialYear: financialYear,
   });
 
   const OnSubmit = () => {
-    //update the data using update API
-    //refatch the data using the get API
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/${leaveLossFactorId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        // setFinancialYearData(actualDataObject);
+      });
   };
 
   const closeDropDown = (isopen) => {
@@ -214,13 +231,13 @@ function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
                 <AiIcons.AiOutlineEdit />
                 Edit
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineDelete /> Delete
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCheckCircle /> Activate
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>
@@ -235,7 +252,7 @@ function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Financial Year</ModalHeading>
+              <ModalHeading>Edit Global Leave loss Factor</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -245,6 +262,15 @@ function Tr({ leaveLossFactorId, month, onSite, offShore, financialYear }) {
               </ModalIcon>
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
+                <div>
+                  <label for="name">Financial Year</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.financialYear}
+                  />
+                </div>
                 <div>
                   <label for="name">#</label>
                   <input
