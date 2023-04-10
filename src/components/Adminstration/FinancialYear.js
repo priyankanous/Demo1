@@ -1,39 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
+import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
-function FinancialYear() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+function BusinessType() {
+  const [businessType, setBusinessType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [businessTypeFormData,setbusinessTypeFormData] = useState({businessTypeName:"",businessTypeDisplayName:""})
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((actualData) => {
-        setData(actualData);
-      });
+
+  const fetchBusinessTypeData = async ()=>{
+    const {data} = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type');
+    setBusinessType(data?.data)
+  }
+
+  useEffect(() => {  
+    fetchBusinessTypeData();
   }, []);
+
+  const setBusinessTypeData = async ()=>{
+    const {data} = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type',businessTypeFormData);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setIsOpen(false);
+      fetchBusinessTypeData();
+    }
+  }
+
+
   return (
     <div>
       <BaseComponent
-        field="Financial Year"
-        actionButtonName="Setup Financial yearr"
-        columns={[
-          "Name of financial year",
-          "Custom name of financial year",
-          "Finanical year starting from",
-          "Financial Year Ending On",
-        ]}
-        data={data}
-        Tr={Tr}
+        field="Business Type"
+        actionButtonName="Setup Business Type"
+        columns={["Name", "Display Name"]}
+        data={businessType}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -44,7 +49,7 @@ function FinancialYear() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Financial Year</ModalHeading>
+              <ModalHeading>Setup Business Type</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -55,20 +60,12 @@ function FinancialYear() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Name of financial year</label>
-                  <input type="text" id="name" spellcheck="false" />
+                  <label for="name">Name</label>
+                  <input type="text" id="business-type-name" value={businessTypeFormData?.businessTypeName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeName:e.target.value})}}  />
                 </div>
                 <div>
-                  <label for="email">Custom name of Finanical year</label>
-                  <input type="text" id="email" spellcheck="false" />
-                </div>
-                <div>
-                  <label for="email">Financial year starting from</label>
-                  <input type="text" id="email" spellcheck="false" />
-                </div>
-                <div>
-                  <label for="email">Financial year ending On</label>
-                  <input type="text" id="email" spellcheck="false" />
+                  <label for="email">Display Name</label>
+                  <input type="text" id="business-type-display-name" value={businessTypeFormData?.businessTypeDisplayName} onChange={(e)=>{setbusinessTypeFormData({...businessTypeFormData,businessTypeDisplayName:e.target.value})}}  />
                 </div>
                 <div>
                   <label>
@@ -77,6 +74,7 @@ function FinancialYear() {
                       value="Save"
                       id="create-account"
                       class="button"
+                      onClick={()=>{setBusinessTypeData()}}
                     />
                     <input
                       type="button"
@@ -98,35 +96,65 @@ function FinancialYear() {
   );
 }
 
-function Tr({ userId, id, title, completed }) {
+function Tr({ businessTypeName, businessTypeDisplayName }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown  ? setDropdown(false) : setDropdown(true)
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{businessTypeName || "Unknown"}</span>
       </td>
       <td>
-        <span>{userId || "Unknown"}</span>
+        <span>{businessTypeDisplayName || "Unknown"}</span>
       </td>
       <td>
-        <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
-        <span style={{float:'right'}} ><AiIcons.AiOutlineMore  onClick={(e)=>closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{float:'right'}} class="dropdown-content">
-                        <a style={{padding:'5px'}}><AiIcons.AiOutlineEdit onClick={() => {setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineDelete/> Delete</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCheckCircle/> Activate</a>
-                        <a href="#about" style={{padding:'5px'}}><AiIcons.AiOutlineCloseCircle/> Deactivate</a>
-                    </div>} </span> 
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );
 }
 
-export default FinancialYear;
+export default BusinessType;

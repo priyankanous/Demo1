@@ -197,7 +197,7 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        setFinancialYearData(actualDataObject);
+        // setFinancialYearData(actualDataObject);
       });
   };
 

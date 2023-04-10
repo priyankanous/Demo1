@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -35,9 +35,9 @@ function Location() {
       <BaseComponent
         field="Location"
         actionButtonName="Setup Location"
-        columns={["Location Name", "Location Display Name"]}
+        columns={["Name", "Display Name"]}
         data={locationName}
-        Tr={Tr}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -59,11 +59,11 @@ function Location() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Location Name</label>
+                  <label for="name">Name</label>
                   <input type="text" id="loc-name" value={locationFormData?.locationName} onChange={(e)=>{setLocationFormData({...locationFormData,locationName:e.target.value})}} />
                 </div>
                 <div>
-                  <label for="email">Location Display Name</label>
+                  <label for="email">Display Name</label>
                   <input type="text" id="loc-disp-name" value={locationFormData?.locationDisplayName} onChange={(e)=>{setLocationFormData({...locationFormData,locationDisplayName:e.target.value})}} />
                 </div>
                 <div>
@@ -94,14 +94,29 @@ function Location() {
     </div>
   );
 }
-function Tr({ locationName, locationDisplayName }) {
+function Tr({ data:{locationName, locationDisplayName }}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen  ? setDropdown(false) : setDropdown(true)
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown  ? setDropdown(false) : setDropdown(true)
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{locationName || "Unknown"}</span>
       </td>

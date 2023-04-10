@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
 `;
 
 export const SidebarLabel = styled.span`
@@ -29,7 +29,7 @@ export const DropdownLink = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 0.8rem;
+  font-size: 1.0rem;
 
   .active {
     background: #0a8b9c;
