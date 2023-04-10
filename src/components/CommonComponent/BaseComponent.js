@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { AiFillPlusSquare } from "react-icons/ai";
 import {
   TableHeadingSection,
@@ -21,12 +22,34 @@ function BaseComponent(props) {
       </TableHeadingSection>
       {props.globalLeave || props.currency ? (
         <React.Fragment>
-        <div class="filter">
-          <span style={{paddingRight: '2%'}}>Financial year: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{display: props.globalLeave ?"none" :"",paddingRight: '2%'}}>Base Currency: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{paddingRight: '2%'}}>Copy From: <input type="text" id="email" spellcheck="false"/> </span>
-          <span style={{paddingRight: '2%'}}><TableHeadingButton>Apply</TableHeadingButton></span>
-        </div>
+          <div class="filter">
+            <span style={{ paddingRight: "2%" }}>
+              Financial year:
+              <select id="filterSelect">
+                <option value="" disabled selected hidden>
+                  Please choose one option
+                </option>
+                {props.financialYearData.map((fyData, index) => {
+                  const fyNameData = fyData.financialYearName;
+                  return <option key={index}>{fyNameData}</option>;
+                })}
+              </select>
+            </span>
+            <span
+              style={{
+                display: props.globalLeave ? "none" : "",
+                paddingRight: "2%",
+              }}
+            >
+              Base Currency: <input type="text" id="email" spellcheck="false" />{" "}
+            </span>
+            <span style={{ paddingRight: "2%" }}>
+              Copy From: <input type="text" id="email" spellcheck="false" />{" "}
+            </span>
+            <span style={{ paddingRight: "2%" }}>
+              <button id="filterButton">Apply</button>
+            </span>
+          </div>
           <table id="style">
             <tr>
               {props.columns.map((header) => {

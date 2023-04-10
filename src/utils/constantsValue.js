@@ -11,7 +11,7 @@ export const modalStyleObject = {
         width: 'max-content',
         margin: '0',
         height: 'max-content',
-        background: 'none'
+        background: 'white'
     }
 }
 

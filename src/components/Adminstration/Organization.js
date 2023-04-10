@@ -5,6 +5,7 @@ import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function Organization() {
   const [data, setData] = useState(null);
@@ -27,6 +28,7 @@ function Organization() {
         setData(actualDataObject);
       });
   };
+
   const AddDataToOrganization = async (e) => {
     const post = {
       orgName: orgName,
@@ -45,7 +47,7 @@ function Organization() {
       <BaseComponent
         field="Organization"
         actionButtonName="Setup Organization"
-        columns={["Organization Name", "Organization Display Name"]}
+        columns={[" Name", " Display Name"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -69,7 +71,7 @@ function Organization() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Organization Name</label>
+                  <label for="name"> Organization Name</label>
                   <input
                     type="text"
                     id="name"
@@ -120,6 +122,13 @@ function Organization() {
 }
 
 function Tr({ orgName, orgDisplayName }) {
+  const [isDropdown, setDropdown] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeDropDown = (isopen) => {
+    isopen ? setDropdown(false) : setDropdown(true);
+  };
   return (
     <tr>
       <td>
@@ -127,6 +136,32 @@ function Tr({ orgName, orgDisplayName }) {
       </td>
       <td>
         <span>{orgDisplayName || "Unknown"}</span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );

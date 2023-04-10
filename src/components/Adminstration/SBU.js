@@ -5,6 +5,7 @@ import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import axios from "axios";
+import * as AiIcons from "react-icons/ai";
 
 function Sbu() {
   const [data, setData] = useState(null);
@@ -17,18 +18,19 @@ function Sbu() {
     getAllSbuData();
   }, []);
 
-  const getAllBuNameData = () => {
+  const getBuNameData = () => {
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
       )
       .then((response) => {
+        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setBuNameData(actualDataObject);
       });
   };
   const getAllSbuData = () => {
-    getAllBuNameData();
+    getBuNameData();
     axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu`)
       .then((response) => {
@@ -54,9 +56,9 @@ function Sbu() {
   return (
     <div>
       <BaseComponent
-        field="SBU"
-        actionButtonName="Setup SBU"
-        columns={["SBU Name", "SBU Display Name", "Child of BU"]}
+        field="Strategic Business Unit"
+        actionButtonName="Setup Strategic Business Unit"
+        columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -80,7 +82,7 @@ function Sbu() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">SBU Name</label>
+                  <label for="name">Strategic Business Unit Name</label>
                   <input
                     type="text"
                     id="name"
@@ -91,7 +93,9 @@ function Sbu() {
                   />
                 </div>
                 <div>
-                  <label for="email">SBU Display Name</label>
+                  <label for="email">
+                    Strategic Business Unit Display Name
+                  </label>
                   <input
                     type="text"
                     id="email"
@@ -102,13 +106,15 @@ function Sbu() {
                   />
                 </div>
                 <div>
-                  <label for="email">Child of BU</label>
+                  <label for="email">Parent BU</label>
                   <select
                     onChange={(e) => {
                       setBuDisplayName(e.target.value);
                     }}
                   >
-                    <option>Please choose one option</option>
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
                     {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
                       return <option key={index}>{buNameData}</option>;
@@ -144,6 +150,11 @@ function Sbu() {
   );
 }
 function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
+  const [isDropdown, setDropdown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const closeDropDown = (isopen) => {
+    isopen ? setDropdown(false) : setDropdown(true);
+  };
   return (
     <tr>
       <td>
@@ -154,6 +165,32 @@ function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
       </td>
       <td>
         <span>{buDisplayName || "Unknown"}</span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />{" "}
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );
