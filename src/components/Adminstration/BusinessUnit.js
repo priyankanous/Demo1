@@ -53,101 +53,97 @@ function BuisnessUnit() {
   };
   return (
     <React.Fragment>
-      {data ? (
-        <div>
-          <BaseComponent
-            field="Business Unit"
-            actionButtonName="Setup Business Unit"
-            columns={["Name", "Display Name", "Parent Organization"]}
-            data={data}
-            Tr={Tr}
-            setIsOpen={setIsOpen}
-          />
-          <Modal
-            isOpen={isOpen}
-            onRequestClose={() => setIsOpen(false)}
-            style={modalStyleObject}
-          >
-            <div>
-              <div class="main" className="ModalContainer">
-                <div class="register">
-                  <ModalHeading>Setup Business Unit</ModalHeading>
-                  <ModalIcon
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                  >
-                    <AiOutlineClose></AiOutlineClose>
-                  </ModalIcon>
-                  <hr color="#62bdb8"></hr>
-                  <form id="reg-form">
-                    <div>
-                      <label for="name">Business Unit Name</label>
+      <div>
+        <BaseComponent
+          field="Business Unit"
+          actionButtonName="Setup Business Unit"
+          columns={["Name", "Display Name", "Parent Organization"]}
+          data={data}
+          Tr={Tr}
+          setIsOpen={setIsOpen}
+        />
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={() => setIsOpen(false)}
+          style={modalStyleObject}
+        >
+          <div>
+            <div class="main" className="ModalContainer">
+              <div class="register">
+                <ModalHeading>Setup Business Unit</ModalHeading>
+                <ModalIcon
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  <AiOutlineClose></AiOutlineClose>
+                </ModalIcon>
+                <hr color="#62bdb8"></hr>
+                <form id="reg-form">
+                  <div>
+                    <label for="name"> Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setBusinessUnitName(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label for="email"> Display Name</label>
+                    <input
+                      type="text"
+                      id="email"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setBusinessUnitDisplayName(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label for="username">Parent Organization</label>
+                    <select
+                      onChange={(e) => {
+                        setChildOfOrganization(e.target.value);
+                      }}
+                    >
+                      <option value="" disabled selected hidden>
+                        Please choose one option
+                      </option>
+                      {orgNameData.map((orgDataName, index) => {
+                        const orgName = orgDataName.orgName;
+                        return <option key={index}>{orgName}</option>;
+                      })}
+                    </select>
+                  </div>
+                  <div>
+                    <label>
                       <input
-                        type="text"
-                        id="name"
-                        spellcheck="false"
-                        onChange={(e) => {
-                          setBusinessUnitName(e.target.value);
-                        }}
+                        type="button"
+                        value="Save"
+                        id="create-account"
+                        class="button"
+                        onClick={AddDataToBu}
                       />
-                    </div>
-                    <div>
-                      <label for="email">Business Unit Display Name</label>
                       <input
-                        type="text"
-                        id="email"
-                        spellcheck="false"
-                        onChange={(e) => {
-                          setBusinessUnitDisplayName(e.target.value);
+                        type="button"
+                        onClick={() => {
+                          setIsOpen(false);
                         }}
+                        value="Cancel"
+                        id="create-account"
+                        class="button"
                       />
-                    </div>
-                    <div>
-                      <label for="username">Parent Organization</label>
-                      <select
-                        onChange={(e) => {
-                          setChildOfOrganization(e.target.value);
-                        }}
-                      >
-                        <option value="" disabled selected hidden>
-                          Please choose one option
-                        </option>
-                        {orgNameData.map((orgDataName, index) => {
-                          const orgName = orgDataName.orgName;
-                          return <option key={index}>{orgName}</option>;
-                        })}
-                      </select>
-                    </div>
-                    <div>
-                      <label>
-                        <input
-                          type="button"
-                          value="Save"
-                          id="create-account"
-                          class="button"
-                          onClick={AddDataToBu}
-                        />
-                        <input
-                          type="button"
-                          onClick={() => {
-                            setIsOpen(false);
-                          }}
-                          value="Cancel"
-                          id="create-account"
-                          class="button"
-                        />
-                      </label>
-                    </div>
-                  </form>
-                </div>
+                    </label>
+                  </div>
+                </form>
               </div>
             </div>
-          </Modal>
-        </div>
-      ) : (
-        <div>no data found</div>
-      )}
+          </div>
+        </Modal>
+      </div>
     </React.Fragment>
   );
 }
