@@ -19,8 +19,8 @@ function Organization() {
     getAllOrganizationData();
   }, []);
 
-  const getAllOrganizationData = () => {
-    axios
+  const getAllOrganizationData = async () => {
+    await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
       .then((response) => {
         console.log("this is resp", response);
@@ -41,6 +41,7 @@ function Organization() {
       );
       console.log("this is the response", response.data);
     } catch {}
+    setIsOpen(false);
   };
   return (
     <div>
@@ -71,7 +72,7 @@ function Organization() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name"> Organization Name</label>
+                  <label for="name">Name</label>
                   <input
                     type="text"
                     id="name"
@@ -82,7 +83,7 @@ function Organization() {
                   />
                 </div>
                 <div>
-                  <label for="email">Organization Display Name</label>
+                  <label for="email">Display Name</label>
                   <input
                     type="text"
                     id="email"

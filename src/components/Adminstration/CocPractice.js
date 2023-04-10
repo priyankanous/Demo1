@@ -59,7 +59,7 @@ function CocPractice() {
       <BaseComponent
         field="Coc Practice"
         actionButtonName="Setup Coc Practice"
-        columns={["Name", " Display Name", "Parent BU"]}
+        columns={["Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -83,7 +83,7 @@ function CocPractice() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="email">CoC Practice Name</label>
+                  <label for="email">Name</label>
                   <input
                     type="text"
                     id="email"
@@ -94,7 +94,7 @@ function CocPractice() {
                   />
                 </div>
                 <div>
-                  <label for="username">CoC Practice Display name</label>
+                  <label for="username">name</label>
                   <input
                     type="text"
                     id="email"

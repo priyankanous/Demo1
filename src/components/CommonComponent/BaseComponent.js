@@ -9,6 +9,25 @@ import {
 } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
+  const [dataTest, setData] = useState(null);
+  const [financialYearData, setFinancialYearData] = useState([]);
+  const func = props.getAllGlobalLLF;
+
+  useEffect(() => {
+    getFinancialYearNameData();
+  }, []);
+  const getFinancialYearNameData = async () => {
+    await axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
+      )
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setFinancialYearData(actualDataObject);
+      });
+  };
+
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -25,11 +44,16 @@ function BaseComponent(props) {
           <div class="filter">
             <span style={{ paddingRight: "2%" }}>
               Financial year:
-              <select id="filterSelect">
+              <select
+                id="filterSelect"
+                onChange={(e) => {
+                  props.getAllGlobalLLF(e.target.value);
+                }}
+              >
                 <option value="" disabled selected hidden>
                   Please choose one option
                 </option>
-                {props.financialYearData.map((fyData, index) => {
+                {financialYearData.map((fyData, index) => {
                   const fyNameData = fyData.financialYearName;
                   return <option key={index}>{fyNameData}</option>;
                 })}
