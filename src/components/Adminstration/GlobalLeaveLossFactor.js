@@ -69,7 +69,7 @@ function GlobalLeaveLossFactor() {
         columns={["#", "Month", "Offshore", "Onshore", ""]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return <Tr data={obj} setFinancialYearData={setFinancialYearData} />;
         }}
         setIsOpen={setIsOpen}
         globalLeave={isGlobalLeave}
@@ -176,6 +176,7 @@ function GlobalLeaveLossFactor() {
 }
 
 function Tr({
+  setFinancialYearData,
   data: { leaveLossFactorId, month, onSite, offShore, financialYear },
 }) {
   const [isDropdown, setDropdown] = useState(false);
