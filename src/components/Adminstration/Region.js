@@ -47,7 +47,7 @@ function Region() {
         actionButtonName="Setup Region"
         columns={["Name", "Display Name"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -118,7 +118,7 @@ function Region() {
     </div>
   );
 }
-function Tr({ regionName, regionDisplayName }) {
+function Tr({data:{regionName, regionDisplayName} }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {

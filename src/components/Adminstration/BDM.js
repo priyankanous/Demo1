@@ -1,28 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal, { defaultStyles } from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
+import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import BaseComponent from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import Select from 'react-select';
+import Multiselect from 'multiselect-react-dropdown';
 
 
 
 function Bdm() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [bdmFormData, setbdmFormData] = useState({ bdmName: "", bdmDisplayName: "", activeFrom: "", activeUntil: "", linkedToBusinessUnit: [], linkedToRegion: [] });
+  const [bdmFormData, setbdmFormData] = useState({ bdmName: "", bdmDisplayName: "", activeFrom: "", activeUntil: "" });
   const [isBusinessUnitLinked, setBusinessUnitLinked] = useState(false);
   const [isRegionLinked, setRegionLinked] = useState(false);
   const [businessUnit, setBusinessUnit] = useState([]);
   const [region, setRegion] = useState([]);
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
+  const [dropdownOpenBU, setdropdownOpenBU] = useState(false);
+  const [dropdownOpenReg, setdropdownOpenReg] = useState(false);
+  const [selectedBusinessUnit, setselectedBusinessUnit] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState([]);
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 
 
   const fetchBusinessUnitData = async () => {
@@ -48,7 +49,63 @@ function Bdm() {
 
 
   const postBdmData = async () => {
-    console.log(bdmFormData);
+    const linkedToBusinessUnit = selectedBusinessUnit.map((value)=>value?.businessUnitName);
+    const linkedToRegion = selectedRegion.map((value)=>value?.regionName);
+    const {bdmDisplayName,bdmName,activeFrom,activeUntil} = bdmFormData
+    const activeFromDt = `${parseInt(new Date(activeFrom).getDate()) < 10 ? '0'+parseInt(new Date(activeFrom).getDate()) : parseInt(new Date(activeFrom).getDate()) }/${month[new Date(activeFrom).getMonth()]}/${new Date(activeFrom).getFullYear()}`;
+    const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10 ? '0'+parseInt(new Date(activeUntil).getDate()) : parseInt(new Date(activeUntil).getDate()) }/${month[new Date(activeUntil).getMonth()]}/${new Date(activeUntil).getFullYear()}`;
+    let bdmFromData = {bdmDisplayName,bdmName,activeFrom:activeFromDt,activeUntil:activeUntilDt,linkedToBusinessUnit,linkedToRegion};
+    const {data} = await  axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm',bdmFromData);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
+      setIsOpen(false);
+      setBusinessUnitLinked(false);
+      setRegionLinked(false);
+      setselectedBusinessUnit([]);
+      setSelectedRegion([]);
+      setdropdownOpenBU(false);
+      setdropdownOpenReg(false);
+      fetchBdmData();
+    }
+    
+  }
+
+  const selectMarkDropdown = (value, type) => {
+    if (type === 'bu') {
+      const indexOfSelectedValue = selectedBusinessUnit.findIndex((valueObj) => { return valueObj.businessUnitName === value?.businessUnitName });
+      if (indexOfSelectedValue === -1) {
+        if (isBusinessUnitLinked) {
+          setselectedBusinessUnit([value])
+        }
+        else { setselectedBusinessUnit([...selectedBusinessUnit, value]) }
+      } else {
+        const arrayData = selectedBusinessUnit.filter((valueObj) => { return valueObj?.businessUnitName !== value?.businessUnitName });
+        setselectedBusinessUnit(arrayData);
+      }
+    } else if (type === 'reg') {
+      const indexOfSelectedValue = selectedRegion.findIndex((valueObj) => { return valueObj.regionName === value?.regionName });
+      if (indexOfSelectedValue === -1) {
+        if (isRegionLinked) {
+          setSelectedRegion([value])
+        }
+        else { setSelectedRegion([...selectedRegion, value]) }
+      } else {
+        const arrayData = selectedRegion.filter((valueObj) => { return valueObj?.regionName !== value?.regionName });
+        setSelectedRegion(arrayData);
+      }
+    }
+  }
+
+  const checkElementInArray = (value,type) => {
+    if(type === 'bu'){
+      if (selectedBusinessUnit.findIndex((valueObj) => { return valueObj.businessUnitName === value?.businessUnitName }) === -1) {
+        return false;
+      }
+    }else if(type === 'reg'){
+      if (selectedRegion.findIndex((valueObj) => { return valueObj.regionName === value?.regionName }) === -1) {
+        return false;
+      }
+    }
+    return true;
   }
 
   return (
@@ -58,13 +115,13 @@ function Bdm() {
         actionButtonName="Setup BDM"
         columns={["BDM Name", "BDM Display Name", "Active From", "Active Until", "Linked BU", "Linked Region", " "]}
         data={data}
-        Tr={(obj) => { return <Tr data={obj} /> }} 
+        Tr={(obj) => { return <Tr data={obj} /> }}
         setIsOpen={setIsOpen}
       />
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        style={bdmStyleObject}
       >
         <div>
           <div class="main" className="ModalContainer">
@@ -95,30 +152,73 @@ function Bdm() {
                   <label for="email">Active Until</label>
                   <input type="date" value={bdmFormData?.activeUntil} onChange={(e) => { setbdmFormData({ ...bdmFormData, activeUntil: e.target.value }) }} id="bdm-activeUntil" spellcheck="false" />
                 </div>
-
                 <div>
-              <label>
-                <input
-                  type="button"
-                  value="Save"
-                  id="create-account"
-                  class="button"
-                  onClick={() => { postBdmData() }}
-                />
-                <input
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                  value="Cancel"
-                  id="create-account"
-                  class="button"
-                />
-              </label>
-            </div>
+                  <label className="label-bdm"><input onClick={() => { setBusinessUnitLinked(!isBusinessUnitLinked); setselectedBusinessUnit([]); setdropdownOpenBU(false) }} className={`label-bdm-input ${isBusinessUnitLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to BU</span></label>
+                  <div class="container">
+                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenBU && 'open'}`}>
+                      <span class="btn-text">Select Business Unit</span>
+                      <span class="arrow-dwn">
+                        <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
+                      </span>
+                    </div>
+
+                    <ul style={{ overflowY: 'auto', height: '200px' }} class="list-items open-list-items" className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
+                      {businessUnit && businessUnit.map((value, index) => {
+                        return <li onClick={() => { selectMarkDropdown(value, 'bu') }} key={index} class={`item ${checkElementInArray(value,'bu') && 'checked'}`}>
+                          <span class="checkbox">
+                            <i class="fa-solid fa-check check-icon"><AiIcons.AiOutlineCheck /></i>
+                          </span>
+                          <span class="item-text">{value?.businessUnitName}</span>
+                        </li>
+                      })}
+                    </ul>
+                  </div>
+                </div>
+                <div>
+                  <label className="label-bdm"><input onClick={() => { setRegionLinked(!isRegionLinked); setSelectedRegion([]); setdropdownOpenReg(false) }} className={`label-bdm-input ${isRegionLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to Region</span></label>
+                  <div class="container">
+                    <div onClick={() => { setdropdownOpenReg(!dropdownOpenReg); }} style={{ position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenReg && 'open'}`}>
+                      <span class="btn-text">Select Region</span>
+                      <span class="arrow-dwn">
+                        <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
+                      </span>
+                    </div>
+
+                    <ul style={{ overflowY: 'auto', height: '200px' }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
+                      {region && region.map((value, index) => {
+                        return <li onClick={() => { selectMarkDropdown(value, 'reg') }} key={index} class={`item ${checkElementInArray(value,'reg') && 'checked'}`}>
+                          <span class="checkbox">
+                            <i class="fa-solid fa-check check-icon"><AiIcons.AiOutlineCheck /></i>
+                          </span>
+                          <span class="item-text">{value?.regionName}</span>
+                        </li>
+                      })}
+                    </ul>
+                  </div>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={() => { postBdmData() }}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
               </form>
             </div>
-              {/* <div style={{width:'350px',float:'right',borderRadius:"5px"}}>
+            {/* <div style={{width:'350px',float:'right',borderRadius:"5px"}}>
               <Select isSearchable={false} options={options} />
               </div>             */}
           </div>

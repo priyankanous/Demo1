@@ -15,6 +15,24 @@ export const modalStyleObject = {
     }
 }
 
+export const bdmStyleObject = {
+    overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
+    content: {
+        position: 'absolute',
+        top: '10%',
+        left: '40%',
+        border: 'none',
+        overflow: 'auto',
+        outline: 'none',
+        padding: '20px',
+        width: 'max-content',
+        margin: '0',
+        height: '750px',
+        background: 'white',
+        overflowY:'auto'
+    }
+}
+
 export const notificationModalStyleObj = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content:{

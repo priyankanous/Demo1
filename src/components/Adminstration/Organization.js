@@ -50,7 +50,7 @@ function Organization() {
         actionButtonName="Setup Organization"
         columns={[" Name", " Display Name"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj)=>{return <Tr data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -122,7 +122,7 @@ function Organization() {
   );
 }
 
-function Tr({ orgName, orgDisplayName }) {
+function Tr({ data:{orgName, orgDisplayName} }) {
   const [isDropdown, setDropdown] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);

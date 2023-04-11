@@ -59,7 +59,7 @@ function BuisnessUnit() {
           actionButtonName="Setup Business Unit"
           columns={["Name", "Display Name", "Parent Organization"]}
           data={data}
-          Tr={Tr}
+          Tr={(obj)=>{return <Tr data={obj}/>}}
           setIsOpen={setIsOpen}
         />
         <Modal
@@ -148,7 +148,7 @@ function BuisnessUnit() {
   );
 }
 
-function Tr({ businessUnitName, businessUnitDisplayName, childOfOrg }) {
+function Tr({ data:{businessUnitName, businessUnitDisplayName, childOfOrg} }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {
