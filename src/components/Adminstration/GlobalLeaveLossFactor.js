@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -67,7 +67,7 @@ function GlobalLeaveLossFactor() {
       <BaseComponent
         field="Global Leave Loss Factor"
         actionButtonName="Setup Global Leave Loss Factor"
-        columns={["#", "Month", "Offshore", "Onshore", ""]}
+        columns={["#", "Month", "Offshore", "Onshore"]}
         data={data}
         Tr={(obj) => {
           return <Tr data={obj} setFinancialYearData={setFinancialYearData} />;
@@ -189,6 +189,19 @@ function Tr({
     offShore: offShore,
     financialYear: financialYear,
   });
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
 
   const OnSubmit = () => {
     axios
@@ -198,15 +211,16 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        // setFinancialYearData(actualDataObject);
+        setFinancialYearData(actualDataObject);
+        setIsOpen(false);
       });
   };
 
-  const closeDropDown = (isopen) => {
-    isopen ? setDropdown(false) : setDropdown(true);
+  const closeDropDown = () => {
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{leaveLossFactorId || "Unknown"}</span>
       </td>
@@ -220,7 +234,9 @@ function Tr({
         <span>{onSite || "Unknown"}</span>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
-            onClick={(e) => closeDropDown(isDropdown)}
+            onClick={(e) => {
+              closeDropDown();
+            }}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div style={{ float: "right" }} class="dropdown-content">
@@ -233,13 +249,13 @@ function Tr({
                 <AiIcons.AiOutlineEdit />
                 Edit
               </a>
-              <a style={{ padding: "5px" }}>
+              <a href="#about" style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineDelete /> Delete
               </a>
-              <a style={{ padding: "5px" }}>
+              <a href="#about" style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCheckCircle /> Activate
               </a>
-              <a style={{ padding: "5px" }}>
+              <a href="#about" style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>

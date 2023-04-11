@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -10,25 +10,32 @@ import * as AiIcons from "react-icons/ai";
 function PricingType() {
   const [pricingType, setpricingType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [pricingTypeFormData, setpricingTypeFormData] = useState({ pricingTypeName: "", pricingTypeDisplayName: "" })
-
+  const [pricingTypeFormData, setpricingTypeFormData] = useState({
+    pricingTypeName: "",
+    pricingTypeDisplayName: "",
+  });
 
   const fetchpricingTypeData = async () => {
-    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type');
-    setpricingType(data?.data)
-  }
+    const { data } = await axios.get(
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type"
+    );
+    setpricingType(data?.data);
+  };
 
   useEffect(() => {
     fetchpricingTypeData();
   }, []);
 
   const setpricingTypeData = async () => {
-    const { data } = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type', pricingTypeFormData);
-    if (data?.message === 'Success' && data?.responseCode === 200) {
+    const { data } = await axios.post(
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type",
+      pricingTypeFormData
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       fetchpricingTypeData();
     }
-  }
+  };
   return (
     <div>
       <BaseComponent
@@ -36,7 +43,9 @@ function PricingType() {
         actionButtonName="Setup Pricing type"
         columns={["Name", "Display name"]}
         data={pricingType}
-        Tr={(obj)=>{return <Tr data={obj}/>}}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -59,11 +68,31 @@ function PricingType() {
               <form id="reg-form">
                 <div>
                   <label for="name">Name</label>
-                  <input type="text" id="pricing-type-name" value={pricingTypeFormData?.pricingTypeName} onChange={(e) => { setpricingTypeFormData({ ...pricingTypeFormData, pricingTypeName: e.target.value }) }} />
+                  <input
+                    type="text"
+                    id="pricing-type-name"
+                    value={pricingTypeFormData?.pricingTypeName}
+                    onChange={(e) => {
+                      setpricingTypeFormData({
+                        ...pricingTypeFormData,
+                        pricingTypeName: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Display name</label>
-                  <input type="text" id="pricing-type-display-name" value={pricingTypeFormData?.pricingTypeDisplayName} onChange={(e) => { setpricingTypeFormData({ ...pricingTypeFormData, pricingTypeDisplayName: e.target.value }) }} />
+                  <input
+                    type="text"
+                    id="pricing-type-display-name"
+                    value={pricingTypeFormData?.pricingTypeDisplayName}
+                    onChange={(e) => {
+                      setpricingTypeFormData({
+                        ...pricingTypeFormData,
+                        pricingTypeDisplayName: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -72,7 +101,9 @@ function PricingType() {
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={() => { setpricingTypeData() }}
+                      onClick={() => {
+                        setpricingTypeData();
+                      }}
                     />
                     <input
                       type="button"
@@ -94,7 +125,7 @@ function PricingType() {
   );
 }
 
-function Tr({data:{pricingTypeDisplayName,pricingTypeName}}) {
+function Tr({ data: { pricingTypeDisplayName, pricingTypeName } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -113,7 +144,7 @@ function Tr({data:{pricingTypeDisplayName,pricingTypeName}}) {
   OutsideClick(wrapperRef);
 
   const closeDropDown = () => {
-    isDropdown  ? setDropdown(false) : setDropdown(true)
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
 
   return (
@@ -123,15 +154,34 @@ function Tr({data:{pricingTypeDisplayName,pricingTypeName}}) {
       </td>
       <td>
         <span>{pricingTypeDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => { closeDropDown() }}></AiIcons.AiOutlineMore>
-          {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
-            <a style={{ padding: '5px' }}><AiIcons.AiOutlineEdit onClick={() => { setIsOpen(true); }} /> Edit</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
-          </div>} </span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => {
+              closeDropDown();
+            }}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineEdit
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />
+                Edit
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a href="#about" style={{ padding: "5px" }}>
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}
+        </span>
       </td>
     </tr>
   );

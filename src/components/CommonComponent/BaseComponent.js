@@ -74,7 +74,7 @@ function BaseComponent(props) {
               <button id="filterButton">Apply</button>
             </span>
           </div>
-          <table id="style">
+          <table>
             <tr>
               {props.columns.map((header) => {
                 return <th>{header}</th>;
