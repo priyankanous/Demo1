@@ -51,6 +51,8 @@ function Sbu() {
         post
       );
       console.log("this is the response", response.data);
+      setIsOpen(false);
+      getAllSbuData();
     } catch {}
   };
   return (
@@ -60,7 +62,9 @@ function Sbu() {
         actionButtonName="Setup Strategic Business Unit"
         columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -147,7 +151,7 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
+function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {

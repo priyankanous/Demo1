@@ -40,6 +40,8 @@ function WorkOrderStatus() {
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus",
         post
       );
+      setIsOpen(false);
+      getAllWorkOrderData();
     } catch {}
   };
   return (
@@ -49,7 +51,9 @@ function WorkOrderStatus() {
         actionButtonName="Setup Work order status"
         columns={["Name", "Display Name"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -60,7 +64,7 @@ function WorkOrderStatus() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Status</ModalHeading>
+              <ModalHeading>Setup Work Order Status</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -71,7 +75,7 @@ function WorkOrderStatus() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Work Order Status Name</label>
+                  <label for="name">Name</label>
                   <input
                     type="text"
                     id="name"
@@ -82,7 +86,7 @@ function WorkOrderStatus() {
                   />
                 </div>
                 <div>
-                  <label for="email">Work Order Status Display Name</label>
+                  <label for="email">Display Name</label>
                   <input
                     type="text"
                     id="email"
@@ -121,7 +125,7 @@ function WorkOrderStatus() {
   );
 }
 
-function Tr({ woStatusName, woStatusDisplayName }) {
+function Tr({ data: { woStatusName, woStatusDisplayName } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const closeDropDown = (isopen) => {

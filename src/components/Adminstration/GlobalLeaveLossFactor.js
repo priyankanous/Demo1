@@ -47,6 +47,7 @@ function GlobalLeaveLossFactor() {
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
         post
       );
+      setIsOpen(false);
     } catch {}
   };
   const getFinancialYearNameData = async () => {

@@ -52,6 +52,8 @@ function CocPractice() {
         post
       );
       console.log("this is the response", response.data);
+      getAllCocData();
+      setIsOpen(false);
     } catch {}
   };
   return (
@@ -61,7 +63,9 @@ function CocPractice() {
         actionButtonName="Setup Coc Practice"
         columns={["Name", " Display Name", "Parent Business Unit"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -147,7 +151,9 @@ function CocPractice() {
   );
 }
 
-function Tr({ cocPracticeName, cocPracticeDisplayName, buDisplayName }) {
+function Tr({
+  data: { cocPracticeName, cocPracticeDisplayName, buDisplayName },
+}) {
   const [isDropdown, setDropdown] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
