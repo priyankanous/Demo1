@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -40,6 +40,8 @@ function WorkOrderStatus() {
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus",
         post
       );
+      setIsOpen(false);
+      getAllWorkOrderData();
     } catch {}
   };
   return (
@@ -49,7 +51,9 @@ function WorkOrderStatus() {
         actionButtonName="Setup Work order status"
         columns={["Name", "Display Name"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -60,7 +64,7 @@ function WorkOrderStatus() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup Status</ModalHeading>
+              <ModalHeading>Setup Work Order Status</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -71,7 +75,7 @@ function WorkOrderStatus() {
               <hr color="#62bdb8"></hr>
               <form id="reg-form">
                 <div>
-                  <label for="name">Work Order Status Name</label>
+                  <label for="name">Name</label>
                   <input
                     type="text"
                     id="name"
@@ -82,7 +86,7 @@ function WorkOrderStatus() {
                   />
                 </div>
                 <div>
-                  <label for="email">Work Order Status Display Name</label>
+                  <label for="email">Display Name</label>
                   <input
                     type="text"
                     id="email"
@@ -121,14 +125,29 @@ function WorkOrderStatus() {
   );
 }
 
-function Tr({ woStatusName, woStatusDisplayName }) {
+function Tr({ data: { woStatusName, woStatusDisplayName } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen ? setDropdown(false) : setDropdown(true);
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{woStatusName || "Unknown"}</span>
       </td>
@@ -136,7 +155,9 @@ function Tr({ woStatusName, woStatusDisplayName }) {
         <span>{woStatusDisplayName || "Unknown"}</span>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
-            onClick={(e) => closeDropDown(isDropdown)}
+            onClick={(e) => {
+              closeDropDown();
+            }}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div style={{ float: "right" }} class="dropdown-content">
@@ -145,7 +166,7 @@ function Tr({ woStatusName, woStatusDisplayName }) {
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />{" "}
+                />
                 Edit
               </a>
               <a href="#about" style={{ padding: "5px" }}>
@@ -158,7 +179,7 @@ function Tr({ woStatusName, woStatusDisplayName }) {
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>
-          )}{" "}
+          )}
         </span>
       </td>
     </tr>

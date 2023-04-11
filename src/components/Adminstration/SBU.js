@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -51,6 +51,8 @@ function Sbu() {
         post
       );
       console.log("this is the response", response.data);
+      setIsOpen(false);
+      getAllSbuData();
     } catch {}
   };
   return (
@@ -60,7 +62,9 @@ function Sbu() {
         actionButtonName="Setup Strategic Business Unit"
         columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -147,14 +151,29 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
+function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const closeDropDown = (isopen) => {
-    isopen ? setDropdown(false) : setDropdown(true);
+
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{sbuName || "Unknown"}</span>
       </td>
@@ -165,7 +184,9 @@ function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
         <span>{buDisplayName || "Unknown"}</span>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
-            onClick={(e) => closeDropDown(isDropdown)}
+            onClick={(e) => {
+              closeDropDown();
+            }}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div style={{ float: "right" }} class="dropdown-content">
@@ -174,7 +195,7 @@ function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />{" "}
+                />
                 Edit
               </a>
               <a href="#about" style={{ padding: "5px" }}>
@@ -187,7 +208,7 @@ function Tr({ sbuName, sbuDisplayName, buDisplayName }) {
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>
-          )}{" "}
+          )}
         </span>
       </td>
     </tr>
