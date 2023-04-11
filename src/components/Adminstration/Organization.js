@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
@@ -42,6 +42,7 @@ function Organization() {
       console.log("this is the response", response.data);
     } catch {}
     setIsOpen(false);
+    getAllOrganizationData();
   };
   return (
     <div>
@@ -50,7 +51,9 @@ function Organization() {
         actionButtonName="Setup Organization"
         columns={[" Name", " Display Name"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} />;
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -122,16 +125,29 @@ function Organization() {
   );
 }
 
-function Tr({ orgName, orgDisplayName }) {
+function Tr({ data: { orgName, orgDisplayName } }) {
   const [isDropdown, setDropdown] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
 
-  const closeDropDown = (isopen) => {
-    isopen ? setDropdown(false) : setDropdown(true);
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
+
+  const closeDropDown = () => {
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
         <span>{orgName || "Unknown"}</span>
       </td>
@@ -139,7 +155,9 @@ function Tr({ orgName, orgDisplayName }) {
         <span>{orgDisplayName || "Unknown"}</span>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
-            onClick={(e) => closeDropDown(isDropdown)}
+            onClick={(e) => {
+              closeDropDown();
+            }}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div style={{ float: "right" }} class="dropdown-content">
@@ -148,7 +166,7 @@ function Tr({ orgName, orgDisplayName }) {
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />{" "}
+                />
                 Edit
               </a>
               <a href="#about" style={{ padding: "5px" }}>
@@ -161,7 +179,7 @@ function Tr({ orgName, orgDisplayName }) {
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>
-          )}{" "}
+          )}
         </span>
       </td>
     </tr>
