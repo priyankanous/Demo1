@@ -7,7 +7,7 @@ import {
   ModalHeading,
   ModalIcon,
 } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -46,7 +46,7 @@ function WorkOrderStatus() {
   };
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Work Order status"
         actionButtonName="Setup Work order status"
         columns={["Name", "Display Name"]}

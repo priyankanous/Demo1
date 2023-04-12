@@ -12,7 +12,6 @@ function BaseComponent(props) {
   const [dataTest, setData] = useState(null);
   const [financialYearData, setFinancialYearData] = useState([]);
   const func = props.getAllGlobalLLF;
-
   useEffect(() => {
     getFinancialYearNameData();
   }, []);
@@ -103,4 +102,9 @@ function BaseComponent(props) {
   );
 }
 
-export default BaseComponent;
+
+
+export const MemoizedBaseComponent = React.memo(BaseComponent,(prevProps,nextProps)=>{
+  if(JSON.stringify(prevProps?.data) === JSON.stringify(nextProps?.data)) return true;
+  return false;
+});

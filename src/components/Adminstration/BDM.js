@@ -3,7 +3,7 @@ import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal, { defaultStyles } from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import {MemoizedBaseComponent} from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
 import Multiselect from 'multiselect-react-dropdown';
@@ -110,7 +110,7 @@ function Bdm() {
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="BDM"
         actionButtonName="Setup BDM"
         columns={["BDM Name", "BDM Display Name", "Active From", "Active Until", "Linked BU", "Linked Region", " "]}

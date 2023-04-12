@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -11,7 +11,7 @@ function Status() {
   const [statusType, setstatusType] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [statusTypeFormData, setstatusTypeFormData] = useState({ statusName: "", statusDisplayName: "" })
-
+  const [isEditId, setIsEditId] = useState(null);
 
   const fetchstatusTypeData = async () => {
     const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status');
@@ -23,21 +23,56 @@ function Status() {
   }, []);
 
   const setstatusTypeData = async () => {
-    const { data } = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status', statusTypeFormData);
+    if(isEditId !== null){
+      var {data} = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${isEditId}`, statusTypeFormData)
+    }else{
+      var { data } = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/status', statusTypeFormData);
+    }
     if (data?.message === 'Success' && data?.responseCode === 200) {
       setIsOpen(false);
       fetchstatusTypeData();
+      setIsEditId(null);
+    }
+  }
+
+  const openTheModalWithValues = async (e, id) => {
+    console.log(id, 'HERE');
+    const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${id}`);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
+      setstatusTypeFormData({ statusName: data?.data?.statusName, statusDisplayName: data?.data?.statusDisplayName })
+      setIsOpen(true);
+      setIsEditId(id);
+    }
+  }
+
+  const deleteSelectedLocation = async(id)=>{
+    const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${id}`);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
+      setstatusTypeFormData({ statusName:"", statusDisplayName: "" })
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchstatusTypeData()
+    }
+  }
+
+  const activeDeactivateTableData = async(id)=>{
+    const {data} = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/activate-or-deactivate/${id}`);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setstatusTypeFormData({ statusName:"", statusDisplayName: "" })
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchstatusTypeData()
     }
   }
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Status"
         actionButtonName="Setup status"
         columns={["Name", "Display name"," "]}
         data={statusType}
-        Tr={(obj)=>{return <Tr data={obj}/>}}
+        Tr={(obj)=>{return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj}/>}}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -96,9 +131,8 @@ function Status() {
 }
 
 
-function Tr({ data:{statusName, statusDisplayName} }) {
+function Tr({ data:{statusName, statusDisplayName,isActive,statusId},activeDeactivateTableData,openTheModalWithValues,deleteSelectedLocation }) {
   const [isDropdown, setDropdown] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -119,22 +153,22 @@ function Tr({ data:{statusName, statusDisplayName} }) {
   };
   return (
     <tr ref={wrapperRef}>
-      <td>
-        <span>{statusName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{statusDisplayName || "Unknown"}</span>
-      </td>
-      <td>
+        <td className={!isActive && 'disable-table-row'}>
+          <span>{statusName || "Unknown"}</span>
+        </td>
+        <td className={!isActive && 'disable-table-row'}>
+          <span>{statusDisplayName || "Unknown"}</span>
+        </td>
+        <td data-id={statusId}>
         <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-          {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
-            <a style={{ padding: '5px' }}><AiIcons.AiOutlineEdit onClick={() => { setIsOpen(true); }} /> Edit</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
-            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
-          </div>} </span>
-      </td>
-    </tr>
+            {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
+              <a onClick={(e) => { openTheModalWithValues(e, statusId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
+              <a onClick={()=>{deleteSelectedLocation(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+              <a className={isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
+              <a className={!isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
+            </div>} </span>
+        </td>
+      </tr>
   );
 }
 

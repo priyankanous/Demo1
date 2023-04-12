@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from 'react-modal';
 import { modalStyleObject, notificationModalStyleObj } from "../../utils/constantsValue";
 import { ModalHeading,ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import EmailNotificationSetup from './EmailNotificationSetup';
 
 const NotificationConfig = ()=>{
@@ -27,7 +27,7 @@ const NotificationConfig = ()=>{
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Notification Templates"
         actionButtonName="Create new Email Templates"
         columns={["Id", "Templ. Code", "Name"," "]}
