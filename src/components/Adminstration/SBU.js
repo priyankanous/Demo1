@@ -3,7 +3,7 @@ import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -57,7 +57,7 @@ function Sbu() {
   };
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Strategic Business Unit"
         actionButtonName="Setup Strategic Business Unit"
         columns={[" Name", " Display Name", "Parent Business Unit"]}

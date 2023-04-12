@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
 
@@ -16,6 +16,7 @@ function SbuHead() {
     const [activeForm, setActiveForm] = useState(null);
     const [activeUntil, setActiveUntil] = useState(null);
     const [sbuName, setSbuName] = useState(null);
+    const [isEditId, setIsEditId] = useState(null);
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     const fetchSbuDetails = async () => {
@@ -24,6 +25,7 @@ function SbuHead() {
     }
 
     const fetchSbuHeadData = async () => {
+        console.log('2')
         fetchSbuDetails();
         const data = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead');
         setData(data?.data?.data);
@@ -34,9 +36,8 @@ function SbuHead() {
     }, [])
 
     const setSbuHeadData = async () => {
-
-        const activeFromDt = `${parseInt(new Date(activeForm).getDate()) < 10 ? '0'+parseInt(new Date(activeForm).getDate()) : parseInt(new Date(activeForm).getDate()) }/${month[new Date(activeForm).getMonth()]}/${new Date(activeForm).getFullYear()}`;
-        const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10 ? '0'+parseInt(new Date(activeUntil).getDate()) : parseInt(new Date(activeUntil).getDate()) }/${month[new Date(activeUntil).getMonth()]}/${new Date(activeUntil).getFullYear()}`;
+        const activeFromDt = `${parseInt(new Date(activeForm).getDate()) < 10 ? '0' + parseInt(new Date(activeForm).getDate()) : parseInt(new Date(activeForm).getDate())}/${month[new Date(activeForm).getMonth()]}/${new Date(activeForm).getFullYear()}`;
+        const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10 ? '0' + parseInt(new Date(activeUntil).getDate()) : parseInt(new Date(activeUntil).getDate())}/${month[new Date(activeUntil).getMonth()]}/${new Date(activeUntil).getFullYear()}`;
         const postSbuHeadData = {
             sbuHeadName,
             sbuHeadDisplayName,
@@ -44,20 +45,71 @@ function SbuHead() {
             activeFrom: activeFromDt,
             activeUntil: activeUntilDt,
         }
-        console.log(postSbuHeadData);
-        const { data } = await axios.post(
-            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead",
-            postSbuHeadData
-        );
-        // if (data?.message === 'Success' && data?.responseCode === 200) {
-        //     setIsOpen(false);
-        //     fetchSbuHeadData();
-        // }
+        if (isEditId !== null) {
+            var { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${isEditId}`, postSbuHeadData);
+        } else {
+            var { data } = await axios.post(
+                "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead",
+                postSbuHeadData
+            );
+        }
+        if (data?.message === 'Success' && data?.responseCode === 200) {
+            setIsOpen(false);
+            fetchSbuHeadData();
+        }
+    }
+
+    const openTheModalWithValues = async (e, id) => {
+        const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${id}`);
+        if (data?.message === 'Success' && data?.responseCode === 200) {
+            setSbuHeadName(data?.data?.sbuHeadName);
+            setSbuName(data?.data?.sbuName);
+            setSbuHeadDisplayName(data?.data?.sbuHeadDisplayName);
+            setActiveForm(createDate(data?.data?.activeFrom));
+            setActiveUntil(createDate(data?.data?.activeUntil));
+            setIsOpen(true);
+            setIsEditId(id);
+        }
+    }
+
+    const createDate = (date) => {
+        let splitDate = date.split('/');
+        let monthDate = `${month.indexOf(splitDate[1]) + 1 < 10 ? '0' + String(month.indexOf(splitDate[1]) + 1) : month.indexOf(splitDate[1]) + 1}`;
+        return `${splitDate[2]}-${monthDate}-${splitDate[0]}`
+    }
+
+    const deleteSelectedLocation = async (id) => {
+        const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${id}`);
+        if (data?.message === 'Success' && data?.responseCode === 200) {
+            setIsOpen(false);
+            fetchSbuHeadData();
+            setIsEditId(null);
+            setSbuHeadName(null);
+            setSbuName(null);
+            setSbuHeadDisplayName(null);
+            setActiveForm(null);
+            setActiveUntil(null);
+        }
+    }
+
+    const activeDeactivateTableData = async (id) => {
+        const { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/activate-or-deactivate/${id}`);
+        if (data?.message === 'Success' && data?.responseCode === 200) {
+            console.log('IN CALLED')
+            setIsOpen(false);
+            setIsEditId(null);
+            setSbuHeadName(null);
+            setSbuName(null);
+            setSbuHeadDisplayName(null);
+            setActiveForm(null);
+            setActiveUntil(null);
+            fetchSbuHeadData();
+        }
     }
 
     return (
         <div>
-            <BaseComponent
+            <MemoizedBaseComponent
                 field="SBU Head"
                 actionButtonName="Setup SBU Head"
                 columns={[
@@ -69,7 +121,7 @@ function SbuHead() {
                     " "
                 ]}
                 data={data}
-                Tr={(obj) => { return <Tr data={obj} /> }}
+                Tr={(obj) => { return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj} /> }}
                 setIsOpen={setIsOpen}
             />
             <Modal
@@ -115,10 +167,10 @@ function SbuHead() {
                                             setSbuName(e.target.value);
                                         }}
                                     >
-                                        <option value="" disabled selected hidden >Please choose one option</option>
+                                        <option value="" disabled selected={sbuName === null && true} hidden >Please choose one option</option>
                                         {sbuNameData?.map((sbuData, index) => {
                                             const sbuNameData = sbuData.sbuName;
-                                            return <option key={index}>{sbuNameData}</option>
+                                            return <option selected={sbuNameData === sbuName} key={index}>{sbuNameData}</option>
                                         })}
                                     </select>
                                 </div>
@@ -169,7 +221,7 @@ function SbuHead() {
     );
 }
 
-function Tr({ data: { sbuHeadName, sbuHeadDisplayName, sbuName, activeFrom, activeUntil } }) {
+function Tr({ data: { sbuHeadName, sbuHeadDisplayName, sbuName, activeFrom, activeUntil, isActive, sbuHeadId }, activeDeactivateTableData, openTheModalWithValues, deleteSelectedLocation }) {
     const [isDropdown, setDropdown] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -192,29 +244,45 @@ function Tr({ data: { sbuHeadName, sbuHeadDisplayName, sbuName, activeFrom, acti
     };
     return (
         <tr ref={wrapperRef}>
-            <td>
+            <td className={!isActive && 'disable-table-row'}>
                 <span>{sbuHeadName || "Unknown"}</span>
             </td>
-            <td>
+            <td className={!isActive && 'disable-table-row'}>
                 <span>{sbuHeadDisplayName || "Unknown"}</span>
             </td>
-            <td>
+            <td className={!isActive && 'disable-table-row'}>
                 <span>{sbuName || "Unknown"}</span>
             </td>
-            <td>
+            <td className={!isActive && 'disable-table-row'}>
                 <span>{activeFrom || "Unknown"}</span>
             </td>
-            <td>
+            <td className={!isActive && 'disable-table-row'}>
                 <span>{activeUntil || "Unknown"}</span>
             </td>
-            <td>
-                <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-                    {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
-                        <a style={{ padding: '5px' }}><AiIcons.AiOutlineEdit onClick={() => { setIsOpen(true); }} /> Edit</a>
-                        <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
-                        <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
-                        <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
-                    </div>} </span>
+            <td data-id={sbuHeadId}>
+                <span style={{ float: "right" }}>
+                    <AiIcons.AiOutlineMore
+                        onClick={(e) => closeDropDown(isDropdown)}
+                    ></AiIcons.AiOutlineMore>
+                    {isDropdown && (
+                        <div style={{ float: "right" }} class="dropdown-content">
+                            <a onClick={(e) => { openTheModalWithValues(e, sbuHeadId) }} style={{ padding: "5px" }}>
+                                <AiIcons.AiOutlineEdit
+                                />{" "}
+                                Edit
+                            </a>
+                            <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
+                                <AiIcons.AiOutlineDelete /> Delete
+                            </a>
+                            <a className={isActive && 'disable-table-row'} onClick={() => { activeDeactivateTableData(sbuHeadId) }} style={{ padding: "5px" }}>
+                                <AiIcons.AiOutlineCheckCircle /> Activate
+                            </a>
+                            <a className={!isActive && 'disable-table-row'} onClick={() => { activeDeactivateTableData(sbuHeadId) }} style={{ padding: "5px" }}>
+                                <AiIcons.AiOutlineCloseCircle /> Deactivate
+                            </a>
+                        </div>
+                    )}{" "}
+                </span>
             </td>
         </tr>
     );

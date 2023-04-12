@@ -3,7 +3,7 @@
 // import Modal from "react-modal";
 // import { modalStyleObject } from "../../utils/constantsValue";
 // import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-// import BaseComponent from "../CommonComponent/BaseComponent";
+// import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 // import * as AiIcons from "react-icons/ai";
 
 // function Currency() {
@@ -22,7 +22,7 @@
 //   }, []);
 //   return (
 //     <div>
-//       <BaseComponent
+//       <MemoizedBaseComponent
 //         field="Currency"
 //         actionButtonName="Setup Currency"
 //         columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}
@@ -247,7 +247,7 @@ import { AiOutlineClose, AiOutlineMore } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 function Currency() {
   const [data, setData] = useState(null);
@@ -271,7 +271,7 @@ function Currency() {
   };
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Currency"
         actionButtonName="Setup Currency"
         columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}

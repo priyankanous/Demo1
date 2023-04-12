@@ -352,3 +352,8 @@ $green-border: #72B372;
 .item.checked .check-icon {
 	transform: scale(1.2);
 }
+.disable-table-row{
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
