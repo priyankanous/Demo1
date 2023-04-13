@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -14,6 +14,7 @@ function PricingType() {
     pricingTypeName: "",
     pricingTypeDisplayName: "",
   });
+  const [isEditId, setIsEditId] = useState(null);
 
   const fetchpricingTypeData = async () => {
     const { data } = await axios.get(
@@ -27,24 +28,60 @@ function PricingType() {
   }, []);
 
   const setpricingTypeData = async () => {
-    const { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type",
-      pricingTypeFormData
-    );
+    if (isEditId !== null) {
+      var { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${isEditId}`, pricingTypeFormData)
+    } else {
+      var { data } = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type",
+        pricingTypeFormData
+      );
+    }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
+      setIsEditId(null);
       fetchpricingTypeData();
     }
   };
+
+  const openTheModalWithValues = async (e, id) => {
+    console.log(id, 'HERE');
+    const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
+      setpricingTypeFormData({ pricingTypeName: data?.data?.pricingTypeName, pricingTypeDisplayName: data?.data?.pricingTypeDisplayName })
+      setIsOpen(true);
+      setIsEditId(id);
+    }
+  }
+
+  const deleteSelectedLocation = async(id)=>{
+    const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
+      setpricingTypeFormData({ pricingTypeName:"", pricingTypeDisplayName: "" })
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchpricingTypeData()
+    }
+  }
+
+  const activeDeactivateTableData = async(id)=>{
+    const {data} = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/activate-or-deactivate/${id}`);
+    if(data?.message === 'Success' && data?.responseCode === 200){
+      setpricingTypeFormData({ pricingTypeName:"", pricingTypeDisplayName: "" })
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchpricingTypeData()
+    }
+  }
+
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Pricing Type"
         actionButtonName="Setup Pricing type"
-        columns={["Name", "Display name"]}
+        columns={["Name", "Display name"," "]}
         data={pricingType}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj} />;
         }}
         setIsOpen={setIsOpen}
       />
@@ -125,7 +162,7 @@ function PricingType() {
   );
 }
 
-function Tr({ data: { pricingTypeDisplayName, pricingTypeName } }) {
+function Tr({ data: { pricingTypeDisplayName, pricingTypeName,isActive,pricingTypeId  },activeDeactivateTableData,openTheModalWithValues,deleteSelectedLocation }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -149,41 +186,22 @@ function Tr({ data: { pricingTypeDisplayName, pricingTypeName } }) {
 
   return (
     <tr ref={wrapperRef}>
-      <td>
-        <span>{pricingTypeName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{pricingTypeDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
-            </div>
-          )}
-        </span>
-      </td>
-    </tr>
+    <td className={!isActive && 'disable-table-row'}>
+      <span>{pricingTypeName || "Unknown"}</span>
+    </td>
+    <td className={!isActive && 'disable-table-row'}>
+      <span>{pricingTypeDisplayName || "Unknown"}</span>
+    </td>
+    <td data-id={pricingTypeId}>
+    <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+        {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
+          <a onClick={(e) => { openTheModalWithValues(e, pricingTypeId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
+          <a onClick={()=>{deleteSelectedLocation(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+          <a className={isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
+          <a className={!isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
+        </div>} </span>
+    </td>
+  </tr>
   );
 }
 

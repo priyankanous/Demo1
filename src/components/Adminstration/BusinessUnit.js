@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -56,7 +56,7 @@ function BuisnessUnit() {
   return (
     <React.Fragment>
       <div>
-        <BaseComponent
+        <MemoizedBaseComponent
           field="Business Unit"
           actionButtonName="Setup Business Unit"
           columns={["Name", "Display Name", "Parent Organization"]}

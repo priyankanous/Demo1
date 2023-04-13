@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -59,7 +59,7 @@ function CocPractice() {
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Coc Practice"
         actionButtonName="Setup Coc Practice"
         columns={["Name", " Display Name", "Parent Business Unit"]}

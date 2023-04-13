@@ -84,4 +84,11 @@ function BaseComponent(props) {
   );
 }
 
-export default BaseComponent;
+export const MemoizedBaseComponent = React.memo(
+  BaseComponent,
+  (prevProps, nextProps) => {
+    if (JSON.stringify(prevProps?.data) === JSON.stringify(nextProps?.data))
+      return true;
+    return false;
+  }
+);

@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import BaseComponent from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
 
@@ -66,7 +66,7 @@ function SbuHead() {
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="SBU Head"
         actionButtonName="Setup SBU Head"
         columns={[
