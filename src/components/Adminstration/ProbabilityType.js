@@ -70,7 +70,7 @@ function Probability() {
       <MemoizedBaseComponent
         field="Probability Type"
         actionButtonName="Setup Probability"
-        columns={["Name", "Percentage"]}
+        columns={["Name", "Percentage"," "]}
         data={probabilitydata}
         Tr={(obj)=>{return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj}/>}}
         setIsOpen={setIsOpen}
@@ -156,7 +156,9 @@ function Tr({ data:{probabilityTypeName, percentage,probabilityTypeId,isActive},
       </td>
       <td className={!isActive && 'disable-table-row'} data-id={probabilityTypeId}>
         <span>{percentage || "Unknown"}</span>
-        <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+      </td>
+      <td>
+      <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
           {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
             <a onClick={(e) => { openTheModalWithValues(e, probabilityTypeId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
             <a onClick={()=>{deleteSelectedLocation(probabilityTypeId)}} href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>

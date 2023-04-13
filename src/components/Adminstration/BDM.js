@@ -122,6 +122,7 @@ function Bdm() {
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={bdmStyleObject}
+        className={'modal-container'}
       >
         <div>
           <div class="main" className="ModalContainer">
