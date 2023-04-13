@@ -10,6 +10,11 @@
   color: #072a3a;
 } */
 
+*{
+  /* zoom: 90%; */
+  /* background-color: #0a8b9c; */
+}
+
 .Modal {
   position: absolute;
   top: 70%;
@@ -255,3 +260,4 @@ input {
     transform: rotate(360deg);
   }
 }
+

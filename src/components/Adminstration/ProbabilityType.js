@@ -99,7 +99,7 @@ function Probability() {
                 </div>
                 <div>
                   <label for="email">Percentage</label>
-                  <input type="text" id="probability-percentage" spellcheck="false" value={probabilityFormData?.percentage} onChange={(e) => { setProbabilityFormData({ ...probabilityFormData, percentage: parseInt(e.target.value) }) }} />
+                  <input type="number" id="probability-percentage" spellcheck="false" value={probabilityFormData?.percentage} onChange={(e) => { setProbabilityFormData({ ...probabilityFormData, percentage: parseInt(e.target.value) }) }} />
                 </div>
                 <div>
                   <label>

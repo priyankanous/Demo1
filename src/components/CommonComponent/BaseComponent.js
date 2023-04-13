@@ -86,7 +86,7 @@ function BaseComponent(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <table>
+          <table style={{fontSize:'1vw'}}>
             <tr>
               {props.columns.map((header) => {
                 return <th>{header}</th>;

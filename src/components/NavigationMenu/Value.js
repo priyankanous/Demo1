@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.8vh;
 `;
 
 export const SidebarLabel = styled.span`
@@ -25,11 +25,11 @@ export const DropdownLink = styled(Link)`
   padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  display: inline-block;
+  display: block;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 1.0rem;
+  font-size: 0.7vw;
 
   .active {
     background: #0a8b9c;
@@ -122,7 +122,7 @@ export const TableHeadingSection = styled.div`
 export const TableHeading = styled.div`
   margin: 25px 50px;
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #072a3a;
 `;
 
@@ -131,9 +131,9 @@ export const TableHeadingButton = styled.button`
   border: none;
   border-radius: 30px;
   color: white;
-  padding: 12px 26px;
-  font-size: 16px;
-  margin: 12px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1vw;
+  margin: 1vw;
   cursor: pointer;
 `;
 export const TableHeadingButtonPlusIcon = styled.i`
@@ -141,10 +141,13 @@ export const TableHeadingButtonPlusIcon = styled.i`
   vertical-align: middle;
 `;
 export const NavBarHeading = styled.div`
-  margin: 20px 60px;
-  font-size: 2rem;
+  margin-top: 1em;
+  margin-left:4rem;
+  margin-bottom:1rem;
+  font-size: 1.8vw;
   font-family: sans-serif;
   font-weight: 700;
+  text-align:middle;
 `;
 
 export const UserLoggedInSection = styled.div`
@@ -158,6 +161,7 @@ export const LoggedInUserImage = styled.img`
 `;
 export const LoggedInUserName = styled.span`
   font-weight: 500;
+  font-size:1.5vw;
   color: rgb(7, 46, 58);
 `;
 export const ModalFormButton = styled.div`
