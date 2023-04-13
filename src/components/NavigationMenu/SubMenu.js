@@ -38,8 +38,8 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
       {isOpen  &&
         item.subNav.map((item, index1) => {
           return (
-            <DropdownLink onClick={() => {console.log(index1,item.path);setsubDropDownActive(item.path)}} to={item.path} key={index1}> 
-              <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <DropdownLink onClick={() => {setsubDropDownActive(item.path)}} to={item.path} key={index1}> 
+              <span >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               <SidebarLabel  className={subDropDownActive == item.path && 'active'}>{item.title}</SidebarLabel>
             </DropdownLink>
           );

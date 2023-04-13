@@ -128,6 +128,7 @@ function SbuHead() {
                 isOpen={isOpen}
                 onRequestClose={() => setIsOpen(false)}
                 style={modalStyleObject}
+                className='modal-container'
             >
                 <div>
                     <div class="main" className="ModalContainer">
