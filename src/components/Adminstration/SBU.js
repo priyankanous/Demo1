@@ -63,7 +63,13 @@ function Sbu() {
         columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return (
+            <Tr
+              data={obj}
+              buNameData={buNameData}
+              getAllSbuData={getAllSbuData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -151,9 +157,19 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
+function Tr({
+  buNameData,
+  getAllSbuData,
+  data: { sbuId, sbuName, sbuDisplayName, buDisplayName },
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    sbuId: sbuId,
+    sbuName: sbuName,
+    sbuDisplayName: sbuDisplayName,
+    buDisplayName: buDisplayName,
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -172,46 +188,174 @@ function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllSbuData();
+        setIsOpen(false);
+      });
+  };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllSbuData();
+        setIsOpen(false);
+      });
+  };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{sbuName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{sbuDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{buDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td>
+          <span>{sbuName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{sbuDisplayName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{buDisplayName || "Unknown"}</span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit SBU</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    value={responseData.sbuName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        sbuName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="email">Display Name</label>
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    value={responseData.sbuDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        sbuDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="email">Parent Business Unit</label>
+                  <select
+                    value={responseData.buDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        buDisplayName: e.target.value,
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      return <option key={index}>{buNameData}</option>;
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 export default Sbu;
