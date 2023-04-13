@@ -274,7 +274,7 @@ function Currency() {
       <BaseComponent
         field="Currency"
         actionButtonName="Setup Currency"
-        columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}
+        columns={["Currency", "Name", "Symbol", "Conversion Rate"]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}

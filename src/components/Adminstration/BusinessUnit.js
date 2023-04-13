@@ -62,7 +62,13 @@ function BuisnessUnit() {
           columns={["Name", "Display Name", "Parent Organization"]}
           data={data}
           Tr={(obj) => {
-            return <Tr data={obj} />;
+            return (
+              <Tr
+                data={obj}
+                getAllBuData={getAllBuData}
+                orgNameData={orgNameData}
+              />
+            );
           }}
           setIsOpen={setIsOpen}
         />
@@ -153,10 +159,23 @@ function BuisnessUnit() {
 }
 
 function Tr({
-  data: { businessUnitName, businessUnitDisplayName, childOfOrg },
+  getAllBuData,
+  orgNameData,
+  data: {
+    businessUnitId,
+    businessUnitName,
+    businessUnitDisplayName,
+    childOfOrg,
+  },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    businessUnitId: businessUnitId,
+    businessUnitName: businessUnitName,
+    businessUnitDisplayName: businessUnitDisplayName,
+    childOfOrg: childOfOrg,
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -175,46 +194,173 @@ function Tr({
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setIsOpen(false);
+        getAllBuData();
+      });
+  };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllBuData();
+        setIsOpen(false);
+      });
+  };
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{businessUnitName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{businessUnitDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{childOfOrg || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td>
+          <span>{businessUnitName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{businessUnitDisplayName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{childOfOrg || "Unknown"}</span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit Business Unit</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="bu_name">Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.businessUnitName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        businessUnitName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="bu_disp_name">Display Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.businessUnitDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        businessUnitDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="parent_Organisation">Parent Organization</label>
+                  <select
+                    value={responseData.childOfOrg}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        childOfOrg: e.target.value,
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {orgNameData.map((orgDataName, index) => {
+                      const orgName = orgDataName.orgName;
+                      return <option key={index}>{orgName}</option>;
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 
