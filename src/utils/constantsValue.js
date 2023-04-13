@@ -2,15 +2,15 @@ export const modalStyleObject = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content: {
         position: 'absolute',
-        top: '20%',
-        left: '40%',
+        top: '15%',
+        left: '32%',
         border: 'none',
         overflow: 'auto',
         outline: 'none',
         padding: '20px',
-        width: 'max-content',
+        width: '50%',
         margin: '0',
-        height: 'max-content',
+        height: '70%',
         background: 'white'
     }
 }
@@ -20,14 +20,14 @@ export const bdmStyleObject = {
     content: {
         position: 'absolute',
         top: '10%',
-        left: '40%',
+        left: '30%',
         border: 'none',
         overflow: 'auto',
         outline: 'none',
         padding: '20px',
-        width: 'max-content',
+        width: '50%',
         margin: '0',
-        height: '750px',
+        height: '70%',
         background: 'white',
         overflowY:'auto'
     }
@@ -36,8 +36,8 @@ export const bdmStyleObject = {
 export const notificationModalStyleObj = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content:{
-        width:'1300px',
-        height:'650px',
+        width:'70%',
+        height:'70%',
         position:'absolute',
         top:'13%',
         left:'20%',

@@ -98,7 +98,7 @@ function CocPractice() {
                   />
                 </div>
                 <div>
-                  <label for="username">name</label>
+                  <label for="username">Display Name</label>
                   <input
                     type="text"
                     id="email"

@@ -21,14 +21,13 @@ $green-border: #72B372;
 
 .register {
 	opacity: 2;
-	width: 400px;
-	height: max-content;
-	margin: 10px auto;
+	width: 70%;
+	margin: 0vh auto;
 	border-radius: 10px;
-	padding: 25px;
+	padding: 0.2vw;
 	border-radius: 25px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	background-color: white;
+	margin-top: 0px;
 
 	h3 {
 		margin: 10px 15px 20px;
@@ -55,7 +54,7 @@ $green-border: #72B372;
 	}
 
 	input[type=text],
-	input[type=date] {
+	input[type=date],input[type=number] {
 		width: 50%;
 		outline: none;
 		border-radius: 10px;
@@ -73,7 +72,7 @@ $green-border: #72B372;
 		border: none;
 	}
 
-	input[type=text] {
+	input[type=text],input[type=number] {
 		width: 50%;
 		outline: none;
 		border-radius: 10px;
@@ -82,7 +81,7 @@ $green-border: #72B372;
 		border: blue;
 	}
 
-	input[type=text]:focus {
+	input[type=text]:focus,input[type=number]:focus {
 		background: rgb(193, 222, 231);
 	}
 
@@ -249,10 +248,9 @@ $green-border: #72B372;
 }
 
 .container {
-	max-width: 220px;
+	max-width: 225px;
 	position: relative;
-	left: 90px;
-
+	left: 105px;
 }
 
 .select-btn {
