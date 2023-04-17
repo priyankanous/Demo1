@@ -32,7 +32,7 @@ export const DropdownLink = styled(Link)`
   font-size: 0.8vw;
 
   .active {
-    background: #0a8b9c;
+    background: #23C5C7;
     border-radius: 5.5rem;
     margin-left: 0.4rem;
     marging-right: 0.5rem;
@@ -40,11 +40,13 @@ export const DropdownLink = styled(Link)`
     padding-right: 0.5rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+    color:black;
+    
   }
 `;
 
 export const SidebarNav = styled.nav`
-  background: #072e3a;
+  background: #002333;
   width: 17%;
   height: 105%;
   display: flex;
@@ -127,7 +129,7 @@ export const TableHeading = styled.div`
 `;
 
 export const TableHeadingButton = styled.button`
-  background-color: #0a8b9c;
+  background-color: #002333;
   border: none;
   border-radius: 30px;
   color: white;
