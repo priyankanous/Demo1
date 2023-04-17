@@ -27,7 +27,7 @@ const SubMenu = ({ item, isOpen, handleSubMenuClick,index,setOpenSubmenu }) => {
 
   return (
     <>
-      <SidebarLink key={index} style={{background:isMainmenuactive && '#0a8b9c'}}   to={item.path} onClick={()=>{item.subNav && handleSubMenuClick(index);}}>
+      <SidebarLink key={index} style={{background:isMainmenuactive && '#23C5C7',color:isMainmenuactive && 'black',fontWeight:isMainmenuactive && '600'}}   to={item.path} onClick={()=>{item.subNav && handleSubMenuClick(index);}}>
         <div>
           {item.icon}
           <SidebarLabel>{item.title}

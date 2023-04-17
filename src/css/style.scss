@@ -88,21 +88,27 @@ $green-border: #72B372;
 	}
 
 	.button {
+		background-color: #002333 !important;
 		font-size: small;
 		font-weight: 200;
 		border-radius: 13px;
-		color: #000000;
+		color: white;
 		width: 60px;
 		padding: 7px;
 		float: left;
 		margin-right: 0.7rem;
-		margin-left: 0.5rem;
+		margin-left: 0.7rem;
 		margin-top: 1.2rem;
 		border: 1px solid rgb(185, 217, 228);
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-		@include linear-gradient(#96d0d4, #94d7db);
-
 	}
+	#bdm-form{
+		div{
+			margin-top: 0px;
+		}
+	}
+
+	
 }
 
 .notification-email {
@@ -250,18 +256,24 @@ $green-border: #72B372;
 }
 
 .container {
-	max-width: 225px;
+	max-width: 90%;
+	min-width: 90%;
 	position: relative;
-	left: 105px;
+	display: flex;
+	flex-direction: column;
+	padding-left: 24%;
+	padding-top: 0px;
 }
 
 .select-btn {
 	display: flex;
 	height: 30px;
+	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 16px;
 	border-radius: 8px;
+	width: 50%;
 	cursor: pointer;
 	background-color: #fff;
 	box-shadow: 0px 2px 5px grey;

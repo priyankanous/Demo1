@@ -136,8 +136,8 @@ function Bdm() {
                 <AiOutlineClose></AiOutlineClose>
               </ModalIcon>
               <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
+              <form id="bdm-form">
+                <div >
                   <label for="name">BDM Name</label>
                   <input type="text" value={bdmFormData?.bdmName} onChange={(e) => { setbdmFormData({ ...bdmFormData, bdmName: e.target.value }) }} id="bdm-name" />
                 </div>
@@ -156,14 +156,14 @@ function Bdm() {
                 <div>
                   <label className="label-bdm"><input onClick={() => { setBusinessUnitLinked(!isBusinessUnitLinked); setselectedBusinessUnit([]); setdropdownOpenBU(false) }} className={`label-bdm-input ${isBusinessUnitLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to BU</span></label>
                   <div class="container">
-                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenBU && 'open'}`}>
+                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0' }}  className={`select-btn ${dropdownOpenBU && 'open'}`}>
                       <span class="btn-text">Select Business Unit</span>
                       <span class="arrow-dwn">
                         <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
                       </span>
                     </div>
 
-                    <ul style={{ overflowY: 'auto', height: '200px' }} class="list-items open-list-items" className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
+                    <ul style={{ overflowY: 'auto', height: '200px',width:'50%' }}  className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
                       {businessUnit && businessUnit.map((value, index) => {
                         return <li onClick={() => { selectMarkDropdown(value, 'bu') }} key={index} class={`item ${checkElementInArray(value,'bu') && 'checked'}`}>
                           <span class="checkbox">
@@ -185,7 +185,7 @@ function Bdm() {
                       </span>
                     </div>
 
-                    <ul style={{ overflowY: 'auto', height: '200px' }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
+                    <ul style={{ overflowY: 'auto', height: '200px',width:"50%" }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
                       {region && region.map((value, index) => {
                         return <li onClick={() => { selectMarkDropdown(value, 'reg') }} key={index} class={`item ${checkElementInArray(value,'reg') && 'checked'}`}>
                           <span class="checkbox">

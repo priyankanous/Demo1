@@ -7,6 +7,7 @@ app.use(express.static("public"));
 
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
+  next();
 });
 
 app.get("/check-health", (req, res) => {
