@@ -230,7 +230,16 @@ function Tr({
     sbuId: sbuId,
     sbuName: sbuName,
     sbuDisplayName: sbuDisplayName,
-    businessUnitName: {},
+    businessUnit: {
+      businessUnitId: businessUnit.businessUnitId,
+      businessUnitName: businessUnit.businessUnitName,
+      businessUnitDisplayName: businessUnit.businessUnitDisplayName,
+      organization: {
+        id: businessUnit.organization.id,
+        orgName: businessUnit.organization.orgName,
+        orgDisplayName: businessUnit.organization.orgDisplayName,
+      },
+    },
   });
 
   const OutsideClick = (ref) => {
@@ -263,18 +272,20 @@ function Tr({
         setIsOpen(false);
       });
   };
-  const DeleteRecord = () => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllSbuData();
-        setIsOpen(false);
-      });
-  };
+  // API calls to delete record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllSbuData();
+  //       setIsOpen(false);
+  //     });
+  // };
 
   return (
     <React.Fragment>
@@ -304,7 +315,7 @@ function Tr({
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                <a
+                {/* <a
                   href="#about"
                   style={{ padding: "5px" }}
                   onClick={() => {
@@ -312,7 +323,7 @@ function Tr({
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
+                </a> */}
                 <a href="#about" style={{ padding: "5px" }}>
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
@@ -375,11 +386,39 @@ function Tr({
                 <div>
                   <label for="email">Parent Business Unit</label>
                   <select
-                    value={responseData.buDisplayName}
+                    value={responseData.businessUnit.businessUnitName}
                     onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      const selectedOrgId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDisplayName"
+                        );
+                      const selectedOrgName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgName"
+                        );
+
                       setResponseData({
                         ...responseData,
-                        buDisplayName: e.target.value,
+                        businessUnit: {
+                          ...responseData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          organization: {
+                            ...responseData.businessUnit.organization,
+                            id: selectedOrgId,
+                            orgName: selectedOrgName,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        },
                       });
                     }}
                   >
@@ -388,7 +427,23 @@ function Tr({
                     </option>
                     {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
-                      return <option key={index}>{buNameData}</option>;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      const orgId = buData.organization.id;
+                      const orgName = buData.organization.orgName;
+                      const orgDisplayName = buData.organization.orgDisplayName;
+                      return (
+                        <option
+                          data-buId={buId}
+                          data-buDisplayName={buDisplayName}
+                          data-orgId={orgId}
+                          data-orgName={orgName}
+                          data-orgDisplayName={orgDisplayName}
+                          key={index}
+                        >
+                          {buNameData}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>

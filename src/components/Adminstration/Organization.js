@@ -166,18 +166,20 @@ function Tr({ getAllOrganizationData, data: { id, orgName, orgDisplayName } }) {
         getAllOrganizationData();
       });
   };
-  const DeleteRecord = () => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization/${id}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllOrganizationData();
-        setIsOpen(false);
-      });
-  };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization/${id}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllOrganizationData();
+  //       setIsOpen(false);
+  //     });
+  // };
 
   return (
     <React.Fragment>
@@ -204,7 +206,7 @@ function Tr({ getAllOrganizationData, data: { id, orgName, orgDisplayName } }) {
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                <a
+                {/* <a
                   href="#about"
                   style={{ padding: "5px" }}
                   onClick={() => {
@@ -212,7 +214,7 @@ function Tr({ getAllOrganizationData, data: { id, orgName, orgDisplayName } }) {
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
+                </a> */}
                 <a href="#about" style={{ padding: "5px" }}>
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>

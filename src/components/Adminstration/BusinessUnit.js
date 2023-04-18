@@ -243,18 +243,20 @@ function Tr({
         getAllBuData();
       });
   };
-  const DeleteRecord = () => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllBuData();
-        setIsOpen(false);
-      });
-  };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllBuData();
+  //       setIsOpen(false);
+  //     });
+  // };
 
   // const activeDeactivateTableData = async (id) => {
   //   const { data } = await axios.put(
@@ -296,7 +298,7 @@ function Tr({
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                <a
+                {/* <a
                   href="#about"
                   style={{ padding: "5px" }}
                   onClick={() => {
@@ -304,7 +306,7 @@ function Tr({
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
+                </a> */}
                 <a
                   href="#about"
                   style={{ padding: "5px" }}
