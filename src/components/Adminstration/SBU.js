@@ -14,6 +14,20 @@ function Sbu() {
   const [sbuName, setSbuName] = useState(null);
   const [sbuDisplayName, setSbuDisplayName] = useState(null);
   const [buDisplayName, setBuDisplayName] = useState(null);
+  const [sbuData, setSbuData] = useState({
+    sbuName: "",
+    sbuDisplayName: "",
+    businessUnit: {
+      businessUnitId: "",
+      businessUnitName: "",
+      businessUnitDisplayName: "",
+      organization: {
+        id: 0,
+        orgName: "",
+        orgDisplayName: "",
+      },
+    },
+  });
   useEffect(() => {
     getAllSbuData();
   }, []);
@@ -40,15 +54,10 @@ function Sbu() {
   };
 
   const AddDataToSbu = async (e) => {
-    const post = {
-      sbuName: sbuName,
-      sbuDisplayName: sbuDisplayName,
-      buDisplayName: buDisplayName,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu",
-        post
+        sbuData
       );
       console.log("this is the response", response.data);
       setIsOpen(false);
@@ -98,7 +107,10 @@ function Sbu() {
                     id="name"
                     spellcheck="false"
                     onChange={(e) => {
-                      setSbuName(e.target.value);
+                      setSbuData({
+                        ...sbuData,
+                        sbuName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -109,7 +121,10 @@ function Sbu() {
                     id="email"
                     spellcheck="false"
                     onChange={(e) => {
-                      setSbuDisplayName(e.target.value);
+                      setSbuData({
+                        ...sbuData,
+                        sbuDisplayName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -117,7 +132,38 @@ function Sbu() {
                   <label for="email">Parent Business Unit</label>
                   <select
                     onChange={(e) => {
-                      setBuDisplayName(e.target.value);
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      const selectedOrgId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDisplayName"
+                        );
+                      const selectedOrgName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgName"
+                        );
+
+                      setSbuData({
+                        ...sbuData,
+                        businessUnit: {
+                          ...sbuData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          organization: {
+                            ...sbuData.businessUnit.organization,
+                            id: selectedOrgId,
+                            orgName: selectedOrgName,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        },
+                      });
                     }}
                   >
                     <option value="" disabled selected hidden>
@@ -125,7 +171,23 @@ function Sbu() {
                     </option>
                     {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
-                      return <option key={index}>{buNameData}</option>;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      const orgId = buData.organization.id;
+                      const orgName = buData.organization.orgName;
+                      const orgDisplayName = buData.organization.orgDisplayName;
+                      return (
+                        <option
+                          data-buId={buId}
+                          data-buDisplayName={buDisplayName}
+                          data-orgId={orgId}
+                          data-orgName={orgName}
+                          data-orgDisplayName={orgDisplayName}
+                          key={index}
+                        >
+                          {buNameData}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>
@@ -160,7 +222,7 @@ function Sbu() {
 function Tr({
   buNameData,
   getAllSbuData,
-  data: { sbuId, sbuName, sbuDisplayName, buDisplayName },
+  data: { sbuId, sbuName, sbuDisplayName, businessUnit },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -168,7 +230,7 @@ function Tr({
     sbuId: sbuId,
     sbuName: sbuName,
     sbuDisplayName: sbuDisplayName,
-    buDisplayName: buDisplayName,
+    businessUnitName: {},
   });
 
   const OutsideClick = (ref) => {
@@ -224,7 +286,7 @@ function Tr({
           <span>{sbuDisplayName || "Unknown"}</span>
         </td>
         <td>
-          <span>{buDisplayName || "Unknown"}</span>
+          <span>{businessUnit.businessUnitName || "Unknown"}</span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {

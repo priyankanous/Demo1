@@ -11,9 +11,11 @@ function BuisnessUnit() {
   const [data, setData] = useState(null);
   const [orgNameData, setOrgNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [businessUnitName, setBusinessUnitName] = useState(null);
-  const [businessUnitDisplayName, setBusinessUnitDisplayName] = useState(null);
-  const [childOfOrg, setChildOfOrganization] = useState(null);
+  const [businessUnitData, setBusinessUnitData] = useState({
+    businessUnitName: "",
+    businessUnitDisplayName: "",
+    organization: { id: "", orgName: "", orgDisplayName: "" },
+  });
 
   useEffect(() => {
     getAllBuData();
@@ -39,15 +41,10 @@ function BuisnessUnit() {
       });
   };
   const AddDataToBu = async (e) => {
-    const post = {
-      businessUnitName: businessUnitName,
-      businessUnitDisplayName: businessUnitDisplayName,
-      childOfOrg: childOfOrg,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit",
-        post
+        businessUnitData
       );
       setIsOpen(false);
       getAllBuData();
@@ -97,7 +94,10 @@ function BuisnessUnit() {
                       id="name"
                       spellcheck="false"
                       onChange={(e) => {
-                        setBusinessUnitName(e.target.value);
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          businessUnitName: e.target.value,
+                        });
                       }}
                     />
                   </div>
@@ -108,7 +108,10 @@ function BuisnessUnit() {
                       id="email"
                       spellcheck="false"
                       onChange={(e) => {
-                        setBusinessUnitDisplayName(e.target.value);
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          businessUnitDisplayName: e.target.value,
+                        });
                       }}
                     />
                   </div>
@@ -116,7 +119,24 @@ function BuisnessUnit() {
                     <label for="username">Parent Organization</label>
                     <select
                       onChange={(e) => {
-                        setChildOfOrganization(e.target.value);
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-orgId"
+                          );
+                        const selectedOrgDispName =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-orgDispName"
+                          );
+
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          organization: {
+                            ...businessUnitData.organization,
+                            id: selectedId,
+                            orgName: e.target.value,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        });
                       }}
                     >
                       <option value="" disabled selected hidden>
@@ -124,7 +144,19 @@ function BuisnessUnit() {
                       </option>
                       {orgNameData.map((orgDataName, index) => {
                         const orgName = orgDataName.orgName;
-                        return <option key={index}>{orgName}</option>;
+                        const orgId = orgDataName.id;
+                        const orgDisplayName = orgDataName.orgDisplayName;
+                        if (orgDataName.isActive) {
+                          return (
+                            <option
+                              data-orgId={orgId}
+                              data-orgDispName={orgDisplayName}
+                              key={index}
+                            >
+                              {orgName}
+                            </option>
+                          );
+                        }
                       })}
                     </select>
                   </div>
@@ -165,7 +197,7 @@ function Tr({
     businessUnitId,
     businessUnitName,
     businessUnitDisplayName,
-    childOfOrg,
+    organization,
   },
 }) {
   const [isDropdown, setDropdown] = useState(false);
@@ -174,7 +206,11 @@ function Tr({
     businessUnitId: businessUnitId,
     businessUnitName: businessUnitName,
     businessUnitDisplayName: businessUnitDisplayName,
-    childOfOrg: childOfOrg,
+    organization: {
+      id: organization.id,
+      orgName: organization.orgName,
+      orgDisplayName: organization.orgDisplayName,
+    },
   });
 
   const OutsideClick = (ref) => {
@@ -219,6 +255,19 @@ function Tr({
         setIsOpen(false);
       });
   };
+
+  // const activeDeactivateTableData = async (id) => {
+  //   const { data } = await axios.put(
+  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/activate-or-deactivate/${id}`
+  //   );
+  //   if (data?.message === "Success" && data?.responseCode === 200) {
+  //     setLocationFormData({ locationName: "", locationDisplayName: "" });
+  //     setIsOpen(false);
+  //     setIsEditId(null);
+  //     fetchLocationName();
+  //   }
+  // };
+
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
@@ -229,7 +278,7 @@ function Tr({
           <span>{businessUnitDisplayName || "Unknown"}</span>
         </td>
         <td>
-          <span>{childOfOrg || "Unknown"}</span>
+          <span>{organization.orgName || "Unknown"}</span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -256,7 +305,14 @@ function Tr({
                 >
                   <AiIcons.AiOutlineDelete /> Delete
                 </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  // className={isActive && "disable-table-row"}
+                  // onClick={() => {
+                  //   activeDeactivateTableData(businessUnitId);
+                  // }}
+                >
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
                 <a href="#about" style={{ padding: "5px" }}>
@@ -318,11 +374,22 @@ function Tr({
                 <div>
                   <label for="parent_Organisation">Parent Organization</label>
                   <select
-                    value={responseData.childOfOrg}
+                    value={responseData.organization.orgName}
                     onChange={(e) => {
+                      const selectedId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDispName"
+                        );
                       setResponseData({
                         ...responseData,
-                        childOfOrg: e.target.value,
+                        organization: {
+                          ...responseData.organization,
+                          id: selectedId,
+                          orgName: e.target.value,
+                          orgDisplayName: selectedOrgDispName,
+                        },
                       });
                     }}
                   >
@@ -331,7 +398,19 @@ function Tr({
                     </option>
                     {orgNameData.map((orgDataName, index) => {
                       const orgName = orgDataName.orgName;
-                      return <option key={index}>{orgName}</option>;
+                      const orgId = orgDataName.id;
+                      const orgDisplayName = orgDataName.orgDisplayName;
+                      if (orgDataName.isActive) {
+                        return (
+                          <option
+                            data-orgId={orgId}
+                            data-orgDispName={orgDisplayName}
+                            key={index}
+                          >
+                            {orgName}
+                          </option>
+                        );
+                      }
                     })}
                   </select>
                 </div>
