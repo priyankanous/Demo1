@@ -11,9 +11,20 @@ function Sbu() {
   const [data, setData] = useState(null);
   const [buNameData, setBuNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [sbuName, setSbuName] = useState(null);
-  const [sbuDisplayName, setSbuDisplayName] = useState(null);
-  const [buDisplayName, setBuDisplayName] = useState(null);
+  const [sbuData, setSbuData] = useState({
+    sbuName: "",
+    sbuDisplayName: "",
+    businessUnit: {
+      businessUnitId: "",
+      businessUnitName: "",
+      businessUnitDisplayName: "",
+      organization: {
+        id: 0,
+        orgName: "",
+        orgDisplayName: "",
+      },
+    },
+  });
   useEffect(() => {
     getAllSbuData();
   }, []);
@@ -40,15 +51,10 @@ function Sbu() {
   };
 
   const AddDataToSbu = async (e) => {
-    const post = {
-      sbuName: sbuName,
-      sbuDisplayName: sbuDisplayName,
-      buDisplayName: buDisplayName,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu",
-        post
+        sbuData
       );
       console.log("this is the response", response.data);
       setIsOpen(false);
@@ -63,7 +69,14 @@ function Sbu() {
         columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return (
+            <Tr
+              data={obj}
+              buNameData={buNameData}
+              getAllSbuData={getAllSbuData}
+              setSbuData={setSbuData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -92,7 +105,10 @@ function Sbu() {
                     id="name"
                     spellcheck="false"
                     onChange={(e) => {
-                      setSbuName(e.target.value);
+                      setSbuData({
+                        ...sbuData,
+                        sbuName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -103,7 +119,10 @@ function Sbu() {
                     id="email"
                     spellcheck="false"
                     onChange={(e) => {
-                      setSbuDisplayName(e.target.value);
+                      setSbuData({
+                        ...sbuData,
+                        sbuDisplayName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -111,7 +130,38 @@ function Sbu() {
                   <label for="email">Parent Business Unit</label>
                   <select
                     onChange={(e) => {
-                      setBuDisplayName(e.target.value);
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      const selectedOrgId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDisplayName"
+                        );
+                      const selectedOrgName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgName"
+                        );
+
+                      setSbuData({
+                        ...sbuData,
+                        businessUnit: {
+                          ...sbuData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          organization: {
+                            ...sbuData.businessUnit.organization,
+                            id: selectedOrgId,
+                            orgName: selectedOrgName,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        },
+                      });
                     }}
                   >
                     <option value="" disabled selected hidden>
@@ -119,7 +169,25 @@ function Sbu() {
                     </option>
                     {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
-                      return <option key={index}>{buNameData}</option>;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      const orgId = buData.organization.id;
+                      const orgName = buData.organization.orgName;
+                      const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            data-orgId={orgId}
+                            data-orgName={orgName}
+                            data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
                     })}
                   </select>
                 </div>
@@ -151,9 +219,29 @@ function Sbu() {
     </div>
   );
 }
-function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
+function Tr({
+  buNameData,
+  getAllSbuData,
+  setSbuData,
+  data: { sbuId, sbuName, sbuDisplayName, businessUnit, isActive },
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    sbuId: sbuId,
+    sbuName: sbuName,
+    sbuDisplayName: sbuDisplayName,
+    businessUnit: {
+      businessUnitId: businessUnit.businessUnitId,
+      businessUnitName: businessUnit.businessUnitName,
+      businessUnitDisplayName: businessUnit.businessUnitDisplayName,
+      organization: {
+        id: businessUnit.organization.id,
+        orgName: businessUnit.organization.orgName,
+        orgDisplayName: businessUnit.organization.orgDisplayName,
+      },
+    },
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -172,46 +260,260 @@ function Tr({ data: { sbuName, sbuDisplayName, buDisplayName } }) {
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllSbuData();
+        setIsOpen(false);
+      });
+  };
+
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setSbuData({
+        sbuName: "",
+        sbuDisplayName: "",
+        businessUnit: {
+          businessUnitId: "",
+          businessUnitName: "",
+          businessUnitDisplayName: "",
+          organization: {
+            id: 0,
+            orgName: "",
+            orgDisplayName: "",
+          },
+        },
+      });
+      setIsOpen(false);
+      getAllSbuData();
+    }
+  };
+  // API calls to delete record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllSbuData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{sbuName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{sbuDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{buDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td className={!isActive && "disable-table-row"}>
+          <span>{sbuName || "Unknown"}</span>
+        </td>
+        <td className={!isActive && "disable-table-row"}>
+          <span>{sbuDisplayName || "Unknown"}</span>
+        </td>
+        <td>
+          <span className={!isActive && "disable-table-row"}>
+            {businessUnit.businessUnitName || "Unknown"}
+          </span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                {/* <a
+                  
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a> */}
+                <a
+                  style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(sbuId);
+                  }}
+                >
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(sbuId);
+                  }}
+                  style={{ padding: "5px" }}
+                >
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit SBU</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    spellcheck="false"
+                    value={responseData.sbuName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        sbuName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="email">Display Name</label>
+                  <input
+                    type="text"
+                    id="email"
+                    spellcheck="false"
+                    value={responseData.sbuDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        sbuDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="email">Parent Business Unit</label>
+                  <select
+                    value={responseData.businessUnit.businessUnitName}
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      const selectedOrgId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDisplayName"
+                        );
+                      const selectedOrgName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgName"
+                        );
+
+                      setResponseData({
+                        ...responseData,
+                        businessUnit: {
+                          ...responseData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          organization: {
+                            ...responseData.businessUnit.organization,
+                            id: selectedOrgId,
+                            orgName: selectedOrgName,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        },
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      const orgId = buData.organization.id;
+                      const orgName = buData.organization.orgName;
+                      const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            data-orgId={orgId}
+                            data-orgName={orgName}
+                            data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 export default Sbu;

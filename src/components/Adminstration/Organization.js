@@ -14,6 +14,7 @@ function Organization() {
   const [isOpen, setIsOpen] = useState(false);
   const [orgName, setOrgName] = useState(null);
   const [orgDisplayName, setOrgDisplayName] = useState(null);
+  const [orgData, setOrgData] = useState({ orgName: "", orgDisplayName: "" });
 
   useEffect(() => {
     getAllOrganizationData();
@@ -30,14 +31,10 @@ function Organization() {
   };
 
   const AddDataToOrganization = async (e) => {
-    const post = {
-      orgName: orgName,
-      orgDisplayName: orgDisplayName,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization",
-        post
+        orgData
       );
       console.log("this is the response", response.data);
     } catch {}
@@ -52,7 +49,13 @@ function Organization() {
         columns={[" Name", " Display Name"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return (
+            <Tr
+              data={obj}
+              getAllOrganizationData={getAllOrganizationData}
+              setOrgData={setOrgData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -81,7 +84,7 @@ function Organization() {
                     id="name"
                     spellcheck="false"
                     onChange={(e) => {
-                      setOrgName(e.target.value);
+                      setOrgData({ ...orgData, orgName: e.target.value });
                     }}
                   />
                 </div>
@@ -92,7 +95,10 @@ function Organization() {
                     id="email"
                     spellcheck="false"
                     onChange={(e) => {
-                      setOrgDisplayName(e.target.value);
+                      setOrgData({
+                        ...orgData,
+                        orgDisplayName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -125,9 +131,18 @@ function Organization() {
   );
 }
 
-function Tr({ data: { orgName, orgDisplayName } }) {
+function Tr({
+  getAllOrganizationData,
+  setOrgData,
+  data: { id, orgName, orgDisplayName, isActive },
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    id: id,
+    orgName: orgName,
+    orgDisplayName: orgDisplayName,
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -146,43 +161,177 @@ function Tr({ data: { orgName, orgDisplayName } }) {
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization/${id}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setIsOpen(false);
+        getAllOrganizationData();
+      });
+  };
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setOrgData({ orgName: "", orgDisplayName: "" });
+      setIsOpen(false);
+      getAllOrganizationData();
+    }
+  };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization/${id}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllOrganizationData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{orgName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{orgDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td className={!isActive && "disable-table-row"}>
+          <span>{orgName || "Unknown"}</span>
+        </td>
+        <td>
+          <span className={!isActive && "disable-table-row"}>
+            {orgDisplayName || "Unknown"}
+          </span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                {/* <a
+                  
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a> */}
+                <a
+                  style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(id);
+                  }}
+                >
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(id);
+                  }}
+                  style={{ padding: "5px" }}
+                >
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit Organization</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="organization_name">Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.orgName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        orgName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="organization_disp_name">Display Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.orgDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        orgDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 

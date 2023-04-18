@@ -51,6 +51,7 @@ function GlobalLeaveLossFactor() {
     } catch {}
   };
   const getFinancialYearNameData = async () => {
+    console.log("in financial year data");
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
@@ -64,6 +65,8 @@ function GlobalLeaveLossFactor() {
 
   return (
     <div>
+      {console.log("in GLL Financneee", financialYearData)}
+
       <MemoizedBaseComponent
         field="Global Leave Loss Factor"
         actionButtonName="Setup Global Leave Loss Factor"
@@ -249,13 +252,13 @@ function Tr({
                 <AiIcons.AiOutlineEdit />
                 Edit
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              {/* <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              </a> */}
+              <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCheckCircle /> Activate
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>
