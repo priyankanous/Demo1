@@ -40,7 +40,7 @@ const Sidebar = () => {
         <>
           <div>
             <PrimaryNav>
-              <Menu className="nav">
+              <Menu  className="nav">
                 <NavBarHeading>Rolling Revenue</NavBarHeading>
                 <UserLoggedInSection>
                   <LoggedInUserImage src={userObj?.picture?.thumbnail} />
@@ -51,8 +51,8 @@ const Sidebar = () => {
           </div>
         </>
       </Navbar>
-      <hr style={{ width: "75%", marginRight: "4rem" }} />
-      <IconContext.Provider value={{ color: "#fff" }}>
+      <hr style={{ width: "75%", marginRight: "4rem",marginTop:"1.2vh" }} />
+      {/* <IconContext.Provider value={{ color: "yellow" }}> */}
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <img src={Nous_Infosystems} alt="Nous logo" className="image" />
@@ -71,7 +71,7 @@ const Sidebar = () => {
             })}
           </SidebarWrap>
         </SidebarNav>
-      </IconContext.Provider>
+      {/* </IconContext.Provider> */}
     </>
   );
 };

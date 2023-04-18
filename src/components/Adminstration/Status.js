@@ -163,7 +163,7 @@ function Tr({ data:{statusName, statusDisplayName,isActive,statusId},activeDeact
         <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
             {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
               <a onClick={(e) => { openTheModalWithValues(e, statusId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
-              <a onClick={()=>{deleteSelectedLocation(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+              {/* <a onClick={()=>{deleteSelectedLocation(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a> */}
               <a className={isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
               <a className={!isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
             </div>} </span>

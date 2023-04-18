@@ -1,0 +1,24 @@
+{
+  "name": "rolling-revenue-modernization",
+  "version": "1.0.0",
+  "description": "New version of application - rolling revenue modernization, react js deployed on server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.nousinfo.com/rolling-revenue-report/rrr-frontend/-/tree/main"
+  },
+  "keywords": [
+    "rrr",
+    "react",
+    "express"
+  ],
+  "author": "Nous Infosystems",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
