@@ -11,9 +11,11 @@ function BuisnessUnit() {
   const [data, setData] = useState(null);
   const [orgNameData, setOrgNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [businessUnitName, setBusinessUnitName] = useState(null);
-  const [businessUnitDisplayName, setBusinessUnitDisplayName] = useState(null);
-  const [childOfOrg, setChildOfOrganization] = useState(null);
+  const [businessUnitData, setBusinessUnitData] = useState({
+    businessUnitName: "",
+    businessUnitDisplayName: "",
+    organization: { id: "", orgName: "", orgDisplayName: "" },
+  });
 
   useEffect(() => {
     getAllBuData();
@@ -39,15 +41,10 @@ function BuisnessUnit() {
       });
   };
   const AddDataToBu = async (e) => {
-    const post = {
-      businessUnitName: businessUnitName,
-      businessUnitDisplayName: businessUnitDisplayName,
-      childOfOrg: childOfOrg,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit",
-        post
+        businessUnitData
       );
       setIsOpen(false);
       getAllBuData();
@@ -62,7 +59,13 @@ function BuisnessUnit() {
           columns={["Name", "Display Name", "Parent Organization"]}
           data={data}
           Tr={(obj) => {
-            return <Tr data={obj} />;
+            return (
+              <Tr
+                data={obj}
+                getAllBuData={getAllBuData}
+                orgNameData={orgNameData}
+              />
+            );
           }}
           setIsOpen={setIsOpen}
         />
@@ -91,7 +94,10 @@ function BuisnessUnit() {
                       id="name"
                       spellcheck="false"
                       onChange={(e) => {
-                        setBusinessUnitName(e.target.value);
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          businessUnitName: e.target.value,
+                        });
                       }}
                     />
                   </div>
@@ -102,7 +108,10 @@ function BuisnessUnit() {
                       id="email"
                       spellcheck="false"
                       onChange={(e) => {
-                        setBusinessUnitDisplayName(e.target.value);
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          businessUnitDisplayName: e.target.value,
+                        });
                       }}
                     />
                   </div>
@@ -110,7 +119,24 @@ function BuisnessUnit() {
                     <label for="username">Parent Organization</label>
                     <select
                       onChange={(e) => {
-                        setChildOfOrganization(e.target.value);
+                        const selectedId =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-orgId"
+                          );
+                        const selectedOrgDispName =
+                          e.target.selectedOptions[0].getAttribute(
+                            "data-orgDispName"
+                          );
+
+                        setBusinessUnitData({
+                          ...businessUnitData,
+                          organization: {
+                            ...businessUnitData.organization,
+                            id: selectedId,
+                            orgName: e.target.value,
+                            orgDisplayName: selectedOrgDispName,
+                          },
+                        });
                       }}
                     >
                       <option value="" disabled selected hidden>
@@ -118,7 +144,19 @@ function BuisnessUnit() {
                       </option>
                       {orgNameData.map((orgDataName, index) => {
                         const orgName = orgDataName.orgName;
-                        return <option key={index}>{orgName}</option>;
+                        const orgId = orgDataName.id;
+                        const orgDisplayName = orgDataName.orgDisplayName;
+                        if (orgDataName.isActive) {
+                          return (
+                            <option
+                              data-orgId={orgId}
+                              data-orgDispName={orgDisplayName}
+                              key={index}
+                            >
+                              {orgName}
+                            </option>
+                          );
+                        }
                       })}
                     </select>
                   </div>
@@ -153,10 +191,27 @@ function BuisnessUnit() {
 }
 
 function Tr({
-  data: { businessUnitName, businessUnitDisplayName, childOfOrg },
+  getAllBuData,
+  orgNameData,
+  data: {
+    businessUnitId,
+    businessUnitName,
+    businessUnitDisplayName,
+    organization,
+  },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    businessUnitId: businessUnitId,
+    businessUnitName: businessUnitName,
+    businessUnitDisplayName: businessUnitDisplayName,
+    organization: {
+      id: organization.id,
+      orgName: organization.orgName,
+      orgDisplayName: organization.orgDisplayName,
+    },
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -175,46 +230,218 @@ function Tr({
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setIsOpen(false);
+        getAllBuData();
+      });
+  };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllBuData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
+  // const activeDeactivateTableData = async (id) => {
+  //   const { data } = await axios.put(
+  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/activate-or-deactivate/${id}`
+  //   );
+  //   if (data?.message === "Success" && data?.responseCode === 200) {
+  //     setLocationFormData({ locationName: "", locationDisplayName: "" });
+  //     setIsOpen(false);
+  //     setIsEditId(null);
+  //     fetchLocationName();
+  //   }
+  // };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{businessUnitName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{businessUnitDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{childOfOrg || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td>
+          <span>{businessUnitName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{businessUnitDisplayName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{organization.orgName || "Unknown"}</span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                {/* <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a> */}
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  // className={isActive && "disable-table-row"}
+                  // onClick={() => {
+                  //   activeDeactivateTableData(businessUnitId);
+                  // }}
+                >
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit Business Unit</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="bu_name">Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.businessUnitName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        businessUnitName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="bu_disp_name">Display Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.businessUnitDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        businessUnitDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="parent_Organisation">Parent Organization</label>
+                  <select
+                    value={responseData.organization.orgName}
+                    onChange={(e) => {
+                      const selectedId =
+                        e.target.selectedOptions[0].getAttribute("data-orgId");
+                      const selectedOrgDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-orgDispName"
+                        );
+                      setResponseData({
+                        ...responseData,
+                        organization: {
+                          ...responseData.organization,
+                          id: selectedId,
+                          orgName: e.target.value,
+                          orgDisplayName: selectedOrgDispName,
+                        },
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {orgNameData.map((orgDataName, index) => {
+                      const orgName = orgDataName.orgName;
+                      const orgId = orgDataName.id;
+                      const orgDisplayName = orgDataName.orgDisplayName;
+                      if (orgDataName.isActive) {
+                        return (
+                          <option
+                            data-orgId={orgId}
+                            data-orgDispName={orgDisplayName}
+                            key={index}
+                          >
+                            {orgName}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 

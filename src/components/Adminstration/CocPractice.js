@@ -56,6 +56,7 @@ function CocPractice() {
       setIsOpen(false);
     } catch {}
   };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -64,7 +65,13 @@ function CocPractice() {
         columns={["Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return (
+            <Tr
+              data={obj}
+              buNameData={buNameData}
+              getAllCocData={getAllCocData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -152,10 +159,23 @@ function CocPractice() {
 }
 
 function Tr({
-  data: { cocPracticeName, cocPracticeDisplayName, buDisplayName },
+  getAllCocData,
+  buNameData,
+  data: {
+    cocPracticeId,
+    cocPracticeName,
+    cocPracticeDisplayName,
+    buDisplayName,
+  },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    cocPracticeId: cocPracticeId,
+    cocPracticeName: cocPracticeName,
+    cocPracticeDisplayName: cocPracticeDisplayName,
+    buDisplayName: buDisplayName,
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -174,46 +194,172 @@ function Tr({
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice/${cocPracticeId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setIsOpen(false);
+        getAllCocData();
+      });
+  };
+
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice/${cocPracticeId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllCocData();
+        setIsOpen(false);
+      });
+  };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{cocPracticeName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{cocPracticeDisplayName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{buDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td>
+          <span>{cocPracticeName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{cocPracticeDisplayName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{buDisplayName || "Unknown"}</span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  onClick={(e) => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit Business Unit</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="coc_name">Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.cocPracticeName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        cocPracticeName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="coc_disp_name">Display Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.cocPracticeDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        cocPracticeDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="name">Parent Business Unit</label>
+                  <select
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        buDisplayName: e.target.value,
+                      });
+                    }}
+                  >
+                    <option>Please choose one option</option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      return <option key={index}>{buNameData}</option>;
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 

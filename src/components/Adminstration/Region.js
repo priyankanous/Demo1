@@ -50,7 +50,7 @@ function Region() {
         columns={["Name", "Display Name"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return <Tr data={obj} getRegionData={getRegionData} />;
         }}
         setIsOpen={setIsOpen}
       />
@@ -122,9 +122,17 @@ function Region() {
     </div>
   );
 }
-function Tr({ data: { regionName, regionDisplayName } }) {
+function Tr({
+  getRegionData,
+  data: { regionId, regionName, regionDisplayName },
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [responseData, setResponseData] = useState({
+    regionId: regionId,
+    regionName: regionName,
+    regionDisplayName: regionDisplayName,
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -143,43 +151,151 @@ function Tr({ data: { regionName, regionDisplayName } }) {
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getRegionData();
+        setIsOpen(false);
+      });
+  };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getRegionData();
+        setIsOpen(false);
+      });
+  };
+
   return (
-    <tr ref={wrapperRef}>
-      <td>
-        <span>{regionName || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{regionDisplayName || "Unknown"}</span>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => {
-              closeDropDown();
-            }}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
+    <React.Fragment>
+      <tr ref={wrapperRef}>
+        <td>
+          <span>{regionName || "Unknown"}</span>
+        </td>
+        <td>
+          <span>{regionDisplayName || "Unknown"}</span>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+              onClick={(e) => {
+                closeDropDown();
+              }}
+            ></AiIcons.AiOutlineMore>
+            {isDropdown && (
+              <div style={{ float: "right" }} class="dropdown-content">
+                <a
+                  style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
-                />
-                Edit
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+                >
+                  <AiIcons.AiOutlineEdit />
+                  Edit
+                </a>
+                <a
+                  href="#about"
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    DeleteRecord();
+                  }}
+                >
+                  <AiIcons.AiOutlineDelete /> Delete
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCheckCircle /> Activate
+                </a>
+                <a href="#about" style={{ padding: "5px" }}>
+                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                </a>
+              </div>
+            )}
+          </span>
+        </td>
+      </tr>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={modalStyleObject}
+      >
+        <div>
+          <div class="main" className="ModalContainer">
+            <div class="register">
+              <ModalHeading>Edit Region</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <AiOutlineClose></AiOutlineClose>
+              </ModalIcon>
+              <hr color="#62bdb8"></hr>
+              <form id="reg-form">
+                <div>
+                  <label for="region_name">Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.regionName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        regionName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label for="region_disp_name">Display Name</label>
+                  <input
+                    type="text"
+                    id="id"
+                    spellcheck="false"
+                    value={responseData.regionDisplayName}
+                    onChange={(e) => {
+                      setResponseData({
+                        ...responseData,
+                        regionDisplayName: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div>
+                  <label>
+                    <input
+                      type="button"
+                      value="Save"
+                      id="create-account"
+                      class="button"
+                      onClick={OnSubmit}
+                    />
+                    <input
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                      class="button"
+                    />
+                  </label>
+                </div>
+              </form>
             </div>
-          )}
-        </span>
-      </td>
-    </tr>
+          </div>
+        </div>
+      </Modal>
+    </React.Fragment>
   );
 }
 export default Region;

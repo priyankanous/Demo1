@@ -9,24 +9,6 @@ import {
 } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
-  const [dataTest, setData] = useState(null);
-  const [financialYearData, setFinancialYearData] = useState([]);
-  const func = props.getAllGlobalLLF;
-  useEffect(() => {
-    getFinancialYearNameData();
-  }, []);
-  const getFinancialYearNameData = async () => {
-    await axios
-      .get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
-      )
-      .then((response) => {
-        console.log("This is axios resp", response);
-        const actualDataObject = response.data.data;
-        setFinancialYearData(actualDataObject);
-      });
-  };
-
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -52,7 +34,7 @@ function BaseComponent(props) {
                 <option value="" disabled selected hidden>
                   Please choose one option
                 </option>
-                {financialYearData.map((fyData, index) => {
+                {props.financialYearData.map((fyData, index) => {
                   const fyNameData = fyData.financialYearName;
                   return <option key={index}>{fyNameData}</option>;
                 })}
@@ -102,9 +84,11 @@ function BaseComponent(props) {
   );
 }
 
-
-
-export const MemoizedBaseComponent = React.memo(BaseComponent,(prevProps,nextProps)=>{
-  if(JSON.stringify(prevProps?.data) === JSON.stringify(nextProps?.data)) return true;
-  return false;
-});
+export const MemoizedBaseComponent = React.memo(
+  BaseComponent,
+  (prevProps, nextProps) => {
+    if (JSON.stringify(prevProps?.data) === JSON.stringify(nextProps?.data))
+      return true;
+    return false;
+  }
+);
