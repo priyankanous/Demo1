@@ -25,7 +25,6 @@ function SbuHead() {
     }
 
     const fetchSbuHeadData = async () => {
-        console.log('2')
         fetchSbuDetails();
         const data = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead');
         setData(data?.data?.data);
@@ -41,9 +40,10 @@ function SbuHead() {
         const postSbuHeadData = {
             sbuHeadName,
             sbuHeadDisplayName,
-            sbuName,
+            strategicBusinessUnit:sbuName,
             activeFrom: activeFromDt,
             activeUntil: activeUntilDt,
+            sbuHeadId: 0,
         }
         if (isEditId !== null) {
             var { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${isEditId}`, postSbuHeadData);
@@ -63,7 +63,7 @@ function SbuHead() {
         const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${id}`);
         if (data?.message === 'Success' && data?.responseCode === 200) {
             setSbuHeadName(data?.data?.sbuHeadName);
-            setSbuName(data?.data?.sbuName);
+            setSbuName(data?.data?.strategicBusinessUnit);
             setSbuHeadDisplayName(data?.data?.sbuHeadDisplayName);
             setActiveForm(createDate(data?.data?.activeFrom));
             setActiveUntil(createDate(data?.data?.activeUntil));
@@ -81,30 +81,26 @@ function SbuHead() {
     const deleteSelectedLocation = async (id) => {
         const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${id}`);
         if (data?.message === 'Success' && data?.responseCode === 200) {
-            setIsOpen(false);
-            fetchSbuHeadData();
-            setIsEditId(null);
-            setSbuHeadName(null);
-            setSbuName(null);
-            setSbuHeadDisplayName(null);
-            setActiveForm(null);
-            setActiveUntil(null);
+            resetStateAndData();
         }
     }
 
     const activeDeactivateTableData = async (id) => {
         const { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/activate-or-deactivate/${id}`);
         if (data?.message === 'Success' && data?.responseCode === 200) {
-            console.log('IN CALLED')
-            setIsOpen(false);
-            setIsEditId(null);
-            setSbuHeadName(null);
-            setSbuName(null);
-            setSbuHeadDisplayName(null);
-            setActiveForm(null);
-            setActiveUntil(null);
-            fetchSbuHeadData();
+            resetStateAndData();
         }
+    }
+
+    const resetStateAndData = () => {
+        setIsOpen(false);
+        fetchSbuHeadData();
+        setIsEditId(null);
+        setSbuHeadName(null);
+        setSbuName(null);
+        setSbuHeadDisplayName(null);
+        setActiveForm(null);
+        setActiveUntil(null);
     }
 
     return (
@@ -136,7 +132,7 @@ function SbuHead() {
                             <ModalHeading>Setup SBU Head</ModalHeading>
                             <ModalIcon
                                 onClick={() => {
-                                    setIsOpen(false);
+                                    resetStateAndData();
                                 }}
                             >
                                 <AiOutlineClose></AiOutlineClose>
@@ -165,13 +161,14 @@ function SbuHead() {
                                     <label for="email">SBU Name</label>
                                     <select
                                         onChange={(e) => {
-                                            setSbuName(e.target.value);
+                                            const sbuSelected = JSON.parse(e.target.value);
+                                            setSbuName(sbuSelected);
                                         }}
                                     >
                                         <option value="" disabled selected={sbuName === null && true} hidden >Please choose one option</option>
                                         {sbuNameData?.map((sbuData, index) => {
                                             const sbuNameData = sbuData.sbuName;
-                                            return <option selected={sbuNameData === sbuName} key={index}>{sbuNameData}</option>
+                                            return <option value={JSON.stringify(sbuData)} selected={sbuNameData === sbuName} key={index}>{sbuNameData}</option>
                                         })}
                                     </select>
                                 </div>
@@ -205,7 +202,7 @@ function SbuHead() {
                                         <input
                                             type="button"
                                             onClick={() => {
-                                                setIsOpen(false);
+                                                resetStateAndData();
                                             }}
                                             value="Cancel"
                                             id="create-account"
@@ -222,7 +219,7 @@ function SbuHead() {
     );
 }
 
-function Tr({ data: { sbuHeadName, sbuHeadDisplayName, sbuName, activeFrom, activeUntil, isActive, sbuHeadId }, activeDeactivateTableData, openTheModalWithValues, deleteSelectedLocation }) {
+function Tr({ data: { sbuHeadName, sbuHeadDisplayName, strategicBusinessUnit:{sbuName}, activeFrom, activeUntil, isActive, sbuHeadId }, activeDeactivateTableData, openTheModalWithValues, deleteSelectedLocation }) {
     const [isDropdown, setDropdown] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
