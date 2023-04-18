@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 1.8vh;
+  font-size: 1.5vh;
 `;
 
 export const SidebarLabel = styled.span`
@@ -23,13 +23,14 @@ export const DropdownLink = styled(Link)`
   background: #0a8b9;
   margin-left: 0rem;
   padding-right: 1rem;
-  padding-top: 0.25rem;
+  padding-top: 0.4rem;
   padding-bottom: 0.25rem;
   display: block;
   align-items: center;
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 0.8vw;
+  font-size: 1.5vh;
+  overflow:auto;
 
   .active {
     background: #23C5C7;
@@ -56,6 +57,7 @@ export const SidebarNav = styled.nav`
   left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
   transition: 350ms;
   z-index: 10;
+  overflow:auto;
 `;
 
 export const SidebarWrap = styled.div`

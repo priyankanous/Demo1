@@ -93,7 +93,7 @@ $green-border: #72B372;
 		font-weight: 200;
 		border-radius: 13px;
 		color: white;
-		width: 60px;
+		width: 69px;
 		padding: 7px;
 		float: left;
 		margin-right: 0.7rem;
@@ -120,8 +120,8 @@ $green-border: #72B372;
 	font-size: small;
 	font-weight: 200;
 	border-radius: 13px;
-	color: #000000;
-	width: max-content;
+	color: white;
+	width: 10rem;
 	padding: 7px;
 	float: left;
 	margin-right: 0.7rem;
@@ -129,13 +129,12 @@ $green-border: #72B372;
 	margin-top: 1.2rem;
 	border: 1px solid rgb(185, 217, 228);
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	@include linear-gradient(#96d0d4, #94d7db);
 }
 
 .align-email-contents-notification {
 	display: flex;
 	width: 100%;
-	align-items: stretch;
+	// align-items: stretch;
 	height: 350px;
 	margin-top: 25px;
 
@@ -155,7 +154,7 @@ $green-border: #72B372;
 			.email-input {
 				width: 85%;
 				padding: 2px 2px;
-				margin: 4px 0px;
+				margin: 4px 9px;
 				border-radius: 5px;
 
 				// box-shadow: none;
@@ -169,7 +168,7 @@ $green-border: #72B372;
 					margin: 0px 5px;
 
 					i {
-						margin: 0px 10px;
+						margin: 0px 3px;
 					}
 
 					i:last-child {
@@ -179,13 +178,14 @@ $green-border: #72B372;
 			}
 
 			.email-notification-textarea {
-				margin: 0px 76px;
+				margin: 0px 50px;
 				height: 250px;
 
 			}
 
 			.style-email-icons {
 				display: inline-block;
+				font-size:small;
 			}
 
 
