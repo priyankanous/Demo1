@@ -18,6 +18,10 @@ function WorkOrderStatus() {
   const [isOpen, setIsOpen] = useState(false);
   const [woStatusName, setWorkOrderStatusName] = useState(null);
   const [woStatusDisplayName, setWorkOrderStatusDisplayName] = useState(null);
+  const [woStatusData, setWoStatusData] = useState({
+    woStatusName: "",
+    woStatusDisplayName: "",
+  });
 
   useEffect(() => {
     getAllWorkOrderData();
@@ -31,14 +35,10 @@ function WorkOrderStatus() {
       });
   };
   const AddDataToWorkOrderStatus = async (e) => {
-    const post = {
-      woStatusName: woStatusName,
-      woStatusDisplayName: woStatusDisplayName,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus",
-        post
+        woStatusData
       );
       setIsOpen(false);
       getAllWorkOrderData();
@@ -52,7 +52,13 @@ function WorkOrderStatus() {
         columns={["Name", "Display Name"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} getAllWorkOrderData={getAllWorkOrderData} />;
+          return (
+            <Tr
+              data={obj}
+              getAllWorkOrderData={getAllWorkOrderData}
+              setWoStatusData={setWoStatusData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -81,7 +87,10 @@ function WorkOrderStatus() {
                     id="name"
                     spellcheck="false"
                     onChange={(e) => {
-                      setWorkOrderStatusName(e.target.value);
+                      setWoStatusData({
+                        ...woStatusData,
+                        woStatusName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -92,7 +101,10 @@ function WorkOrderStatus() {
                     id="email"
                     spellcheck="false"
                     onChange={(e) => {
-                      setWorkOrderStatusDisplayName(e.target.value);
+                      setWoStatusData({
+                        ...woStatusData,
+                        woStatusDisplayName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -127,7 +139,8 @@ function WorkOrderStatus() {
 
 function Tr({
   getAllWorkOrderData,
-  data: { woStatusId, woStatusName, woStatusDisplayName },
+  setWoStatusData,
+  data: { woStatusId, woStatusName, woStatusDisplayName, isActive },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -167,26 +180,40 @@ function Tr({
         getAllWorkOrderData();
       });
   };
-  const DeleteRecord = () => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus/${woStatusId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllWorkOrderData();
-        setIsOpen(false);
-      });
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setWoStatusData({ woStatusName: "", woStatusDisplayName: "" });
+      setIsOpen(false);
+      getAllWorkOrderData();
+    }
   };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus/${woStatusId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllWorkOrderData();
+  //       setIsOpen(false);
+  //     });
+  // };
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{woStatusName || "Unknown"}</span>
         </td>
         <td>
-          <span>{woStatusDisplayName || "Unknown"}</span>
+          <span className={!isActive && "disable-table-row"}>
+            {woStatusDisplayName || "Unknown"}
+          </span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -204,19 +231,31 @@ function Tr({
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                <a
-                  href="#about"
+                {/* <a
+                 
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                </a> */}
+                <a
+                  style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(woStatusId);
+                  }}
+                >
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(woStatusId);
+                  }}
+                  style={{ padding: "5px" }}
+                >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
                 </a>
               </div>

@@ -55,7 +55,7 @@ function BuisnessUnit() {
       <div>
         <MemoizedBaseComponent
           field="Business Unit"
-          actionButtonName="Setup Business Unit"
+          actionButtonName="Add New"
           columns={["Name", "Display Name", "Parent Organization"]}
           data={data}
           Tr={(obj) => {
@@ -64,6 +64,7 @@ function BuisnessUnit() {
                 data={obj}
                 getAllBuData={getAllBuData}
                 orgNameData={orgNameData}
+                setBusinessUnitData={setBusinessUnitData}
               />
             );
           }}
@@ -192,11 +193,13 @@ function BuisnessUnit() {
 
 function Tr({
   getAllBuData,
+  setBusinessUnitData,
   orgNameData,
   data: {
     businessUnitId,
     businessUnitName,
     businessUnitDisplayName,
+    isActive,
     organization,
   },
 }) {
@@ -258,29 +261,34 @@ function Tr({
   //     });
   // };
 
-  // const activeDeactivateTableData = async (id) => {
-  //   const { data } = await axios.put(
-  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/activate-or-deactivate/${id}`
-  //   );
-  //   if (data?.message === "Success" && data?.responseCode === 200) {
-  //     setLocationFormData({ locationName: "", locationDisplayName: "" });
-  //     setIsOpen(false);
-  //     setIsEditId(null);
-  //     fetchLocationName();
-  //   }
-  // };
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setBusinessUnitData({
+        businessUnitName: "",
+        businessUnitDisplayName: "",
+        organization: { id: "", orgName: "", orgDisplayName: "" },
+      });
+      setIsOpen(false);
+      getAllBuData();
+    }
+  };
 
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{businessUnitName || "Unknown"}</span>
         </td>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{businessUnitDisplayName || "Unknown"}</span>
         </td>
         <td>
-          <span>{organization.orgName || "Unknown"}</span>
+          <span className={!isActive && "disable-table-row"}>
+            {organization.orgName || "Unknown"}
+          </span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -299,7 +307,6 @@ function Tr({
                   Edit
                 </a>
                 {/* <a
-                  href="#about"
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
@@ -308,16 +315,21 @@ function Tr({
                   <AiIcons.AiOutlineDelete /> Delete
                 </a> */}
                 <a
-                  href="#about"
                   style={{ padding: "5px" }}
-                  // className={isActive && "disable-table-row"}
-                  // onClick={() => {
-                  //   activeDeactivateTableData(businessUnitId);
-                  // }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(businessUnitId);
+                  }}
                 >
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(businessUnitId);
+                  }}
+                  style={{ padding: "5px" }}
+                >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
                 </a>
               </div>

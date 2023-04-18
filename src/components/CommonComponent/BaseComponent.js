@@ -9,6 +9,7 @@ import {
 } from "../NavigationMenu/Value";
 
 function BaseComponent(props) {
+  console.log();
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -20,7 +21,8 @@ function BaseComponent(props) {
           {props.actionButtonName}
         </TableHeadingButton>
       </TableHeadingSection>
-      {props.globalLeave || props.currency ? (
+      {console.log("th finaccceecc", props.financialYearData)}
+      {(props.globalLeave && props.financialYearData) || props.currency ? (
         <React.Fragment>
           <div class="filter">
             <span style={{ paddingRight: "2%" }}>
@@ -35,6 +37,10 @@ function BaseComponent(props) {
                   Please choose one option
                 </option>
                 {props.financialYearData.map((fyData, index) => {
+                  console.log(
+                    "this is in Base component to check Financial year",
+                    fyData
+                  );
                   const fyNameData = fyData.financialYearName;
                   return <option key={index}>{fyNameData}</option>;
                 })}
@@ -68,7 +74,7 @@ function BaseComponent(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <table style={{fontSize:'1vw'}}>
+          <table style={{ fontSize: "1vw" }}>
             <tr>
               {props.columns.map((header) => {
                 return <th>{header}</th>;

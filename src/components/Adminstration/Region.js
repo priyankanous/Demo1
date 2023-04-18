@@ -12,12 +12,16 @@ function Region() {
   const [isOpen, setIsOpen] = useState(false);
   const [regionName, setRegionName] = useState(null);
   const [regionDisplayName, setRegionDisplayName] = useState(null);
+  const [regionData, setRegionData] = useState({
+    regionName: "",
+    regionDisplayName: "",
+  });
 
   useEffect(() => {
-    getRegionData();
+    getAllRegionData();
   }, []);
 
-  const getRegionData = async () => {
+  const getAllRegionData = async () => {
     await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
       .then((response) => {
@@ -27,17 +31,13 @@ function Region() {
       });
   };
   const AddDataToRegion = async (e) => {
-    const post = {
-      regionName: regionName,
-      regionDisplayName: regionDisplayName,
-    };
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
-        post
+        regionData
       );
       console.log("this is the response", response.data);
-      getRegionData();
+      getAllRegionData();
       setIsOpen(false);
     } catch {}
   };
@@ -50,7 +50,13 @@ function Region() {
         columns={["Name", "Display Name"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} getRegionData={getRegionData} />;
+          return (
+            <Tr
+              data={obj}
+              getAllRegionData={getAllRegionData}
+              setRegionData={setRegionData}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -79,7 +85,10 @@ function Region() {
                     id="name"
                     spellcheck="false"
                     onChange={(e) => {
-                      setRegionName(e.target.value);
+                      setRegionData({
+                        ...regionData,
+                        regionName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -90,7 +99,10 @@ function Region() {
                     id="email"
                     spellcheck="false"
                     onChange={(e) => {
-                      setRegionDisplayName(e.target.value);
+                      setRegionData({
+                        ...regionData,
+                        regionDisplayName: e.target.value,
+                      });
                     }}
                   />
                 </div>
@@ -123,8 +135,9 @@ function Region() {
   );
 }
 function Tr({
-  getRegionData,
-  data: { regionId, regionName, regionDisplayName },
+  getAllRegionData,
+  setRegionData,
+  data: { regionId, regionName, regionDisplayName, isActive },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -160,31 +173,46 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        getRegionData();
-        setIsOpen(false);
-      });
-  };
-  const DeleteRecord = () => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getRegionData();
+        getAllRegionData();
         setIsOpen(false);
       });
   };
 
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setRegionData({ regionName: "", regionDisplayName: "" });
+      setIsOpen(false);
+      getAllRegionData();
+    }
+  };
+  // API calls to delete Record
+
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllRegionData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{regionName || "Unknown"}</span>
         </td>
         <td>
-          <span>{regionDisplayName || "Unknown"}</span>
+          <span className={!isActive && "disable-table-row"}>
+            {regionDisplayName || "Unknown"}
+          </span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -202,19 +230,31 @@ function Tr({
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                <a
-                  href="#about"
+                {/* <a
+                 
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                </a> */}
+                <a
+                  style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(regionId);
+                  }}
+                >
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(regionId);
+                  }}
+                  style={{ padding: "5px" }}
+                >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
                 </a>
               </div>

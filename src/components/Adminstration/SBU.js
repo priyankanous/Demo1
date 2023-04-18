@@ -11,9 +11,6 @@ function Sbu() {
   const [data, setData] = useState(null);
   const [buNameData, setBuNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [sbuName, setSbuName] = useState(null);
-  const [sbuDisplayName, setSbuDisplayName] = useState(null);
-  const [buDisplayName, setBuDisplayName] = useState(null);
   const [sbuData, setSbuData] = useState({
     sbuName: "",
     sbuDisplayName: "",
@@ -77,6 +74,7 @@ function Sbu() {
               data={obj}
               buNameData={buNameData}
               getAllSbuData={getAllSbuData}
+              setSbuData={setSbuData}
             />
           );
         }}
@@ -176,18 +174,20 @@ function Sbu() {
                       const orgId = buData.organization.id;
                       const orgName = buData.organization.orgName;
                       const orgDisplayName = buData.organization.orgDisplayName;
-                      return (
-                        <option
-                          data-buId={buId}
-                          data-buDisplayName={buDisplayName}
-                          data-orgId={orgId}
-                          data-orgName={orgName}
-                          data-orgDisplayName={orgDisplayName}
-                          key={index}
-                        >
-                          {buNameData}
-                        </option>
-                      );
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            data-orgId={orgId}
+                            data-orgName={orgName}
+                            data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
                     })}
                   </select>
                 </div>
@@ -222,7 +222,8 @@ function Sbu() {
 function Tr({
   buNameData,
   getAllSbuData,
-  data: { sbuId, sbuName, sbuDisplayName, businessUnit },
+  setSbuData,
+  data: { sbuId, sbuName, sbuDisplayName, businessUnit, isActive },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -272,6 +273,30 @@ function Tr({
         setIsOpen(false);
       });
   };
+
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setSbuData({
+        sbuName: "",
+        sbuDisplayName: "",
+        businessUnit: {
+          businessUnitId: "",
+          businessUnitName: "",
+          businessUnitDisplayName: "",
+          organization: {
+            id: 0,
+            orgName: "",
+            orgDisplayName: "",
+          },
+        },
+      });
+      setIsOpen(false);
+      getAllSbuData();
+    }
+  };
   // API calls to delete record
 
   // const DeleteRecord = () => {
@@ -290,14 +315,16 @@ function Tr({
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{sbuName || "Unknown"}</span>
         </td>
-        <td>
+        <td className={!isActive && "disable-table-row"}>
           <span>{sbuDisplayName || "Unknown"}</span>
         </td>
         <td>
-          <span>{businessUnit.businessUnitName || "Unknown"}</span>
+          <span className={!isActive && "disable-table-row"}>
+            {businessUnit.businessUnitName || "Unknown"}
+          </span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -316,7 +343,7 @@ function Tr({
                   Edit
                 </a>
                 {/* <a
-                  href="#about"
+                  
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
@@ -324,10 +351,22 @@ function Tr({
                 >
                   <AiIcons.AiOutlineDelete /> Delete
                 </a> */}
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(sbuId);
+                  }}
+                >
                   <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
-                <a href="#about" style={{ padding: "5px" }}>
+                <a
+                  className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(sbuId);
+                  }}
+                  style={{ padding: "5px" }}
+                >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
                 </a>
               </div>
@@ -432,18 +471,20 @@ function Tr({
                       const orgId = buData.organization.id;
                       const orgName = buData.organization.orgName;
                       const orgDisplayName = buData.organization.orgDisplayName;
-                      return (
-                        <option
-                          data-buId={buId}
-                          data-buDisplayName={buDisplayName}
-                          data-orgId={orgId}
-                          data-orgName={orgName}
-                          data-orgDisplayName={orgDisplayName}
-                          key={index}
-                        >
-                          {buNameData}
-                        </option>
-                      );
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            data-orgId={orgId}
+                            data-orgName={orgName}
+                            data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
                     })}
                   </select>
                 </div>
