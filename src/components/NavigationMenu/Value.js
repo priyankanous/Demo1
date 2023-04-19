@@ -32,7 +32,7 @@ export const DropdownLink = styled(Link)`
   font-size: 0.8vw;
 
   .active {
-    background: #23C5C7;
+    background: #23c5c7;
     border-radius: 5.5rem;
     margin-left: 0.4rem;
     marging-right: 0.5rem;
@@ -40,8 +40,7 @@ export const DropdownLink = styled(Link)`
     padding-right: 0.5rem;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
-    color:black;
-    
+    color: black;
   }
 `;
 
@@ -144,12 +143,12 @@ export const TableHeadingButtonPlusIcon = styled.i`
 `;
 export const NavBarHeading = styled.div`
   margin-top: 1em;
-  margin-left:4rem;
-  margin-bottom:1rem;
+  margin-left: 4rem;
+  margin-bottom: 1rem;
   font-size: 1.8vw;
   font-family: sans-serif;
   font-weight: 700;
-  text-align:middle;
+  text-align: middle;
 `;
 
 export const UserLoggedInSection = styled.div`
@@ -163,7 +162,7 @@ export const LoggedInUserImage = styled.img`
 `;
 export const LoggedInUserName = styled.span`
   font-weight: 500;
-  font-size:1.5vw;
+  font-size: 1.5vw;
   color: rgb(7, 46, 58);
 `;
 export const ModalFormButton = styled.div`

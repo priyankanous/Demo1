@@ -24,7 +24,6 @@
 //     <div>
 //       <MemoizedBaseComponent
 //         field="Currency"
-//         actionButtonName="Setup Currency"
 //         columns={["Currency", "Name", "Symbol", "Conversion Rate", ""]}
 //         data={data}
 //         Tr={Tr}
@@ -273,7 +272,6 @@ function Currency() {
     <div>
       <MemoizedBaseComponent
         field="Currency"
-        actionButtonName="Setup Currency"
         columns={["Currency", "Name", "Symbol", "Conversion Rate"]}
         data={data}
         Tr={Tr}
@@ -396,9 +394,9 @@ function Tr({ id, name, symbol, rate }) {
                 />{" "}
                 Edit
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              {/* <a href="#about" style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineDelete /> Delete
-              </a>
+              </a> */}
               <a href="#about" style={{ padding: "5px" }}>
                 <AiIcons.AiOutlineCheckCircle /> Activate
               </a>

@@ -3,76 +3,103 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import {MemoizedBaseComponent} from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
 function Probability() {
-  const [probabilityFormData, setProbabilityFormData] = useState({ probabilityTypeName: "", percentage: 0 });
+  const [probabilityFormData, setProbabilityFormData] = useState({
+    probabilityTypeName: "",
+    percentage: 0,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [probabilitydata, setProbabilityData] = useState([]);
   const [isEditId, setIsEditId] = useState(null);
 
   const fetchPercentageType = async () => {
-    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type');
-    setProbabilityData(data?.data)
-  }
+    const { data } = await axios.get(
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type"
+    );
+    setProbabilityData(data?.data);
+  };
 
   useEffect(() => {
     fetchPercentageType();
   }, []);
 
   const setProbabilityTypeData = async () => {
-    if(isEditId !== null){
-      var { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${isEditId}`, probabilityFormData);
-    }else{
-      var { data } = await axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type', probabilityFormData);
+    if (isEditId !== null) {
+      var { data } = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${isEditId}`,
+        probabilityFormData
+      );
+    } else {
+      var { data } = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type",
+        probabilityFormData
+      );
     }
-    if (data?.message === 'Success' && data?.responseCode === 200) {
+    if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       setIsEditId(null);
       fetchPercentageType();
     }
-  }
+  };
 
   const openTheModalWithValues = async (e, id) => {
-      const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`);
-      if (data?.message === 'Success' && data?.responseCode === 200) {
-        setProbabilityFormData({ probabilityTypeName: data?.data?.probabilityTypeName, percentage: data?.data?.percentage })
-        setIsOpen(true);
-        setIsEditId(id);
-      }
+    const { data } = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setProbabilityFormData({
+        probabilityTypeName: data?.data?.probabilityTypeName,
+        percentage: data?.data?.percentage,
+      });
+      setIsOpen(true);
+      setIsEditId(id);
     }
+  };
 
-    const deleteSelectedLocation = async(id)=>{
-      const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`);
-      if (data?.message === 'Success' && data?.responseCode === 200) {
-        setProbabilityFormData({ probabilityTypeName:"", percentage: 0 })
-        setIsOpen(false);
-        setIsEditId(null);
-        fetchPercentageType()
-      }
+  const deleteSelectedLocation = async (id) => {
+    const { data } = await axios.delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setProbabilityFormData({ probabilityTypeName: "", percentage: 0 });
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchPercentageType();
     }
+  };
 
-    const activeDeactivateTableData = async(id)=>{
-      const {data} = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/activate-or-deactivate/${id}`);
-      if(data?.message === 'Success' && data?.responseCode === 200){
-        setProbabilityFormData({ probabilityTypeName:"", percentage: 0 })
-        setIsOpen(false);
-        setIsEditId(null);
-        fetchPercentageType()
-      }
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setProbabilityFormData({ probabilityTypeName: "", percentage: 0 });
+      setIsOpen(false);
+      setIsEditId(null);
+      fetchPercentageType();
     }
-
+  };
 
   return (
     <div>
       <MemoizedBaseComponent
         field="Probability Type"
-        actionButtonName="Setup Probability"
-        columns={["Name", "Percentage"," "]}
+        columns={["Name", "Percentage", " "]}
         data={probabilitydata}
-        Tr={(obj)=>{return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj}/>}}
+        Tr={(obj) => {
+          return (
+            <Tr
+              activeDeactivateTableData={activeDeactivateTableData}
+              openTheModalWithValues={openTheModalWithValues}
+              deleteSelectedLocation={deleteSelectedLocation}
+              data={obj}
+            />
+          );
+        }}
         setIsOpen={setIsOpen}
       />
       <Modal
@@ -95,11 +122,33 @@ function Probability() {
               <form id="reg-form">
                 <div>
                   <label for="name">Name</label>
-                  <input type="text" id="probability-type-name" spellcheck="false" value={probabilityFormData?.probabilityTypeName} onChange={(e) => { setProbabilityFormData({ ...probabilityFormData, probabilityTypeName: e.target.value }) }} />
+                  <input
+                    type="text"
+                    id="probability-type-name"
+                    spellcheck="false"
+                    value={probabilityFormData?.probabilityTypeName}
+                    onChange={(e) => {
+                      setProbabilityFormData({
+                        ...probabilityFormData,
+                        probabilityTypeName: e.target.value,
+                      });
+                    }}
+                  />
                 </div>
                 <div>
                   <label for="email">Percentage</label>
-                  <input type="number" id="probability-percentage" spellcheck="false" value={probabilityFormData?.percentage} onChange={(e) => { setProbabilityFormData({ ...probabilityFormData, percentage: parseInt(e.target.value) }) }} />
+                  <input
+                    type="number"
+                    id="probability-percentage"
+                    spellcheck="false"
+                    value={probabilityFormData?.percentage}
+                    onChange={(e) => {
+                      setProbabilityFormData({
+                        ...probabilityFormData,
+                        percentage: parseInt(e.target.value),
+                      });
+                    }}
+                  />
                 </div>
                 <div>
                   <label>
@@ -108,7 +157,9 @@ function Probability() {
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={() => { setProbabilityTypeData() }}
+                      onClick={() => {
+                        setProbabilityTypeData();
+                      }}
                     />
                     <input
                       type="button"
@@ -129,7 +180,12 @@ function Probability() {
     </div>
   );
 }
-function Tr({ data:{probabilityTypeName, percentage,probabilityTypeId,isActive},openTheModalWithValues,activeDeactivateTableData,deleteSelectedLocation }) {
+function Tr({
+  data: { probabilityTypeName, percentage, probabilityTypeId, isActive },
+  openTheModalWithValues,
+  activeDeactivateTableData,
+  deleteSelectedLocation,
+}) {
   const [isDropdown, setDropdown] = useState(false);
 
   const OutsideClick = (ref) => {
@@ -147,24 +203,64 @@ function Tr({ data:{probabilityTypeName, percentage,probabilityTypeId,isActive},
   OutsideClick(wrapperRef);
 
   const closeDropDown = () => {
-    isDropdown  ? setDropdown(false) : setDropdown(true)
+    isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
     <tr ref={wrapperRef}>
-      <td className={!isActive && 'disable-table-row'}>
+      <td className={!isActive && "disable-table-row"}>
         <span>{probabilityTypeName || "Unknown"}</span>
       </td>
-      <td className={!isActive && 'disable-table-row'} data-id={probabilityTypeId}>
+      <td
+        className={!isActive && "disable-table-row"}
+        data-id={probabilityTypeId}
+      >
         <span>{percentage || "Unknown"}</span>
       </td>
       <td>
-      <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-          {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
-            <a onClick={(e) => { openTheModalWithValues(e, probabilityTypeId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
-            <a onClick={()=>{deleteSelectedLocation(probabilityTypeId)}} href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
-            <a className={isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(probabilityTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
-            <a className={!isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(probabilityTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
-          </div>} </span>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a
+                onClick={(e) => {
+                  openTheModalWithValues(e, probabilityTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineEdit /> Edit
+              </a>
+              {/* <a
+                onClick={() => {
+                  deleteSelectedLocation(probabilityTypeId);
+                }}
+                href="#about"
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineDelete /> Delete
+              </a> */}
+              <a
+                className={isActive && "disable-table-row"}
+                onClick={() => {
+                  activeDeactivateTableData(probabilityTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a
+                className={!isActive && "disable-table-row"}
+                onClick={() => {
+                  activeDeactivateTableData(probabilityTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
       </td>
     </tr>
   );

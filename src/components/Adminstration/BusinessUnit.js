@@ -55,7 +55,6 @@ function BuisnessUnit() {
       <div>
         <MemoizedBaseComponent
           field="Business Unit"
-          actionButtonName="Add New"
           columns={["Name", "Display Name", "Parent Organization"]}
           data={data}
           Tr={(obj) => {
