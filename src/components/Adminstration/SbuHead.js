@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
+import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
@@ -149,6 +149,7 @@ function SbuHead() {
     <div>
       <MemoizedBaseComponent
         field="SBU Head"
+        actionButtonName="Setup SBU Head"
         columns={[
           "Name",
           "Display Name",
@@ -173,7 +174,7 @@ function SbuHead() {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        style={bdmStyleObject}
         className="modal-container"
       >
         <div>
