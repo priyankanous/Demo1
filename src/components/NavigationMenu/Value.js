@@ -65,7 +65,7 @@ export const SidebarWrap = styled.div`
 `;
 
 export const PrimaryNav = styled.nav`
-  height: 5rem;
+  height: 4.2rem;
   display: flex;
   background: #072e3a;
   margin-left: 14.3%;
@@ -147,25 +147,26 @@ export const TableHeadingButtonPlusIcon = styled.i`
 export const NavBarHeading = styled.div`
   margin-top: 1em;
   margin-left:4rem;
-  margin-bottom:1rem;
-  font-size: 1.8vw;
+  font-size: 1.5vw;
   font-family: sans-serif;
   font-weight: 700;
   text-align:middle;
 `;
 
 export const UserLoggedInSection = styled.div`
-  margin-right: 5rem;
+  margin-right: 1rem;
 `;
 export const LoggedInUserImage = styled.img`
-  border-radius: 50%;
   position: relative;
   top: 20%;
   margin-right: 1rem;
+  width:2.5rem;
+  height:2.5rem;
+  border-radius:50%;
 `;
 export const LoggedInUserName = styled.span`
   font-weight: 500;
-  font-size:1.5vw;
+  font-size:1.2vw;
   color: rgb(7, 46, 58);
 `;
 export const ModalFormButton = styled.div`
