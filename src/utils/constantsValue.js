@@ -2,17 +2,18 @@ export const modalStyleObject = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content: {
         position: 'absolute',
-        top: '19%',
+        top: '15%',
         left: '32%',
         border: 'none',
-        overflow: 'auto',
+        overflow: 'overlay',
         outline: 'none',
         padding: '20px',
         width: '45%',
         margin: '0',
-        height: '70%',
+        height: '50%',
         background: 'white',
-        bottom:'10%'
+        bottom:'10%',
+        display:'table'
     }
 }
 

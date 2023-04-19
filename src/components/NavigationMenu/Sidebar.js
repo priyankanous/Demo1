@@ -36,7 +36,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <Navbar>
+      <Navbar style={{backgroundColor:"green"}}>
         <>
           <div>
             <PrimaryNav>
@@ -44,14 +44,14 @@ const Sidebar = () => {
                 <NavBarHeading>Rolling Revenue</NavBarHeading>
                 <UserLoggedInSection>
                   <LoggedInUserImage src={userObj?.picture?.thumbnail} />
-                  <LoggedInUserName>KUNAL TIWARI</LoggedInUserName>
+                  <LoggedInUserName>Rohit Sharma</LoggedInUserName>
                 </UserLoggedInSection>
               </Menu>
             </PrimaryNav>
           </div>
         </>
       </Navbar>
-      <hr style={{ width: "75%", marginRight: "4rem",marginTop:"1.2vh" }} />
+      <hr style={{ width: "75%", marginRight: "4rem" }} />
       {/* <IconContext.Provider value={{ color: "yellow" }}> */}
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
