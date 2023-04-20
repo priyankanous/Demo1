@@ -89,7 +89,6 @@ function Location() {
     <div>
       <MemoizedBaseComponent
         field="Location"
-        actionButtonName="Setup Location"
         columns={["Name", "Display Name", " "]}
         data={locationName}
         Tr={(obj) => {
@@ -229,14 +228,14 @@ function Tr({
               >
                 <AiIcons.AiOutlineEdit /> Edit
               </a>
-              <a
+              {/* <a
                 onClick={() => {
                   deleteSelectedLocation(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineDelete /> Delete
-              </a>
+              </a> */}
               <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {

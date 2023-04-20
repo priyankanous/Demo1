@@ -46,7 +46,6 @@ function Region() {
     <div>
       <MemoizedBaseComponent
         field="Region"
-        actionButtonName="Setup Region"
         columns={["Name", "Display Name"]}
         data={data}
         Tr={(obj) => {

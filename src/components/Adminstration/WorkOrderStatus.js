@@ -48,7 +48,6 @@ function WorkOrderStatus() {
     <div>
       <MemoizedBaseComponent
         field="Work Order status"
-        actionButtonName="Setup Work order status"
         columns={["Name", "Display Name"]}
         data={data}
         Tr={(obj) => {

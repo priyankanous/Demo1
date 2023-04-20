@@ -8,17 +8,14 @@ import {
   TableHeadingButtonPlusIcon,
 } from "../NavigationMenu/Value";
 
-function BaseComponent(props) {
-  console.log();
+export function BaseComponent(props) {
   return (
     <div className="table_container">
       <TableHeadingSection>
         <TableHeading>Administration - {props.field}</TableHeading>
         <TableHeadingButton onClick={props.setIsOpen}>
-          <TableHeadingButtonPlusIcon>
-            <AiFillPlusSquare></AiFillPlusSquare>
-          </TableHeadingButtonPlusIcon>
-          {props.actionButtonName}
+          <TableHeadingButtonPlusIcon></TableHeadingButtonPlusIcon>
+          Add New
         </TableHeadingButton>
       </TableHeadingSection>
       {console.log("th finaccceecc", props.financialYearData)}
