@@ -67,6 +67,7 @@ function Organization() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
+              <div>
               <ModalHeading>Setup Organization</ModalHeading>
               <ModalIcon
                 onClick={() => {
@@ -76,6 +77,7 @@ function Organization() {
                 <AiOutlineClose></AiOutlineClose>
               </ModalIcon>
               <hr color="#62bdb8"></hr>
+              </div>
               <form id="reg-form">
                 <div>
                   <label for="name">Name</label>

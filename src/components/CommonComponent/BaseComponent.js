@@ -21,7 +21,6 @@ function BaseComponent(props) {
           {props.actionButtonName}
         </TableHeadingButton>
       </TableHeadingSection>
-      {console.log("th finaccceecc", props.financialYearData)}
       {(props.globalLeave && props.financialYearData) || props.currency ? (
         <React.Fragment>
           <div class="filter">
@@ -37,10 +36,7 @@ function BaseComponent(props) {
                   Please choose one option
                 </option>
                 {props.financialYearData.map((fyData, index) => {
-                  console.log(
-                    "this is in Base component to check Financial year",
-                    fyData
-                  );
+
                   const fyNameData = fyData.financialYearName;
                   return <option key={index}>{fyNameData}</option>;
                 })}

@@ -119,6 +119,7 @@ function BuisnessUnit() {
                   <div>
                     <label for="username">Parent Organization</label>
                     <select
+                    style={{width:"100%"}}
                       onChange={(e) => {
                         const selectedId =
                           e.target.selectedOptions[0].getAttribute(

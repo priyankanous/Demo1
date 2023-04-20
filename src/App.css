@@ -184,6 +184,7 @@ select {
   padding-left: 4%;
   padding-bottom: 1%;
   margin-top: -2%;
+  font-size: 1vw;
 }
 
 filter .dropdown {
@@ -199,6 +200,7 @@ filter .dropdown {
   width: 16%;
   border-radius: 15px;
   padding: 5px;
+  margin-left: 0.5vw;
 }
 
 #filterButton {
@@ -260,4 +262,3 @@ input {
     transform: rotate(360deg);
   }
 }
-

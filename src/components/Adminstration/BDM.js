@@ -163,7 +163,7 @@ function Bdm() {
                       </span>
                     </div>
 
-                    <ul style={{ overflowY: 'auto', height: '200px',width:'50%' }}  className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
+                    <ul style={{ overflowY: 'auto', height: '200px',width:'90%' }}  className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
                       {businessUnit && businessUnit.map((value, index) => {
                         return <li onClick={() => { selectMarkDropdown(value, 'bu') }} key={index} class={`item ${checkElementInArray(value,'bu') && 'checked'}`}>
                           <span class="checkbox">
@@ -185,7 +185,7 @@ function Bdm() {
                       </span>
                     </div>
 
-                    <ul style={{ overflowY: 'auto', height: '200px',width:"50%" }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
+                    <ul style={{ overflowY: 'auto', height: '200px',width:"90%" }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
                       {region && region.map((value, index) => {
                         return <li onClick={() => { selectMarkDropdown(value, 'reg') }} key={index} class={`item ${checkElementInArray(value,'reg') && 'checked'}`}>
                           <span class="checkbox">

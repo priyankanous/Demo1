@@ -107,7 +107,7 @@ export const Menu = styled.div`
   }
 `;
 
-export const ModalHeading = styled.h3`
+export const ModalHeading = styled.h5`
   display: inline;
 `;
 

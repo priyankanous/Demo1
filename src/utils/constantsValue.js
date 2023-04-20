@@ -1,19 +1,18 @@
 export const modalStyleObject = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content: {
-        position: 'absolute',
-        top: '15%',
-        left: '32%',
+        position: 'relative',
+        top: '30%',
+        left: '40%',
         border: 'none',
         overflow: 'overlay',
         outline: 'none',
         padding: '20px',
-        width: '45%',
+        width: '25%',
         margin: '0',
-        height: '50%',
-        background: 'white',
         bottom:'10%',
-        display:'table'
+        display:'table',
+        borderRadius:'5%'
     }
 }
 
@@ -21,17 +20,18 @@ export const bdmStyleObject = {
     overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
     content: {
         position: 'absolute',
-        top: '10%',
-        left: '30%',
+        top: '15%',
+        left: '35%',
         border: 'none',
-        overflow: 'auto',
+        overflow: 'overlay',
         outline: 'none',
         padding: '20px',
-        width: '50%',
+        width: '30%',
         margin: '0',
         height: '70%',
         background: 'white',
-        overflowY:'auto'
+        overflowY:'auto',
+        borderRadius:'3%',
     }
 }
 

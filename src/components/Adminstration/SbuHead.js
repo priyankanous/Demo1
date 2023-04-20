@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
-import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
+import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
@@ -59,7 +59,7 @@ function SbuHead() {
         }
     }
 
-    const openTheModalWithValues = async (e, id) => {
+    const openTheModalWithValues = async (e, id) => { 
         const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${id}`);
         if (data?.message === 'Success' && data?.responseCode === 200) {
             setSbuHeadName(data?.data?.sbuHeadName);
@@ -160,6 +160,7 @@ function SbuHead() {
                                 <div>
                                     <label for="email">SBU Name</label>
                                     <select
+                                    style={{width:"100%"}}
                                         onChange={(e) => {
                                             const sbuSelected = JSON.parse(e.target.value);
                                             setSbuName(sbuSelected);
