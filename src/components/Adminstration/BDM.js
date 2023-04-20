@@ -3,20 +3,17 @@ import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal, { defaultStyles } from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
+import {MemoizedBaseComponent} from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import Multiselect from "multiselect-react-dropdown";
+import Multiselect from 'multiselect-react-dropdown';
+
+
 
 function Bdm() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [bdmFormData, setbdmFormData] = useState({
-    bdmName: "",
-    bdmDisplayName: "",
-    activeFrom: "",
-    activeUntil: "",
-  });
+  const [bdmFormData, setbdmFormData] = useState({ bdmName: "", bdmDisplayName: "", activeFrom: "", activeUntil: "" });
   const [isBusinessUnitLinked, setBusinessUnitLinked] = useState(false);
   const [isRegionLinked, setRegionLinked] = useState(false);
   const [businessUnit, setBusinessUnit] = useState([]);
@@ -25,81 +22,41 @@ function Bdm() {
   const [dropdownOpenReg, setdropdownOpenReg] = useState(false);
   const [selectedBusinessUnit, setselectedBusinessUnit] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
-  const month = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+
 
   const fetchBusinessUnitData = async () => {
-    const { data } = await axios.get(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit"
-    );
+    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit');
     setBusinessUnit(data?.data);
-  };
+  }
 
   const fetchRegionData = async () => {
-    const { data } = await axios.get(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions"
-    );
-    setRegion(data?.data);
-  };
+    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions');
+    setRegion(data?.data)
+  }
 
   const fetchBdmData = async () => {
     fetchBusinessUnitData();
     fetchRegionData();
-    const { data } = await axios.get(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm"
-    );
+    const { data } = await axios.get('http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm');
     setData(data?.data);
-  };
+  }
 
   useEffect(() => {
-    fetchBdmData();
-  }, []);
+    fetchBdmData()
+  }, [])
+
 
   const postBdmData = async () => {
-    const linkedToBusinessUnit = selectedBusinessUnit.map(
-      (value) => value?.businessUnitName
-    );
-    const linkedToRegion = selectedRegion.map((value) => value?.regionName);
-    const { bdmDisplayName, bdmName, activeFrom, activeUntil } = bdmFormData;
-    const activeFromDt = `${
-      parseInt(new Date(activeFrom).getDate()) < 10
-        ? "0" + parseInt(new Date(activeFrom).getDate())
-        : parseInt(new Date(activeFrom).getDate())
-    }/${month[new Date(activeFrom).getMonth()]}/${new Date(
-      activeFrom
-    ).getFullYear()}`;
-    const activeUntilDt = `${
-      parseInt(new Date(activeUntil).getDate()) < 10
-        ? "0" + parseInt(new Date(activeUntil).getDate())
-        : parseInt(new Date(activeUntil).getDate())
-    }/${month[new Date(activeUntil).getMonth()]}/${new Date(
-      activeUntil
-    ).getFullYear()}`;
-    let bdmFromData = {
-      bdmDisplayName,
-      bdmName,
-      activeFrom: activeFromDt,
-      activeUntil: activeUntilDt,
-      linkedToBusinessUnit,
-      linkedToRegion,
-    };
-    const { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm",
-      bdmFromData
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+    const linkedToBusinessUnit = selectedBusinessUnit.map((value)=>value?.businessUnitName);
+    const linkedToRegion = selectedRegion.map((value)=>value?.regionName);
+    const {bdmDisplayName,bdmName,activeFrom,activeUntil} = bdmFormData
+    const activeFromDt = `${parseInt(new Date(activeFrom).getDate()) < 10 ? '0'+parseInt(new Date(activeFrom).getDate()) : parseInt(new Date(activeFrom).getDate()) }/${month[new Date(activeFrom).getMonth()]}/${new Date(activeFrom).getFullYear()}`;
+    const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10 ? '0'+parseInt(new Date(activeUntil).getDate()) : parseInt(new Date(activeUntil).getDate()) }/${month[new Date(activeUntil).getMonth()]}/${new Date(activeUntil).getFullYear()}`;
+    let bdmFromData = {bdmDisplayName,bdmName,activeFrom:activeFromDt,activeUntil:activeUntilDt,linkedToBusinessUnit,linkedToRegion};
+    const {data} = await  axios.post('http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm',bdmFromData);
+    if (data?.message === 'Success' && data?.responseCode === 200) {
       setIsOpen(false);
       setBusinessUnitLinked(false);
       setRegionLinked(false);
@@ -109,91 +66,63 @@ function Bdm() {
       setdropdownOpenReg(false);
       fetchBdmData();
     }
-  };
+    
+  }
 
   const selectMarkDropdown = (value, type) => {
-    if (type === "bu") {
-      const indexOfSelectedValue = selectedBusinessUnit.findIndex(
-        (valueObj) => {
-          return valueObj.businessUnitName === value?.businessUnitName;
-        }
-      );
+    if (type === 'bu') {
+      const indexOfSelectedValue = selectedBusinessUnit.findIndex((valueObj) => { return valueObj.businessUnitName === value?.businessUnitName });
       if (indexOfSelectedValue === -1) {
         if (isBusinessUnitLinked) {
-          setselectedBusinessUnit([value]);
-        } else {
-          setselectedBusinessUnit([...selectedBusinessUnit, value]);
+          setselectedBusinessUnit([value])
         }
+        else { setselectedBusinessUnit([...selectedBusinessUnit, value]) }
       } else {
-        const arrayData = selectedBusinessUnit.filter((valueObj) => {
-          return valueObj?.businessUnitName !== value?.businessUnitName;
-        });
+        const arrayData = selectedBusinessUnit.filter((valueObj) => { return valueObj?.businessUnitName !== value?.businessUnitName });
         setselectedBusinessUnit(arrayData);
       }
-    } else if (type === "reg") {
-      const indexOfSelectedValue = selectedRegion.findIndex((valueObj) => {
-        return valueObj.regionName === value?.regionName;
-      });
+    } else if (type === 'reg') {
+      const indexOfSelectedValue = selectedRegion.findIndex((valueObj) => { return valueObj.regionName === value?.regionName });
       if (indexOfSelectedValue === -1) {
         if (isRegionLinked) {
-          setSelectedRegion([value]);
-        } else {
-          setSelectedRegion([...selectedRegion, value]);
+          setSelectedRegion([value])
         }
+        else { setSelectedRegion([...selectedRegion, value]) }
       } else {
-        const arrayData = selectedRegion.filter((valueObj) => {
-          return valueObj?.regionName !== value?.regionName;
-        });
+        const arrayData = selectedRegion.filter((valueObj) => { return valueObj?.regionName !== value?.regionName });
         setSelectedRegion(arrayData);
       }
     }
-  };
+  }
 
-  const checkElementInArray = (value, type) => {
-    if (type === "bu") {
-      if (
-        selectedBusinessUnit.findIndex((valueObj) => {
-          return valueObj.businessUnitName === value?.businessUnitName;
-        }) === -1
-      ) {
+  const checkElementInArray = (value,type) => {
+    if(type === 'bu'){
+      if (selectedBusinessUnit.findIndex((valueObj) => { return valueObj.businessUnitName === value?.businessUnitName }) === -1) {
         return false;
       }
-    } else if (type === "reg") {
-      if (
-        selectedRegion.findIndex((valueObj) => {
-          return valueObj.regionName === value?.regionName;
-        }) === -1
-      ) {
+    }else if(type === 'reg'){
+      if (selectedRegion.findIndex((valueObj) => { return valueObj.regionName === value?.regionName }) === -1) {
         return false;
       }
     }
     return true;
-  };
+  }
 
   return (
     <div>
       <MemoizedBaseComponent
-        field="Add New"
-        columns={[
-          "BDM Name",
-          "BDM Display Name",
-          "Active From",
-          "Active Until",
-          "Linked BU",
-          "Linked Region",
-          " ",
-        ]}
+        field="BDM"
+        actionButtonName="Setup BDM"
+        columns={["BDM Name", "BDM Display Name", "Active From", "Active Until", "Linked BU", "Linked Region", " "]}
         data={data}
-        Tr={(obj) => {
-          return <Tr data={obj} />;
-        }}
+        Tr={(obj) => { return <Tr data={obj} /> }}
         setIsOpen={setIsOpen}
       />
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={bdmStyleObject}
-        className={"modal-container"}
+        className={'modal-container'}
       >
         <div>
           <div class="main" className="ModalContainer">
@@ -208,204 +137,63 @@ function Bdm() {
               </ModalIcon>
               <hr color="#62bdb8"></hr>
               <form id="bdm-form">
-                <div>
+                <div >
                   <label for="name">BDM Name</label>
-                  <input
-                    type="text"
-                    value={bdmFormData?.bdmName}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        bdmName: e.target.value,
-                      });
-                    }}
-                    id="bdm-name"
-                  />
+                  <input type="text" value={bdmFormData?.bdmName} onChange={(e) => { setbdmFormData({ ...bdmFormData, bdmName: e.target.value }) }} id="bdm-name" />
                 </div>
                 <div>
                   <label for="email">BDM Display Name</label>
-                  <input
-                    type="text"
-                    value={bdmFormData?.bdmDisplayName}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        bdmDisplayName: e.target.value,
-                      });
-                    }}
-                    id="bdm-disp-name"
-                    spellcheck="false"
-                  />
+                  <input type="text" value={bdmFormData?.bdmDisplayName} onChange={(e) => { setbdmFormData({ ...bdmFormData, bdmDisplayName: e.target.value }) }} id="bdm-disp-name" spellcheck="false" />
                 </div>
                 <div>
                   <label for="email">Active From</label>
-                  <input
-                    type="date"
-                    value={bdmFormData?.activeFrom}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        activeFrom: e.target.value,
-                      });
-                    }}
-                    id="bdm-activeFrom"
-                    spellcheck="false"
-                  />
+                  <input type="date" value={bdmFormData?.activeFrom} onChange={(e) => { setbdmFormData({ ...bdmFormData, activeFrom: e.target.value }) }} id="bdm-activeFrom" spellcheck="false" />
                 </div>
                 <div>
                   <label for="email">Active Until</label>
-                  <input
-                    type="date"
-                    value={bdmFormData?.activeUntil}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        activeUntil: e.target.value,
-                      });
-                    }}
-                    id="bdm-activeUntil"
-                    spellcheck="false"
-                  />
+                  <input type="date" value={bdmFormData?.activeUntil} onChange={(e) => { setbdmFormData({ ...bdmFormData, activeUntil: e.target.value }) }} id="bdm-activeUntil" spellcheck="false" />
                 </div>
                 <div>
-                  <label className="label-bdm">
-                    <input
-                      onClick={() => {
-                        setBusinessUnitLinked(!isBusinessUnitLinked);
-                        setselectedBusinessUnit([]);
-                        setdropdownOpenBU(false);
-                      }}
-                      className={`label-bdm-input ${
-                        isBusinessUnitLinked && "checkit"
-                      }`}
-                      type="checkbox"
-                    />
-                    <span
-                      style={{ verticalAlign: "middle", fontSize: "0.8rem" }}
-                    >
-                      Is Linked to BU
-                    </span>
-                  </label>
+                  <label className="label-bdm"><input onClick={() => { setBusinessUnitLinked(!isBusinessUnitLinked); setselectedBusinessUnit([]); setdropdownOpenBU(false) }} className={`label-bdm-input ${isBusinessUnitLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to BU</span></label>
                   <div class="container">
-                    <div
-                      onClick={() => {
-                        setdropdownOpenBU(!dropdownOpenBU);
-                      }}
-                      style={{ position: "sticky", top: "0" }}
-                      className={`select-btn ${dropdownOpenBU && "open"}`}
-                    >
+                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0' }}  className={`select-btn ${dropdownOpenBU && 'open'}`}>
                       <span class="btn-text">Select Business Unit</span>
                       <span class="arrow-dwn">
-                        <i class="fa-solid fa-chevron-down">
-                          <AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp>
-                        </i>
+                        <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
                       </span>
                     </div>
 
-                    <ul
-                      style={{
-                        overflowY: "auto",
-                        height: "200px",
-                        width: "50%",
-                      }}
-                      className={`list-items ${
-                        dropdownOpenBU && "open-list-items"
-                      }`}
-                    >
-                      {businessUnit &&
-                        businessUnit.map((value, index) => {
-                          return (
-                            <li
-                              onClick={() => {
-                                selectMarkDropdown(value, "bu");
-                              }}
-                              key={index}
-                              class={`item ${
-                                checkElementInArray(value, "bu") && "checked"
-                              }`}
-                            >
-                              <span class="checkbox">
-                                <i class="fa-solid fa-check check-icon">
-                                  <AiIcons.AiOutlineCheck />
-                                </i>
-                              </span>
-                              <span class="item-text">
-                                {value?.businessUnitName}
-                              </span>
-                            </li>
-                          );
-                        })}
+                    <ul style={{ overflowY: 'auto', height: '200px',width:'90%' }}  className={`list-items ${dropdownOpenBU && 'open-list-items'}`}>
+                      {businessUnit && businessUnit.map((value, index) => {
+                        return <li onClick={() => { selectMarkDropdown(value, 'bu') }} key={index} class={`item ${checkElementInArray(value,'bu') && 'checked'}`}>
+                          <span class="checkbox">
+                            <i class="fa-solid fa-check check-icon"><AiIcons.AiOutlineCheck /></i>
+                          </span>
+                          <span class="item-text">{value?.businessUnitName}</span>
+                        </li>
+                      })}
                     </ul>
                   </div>
                 </div>
                 <div>
-                  <label className="label-bdm">
-                    <input
-                      onClick={() => {
-                        setRegionLinked(!isRegionLinked);
-                        setSelectedRegion([]);
-                        setdropdownOpenReg(false);
-                      }}
-                      className={`label-bdm-input ${
-                        isRegionLinked && "checkit"
-                      }`}
-                      type="checkbox"
-                    />
-                    <span
-                      style={{ verticalAlign: "middle", fontSize: "0.8rem" }}
-                    >
-                      Is Linked to Region
-                    </span>
-                  </label>
+                  <label className="label-bdm"><input onClick={() => { setRegionLinked(!isRegionLinked); setSelectedRegion([]); setdropdownOpenReg(false) }} className={`label-bdm-input ${isRegionLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to Region</span></label>
                   <div class="container">
-                    <div
-                      onClick={() => {
-                        setdropdownOpenReg(!dropdownOpenReg);
-                      }}
-                      style={{ position: "sticky", top: "0" }}
-                      class="select-btn"
-                      className={`select-btn ${dropdownOpenReg && "open"}`}
-                    >
+                    <div onClick={() => { setdropdownOpenReg(!dropdownOpenReg); }} style={{ position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenReg && 'open'}`}>
                       <span class="btn-text">Select Region</span>
                       <span class="arrow-dwn">
-                        <i class="fa-solid fa-chevron-down">
-                          <AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp>
-                        </i>
+                        <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
                       </span>
                     </div>
 
-                    <ul
-                      style={{
-                        overflowY: "auto",
-                        height: "200px",
-                        width: "50%",
-                      }}
-                      class="list-items open-list-items"
-                      className={`list-items ${
-                        dropdownOpenReg && "open-list-items"
-                      }`}
-                    >
-                      {region &&
-                        region.map((value, index) => {
-                          return (
-                            <li
-                              onClick={() => {
-                                selectMarkDropdown(value, "reg");
-                              }}
-                              key={index}
-                              class={`item ${
-                                checkElementInArray(value, "reg") && "checked"
-                              }`}
-                            >
-                              <span class="checkbox">
-                                <i class="fa-solid fa-check check-icon">
-                                  <AiIcons.AiOutlineCheck />
-                                </i>
-                              </span>
-                              <span class="item-text">{value?.regionName}</span>
-                            </li>
-                          );
-                        })}
+                    <ul style={{ overflowY: 'auto', height: '200px',width:"90%" }} class="list-items open-list-items" className={`list-items ${dropdownOpenReg && 'open-list-items'}`}>
+                      {region && region.map((value, index) => {
+                        return <li onClick={() => { selectMarkDropdown(value, 'reg') }} key={index} class={`item ${checkElementInArray(value,'reg') && 'checked'}`}>
+                          <span class="checkbox">
+                            <i class="fa-solid fa-check check-icon"><AiIcons.AiOutlineCheck /></i>
+                          </span>
+                          <span class="item-text">{value?.regionName}</span>
+                        </li>
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -416,9 +204,7 @@ function Bdm() {
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={() => {
-                        postBdmData();
-                      }}
+                      onClick={() => { postBdmData() }}
                     />
                     <input
                       type="button"
@@ -442,16 +228,7 @@ function Bdm() {
     </div>
   );
 }
-function Tr({
-  data: {
-    bdmName,
-    bdmDisplayName,
-    activeFrom,
-    activeUntil,
-    linkedToBusinessUnit,
-    linkedToRegion,
-  },
-}) {
+function Tr({ data: { bdmName, bdmDisplayName, activeFrom, activeUntil, linkedToBusinessUnit, linkedToRegion } }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -470,7 +247,7 @@ function Tr({
   OutsideClick(wrapperRef);
 
   const closeDropDown = () => {
-    isDropdown ? setDropdown(false) : setDropdown(true);
+    isDropdown ? setDropdown(false) : setDropdown(true)
   };
   return (
     <tr ref={wrapperRef}>
@@ -487,48 +264,22 @@ function Tr({
         <span>{activeUntil}</span>
       </td>
       <td>
-        <span>
-          {linkedToBusinessUnit && linkedToBusinessUnit?.length > 1
-            ? "Multiple BU"
-            : linkedToBusinessUnit[0] || "Unknown"}
-        </span>
+        <span>{linkedToBusinessUnit && linkedToBusinessUnit?.length > 1 ? 'Multiple BU' : linkedToBusinessUnit[0] || 'Unknown'}</span>
       </td>
       <td>
-        <span>
-          {linkedToRegion && linkedToRegion?.length > 1
-            ? "Multiple Region"
-            : linkedToRegion[0] || "Unknown"}
-        </span>
+        <span>{linkedToRegion && linkedToRegion?.length > 1 ? 'Multiple Region' : linkedToRegion[0] || 'Unknown'}</span>
       </td>
       <td>
-        <span style={{ float: "right" }}>
-          <AiIcons.AiOutlineMore
-            onClick={(e) => closeDropDown(isDropdown)}
-          ></AiIcons.AiOutlineMore>
-          {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineEdit
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                />{" "}
-                Edit
-              </a>
-              {/* <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a> */}
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
-            </div>
-          )}{" "}
-        </span>
+        <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
+          {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
+            <a style={{ padding: '5px' }}><AiIcons.AiOutlineEdit onClick={() => { setIsOpen(true); }} /> Edit</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
+            <a href="#about" style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
+          </div>} </span>
       </td>
     </tr>
   );
 }
 export default Bdm;
+

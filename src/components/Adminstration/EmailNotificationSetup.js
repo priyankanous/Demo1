@@ -58,7 +58,7 @@ const EmailNotificationSetup = ({ setIsOpen }) => {
                                     </div>
                                     <div>
                                         <label for="template-desc">Description:</label>
-                                        <textarea type="text" id="template-desc"></textarea>
+                                        <textarea style={{width:"100%"}} type="text" id="template-desc"></textarea>
                                     </div>
                                     <ModalFormButton>
                                         <input type="button" onClick={() => { setTabIndex(1) }} value="Continue" id="create-account" class="button notification-button" />
