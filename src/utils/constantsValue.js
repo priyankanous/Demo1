@@ -7,7 +7,7 @@ export const modalStyleObject = {
         border: 'none',
         overflow: 'overlay',
         outline: 'none',
-        padding: '20px',
+        padding: '10px',
         width: '25%',
         margin: '0',
         bottom:'10%',
