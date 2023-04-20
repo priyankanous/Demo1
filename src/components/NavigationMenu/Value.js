@@ -106,14 +106,15 @@ export const Menu = styled.div`
   }
 `;
 
-export const ModalHeading = styled.h3`
+export const ModalHeading = styled.h5`
   display: inline;
+  margin-left:1vw;
 `;
 
 export const ModalIcon = styled.i`
   float: right;
   color: rgb(10, 139, 156);
-  font-size: 1.2rem;
+  font-size: 1rem;
 `;
 
 export const TableHeadingSection = styled.div`

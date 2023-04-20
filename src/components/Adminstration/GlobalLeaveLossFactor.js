@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
+import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
 import {
   MemoizedBaseComponent,
@@ -68,7 +68,7 @@ function GlobalLeaveLossFactor() {
 
   return (
     <div>
-      <BaseComponent
+      <MemoizedBaseComponent
         field="Global Leave Loss Factor"
         columns={["#", "Month", "Offshore", "Onshore"]}
         data={data}
@@ -84,7 +84,7 @@ function GlobalLeaveLossFactor() {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        style={bdmStyleObject}
       >
         <div>
           <div class="main" className="ModalContainer">
@@ -102,6 +102,7 @@ function GlobalLeaveLossFactor() {
                 <div>
                   <label for="name">Financial Year</label>
                   <select
+                  style={{width:'100%'}}
                     onChange={(e) => {
                       setFinancialYear(e.target.value);
                     }}
@@ -136,7 +137,7 @@ function GlobalLeaveLossFactor() {
                       setOnSite(e.target.value);
                     }}
                   />{" "}
-                  %
+                  <span style={{textAlign:"start"}}>%</span>
                 </div>
                 <div>
                   <label for="email">OffShore</label>
@@ -330,7 +331,7 @@ function Tr({
                       })
                     }
                   />{" "}
-                  %
+                  <span >%</span>
                 </div>
                 <div>
                   <label for="email">OnSite</label>
