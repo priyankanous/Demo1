@@ -45,7 +45,6 @@ function Organization() {
     <div>
       <MemoizedBaseComponent
         field="Organization"
-        actionButtonName="Setup Organization"
         columns={[" Name", " Display Name"]}
         data={data}
         Tr={(obj) => {

@@ -67,7 +67,6 @@ function CocPractice() {
     <div>
       <MemoizedBaseComponent
         field="Coc Practice"
-        actionButtonName="Setup Coc Practice"
         columns={["Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {

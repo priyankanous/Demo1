@@ -65,7 +65,6 @@ function Sbu() {
     <div>
       <MemoizedBaseComponent
         field="Strategic Business Unit"
-        actionButtonName="Setup Strategic Business Unit"
         columns={[" Name", " Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {

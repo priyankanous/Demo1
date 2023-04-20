@@ -3,7 +3,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
-import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
+import {
+  MemoizedBaseComponent,
+  BaseComponent,
+} from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -67,7 +70,6 @@ function GlobalLeaveLossFactor() {
     <div>
       <MemoizedBaseComponent
         field="Global Leave Loss Factor"
-        actionButtonName="Setup Global Leave Loss Factor"
         columns={["#", "Month", "Offshore", "Onshore"]}
         data={data}
         Tr={(obj) => {

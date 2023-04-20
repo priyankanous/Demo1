@@ -36,14 +36,17 @@ export const bdmStyleObject = {
 }
 
 export const notificationModalStyleObj = {
-    overlay: { backgroundColor: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.2)' },
-    content:{
-        width:'70%',
-        height:'70%',
-        position:'absolute',
-        top:'13%',
-        left:'20%',
-        background:'white',
-        borderRadius:'10px'
-    }
-}
+  overlay: {
+    backgroundColor: "rgb(0,0,0)",
+    backgroundColor: "rgba(0,0,0,0.2)",
+  },
+  content: {
+    width: "70%",
+    height: "70%",
+    position: "absolute",
+    top: "13%",
+    left: "20%",
+    background: "white",
+    borderRadius: "10px",
+  },
+};

@@ -29,7 +29,10 @@ function PricingType() {
 
   const setpricingTypeData = async () => {
     if (isEditId !== null) {
-      var { data } = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${isEditId}`, pricingTypeFormData)
+      var { data } = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${isEditId}`,
+        pricingTypeFormData
+      );
     } else {
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type",
@@ -44,44 +47,65 @@ function PricingType() {
   };
 
   const openTheModalWithValues = async (e, id) => {
-    console.log(id, 'HERE');
-    const { data } = await axios.get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`);
-    if (data?.message === 'Success' && data?.responseCode === 200) {
-      setpricingTypeFormData({ pricingTypeName: data?.data?.pricingTypeName, pricingTypeDisplayName: data?.data?.pricingTypeDisplayName })
+    console.log(id, "HERE");
+    const { data } = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setpricingTypeFormData({
+        pricingTypeName: data?.data?.pricingTypeName,
+        pricingTypeDisplayName: data?.data?.pricingTypeDisplayName,
+      });
       setIsOpen(true);
       setIsEditId(id);
     }
-  }
+  };
 
-  const deleteSelectedLocation = async(id)=>{
-    const { data } = await axios.delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`);
-    if (data?.message === 'Success' && data?.responseCode === 200) {
-      setpricingTypeFormData({ pricingTypeName:"", pricingTypeDisplayName: "" })
+  const deleteSelectedLocation = async (id) => {
+    const { data } = await axios.delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setpricingTypeFormData({
+        pricingTypeName: "",
+        pricingTypeDisplayName: "",
+      });
       setIsOpen(false);
       setIsEditId(null);
-      fetchpricingTypeData()
+      fetchpricingTypeData();
     }
-  }
+  };
 
-  const activeDeactivateTableData = async(id)=>{
-    const {data} = await axios.put(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/activate-or-deactivate/${id}`);
-    if(data?.message === 'Success' && data?.responseCode === 200){
-      setpricingTypeFormData({ pricingTypeName:"", pricingTypeDisplayName: "" })
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setpricingTypeFormData({
+        pricingTypeName: "",
+        pricingTypeDisplayName: "",
+      });
       setIsOpen(false);
       setIsEditId(null);
-      fetchpricingTypeData()
+      fetchpricingTypeData();
     }
-  }
+  };
 
   return (
     <div>
       <MemoizedBaseComponent
         field="Pricing Type"
-        actionButtonName="Setup Pricing type"
-        columns={["Name", "Display name"," "]}
+        columns={["Name", "Display name", " "]}
         data={pricingType}
         Tr={(obj) => {
-          return <Tr activeDeactivateTableData={activeDeactivateTableData} openTheModalWithValues={openTheModalWithValues} deleteSelectedLocation={deleteSelectedLocation} data={obj} />;
+          return (
+            <Tr
+              activeDeactivateTableData={activeDeactivateTableData}
+              openTheModalWithValues={openTheModalWithValues}
+              deleteSelectedLocation={deleteSelectedLocation}
+              data={obj}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -93,7 +117,7 @@ function PricingType() {
         <div>
           <div class="main" className="ModalContainer">
             <div class="register">
-              <ModalHeading>Setup CoC Practice</ModalHeading>
+              <ModalHeading>Setup Pricing Type</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -162,7 +186,12 @@ function PricingType() {
   );
 }
 
-function Tr({ data: { pricingTypeDisplayName, pricingTypeName,isActive,pricingTypeId  },activeDeactivateTableData,openTheModalWithValues,deleteSelectedLocation }) {
+function Tr({
+  data: { pricingTypeDisplayName, pricingTypeName, isActive, pricingTypeId },
+  activeDeactivateTableData,
+  openTheModalWithValues,
+  deleteSelectedLocation,
+}) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -186,22 +215,58 @@ function Tr({ data: { pricingTypeDisplayName, pricingTypeName,isActive,pricingTy
 
   return (
     <tr ref={wrapperRef}>
-    <td className={!isActive && 'disable-table-row'}>
-      <span>{pricingTypeName || "Unknown"}</span>
-    </td>
-    <td className={!isActive && 'disable-table-row'}>
-      <span>{pricingTypeDisplayName || "Unknown"}</span>
-    </td>
-    <td data-id={pricingTypeId}>
-    <span style={{ float: 'right' }} ><AiIcons.AiOutlineMore onClick={(e) => closeDropDown(isDropdown)}></AiIcons.AiOutlineMore>
-        {isDropdown && <div style={{ float: 'right' }} class="dropdown-content">
-          <a onClick={(e) => { openTheModalWithValues(e, pricingTypeId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineEdit /> Edit</a>
-          <a onClick={()=>{deleteSelectedLocation(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
-          <a className={isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCheckCircle /> Activate</a>
-          <a className={!isActive && 'disable-table-row'} onClick={()=>{activeDeactivateTableData(pricingTypeId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineCloseCircle /> Deactivate</a>
-        </div>} </span>
-    </td>
-  </tr>
+      <td className={!isActive && "disable-table-row"}>
+        <span>{pricingTypeName || "Unknown"}</span>
+      </td>
+      <td className={!isActive && "disable-table-row"}>
+        <span>{pricingTypeDisplayName || "Unknown"}</span>
+      </td>
+      <td data-id={pricingTypeId}>
+        <span style={{ float: "right" }}>
+          <AiIcons.AiOutlineMore
+            onClick={(e) => closeDropDown(isDropdown)}
+          ></AiIcons.AiOutlineMore>
+          {isDropdown && (
+            <div style={{ float: "right" }} class="dropdown-content">
+              <a
+                onClick={(e) => {
+                  openTheModalWithValues(e, pricingTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineEdit /> Edit
+              </a>
+              {/* <a
+                onClick={() => {
+                  deleteSelectedLocation(pricingTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineDelete /> Delete
+              </a> */}
+              <a
+                className={isActive && "disable-table-row"}
+                onClick={() => {
+                  activeDeactivateTableData(pricingTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineCheckCircle /> Activate
+              </a>
+              <a
+                className={!isActive && "disable-table-row"}
+                onClick={() => {
+                  activeDeactivateTableData(pricingTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineCloseCircle /> Deactivate
+              </a>
+            </div>
+          )}{" "}
+        </span>
+      </td>
+    </tr>
   );
 }
 
