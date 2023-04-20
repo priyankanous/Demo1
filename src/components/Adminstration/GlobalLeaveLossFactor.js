@@ -137,7 +137,7 @@ function GlobalLeaveLossFactor() {
                       setOnSite(e.target.value);
                     }}
                   />{" "}
-                  %
+                  <span style={{textAlign:"start"}}>%</span>
                 </div>
                 <div>
                   <label for="email">OffShore</label>
@@ -331,7 +331,7 @@ function Tr({
                       })
                     }
                   />{" "}
-                  %
+                  <span >%</span>
                 </div>
                 <div>
                   <label for="email">OnSite</label>

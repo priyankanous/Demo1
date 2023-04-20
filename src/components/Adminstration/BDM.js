@@ -198,7 +198,7 @@ function Bdm() {
                   </div>
                 </div>
                 <div>
-                  <label>
+                  <label style={{display:'flex',flexDirection:"row",justifyContent:"center"}}>
                     <input
                       type="button"
                       value="Save"
