@@ -270,9 +270,9 @@ function Tr({ data: { sbuHeadName, sbuHeadDisplayName, strategicBusinessUnit:{sb
                                 />{" "}
                                 Edit
                             </a>
-                            <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
+                            {/* <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
                                 <AiIcons.AiOutlineDelete /> Delete
-                            </a>
+                            </a> */}
                             <a className={isActive && 'disable-table-row'} onClick={() => { activeDeactivateTableData(sbuHeadId) }} style={{ padding: "5px" }}>
                                 <AiIcons.AiOutlineCheckCircle /> Activate
                             </a>

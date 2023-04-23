@@ -6,6 +6,7 @@ import {
   TableHeading,
   TableHeadingButton,
   TableHeadingButtonPlusIcon,
+  TableButtons,
 } from "../NavigationMenu/Value";
 
 export function BaseComponent(props) {
@@ -13,10 +14,12 @@ export function BaseComponent(props) {
     <div className="table_container">
       <TableHeadingSection>
         <TableHeading>Administration - {props.field}</TableHeading>
-        <TableHeadingButton onClick={props.setIsOpen}>
-          <TableHeadingButtonPlusIcon></TableHeadingButtonPlusIcon>
+        {/* <TableHeadingButton onClick={props.setIsOpen}>
           Add New
-        </TableHeadingButton>
+        </TableHeadingButton> */}
+        <TableButtons onClick={props.setIsOpen}>
+          Add New
+        </TableButtons>
       </TableHeadingSection>
       {(props.globalLeave && props.financialYearData) || props.currency ? (
         <React.Fragment>
