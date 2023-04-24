@@ -162,7 +162,7 @@ function BuisnessUnit() {
                     </select>
                   </div>
                   <div>
-                    <label>
+                    <label >
                       <input
                         type="button"
                         value="Save"
