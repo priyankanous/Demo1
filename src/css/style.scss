@@ -303,7 +303,7 @@ $green-border: #72B372;
 
 .list-items {
 	position: relative;
-	margin-top: 15px;
+	margin-top: 1px;
 	border-radius: 8px;
 	padding: 16px;
 	background-color: #fff;
@@ -319,10 +319,10 @@ $green-border: #72B372;
 	display: flex;
 	align-items: center;
 	list-style: none;
-	height: 50px;
+	height: 20px;
 	cursor: pointer;
 	transition: 0.3s;
-	padding: 0 15px;
+	padding: 5px 15px;
 	border-radius: 8px;
 }
 

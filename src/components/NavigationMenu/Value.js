@@ -130,15 +130,28 @@ export const TableHeading = styled.div`
   color: #072a3a;
 `;
 
+export const TableButtons = styled.button`
+width: 8vw;
+height: 6vh;
+background: #002333;
+border-radius: 30px;
+cursor:pointer;
+font-style: normal;
+font-weight: 500;
+font-size: 0.9vw;
+line-height: 19px;
+color: #FFFFFF;
+margin: 2.9vh 3vh 0vh 0vh
+`
 export const TableHeadingButton = styled.button`
   background-color: #002333;
   border: none;
-  border-radius: 30px;
+  border-radius: 20px;
   color: white;
-  padding: 0.6rem 1.4rem;
-  font-size: 1vw;
+  font-size: 2vh;
   margin: 1vw;
   cursor: pointer;
+  width:auto;
 `;
 export const TableHeadingButtonPlusIcon = styled.i`
   margin: 0.4rem;
