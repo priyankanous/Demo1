@@ -12,7 +12,7 @@ export const SidebarLink = styled(Link)`
   list-style: none;
   height: 1%;
   text-decoration: none;
-  font-size: 1.5vh;
+  font-size: 2vh;
 `;
 
 export const SidebarLabel = styled.span`
@@ -158,7 +158,8 @@ export const TableHeadingButtonPlusIcon = styled.i`
   vertical-align: middle;
 `;
 export const NavBarHeading = styled.div`
-  margin-top: 1em;
+  position:relative;
+  top:40%;
   margin-left: 4rem;
   font-size: 1.5vw;
   font-family: sans-serif;

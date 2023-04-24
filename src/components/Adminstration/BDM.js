@@ -195,7 +195,7 @@ function Bdm() {
                 <div>
                   <label className="label-bdm"><input onClick={() => { setBusinessUnitLinked(!isBusinessUnitLinked); setselectedBusinessUnit([]); setdropdownOpenBU(false) }} className={`label-bdm-input ${isBusinessUnitLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to BU</span></label>
                   <div class="container">
-                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0' }} className={`select-btn ${dropdownOpenBU && 'open'}`}>
+                    <div onClick={() => { setdropdownOpenBU(!dropdownOpenBU); }} style={{ position: 'sticky', top: '0',width:"100%" }} className={`select-btn ${dropdownOpenBU && 'open'}`}>
                       <span class="btn-text">Select Business Unit</span>
                       <span class="arrow-dwn">
                         <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>
@@ -217,7 +217,7 @@ function Bdm() {
                 <div>
                   <label className="label-bdm"><input onClick={() => { setRegionLinked(!isRegionLinked); setSelectedRegion([]); setdropdownOpenReg(false) }} className={`label-bdm-input ${isRegionLinked && 'checkit'}`} type='checkbox' /><span style={{ verticalAlign: "middle", fontSize: '0.8rem' }}>Is Linked to Region</span></label>
                   <div class="container">
-                    <div onClick={() => { setdropdownOpenReg(!dropdownOpenReg); }} style={{ position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenReg && 'open'}`}>
+                    <div onClick={() => { setdropdownOpenReg(!dropdownOpenReg); }} style={{width:'100%', position: 'sticky', top: '0' }} class="select-btn" className={`select-btn ${dropdownOpenReg && 'open'}`}>
                       <span class="btn-text">Select Region</span>
                       <span class="arrow-dwn">
                         <i class="fa-solid fa-chevron-down"><AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp></i>

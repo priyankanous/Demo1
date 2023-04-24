@@ -22,10 +22,11 @@ $green-border: #72B372;
 .register {
 	opacity: 2;
 	width: 100%;
-	border-radius: 25px;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	margin-top: 0px 0px;
+
 	#reg-form{
-		margin: 1vw;
+		margin: 0vw;
 		padding:0vw 1vw;
 	}
 	h3 {
@@ -37,15 +38,17 @@ $green-border: #72B372;
 	}
 
 	div {
-		margin: 1.7vw 1vw;
+		margin: 0vw 1vw;
 		border: none;
-		margin-top: 1rem;
+		width:60%;
+		margin-left:20%;
+		margin-top:0.5vw;
 	}
 
 	label {
 		display: inline-block;
 		width: 100%;
-		font-size: small;
+		font-size:1.5vh;
 		text-align: left;
 		padding-right: 3%;
 		margin: 5px;
@@ -57,7 +60,7 @@ $green-border: #72B372;
 		width: 100% !important;
 		outline: none;
 		border-radius: 10px;
-		padding: 5px;
+		padding: 3px;
 		box-shadow: 0px 2px 5px grey;
 		border: blue;
 	}
@@ -75,8 +78,8 @@ $green-border: #72B372;
 	input[type=number] {
 		width: 50%;
 		outline: none;
-		border-radius: 10px;
-		padding: 5px;
+		border-radius: 8px;
+		padding: 3px;
 		box-shadow: 0px 2px 5px grey;
 		border: blue;
 	}
@@ -86,24 +89,31 @@ $green-border: #72B372;
 		background: rgb(193, 222, 231);
 	}
 
+	select{
+		width: 100%;
+		font-size: 1vw;
+		padding:3px;
+	}
+
 	.button {
 		background-color: #002333 !important;
-		font-size: small;
-		font-weight: 200;
+		font-size: 1vw;
+		font-weight: 100;
 		border-radius: 13px;
 		color: white;
-		width: 60px;
-		padding: 7px;
+		width: 50px;
+		height:30px;
+		padding: 3px;
 		float: left;
 		margin-right: 0.7rem;
-		margin-left: 2rem;
+		margin-left: 1.5rem;
 		margin-top: 1.2rem;
 		border: 1px solid rgb(185, 217, 228);
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	}
 	#bdm-form{
 		div{
-			margin-top: 0px;
+			margin-top:1vw;
 		}
 	}
 
@@ -222,8 +232,7 @@ $green-border: #72B372;
 }
 
 .label-bdm {
-	font-size: 1rem !important;
-
+	font-size: 0.7rem !important;
 	.label-bdm-input {
 		vertical-align: middle;
 		-webkit-appearance: none;
@@ -261,6 +270,7 @@ $green-border: #72B372;
 	flex-direction: column;
 	padding-top: 0px;
 	margin-left: 0px !important;
+	margin-top:0px!important
 }
 
 .select-btn {
