@@ -9,9 +9,9 @@ import {
   SidebarNav,
   SidebarWrap,
   UserLoggedInSection,
-} from "./Value";
+} from "../../utils/Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
-import { Menu, MenuLink, PrimaryNav } from "../NavigationMenu/Value";
+import { Menu, MenuLink, PrimaryNav } from "../../utils/Value";
 import { Navbar, Image } from "react-bootstrap";
 import axios from "axios";
 

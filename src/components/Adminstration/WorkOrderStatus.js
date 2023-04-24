@@ -6,7 +6,7 @@ import {
   ModalFormButton,
   ModalHeading,
   ModalIcon,
-} from "../NavigationMenu/Value";
+} from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";

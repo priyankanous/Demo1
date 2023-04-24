@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { ModalFormButton, ModalHeading, ModalIcon, NotificationArrowIcons } from '../NavigationMenu/Value';
+import { ModalFormButton, ModalHeading, ModalIcon, NotificationArrowIcons } from '../../utils/Value';
 import { AiOutlineRight,AiOutlineCaretRight, AiOutlineCaretLeft, AiOutlineBold, AiOutlineItalic, AiOutlineOrderedList, AiOutlineAlignLeft, AiOutlineAlignCenter, AiOutlinePaperClip, AiOutlineUnderline, AiFillFileText, AiFillQuestionCircle, AiOutlineSearch } from "react-icons/ai"
 
 

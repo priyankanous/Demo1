@@ -7,7 +7,7 @@ import {
   TableHeadingButton,
   TableHeadingButtonPlusIcon,
   TableButtons,
-} from "../NavigationMenu/Value";
+} from "../../utils/Value";
 
 export function BaseComponent(props) {
   return (
