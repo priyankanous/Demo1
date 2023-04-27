@@ -5,7 +5,7 @@ import {
   modalStyleObject,
   notificationModalStyleObj,
 } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import EmailNotificationSetup from "./EmailNotificationSetup";
 
