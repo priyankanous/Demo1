@@ -7,8 +7,6 @@ import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
 
-
-
 function Bdm() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
