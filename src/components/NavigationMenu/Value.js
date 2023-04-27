@@ -108,7 +108,7 @@ export const Menu = styled.div`
 
 export const ModalHeading = styled.h5`
   display: inline;
-  margin-left:1vw;
+  margin-left: 1vw;
 `;
 
 export const ModalIcon = styled.i`
@@ -140,6 +140,7 @@ export const TableHeadingButton = styled.button`
   margin: 1vw;
   cursor: pointer;
 `;
+
 export const TableHeadingButtonPlusIcon = styled.i`
   margin: 0.4rem;
   vertical-align: middle;

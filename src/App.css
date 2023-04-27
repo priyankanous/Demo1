@@ -90,13 +90,13 @@ h3 {
   border-radius: 30px;
   color: white;
   margin-bottom: 10%;
-  padding: 15px 32px;
+  padding: 5px 32px;
   float: right;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
+  margin: 4px 2px 3px 8px;
   cursor: pointer;
 }
 .subDiv {
@@ -118,8 +118,7 @@ h3 {
 }
 
 table {
-  overflow-y: auto;
-  padding-top: 10px;
+  overflow-x: auto;
   border-collapse: collapse;
   width: 94%;
   margin-left: 3%;
@@ -133,14 +132,39 @@ th {
   padding: 8px;
   padding-left: 50px;
   background-color: #23c5c7;
+  /* #23c5c7 */
 }
+.trrevenue {
+  border-radius: 20px;
+  box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
+}
+.tdrevenue {
+  text-align: right;
+  padding: 6px 1px 6px 20px;
+}
+.threvenue {
+  text-align: right;
+  position: sticky;
+  top: 0;
+  color: black;
+  padding: 4px;
+  padding-left: 50px;
+  background-color: #f1f2f2;
 
+  /* #23c5c7 */
+}
+.revenueinput {
+  margin-top: 11px;
+  margin-right: 7px;
+}
 td {
   text-align: left;
   padding: 6px;
   padding-left: 50px;
 }
-
+#hidden {
+  display: none;
+}
 tr:nth-child(even) {
   background-color: #d6eeee;
 }
@@ -172,7 +196,7 @@ tr:nth-child(even) {
 }
 
 select {
-  width: 53%;
+  width: 17%;
   outline: none;
   border-radius: 10px;
   padding: 5px;
@@ -214,7 +238,9 @@ filter .dropdown {
   cursor: pointer;
   box-shadow: 0px 2px 5px grey;
 }
-
+a:hover {
+  cursor: pointer;
+}
 input {
   outline: none;
   border-radius: 10px;
