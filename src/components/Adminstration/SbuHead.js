@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
@@ -366,15 +366,9 @@ function Tr({
               >
                 <AiIcons.AiOutlineEdit /> Edit
               </a>
-              <a
-                onClick={() => {
-                  deleteSelectedLocation(sbuHeadId);
-                }}
-                href="#about"
-                style={{ padding: "5px" }}
-              >
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
+              {/* <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
+                                <AiIcons.AiOutlineDelete /> Delete
+                            </a> */}
               <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {

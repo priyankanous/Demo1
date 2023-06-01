@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -104,9 +104,9 @@ function GlobalLeaveLossFactor() {
     );
 
     const actualDataObject = response.data.data;
-    const array = [];
+    const actualDataArray = [];
     actualDataObject.map((copiedData, index) => {
-      array.push({
+      actualDataArray.push({
         ...globalLeaveLossFactorData,
         month: copiedData.month,
         offShore: copiedData.offShore,
@@ -124,7 +124,7 @@ function GlobalLeaveLossFactor() {
 
     const resOfPOST = await axios.post(
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/save-all",
-      array
+      actualDataArray
     );
   };
   return (

@@ -4,10 +4,8 @@ import { AiFillPlusSquare } from "react-icons/ai";
 import {
   TableHeadingSection,
   TableHeading,
-  TableHeadingButton,
-  TableHeadingButtonPlusIcon,
-} from "../NavigationMenu/Value";
-import { auto } from "@popperjs/core";
+  TableButtons,
+} from "../../utils/Value";
 
 export function AdminBaseComponent(props) {
   const [copyData, setCopyData] = useState({
@@ -24,10 +22,7 @@ export function AdminBaseComponent(props) {
     <div className="table_container">
       <TableHeadingSection>
         <TableHeading>Administration - {props.field}</TableHeading>
-        <TableHeadingButton onClick={props.setIsOpen}>
-          <TableHeadingButtonPlusIcon></TableHeadingButtonPlusIcon>
-          Add New
-        </TableHeadingButton>
+        <TableButtons onClick={props.setIsOpen}>Add New</TableButtons>
       </TableHeadingSection>
       {(props.globalLeave && props.financialYearData) ||
       (props.currency && props.financialYearData) ? (
@@ -64,8 +59,8 @@ export function AdminBaseComponent(props) {
             <span style={{ paddingRight: "2%" }}>
               Copy From:{" "}
               <select
+                id="filterSelect"
                 type="text"
-                id="email"
                 onChange={(e) => {
                   setCopyData({ ...copyData, copyFromFy: e.target.value });
                 }}
@@ -83,7 +78,7 @@ export function AdminBaseComponent(props) {
               Copy To:{" "}
               <select
                 type="text"
-                id="email"
+                id="filterSelect"
                 onChange={(e) => {
                   const selectedFyId =
                     e.target.selectedOptions[0].getAttribute("data-fyId");
@@ -137,10 +132,10 @@ export function AdminBaseComponent(props) {
               {console.log("this is in BC copyFromFy", copyData.copyFromFy)}
             </span>
           </div>
-          <table style={{ overflow: auto }}>
+          <table style={{ overflow: "auto" }}>
             <tr>
               {props.columns.map((header) => {
-                return <th>{header}</th>;
+                return <th className="thadministration">{header}</th>;
               })}
             </tr>
             <tbody>
@@ -156,7 +151,7 @@ export function AdminBaseComponent(props) {
           <table style={{ fontSize: "1vw" }}>
             <tr>
               {props.columns.map((header) => {
-                return <th>{header}</th>;
+                return <th className="thadministration">{header}</th>;
               })}
             </tr>
             <tbody>

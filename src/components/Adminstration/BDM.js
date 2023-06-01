@@ -2,11 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal, { defaultStyles } from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon } from "../../utils/Value.js";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import Multiselect from "multiselect-react-dropdown";
 
 function Bdm() {
   const [data, setData] = useState(null);
@@ -25,6 +24,7 @@ function Bdm() {
   const [dropdownOpenReg, setdropdownOpenReg] = useState(false);
   const [selectedBusinessUnit, setselectedBusinessUnit] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
+  const [isEditId, setIsEditId] = useState(null);
   const month = [
     "Jan",
     "Feb",
@@ -68,10 +68,6 @@ function Bdm() {
   }, []);
 
   const postBdmData = async () => {
-    const linkedToBusinessUnit = selectedBusinessUnit.map(
-      (value) => value?.businessUnitName
-    );
-    const linkedToRegion = selectedRegion.map((value) => value?.regionName);
     const { bdmDisplayName, bdmName, activeFrom, activeUntil } = bdmFormData;
     const activeFromDt = `${
       parseInt(new Date(activeFrom).getDate()) < 10
@@ -92,15 +88,23 @@ function Bdm() {
       bdmName,
       activeFrom: activeFromDt,
       activeUntil: activeUntilDt,
-      linkedToBusinessUnit,
-      linkedToRegion,
+      businessUnits: selectedBusinessUnit,
+      regions: selectedRegion,
     };
-    const { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm",
-      bdmFromData
-    );
+    if (isEditId !== null) {
+      var { data } = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/${isEditId}`,
+        bdmFromData
+      );
+    } else {
+      var { data } = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm",
+        bdmFromData
+      );
+    }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
+      setIsEditId(null);
       setBusinessUnitLinked(false);
       setRegionLinked(false);
       setselectedBusinessUnit([]);
@@ -111,7 +115,40 @@ function Bdm() {
     }
   };
 
+  const editBDMData = async (id) => {
+    const { data } = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/${id}`
+    );
+    if (data?.data) {
+      setbdmFormData({
+        bdmName: data?.data?.bdmName,
+        bdmDisplayName: data?.data?.bdmDisplayName,
+        activeFrom: createDate(data?.data?.activeFrom),
+        activeUntil: createDate(data?.data?.activeUntil),
+      });
+      setBusinessUnitLinked(
+        data?.data?.businessUnits.length < 2 ? true : false
+      );
+      setRegionLinked(data?.data?.regions.length < 2 ? true : false);
+      setselectedBusinessUnit(data?.data?.businessUnits);
+      setSelectedRegion(data?.data?.regions);
+      setIsOpen(true);
+      setIsEditId(id);
+    }
+  };
+
+  const createDate = (date) => {
+    let splitDate = date.split("/");
+    let monthDate = `${
+      month.indexOf(splitDate[1]) + 1 < 10
+        ? "0" + String(month.indexOf(splitDate[1]) + 1)
+        : month.indexOf(splitDate[1]) + 1
+    }`;
+    return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
+  };
+
   const selectMarkDropdown = (value, type) => {
+    console.log(value);
     if (type === "bu") {
       const indexOfSelectedValue = selectedBusinessUnit.findIndex(
         (valueObj) => {
@@ -170,6 +207,22 @@ function Bdm() {
     return true;
   };
 
+  const activateDeactivate = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setIsOpen(false);
+      setBusinessUnitLinked(false);
+      setRegionLinked(false);
+      setselectedBusinessUnit([]);
+      setSelectedRegion([]);
+      setdropdownOpenBU(false);
+      setdropdownOpenReg(false);
+      fetchBdmData();
+    }
+  };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -186,7 +239,13 @@ function Bdm() {
         ]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} />;
+          return (
+            <Tr
+              data={obj}
+              editBDMData={editBDMData}
+              activateDeactivate={activateDeactivate}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
       />
@@ -292,7 +351,7 @@ function Bdm() {
                       onClick={() => {
                         setdropdownOpenBU(!dropdownOpenBU);
                       }}
-                      style={{ position: "sticky", top: "0" }}
+                      style={{ position: "sticky", top: "0", width: "100%" }}
                       className={`select-btn ${dropdownOpenBU && "open"}`}
                     >
                       <span class="btn-text">Select Business Unit</span>
@@ -325,10 +384,17 @@ function Bdm() {
                                 checkElementInArray(value, "bu") && "checked"
                               }`}
                             >
-                              <span class="checkbox">
-                                <i class="fa-solid fa-check check-icon">
-                                  <AiIcons.AiOutlineCheck />
-                                </i>
+                              <span
+                                style={{
+                                  borderRadius: isBusinessUnitLinked && "50%",
+                                }}
+                                class="checkbox"
+                              >
+                                {!isBusinessUnitLinked && (
+                                  <i class="fa-solid fa-check check-icon">
+                                    <AiIcons.AiOutlineCheck />
+                                  </i>
+                                )}
                               </span>
                               <span class="item-text">
                                 {value?.businessUnitName}
@@ -363,7 +429,7 @@ function Bdm() {
                       onClick={() => {
                         setdropdownOpenReg(!dropdownOpenReg);
                       }}
-                      style={{ position: "sticky", top: "0" }}
+                      style={{ width: "100%", position: "sticky", top: "0" }}
                       class="select-btn"
                       className={`select-btn ${dropdownOpenReg && "open"}`}
                     >
@@ -398,10 +464,17 @@ function Bdm() {
                                 checkElementInArray(value, "reg") && "checked"
                               }`}
                             >
-                              <span class="checkbox">
-                                <i class="fa-solid fa-check check-icon">
-                                  <AiIcons.AiOutlineCheck />
-                                </i>
+                              <span
+                                style={{
+                                  borderRadius: isRegionLinked && "50%",
+                                }}
+                                class="checkbox"
+                              >
+                                {!isRegionLinked && (
+                                  <i class="fa-solid fa-check check-icon">
+                                    <AiIcons.AiOutlineCheck />
+                                  </i>
+                                )}
                               </span>
                               <span class="item-text">{value?.regionName}</span>
                             </li>
@@ -440,9 +513,6 @@ function Bdm() {
                 </div>
               </form>
             </div>
-            {/* <div style={{width:'350px',float:'right',borderRadius:"5px"}}>
-              <Select isSearchable={false} options={options} />
-              </div>             */}
           </div>
         </div>
       </Modal>
@@ -451,13 +521,17 @@ function Bdm() {
 }
 function Tr({
   data: {
+    isActive,
     bdmName,
     bdmDisplayName,
     activeFrom,
     activeUntil,
-    linkedToBusinessUnit,
-    linkedToRegion,
+    businessUnits,
+    regions,
+    bdmId,
   },
+  activateDeactivate,
+  editBDMData,
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -481,30 +555,29 @@ function Tr({
   };
   return (
     <tr ref={wrapperRef}>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>{bdmName || "Unknown"}</span>
       </td>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>{bdmDisplayName || "Unknown"}</span>
       </td>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>{activeFrom}</span>
       </td>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>{activeUntil}</span>
       </td>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>
-          {linkedToBusinessUnit && linkedToBusinessUnit?.length > 1
-            ? "Multiple BU"
-            : linkedToBusinessUnit[0] || "Unknown"}
+          {(businessUnits &&
+            businessUnits.map((_) => _.businessUnitDisplayName).join(", ")) ||
+            "Unknown"}
         </span>
       </td>
-      <td>
+      <td className={!isActive && "disable-table-row"}>
         <span>
-          {linkedToRegion && linkedToRegion?.length > 1
-            ? "Multiple Region"
-            : linkedToRegion[0] || "Unknown"}
+          {(regions && regions.map((_) => _.regionDisplayName).join(", ")) ||
+            "Unknown"}
         </span>
       </td>
       <td>
@@ -514,7 +587,12 @@ function Tr({
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div style={{ float: "right" }} class="dropdown-content">
-              <a style={{ padding: "5px" }}>
+              <a
+                style={{ padding: "5px" }}
+                onClick={() => {
+                  editBDMData(bdmId);
+                }}
+              >
                 <AiIcons.AiOutlineEdit
                   onClick={() => {
                     setIsOpen(true);
@@ -522,13 +600,22 @@ function Tr({
                 />{" "}
                 Edit
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
-                <AiIcons.AiOutlineDelete /> Delete
-              </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a
+                onClick={() => {
+                  activateDeactivate(bdmId);
+                }}
+                className={isActive && "disable-table-row"}
+                style={{ padding: "5px" }}
+              >
                 <AiIcons.AiOutlineCheckCircle /> Activate
               </a>
-              <a href="#about" style={{ padding: "5px" }}>
+              <a
+                onClick={() => {
+                  activateDeactivate(bdmId);
+                }}
+                className={!isActive && "disable-table-row"}
+                style={{ padding: "5px" }}
+              >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
               </a>
             </div>

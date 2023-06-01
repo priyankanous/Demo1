@@ -3,7 +3,7 @@ import axios from "axios";
 import { AiOutlineClose, AiOutlineMore } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../NavigationMenu/Value";
+import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import { async } from "q";
@@ -17,7 +17,7 @@ function Currency() {
   const [financialYearData, setFinancialYearData] = useState([]);
   const [currencyData, setCurrencyData] = useState({
     currency: "",
-    name: "",
+    currencyName: "",
     conversionRate: "",
     symbol: "",
     financialYear: {
@@ -36,7 +36,7 @@ function Currency() {
     console.log("in the getALLGlobalLLF", e);
     await axios
       .get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financial-year/${e}`
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financialyear/${e}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
@@ -72,7 +72,9 @@ function Currency() {
         field="Currency"
         columns={["Currency", "Name", "Symbol", "Conversion Rate"]}
         data={data}
-        Tr={Tr}
+        Tr={(obj) => {
+          return <Tr data={obj} setFinancialYearData={setFinancialYearData} />;
+        }}
         setIsOpen={setIsOpen}
         currency={isCurrency}
         financialYearData={financialYearData}
@@ -174,7 +176,7 @@ function Currency() {
                     onChange={(e) => {
                       setCurrencyData({
                         ...currencyData,
-                        name: e.target.value,
+                        currencyName: e.target.value,
                       });
                     }}
                   />
@@ -236,44 +238,49 @@ function Currency() {
   );
 }
 
-function Tr({ id, name, symbol, rate }) {
+function Tr({ data: { currencyId, currencyName, conversionRate, symbol } }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdown, setDropdown] = useState(false);
-  const [responseData, setResponseData] = useState({
-    id: id,
-    name: name,
-    symbol: symbol,
-    rate: rate,
-  });
-
-  document.addEventListener("click", function handleClickOutsideBox(event) {
-    // 👇️ the element the user clicked console.log('user clicked: ', event.target);
-    const popup = document.getElementById("dropdown");
-    if (!popup.contains(event.target)) {
-      isDropdown ? setDropdown(false) : setDropdown(true);
-    }
-  });
-
+  // const [responseData, setResponseData] = useState({
+  //   id: id,
+  //   name: name,
+  //   symbol: symbol,
+  //   rate: rate,
+  // });
+  const OutsideClick = (ref) => {
+    useEffect(() => {
+      const handleOutsideClick = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown", handleOutsideClick);
+    }, [ref]);
+  };
+  const wrapperRef = useRef(null);
+  OutsideClick(wrapperRef);
   const closeDropDown = (isopen, id) => {
     isopen ? setDropdown(false) : setDropdown(true);
   };
 
   return (
-    <tr>
+    <tr ref={wrapperRef}>
       <td>
-        <span>{id || "Unknown"}</span>
+        <span>{conversionRate || "Unknown"}</span>
       </td>
       <td>
-        <span>{name || "Unknown"}</span>
+        <span>{currencyName || "Unknown"}</span>
       </td>
       <td>
         <span>{symbol || "Unknown"}</span>
       </td>
       <td>
-        <span>{rate || "Unknown"}</span>
+        <span>{currencyId || "Unknown"}</span>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
-            onClick={() => closeDropDown(isDropdown, id)}
+            onClick={(e) => {
+              closeDropDown();
+            }}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
             <div
@@ -322,51 +329,19 @@ function Tr({ id, name, symbol, rate }) {
               <form id="reg-form">
                 <div>
                   <label for="name">Currency</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.id}
-                  />
+                  <input type="text" id="id" spellcheck="false" />
                 </div>
                 <div>
                   <label for="email">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    value={responseData.name}
-                    onChange={(e) =>
-                      setResponseData({ ...responseData, name: e.target.value })
-                    }
-                  />
+                  <input type="text" id="name" spellcheck="false" />
                 </div>
                 <div>
                   <label for="username">Symbol</label>
-                  <input
-                    type="text"
-                    id="symbol"
-                    spellcheck="false"
-                    value={responseData.symbol}
-                    onChange={(e) =>
-                      setResponseData({
-                        ...responseData,
-                        symbol: e.target.value,
-                      })
-                    }
-                  />
+                  <input type="text" id="symbol" spellcheck="false" />
                 </div>
                 <div>
                   <label for="username">Conversion Rate</label>
-                  <input
-                    type="text"
-                    id="rate"
-                    spellcheck="false"
-                    value={responseData.rate}
-                    onChange={(e) =>
-                      setResponseData({ ...responseData, rate: e.target.value })
-                    }
-                  />
+                  <input type="text" id="rate" spellcheck="false" />
                 </div>
                 <div>
                   <label>
