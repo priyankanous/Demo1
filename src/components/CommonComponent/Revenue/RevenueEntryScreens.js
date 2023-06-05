@@ -12,12 +12,13 @@ import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { connect } from "react-redux";
 import { getFinancialYearData } from "../../../actions/financial-year";
-
+import { saveResourceData } from "../../../actions/resource";
 function RevenueEntryScreens(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputNumber, setInputNumber] = useState("");
   const [gridItems, setGridItems] = useState([]);
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+  const [resourceData, setResourceData] = useState([]);
   const [pricingType, setPricingType] = useState("T & M");
 
   useEffect(() => {
@@ -31,13 +32,20 @@ function RevenueEntryScreens(props) {
     setPricingType(e.target.value);
   };
 
+  const updateResourceData = (data) => {
+    setResourceData(data);
+  };
   const generateGrid = () => {
     const items = [];
 
     if (pricingType == "T & M") {
       for (let i = 0; i < inputNumber; i++) {
         items.push(
-          <RevenueResourceAccordian i={i} formData={tabIndex.formData} />
+          <RevenueResourceAccordian
+            id={i}
+            formData={tabIndex.formData}
+            updateResourceData={updateResourceData}
+          />
         );
       }
     } else {
@@ -50,7 +58,12 @@ function RevenueEntryScreens(props) {
 
     setGridItems(items);
   };
-
+  const saveResourceDetails = () => {
+    props.saveResourceData({
+      resourceData: props.resourceData,
+      formData: tabIndex.formData,
+    });
+  };
   return (
     <React.Fragment>
       {console.log("This is formData", tabIndex.formData)}
@@ -164,6 +177,7 @@ function RevenueEntryScreens(props) {
                         setIsOpen={setIsOpen}
                         setTabIndex={setTabIndex}
                         tabIndex={tabIndex}
+                        pricingType={pricingType}
                       />
                     )}
                     {pricingType == "FP" && (
@@ -171,6 +185,7 @@ function RevenueEntryScreens(props) {
                         setGridItems={setGridItems}
                         setIsOpen={setIsOpen}
                         setTabIndex={setTabIndex}
+                        pricingType={pricingType}
                       />
                     )}
                   </TabPanel>
@@ -219,7 +234,14 @@ function RevenueEntryScreens(props) {
                         justifyContent: "center",
                       }}
                     >
-                      <button className="button">Save</button>
+                      <button
+                        className="button"
+                        onClick={() => {
+                          saveResourceDetails();
+                        }}
+                      >
+                        Save
+                      </button>
                       <button
                         className="button"
                         onClick={() => {
@@ -244,11 +266,13 @@ function RevenueEntryScreens(props) {
 const mapStateToProps = (state) => {
   return {
     financialYear: state.financialYear,
+    resourceData: state.resource.resourceData,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getFinacialYearData: () => dispatch(getFinancialYearData()),
+    saveResourceData: (data) => dispatch(saveResourceData(data)),
   };
 };
 

@@ -10,6 +10,7 @@ import buData from "./bu";
 import locationData from "./location";
 import businessTypeData from "./businessType";
 import cocPracticeData from "./cocPractice";
+import resource from "./resource";
 
 export default combineReducers({
   financialYear,
@@ -23,4 +24,5 @@ export default combineReducers({
   locationData,
   businessTypeData,
   cocPracticeData,
+  resource,
 });

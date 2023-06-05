@@ -15,18 +15,18 @@ const ResourceEntryForm = (props) => {
   const [currencyData, setCurrencyData] = useState();
   const array = [];
   const [formData, setFormData] = useState({
-    account: "",
-    opportunityName: "",
-    bdm: "",
+    account: { accountID: "", accountName: "" },
+    opportunity: { opportunityID: "", opportunityName: "" },
+    bdm: { bdmID: "", bdmName: "" },
     projectCode: "",
     projectStartDate: "",
     projectEndDate: "",
-    currency: "",
-    probability: "",
-    region: "",
-    workOrder: "",
-    workOrderEndDate: "",
-    workOrderStatus: "",
+    currency: { currencyID: "", currencyName: "" },
+    probability: { probabilityTypeID: "", probabilityTypeName: "" },
+    region: { regionID: "", regionName: "" },
+    workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
+    financialYear: { financialYearID: "", financialYearName: "" },
+    pricingType: props.pricingType,
   });
   const getAllCurrencyForFy = async (e) => {
     console.log("in the getALLGlobalLLF", e);
@@ -59,16 +59,29 @@ const ResourceEntryForm = (props) => {
             required
             onChange={(e) => {
               getAllCurrencyForFy(e.target.value);
+              const selectedFyId =
+                e.target.selectedOptions[0].getAttribute("data-fyId");
+              setFormData({
+                ...formData,
+                financialYear: {
+                  ...formData.financialYear,
+                  financialYearID: selectedFyId,
+                  financialYearName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -79,17 +92,29 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, account: e.target.value });
+              const selectedFyId =
+                e.target.selectedOptions[0].getAttribute("data-fyId");
+              setFormData({
+                ...formData,
+                account: {
+                  ...formData.account,
+                  accountID: selectedFyId,
+                  accountName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -100,17 +125,29 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, opportunityName: e.target.value });
+              const selectedFyId =
+                e.target.selectedOptions[0].getAttribute("data-fyId");
+              setFormData({
+                ...formData,
+                opportunity: {
+                  ...formData.opportunity,
+                  opportunityID: selectedFyId,
+                  opportunityName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -121,7 +158,16 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, bdm: e.target.value });
+              const selectedbdmId =
+                e.target.selectedOptions[0].getAttribute("data-bdmId");
+              setFormData({
+                ...formData,
+                bdm: {
+                  ...formData.bdm,
+                  bdmID: selectedbdmId,
+                  bdmName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -129,7 +175,7 @@ const ResourceEntryForm = (props) => {
             </option>
             {props.bdmData.bdmData &&
               props.bdmData.bdmData.map((obj, id) => (
-                <option>{obj.bdmName}</option>
+                <option data-bdmId={obj.bdmId}>{obj.bdmName}</option>
               ))}
           </select>
         </div>
@@ -147,11 +193,14 @@ const ResourceEntryForm = (props) => {
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -168,11 +217,14 @@ const ResourceEntryForm = (props) => {
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -189,11 +241,14 @@ const ResourceEntryForm = (props) => {
             <option value="" disabled selected hidden>
               Select
             </option>
-            {props.financialYear.financialYear &&
-              props.financialYear.financialYear.map((fyData, index) => {
-                const fyNameData = fyData.financialYearName;
-                return <option key={index}>{fyNameData}</option>;
-              })}
+            {props.financialYear.financialYear.map((fyData, index) => {
+              const fyNameData = fyData.financialYearName;
+              return (
+                <option data-fyId={fyData.financialYearId} key={index}>
+                  {fyNameData}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>
@@ -204,7 +259,16 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, currency: e.target.value });
+              const selectedcurrencyId =
+                e.target.selectedOptions[0].getAttribute("data-currencyId");
+              setFormData({
+                ...formData,
+                currency: {
+                  ...formData.currency,
+                  currencyID: selectedcurrencyId,
+                  currencyName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -212,7 +276,9 @@ const ResourceEntryForm = (props) => {
             </option>
             {currencyData &&
               currencyData.map((obj, id) => (
-                <option>{obj.currencyName}</option>
+                <option data-currencyID={obj.currencyId}>
+                  {obj.currencyName}
+                </option>
               ))}
           </select>
         </div>
@@ -224,7 +290,16 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, probability: e.target.value });
+              const selectedprobabilityId =
+                e.target.selectedOptions[0].getAttribute("data-probabilityId");
+              setFormData({
+                ...formData,
+                probability: {
+                  ...formData.probability,
+                  probabilityTypeID: selectedprobabilityId,
+                  probabilityTypeName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -232,7 +307,9 @@ const ResourceEntryForm = (props) => {
             </option>
             {props.probabilityData.probabilityData &&
               props.probabilityData.probabilityData.map((obj, id) => (
-                <option>{obj.probabilityTypeName}</option>
+                <option data-probabilityId={obj.probabilityTypeId}>
+                  {obj.probabilityTypeName}
+                </option>
               ))}
           </select>
         </div>
@@ -244,7 +321,16 @@ const ResourceEntryForm = (props) => {
             id="revenue-select"
             required
             onChange={(e) => {
-              setFormData({ ...formData, region: e.target.value });
+              const selectedregionId =
+                e.target.selectedOptions[0].getAttribute("data-regionId");
+              setFormData({
+                ...formData,
+                region: {
+                  ...formData.region,
+                  regionID: selectedregionId,
+                  regionName: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -252,7 +338,7 @@ const ResourceEntryForm = (props) => {
             </option>
             {props.regionData.regionData &&
               props.regionData.regionData.map((obj, id) => (
-                <option>{obj.regionName}</option>
+                <option data-regionId={obj.regionId}>{obj.regionName}</option>
               ))}
           </select>
         </div>
@@ -261,7 +347,15 @@ const ResourceEntryForm = (props) => {
           <select
             id="revenue-select"
             onChange={(e) => {
-              setFormData({ ...formData, workOrder: e.target.value });
+              const selectedworkOrderId =
+                e.target.selectedOptions[0].getAttribute("data-workOrderId");
+              setFormData({
+                ...formData,
+                workOrder: {
+                  ...formData.workOrder,
+                  workOrderID: selectedworkOrderId,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -269,7 +363,9 @@ const ResourceEntryForm = (props) => {
             </option>
             {props.workOrderData.workOrderData &&
               props.workOrderData.workOrderData.map((obj, id) => (
-                <option>{obj.woStatusName}</option>
+                <option data-workOrderId={obj.woStatusId}>
+                  {obj.woStatusName}
+                </option>
               ))}
           </select>
         </div>
@@ -278,7 +374,13 @@ const ResourceEntryForm = (props) => {
           <select
             id="revenue-select"
             onChange={(e) => {
-              setFormData({ ...formData, workOrderEndDate: e.target.value });
+              setFormData({
+                ...formData,
+                workOrder: {
+                  ...formData.workOrder,
+                  workOrderEndDate: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
@@ -295,7 +397,13 @@ const ResourceEntryForm = (props) => {
           <select
             id="revenue-select"
             onChange={(e) => {
-              setFormData({ ...formData, workOrderStatus: e.target.value });
+              setFormData({
+                ...formData,
+                workOrder: {
+                  ...formData.workOrder,
+                  workOrderStatus: e.target.value,
+                },
+              });
             }}
           >
             <option value="" disabled selected hidden>
