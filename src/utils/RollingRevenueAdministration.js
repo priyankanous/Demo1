@@ -15,11 +15,9 @@ import Currency from "../components/Adminstration/Currency";
 import GlobalLeaveLossFactor from "../components/Adminstration/GlobalLeaveLossFactor";
 import NotificationConfig from "../components/Adminstration/NotificationConfig";
 import BuisnessUnit from "../components/Adminstration/BusinessUnit";
-import HolidayCalender from "../components/CommonComponent/Revenue/HolidayCalender"
-
 
 const RollingRevenueAdministration = {
-    BuisnessUnit,Region,Organization,Sbu,SbuHead,Location,Bdm,Probability,BusinessType,CocPractice,PricingType,WorkOrderStatus,Status,FinancialYear,Currency,NotificationConfig,GlobalLeaveLossFactor,HolidayCalender
+    BuisnessUnit,Region,Organization,Sbu,SbuHead,Location,Bdm,Probability,BusinessType,CocPractice,PricingType,WorkOrderStatus,Status,FinancialYear,Currency,NotificationConfig,GlobalLeaveLossFactor
 }
 
 export default RollingRevenueAdministration;

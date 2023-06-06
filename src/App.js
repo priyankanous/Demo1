@@ -5,8 +5,6 @@ import HomePage from "./components/Home/HomePage";
 import "./css/style.scss";
 import RollingRevenueAdministration from "./utils/RollingRevenueAdministration";
 import { RevenueEntry } from "./utils/RevenueEntry";
-import HolidayCalender from "./components/CommonComponent/Revenue/HolidayCalender";
-
 
 function App() {
   return (
@@ -83,8 +81,6 @@ function App() {
           component={RollingRevenueAdministration.GlobalLeaveLossFactor}
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
-        <Route path="/calender/holidaycalender" component={RollingRevenueAdministration.HolidayCalender}/>
-
       </Switch>
     </Router>
   );
