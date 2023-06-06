@@ -153,7 +153,7 @@ function TrForRevenue(props) {
                         <span>{obj.billingRate || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.workOrderNumber || "Unknown"}</span>
+                        <span>{obj.allocation || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
                         <span>{obj.leaveLossFactor || "Unknown"}</span>

@@ -321,7 +321,7 @@ const RevenueResourceAccordian = (props) => {
               >
                 <input
                   id="resourceinput"
-                  type="text"
+                  type="number"
                   placeholder="Leave Loss Factor"
                   value={resourseDetails.leaveLossFactor}
                   onChange={(e) => {
