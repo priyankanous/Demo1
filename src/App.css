@@ -10,7 +10,7 @@
   color: #072a3a;
 } */
 
-*{
+* {
   /* zoom: 90%; */
   /* background-color: #0a8b9c; */
 }
@@ -90,7 +90,7 @@ h3 {
   border-radius: 30px;
   color: white;
   margin-bottom: 10%;
-  padding: 15px 32px;
+  padding: 8px 30px;
   float: right;
   text-align: center;
   text-decoration: none;
@@ -107,44 +107,165 @@ h3 {
 }
 
 .table_container {
-  background-color: white;
+  overflow: auto;
+  background-color: rgb(244, 243, 243);
   position: absolute;
-  width: 76%;
+  width: 78%;
   height: 82%;
   left: 20%;
   top: 15%;
   box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
   border-radius: 20px;
 }
+.table_main_container {
+  overflow: auto;
+  background-color: rgb(244, 243, 243);
+  position: absolute;
+  width: 82%;
+  height: 74%;
+  left: 17.5%;
+  top: 15%;
+}
+.revenue_table_container {
+  overflow: auto;
+  background-color: rgb(244, 243, 243);
+  position: absolute;
+  width: 104%;
+  left: -2%;
+  height: 70%;
+  top: 28%;
+}
+.revenue_table_container::-webkit-scrollbar {
+  width: 10px;
+}
+.revenue_table_container::-webkit-scrollbar-track {
+  background-color: rgb(193, 191, 191);
+}
+.revenue_table_container::-webkit-scrollbar-thumb {
+  background: #007a7e;
+  border-radius: 25px;
+}
 
 table {
-  overflow-y: auto;
-  padding-top: 10px;
+  overflow-x: auto;
   border-collapse: collapse;
   width: 94%;
   margin-left: 3%;
 }
+#revenuetable {
+  width: 50%;
+}
 
-th {
-  text-align: left;
+.thadministration {
+  font-family: Sans-serif;
+  font-size: smaller;
+  text-align: center;
   position: sticky;
   top: 0;
   color: black;
   padding: 8px;
-  padding-left: 50px;
-  background-color: #23C5C7;
+  background-color: #23c5c7;
+}
+.trrevenue {
+  border-radius: 30px;
+  background-color: white;
+  /* box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3); */
+}
+.trmilestone {
+  background-color: white;
+  box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
+}
+.rowtable {
+  margin: 3%;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.iconsColumn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 4px;
+}
+.nestedtablebgrevenue {
+  margin-top: 2%;
+  background-color: white;
+}
+.tdrevenue {
+  text-align: right;
 }
 
+.threvenue {
+  font-family: Sans-serif;
+  border-collapse: collapse;
+  position: sticky;
+  font-size: smaller;
+  text-align: center;
+  top: 0;
+  color: black;
+  padding: 8px;
+  background-color: #23c5c7;
+}
+.threvenueposition {
+  font-family: Sans-serif;
+  font-size: small;
+  text-align: center;
+  top: 0;
+  color: black;
+  padding: 9px;
+  background-color: #23c5c7;
+}
+.revenueinput {
+  margin-top: 11px;
+  margin-right: 7px;
+}
 td {
-  text-align: left;
+  text-align: center;
   padding: 6px;
-  padding-left: 50px;
+}
+.grid-container {
+  display: inline-grid;
+  grid-template-columns: 50% 50% 50%;
+}
+.grid-item {
+  grid-column-end: span 3;
+}
+.resoucegrid-container {
+  display: inline-grid;
+  grid-template-columns: 50% 50% 50% 50% 50% 50% 50%;
+  grid-template-rows: auto;
+  grid-column-end: span 3;
+  gap: 3px 30px;
 }
 
+.tandmtr {
+  background-color: white;
+}
+.required-field::after {
+  content: "*";
+  font-size: medium;
+  color: red;
+}
+#revenue-select {
+  width: 150px;
+}
+#revenueentry-select {
+  width: 100px;
+}
+#revenueentry-input {
+  width: 1000px;
+  padding-left: 5px;
+  margin-top: 2px;
+}
+#hidden {
+  display: none;
+}
 tr:nth-child(even) {
   background-color: #d6eeee;
 }
-
+label {
+  font-size: small;
+  font-weight: 550;
+}
 .App {
   text-align: center;
 }
@@ -171,13 +292,30 @@ tr:nth-child(even) {
   color: white;
 }
 
-select {
-  width: 53%;
+.selectrevenue {
+  text-align: center;
+  width: 20%;
   outline: none;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0px 2px 5px grey;
   border: blue;
+}
+select {
+  text-align: center;
+  width: 144%;
+  outline: none;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0px 2px 5px grey;
+  border: blue;
+}
+#milestoneselect {
+  width: 108px;
+  background-color: white;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px 0px;
+  padding: 0px;
 }
 
 .filter {
@@ -214,13 +352,47 @@ filter .dropdown {
   cursor: pointer;
   box-shadow: 0px 2px 5px grey;
 }
-
+a:hover {
+  cursor: pointer;
+}
+a {
+  padding-left: 4px;
+}
 input {
   outline: none;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0px 2px 5px grey;
   border: blue;
+}
+#milestoneinput {
+  width: 98px !important;
+  outline: none;
+  border-radius: 0px;
+  padding: 0px;
+  box-shadow: 0px 0px 0px;
+  border: blue;
+}
+#resourceinput {
+  width: 110px !important;
+  outline: none;
+  border-radius: 0px;
+  padding: 0px;
+  box-shadow: 0px 0px 0px;
+  border: blue;
+}
+#accordian {
+  margin-left: -343px;
+}
+#accordianItem {
+  width: 1px;
+}
+#accordianItemHeading {
+  padding-top: 0.5px;
+  width: 948px;
+  height: 30px;
+  text-align: center;
+  background-color: #23c5c7;
 }
 
 .App-link {

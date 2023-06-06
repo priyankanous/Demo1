@@ -3,23 +3,30 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
-import {
-  MemoizedBaseComponent,
-  BaseComponent,
-} from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
 function GlobalLeaveLossFactor() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState({
+    actualDataObject: [],
+    financialYearData: [],
+  });
+
   const [isOpen, setIsOpen] = useState(false);
   const [isGlobalLeave] = useState(true);
-  const [month, setMonth] = useState(null);
-  const [onSite, setOnSite] = useState(null);
-  const [offShore, setOffShore] = useState(null);
-  const [financialYear, setFinancialYear] = useState(null);
+  const [globalLeaveLossFactorData, setGlobalLeaveLoseFactorData] = useState({
+    month: "",
+    onSite: "",
+    offShore: "",
+    financialYear: {
+      financialYearId: "",
+      financialYearName: "",
+      financialYearCustomName: "",
+      startingFrom: "",
+      endingOn: "",
+    },
+  });
   const [financialYearData, setFinancialYearData] = useState([]);
 
   useEffect(() => {
@@ -27,28 +34,21 @@ function GlobalLeaveLossFactor() {
   }, []);
 
   const getAllGlobalLLF = async (e) => {
-    console.log("in the getALLGlobalLLF");
+    console.log("in the getALLGlobalLLF", e);
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${e}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        setData(actualDataObject);
+        setData({ ...data, actualDataObject: actualDataObject });
       });
   };
   const AddDataToGlobalLLF = async (e) => {
-    const post = {
-      month: month,
-      onSite: onSite,
-      offShore: offShore,
-      financialYear: financialYear,
-    };
-
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
-        post
+        globalLeaveLossFactorData
       );
       setIsOpen(false);
     } catch {}
@@ -62,10 +62,71 @@ function GlobalLeaveLossFactor() {
       .then((response) => {
         console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
+        setData({ ...data, financialYearData: actualDataObject });
         setFinancialYearData(actualDataObject);
       });
   };
+  const openTheModalWithValues = async (e, id) => {
+    console.log(id, "HERE");
+    await axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${id}`
+      )
+      .then((response) => {
+        console.log("In the open modal", response);
+        response.data.data.map((editData, index) => {
+          console.log("this is month", editData.month);
+          setGlobalLeaveLoseFactorData({
+            ...globalLeaveLossFactorData,
+            month: editData.month,
+            onSite: editData.onSite,
+            offShore: editData.onSite,
+            financialYear: {
+              ...globalLeaveLossFactorData,
+              financialYearId: editData.financialYear.financialYearId,
+              financialYearName: editData.financialYear.financialYearName,
+              financialYearCustomName:
+                editData.financialYear.financialYearCustomName,
+              startingFrom: editData.financialYear.startingFrom,
+              endingOn: editData.financialYear.endingOn,
+            },
+          });
+        });
+      });
+    setIsOpen(true);
+  };
 
+  const copyFromFyToNewFy = async (copyData) => {
+    console.log("in copy functionn first", copyData);
+
+    const response = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${copyData.copyFromFy}`
+    );
+
+    const actualDataObject = response.data.data;
+    const actualDataArray = [];
+    actualDataObject.map((copiedData, index) => {
+      actualDataArray.push({
+        ...globalLeaveLossFactorData,
+        month: copiedData.month,
+        offShore: copiedData.offShore,
+        onSite: copiedData.onSite,
+        financialYear: {
+          ...globalLeaveLossFactorData.financialYear,
+          financialYearName: copyData.copyToFy.financialYearName,
+          financialYearId: copyData.copyToFy.financialYearId,
+          financialYearCustomName: copyData.copyToFy.financialYearCustomName,
+          startingFrom: copyData.copyToFy.startingFrom,
+          endingOn: copyData.copyToFy.endingOn,
+        },
+      });
+    });
+
+    const resOfPOST = await axios.post(
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/save-all",
+      actualDataArray
+    );
+  };
   return (
     <div>
       <MemoizedBaseComponent
@@ -73,12 +134,19 @@ function GlobalLeaveLossFactor() {
         columns={["#", "Month", "Offshore", "Onshore"]}
         data={data}
         Tr={(obj) => {
-          return <Tr data={obj} setFinancialYearData={setFinancialYearData} />;
+          return (
+            <Tr
+              data={obj}
+              setFinancialYearData={setFinancialYearData}
+              openTheModalWithValues={openTheModalWithValues}
+            />
+          );
         }}
         setIsOpen={setIsOpen}
         globalLeave={isGlobalLeave}
         financialYearData={financialYearData}
         getAllGlobalLLF={getAllGlobalLLF}
+        copyFromFyToNewFy={copyFromFyToNewFy}
       />
 
       <Modal
@@ -102,9 +170,36 @@ function GlobalLeaveLossFactor() {
                 <div>
                   <label for="name">Financial Year</label>
                   <select
-                  style={{width:'100%'}}
+                    style={{ width: "100%" }}
+                    value={
+                      globalLeaveLossFactorData.financialYear.financialYearName
+                    }
                     onChange={(e) => {
-                      setFinancialYear(e.target.value);
+                      const selectedFyId =
+                        e.target.selectedOptions[0].getAttribute("data-fyId");
+                      const selectedfyDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-fyDispName"
+                        );
+                      const selectedFyStartingFrom =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-fyStartingFrom"
+                        );
+                      const selectedfyEndingOn =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-fyEndingOn"
+                        );
+                      setGlobalLeaveLoseFactorData({
+                        ...globalLeaveLossFactorData,
+                        financialYear: {
+                          ...globalLeaveLossFactorData.financialYear,
+                          financialYearId: selectedFyId,
+                          financialYearName: e.target.value,
+                          financialYearCustomName: selectedfyDispName,
+                          startingFrom: selectedFyStartingFrom,
+                          endingOn: selectedfyEndingOn,
+                        },
+                      });
                     }}
                   >
                     <option value="" disabled selected hidden>
@@ -112,7 +207,21 @@ function GlobalLeaveLossFactor() {
                     </option>
                     {financialYearData.map((fyData, index) => {
                       const fyNameData = fyData.financialYearName;
-                      return <option key={index}>{fyNameData}</option>;
+                      const fyId = fyData.financialYearId;
+                      const fyDispName = fyData.financialYearCustomName;
+                      const fyStartingFrom = fyData.startingFrom;
+                      const fyEndingOn = fyData.endingOn;
+                      return (
+                        <option
+                          data-fyId={fyId}
+                          data-fyDispName={fyDispName}
+                          data-fyStartingFrom={fyStartingFrom}
+                          data-fyEndingOn={fyEndingOn}
+                          key={index}
+                        >
+                          {fyNameData}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>
@@ -122,34 +231,45 @@ function GlobalLeaveLossFactor() {
                     type="text"
                     id="email"
                     spellcheck="false"
+                    value={globalLeaveLossFactorData.month}
                     onChange={(e) => {
-                      setMonth(e.target.value);
+                      setGlobalLeaveLoseFactorData({
+                        ...globalLeaveLossFactorData,
+                        month: e.target.value,
+                      });
                     }}
                   />
                 </div>
                 <div>
-                  <label for="email">OnSite</label>
+                  <label for="email">OnSite (%)</label>
                   <input
                     type="number"
                     id="email"
                     spellcheck="false"
+                    value={globalLeaveLossFactorData.onSite}
                     onChange={(e) => {
-                      setOnSite(e.target.value);
+                      setGlobalLeaveLoseFactorData({
+                        ...globalLeaveLossFactorData,
+                        onSite: e.target.value,
+                      });
                     }}
-                  />{" "}
-                  <span style={{textAlign:"start"}}>%</span>
+                  />
+                  <span style={{ textAlign: "start" }}></span>
                 </div>
                 <div>
-                  <label for="email">OffShore</label>
+                  <label for="email">OffShore (%)</label>
                   <input
                     type="number"
                     id="email"
                     spellcheck="false"
+                    value={globalLeaveLossFactorData.offShore}
                     onChange={(e) => {
-                      setOffShore(e.target.value);
+                      setGlobalLeaveLoseFactorData({
+                        ...globalLeaveLossFactorData,
+                        offShore: e.target.value,
+                      });
                     }}
-                  />{" "}
-                  %
+                  />
                 </div>
                 <div>
                   <label>
@@ -182,6 +302,7 @@ function GlobalLeaveLossFactor() {
 
 function Tr({
   setFinancialYearData,
+  openTheModalWithValues,
   data: { leaveLossFactorId, month, onSite, offShore, financialYear },
 }) {
   const [isDropdown, setDropdown] = useState(false);
@@ -246,8 +367,8 @@ function Tr({
             <div style={{ float: "right" }} class="dropdown-content">
               <a
                 style={{ padding: "5px" }}
-                onClick={() => {
-                  setIsOpen(true);
+                onClick={(e) => {
+                  openTheModalWithValues(e, financialYear.financialYearName);
                 }}
               >
                 <AiIcons.AiOutlineEdit />
@@ -290,7 +411,7 @@ function Tr({
                     type="text"
                     id="id"
                     spellcheck="false"
-                    value={responseData.financialYear}
+                    value={responseData.financialYear.financialYearName}
                   />
                 </div>
                 <div>
@@ -331,7 +452,7 @@ function Tr({
                       })
                     }
                   />{" "}
-                  <span >%</span>
+                  <span>%</span>
                 </div>
                 <div>
                   <label for="email">OnSite</label>
