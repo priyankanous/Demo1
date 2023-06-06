@@ -48,7 +48,7 @@ function TrForRevenue(props) {
       // response.data.data.opportunities.map((obj, id) => {
       //   return setOpportunityData(obj);
       // });
-      if (e.pricingType == "T&M") {
+      if (e.pricingType == "T & M") {
         setResourceData(response.data.data.tmResourceEntries);
       } else {
         setResourceData(response.data.data.fpResourceEntries);
@@ -130,6 +130,7 @@ function TrForRevenue(props) {
                 })}
               </tr>
               <tbody>
+                {console.log("IMPPP RESOURCE DATA", resourceData)}
                 {resourceData.length > 0 &&
                   resourceData.map((obj, id) => (
                     <tr>
