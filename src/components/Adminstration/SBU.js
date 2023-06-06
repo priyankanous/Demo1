@@ -3,7 +3,7 @@ import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
-import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -193,7 +193,7 @@ function Sbu() {
 
                 <div>
                   <label>
-                  <input
+                    <input
                       type="button"
                       value="Save"
                       id="create-account"

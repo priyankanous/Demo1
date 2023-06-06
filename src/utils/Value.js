@@ -14,7 +14,6 @@ export const SidebarLink = styled(Link)`
   text-decoration: none;
   font-size: 2vh;
 `;
-
 export const SidebarLabel = styled.span`
   margin-left: 1rem;
 `;
@@ -108,7 +107,7 @@ export const Menu = styled.div`
 
 export const ModalHeading = styled.h5`
   display: inline;
-  margin-left:1vw;
+  margin-left: 1vw;
 `;
 
 export const ModalIcon = styled.i`
@@ -122,27 +121,29 @@ export const TableHeadingSection = styled.div`
   width: 100%;
   justify-content: space-between;
 `;
-
+export const TableRevenue = styled.div`
+  width: 50%;
+`;
 export const TableHeading = styled.div`
-  margin: 25px 50px;
+  margin: 15px 50px;
   font-weight: 500;
   font-size: 1.1rem;
   color: #072a3a;
 `;
 
 export const TableButtons = styled.button`
-width: 8vw;
-height: 6vh;
-background: #002333;
-border-radius: 30px;
-cursor:pointer;
-font-style: normal;
-font-weight: 500;
-font-size: 0.9vw;
-line-height: 19px;
-color: #FFFFFF;
-margin: 2.9vh 3vh 0vh 0vh
-`
+  width: 8vw;
+  height: 6vh;
+  background: #002333;
+  border-radius: 30px;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.9vw;
+  line-height: 19px;
+  color: #ffffff;
+  margin: 2.9vh 3vh 0vh 0vh;
+`;
 export const TableHeadingButton = styled.button`
   background-color: #002333;
   border: none;
@@ -151,15 +152,16 @@ export const TableHeadingButton = styled.button`
   font-size: 2vh;
   margin: 1vw;
   cursor: pointer;
-  width:auto;
+  width: auto;
 `;
+
 export const TableHeadingButtonPlusIcon = styled.i`
   margin: 0.4rem;
   vertical-align: middle;
 `;
 export const NavBarHeading = styled.div`
-  position:relative;
-  top:40%;
+  position: relative;
+  top: 40%;
   margin-left: 4rem;
   font-size: 1.5vw;
   font-family: sans-serif;
@@ -199,4 +201,7 @@ export const NotificationArrowIcons = styled.div`
   align-items: center;
   font-size: 5rem;
   color: #0a8b9c;
+`;
+export const MilestoneInput = styled.nav`
+  width: 100px;
 `;

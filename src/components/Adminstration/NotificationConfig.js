@@ -6,7 +6,7 @@ import {
   notificationModalStyleObj,
 } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
-import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import EmailNotificationSetup from "./EmailNotificationSetup";
 
 const NotificationConfig = () => {

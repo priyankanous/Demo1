@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
-import { MemoizedBaseComponent } from "../CommonComponent/BaseComponent";
+import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 
@@ -118,7 +118,7 @@ function BuisnessUnit() {
                   <div>
                     <label for="username">Parent Organization</label>
                     <select
-                    style={{width:"100%"}}
+                      style={{ width: "100%" }}
                       onChange={(e) => {
                         const selectedId =
                           e.target.selectedOptions[0].getAttribute(
@@ -162,7 +162,7 @@ function BuisnessUnit() {
                     </select>
                   </div>
                   <div>
-                    <label >
+                    <label>
                       <input
                         type="button"
                         value="Save"
