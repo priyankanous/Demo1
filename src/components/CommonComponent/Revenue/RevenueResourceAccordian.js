@@ -48,6 +48,7 @@ const RevenueResourceAccordian = (props) => {
     });
   };
   const addResource = () => {
+    console.log("resource Details for set resource Data", resourseDetails);
     props.setResourceData(resourseDetails);
   };
   return (
@@ -390,5 +391,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(RevenueResourceAccordian);
-
-//Welcome01HM*

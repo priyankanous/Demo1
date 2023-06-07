@@ -31,6 +31,7 @@ const getSaveTandMAPI = async (payload) => {
 };
 
 const preparePayload = (data) => {
+  console.log("thsi si the data......./////", data);
   const { resourceData, formData } = data;
   const resourceDataArry = resourceData.map((resource) => {
     return {

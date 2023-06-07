@@ -13,6 +13,7 @@ import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { connect } from "react-redux";
 import { getFinancialYearData } from "../../../actions/financial-year";
 import { saveResourceData } from "../../../actions/resource";
+import { saveMileStones, saveMilestoneData } from "../../../actions/milestone";
 function RevenueEntryScreens(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputNumber, setInputNumber] = useState("");
@@ -35,6 +36,10 @@ function RevenueEntryScreens(props) {
   const updateResourceData = (data) => {
     setResourceData(data);
   };
+  const [milestones, setMilestones] = useState([]);
+  const updateMilestoneData = (data) => {
+    // props.saveMileStones(props.milestoneDataNew);
+  };
   const generateGrid = () => {
     const items = [];
 
@@ -45,13 +50,19 @@ function RevenueEntryScreens(props) {
             id={i}
             formData={tabIndex.formData}
             updateResourceData={updateResourceData}
+            pricingType={pricingType}
           />
         );
       }
     } else {
       for (let i = 0; i < inputNumber; i++) {
         items.push(
-          <RevenueMilestoneAccordian i={i} formData={tabIndex.formData} />
+          <RevenueMilestoneAccordian
+            id={i}
+            formData={tabIndex.formData}
+            pricingType={pricingType}
+            updateMilestoneData={updateMilestoneData}
+          />
         );
       }
     }
@@ -64,9 +75,26 @@ function RevenueEntryScreens(props) {
       formData: tabIndex.formData,
     });
   };
+  const saveEntireMilestoneDetails = () => {
+    props.saveMileStones(props.milestoneDataNew);
+    props.saveMilestoneData({
+      allMilestones: props.milestoneDataNew,
+      formData: tabIndex.formData,
+    });
+  };
+  const saveData = () => {
+    if (pricingType == "T & M") {
+      saveResourceDetails();
+      setIsOpen(false);
+    } else {
+      saveEntireMilestoneDetails();
+      setIsOpen(false);
+    }
+  };
   return (
     <React.Fragment>
       {console.log("This is formData", tabIndex.formData)}
+      {console.log("milestones--->", milestones)}
       <div>
         <table>
           <tr className="trrevenue">
@@ -237,7 +265,7 @@ function RevenueEntryScreens(props) {
                       <button
                         className="button"
                         onClick={() => {
-                          saveResourceDetails();
+                          saveData();
                         }}
                       >
                         Save
@@ -246,6 +274,7 @@ function RevenueEntryScreens(props) {
                         className="button"
                         onClick={() => {
                           setGridItems([]);
+                          setIsOpen(false);
                         }}
                       >
                         Cancel
@@ -267,12 +296,15 @@ const mapStateToProps = (state) => {
   return {
     financialYear: state.financialYear,
     resourceData: state.resource.resourceData,
+    milestoneDataNew: state.milestone.milestoneDataNew,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getFinacialYearData: () => dispatch(getFinancialYearData()),
     saveResourceData: (data) => dispatch(saveResourceData(data)),
+    saveMileStones: (data) => dispatch(saveMileStones(data)),
+    saveMilestoneData: (data) => dispatch(saveMilestoneData(data)),
   };
 };
 
