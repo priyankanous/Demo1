@@ -57,7 +57,7 @@ export function RevenueBaseComponent(props) {
       </div>
       </div>
       <div style={{position:"relative", top:"370px"}}>
-        <TableScroll />
+        <TableScroll data={data} />
       </div>
       
     </React.Fragment>

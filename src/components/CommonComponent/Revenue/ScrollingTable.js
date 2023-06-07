@@ -20,7 +20,7 @@ const ButtonTocroll = styled(Button)({
   padding: "0px"
   });
 
-const TableScroll = () => {
+const TableScroll = (props) => {
 
   const elementRef = useRef(null);
   const [arrowDisable, setArrowDisable] = useState(true);
@@ -63,9 +63,12 @@ const TableScroll = () => {
       }
     }, speed);
   };
+  const tableData = props.data.financialYearRevenue?.dataMap?.["April-2023"];
 
   return (
     <div className="table_main_container" style={{position:"relative", overflow:"hidden", paddingBottom: "8px"}} >
+          {console.log("this is table data",tableData)}
+
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
         <ButtonTocroll onClick={() => {
           handleHorizantalScroll(elementRef.current, 25, 100, -10);
@@ -89,7 +92,7 @@ const TableScroll = () => {
               <TableRow
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell style={{padding:"0px 10px 1px 10px"}} align="center">data</TableCell>
+                <TableCell style={{padding:"0px 10px 1px 10px"}} align="center"></TableCell>
                 <TableCell style={{padding:"0px 10px 1px 10px"}} align="center">data</TableCell>
                 <TableCell style={{padding:"0px 10px 1px 10px"}} align="center">data</TableCell>
                 <TableCell style={{padding:"0px 10px 1px 10px"}} align="center">data</TableCell>
