@@ -11,7 +11,7 @@ import locationData from "./location";
 import businessTypeData from "./businessType";
 import cocPracticeData from "./cocPractice";
 import resource from "./resource";
-
+import milestone from "./milestone";
 export default combineReducers({
   financialYear,
   probabilityData,
@@ -25,4 +25,5 @@ export default combineReducers({
   businessTypeData,
   cocPracticeData,
   resource,
+  milestone,
 });

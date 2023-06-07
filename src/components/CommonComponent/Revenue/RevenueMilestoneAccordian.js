@@ -5,8 +5,29 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import * as RiIcons from "react-icons/ri";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { getSbuData } from "../../../actions/sbu";
+import { getSbuHeadData } from "../../../actions/sbuHead";
+import { getBuData } from "../../../actions/bu";
+import { getLocationData } from "../../../actions/locaion";
+import { getBusinessTypeData } from "../../../actions/businessType";
+import {
+  setMilestoneData,
+  saveMileStoneDataNew,
+} from "../../../actions/milestone";
+import axios from "axios";
+import { apiV1 } from "../../../utils/constantsValue";
+import RevenueMilestoneResourceData from "./RevenueMilestoneResourceData";
+
 const RevenueMilestoneAccordian = (props) => {
+  useEffect(() => {
+    props.getSbuData();
+    props.getBuData();
+    props.getBusinessTypeData();
+    props.getSbuHeadData();
+    props.getLocationData();
+  }, []);
   const [inputNumber, setInputNumber] = useState("");
 
   const [milestoneGridItems, setMilestoneGridItems] = useState([]);
@@ -14,98 +35,76 @@ const RevenueMilestoneAccordian = (props) => {
     setInputNumber(event.target.value);
   };
 
+  const [milestoneDetails, setMilestoneDetails] = useState({});
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const updateMilestoneDetails = (params) => {
+    const data = { ...milestoneDetails };
+    data[params.milestoneDetailsColumn] = params.event.target.value;
+    if (params.attrKey) {
+      data[params.selectedID] =
+        params.event.target.selectedOptions[0].getAttribute(params.attrKey);
+    }
+    if (params.milestoneDetailsColumn == "milestoneBillingDate") {
+      data[params.milestoneDetailsColumn] = createDate(
+        params.event.target.value
+      );
+    }
+    setMilestoneDetails({
+      ...data,
+    });
+  };
+  const createDate = (date) => {
+    let t = new Date(date);
+    let splitDate = date.split("-");
+    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
+  };
+
+  const [milestones, setMilestonesData] = useState([]);
+
+  const saveOneMilestoneData = () => {
+    const mileStoneData = {
+      milestoneResourceCount: inputNumber,
+      milestoneNumber: props.id + 1,
+      milestoneRevenue: milestoneDetails.milestoneRevenue,
+      milestoneBillingDate: milestoneDetails.milestoneBillingDate,
+      revenueResourceEntries: props.revenueResourceEntries.filter(
+        (revenueResourceEntry) => {
+          const milestoneID = revenueResourceEntry.milestoneID;
+          delete revenueResourceEntry.milestoneID;
+          delete revenueResourceEntry.index;
+          return milestoneID == props.id + 1;
+        }
+      ),
+    };
+    props.saveMileStoneDataNew(mileStoneData);
+  };
+  const [revenueResourceEntries1, setRevenueResourceEntries] = useState([]);
+  const setMilestoneData1 = (data) => {
+    setRevenueResourceEntries([...revenueResourceEntries1, data]);
+  };
   const generateMilestoneGrid = () => {
     const items = [];
     for (let i = 0; i < inputNumber; i++) {
       items.push(
-        <React.Fragment>
-          <br></br>
-          <table>
-            <tr className="trmilestone">
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    SBU
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    SBU Head
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    BU
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    Location
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <input
-                  id="milestoneinput"
-                  type="text"
-                  placeholder="Resource Name"
-                ></input>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <input
-                  id="milestoneinput"
-                  type="number"
-                  placeholder="Employee ID"
-                ></input>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    Start Date
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select id="milestoneselect" required>
-                  <option value="" disabled selected hidden>
-                    End Date
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <input
-                  id="milestoneinput"
-                  type="text"
-                  placeholder="Revenue"
-                ></input>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <select
-                  id="milestoneselect"
-                  required
-                  placeholder="BusinessType"
-                >
-                  <option value="" disabled selected hidden>
-                    BusinessType
-                  </option>
-                </select>
-              </td>
-              <td style={{ borderRight: "solid" }}>
-                <input
-                  type="text"
-                  id="milestoneinput"
-                  placeholder="Allocation %"
-                ></input>
-              </td>
-            </tr>
-          </table>
-        </React.Fragment>
+        <RevenueMilestoneResourceData
+          id={i}
+          setMilestoneData1={setMilestoneData1}
+          milestoneId={props.id + 1}
+        />
       );
     }
 
@@ -129,7 +128,7 @@ const RevenueMilestoneAccordian = (props) => {
             }}
           >
             <RiIcons.RiArrowDownSFill />
-            Milestones {props.i + 1}
+            Milestones {props.id + 1}
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
@@ -137,6 +136,47 @@ const RevenueMilestoneAccordian = (props) => {
             <tr>
               <td>
                 <label className="required-field">MilestoneNumber</label>
+                <input
+                  type="text"
+                  value={props.id + 1}
+                  onChange={(e) => {
+                    updateMilestoneDetails({
+                      event: e,
+                      milestoneDetailsColumn: "milestoneNumber",
+                    });
+                  }}
+                ></input>
+              </td>
+
+              <td> </td>
+              <td>
+                <label className="required-field">Milestone Billing Date</label>
+                <input
+                  type="date"
+                  onChange={(e) => {
+                    updateMilestoneDetails({
+                      event: e,
+                      milestoneDetailsColumn: "milestoneBillingDate",
+                    });
+                  }}
+                ></input>
+              </td>
+              <td></td>
+              <td>
+                <label className="required-field">MilestoneRevenue</label>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    updateMilestoneDetails({
+                      event: e,
+                      milestoneDetailsColumn: "milestoneRevenue",
+                    });
+                  }}
+                ></input>
+              </td>
+              <td></td>
+              <td>
+                <label className="required-field">MilestoneCount</label>
                 <input
                   type="text"
                   value={inputNumber}
@@ -148,20 +188,10 @@ const RevenueMilestoneAccordian = (props) => {
                   Add
                 </button>
               </td>
-              <td> </td>
-              <td>
-                <label className="required-field">Milestone Billing Date</label>
-                <input type="date"></input>
-              </td>
-              <td></td>
-              <td>
-                <label className="required-field">MilestoneRevenue</label>
-                <input type="text"></input>
-              </td>
-              <td></td>
-              <td>
-                <label className="required-field">ResourceCount</label>
-                <input type="text"></input>
+              <td style={{ alignContent: "center" }}>
+                <button className="button" onClick={saveOneMilestoneData}>
+                  Save
+                </button>
               </td>
             </tr>
           </table>
@@ -172,4 +202,33 @@ const RevenueMilestoneAccordian = (props) => {
     </React.Fragment>
   );
 };
-export default RevenueMilestoneAccordian;
+
+const mapStateToProps = (state) => {
+  console.log("this is the state", state);
+
+  return {
+    sbuData: state.sbuData,
+    sbuHeadData: state.sbuHeadData,
+    locationData: state.locationData,
+    buData: state.buData,
+    businessTypeData: state.businessTypeData,
+    resource: state.resource,
+    revenueResourceEntries: state.milestone.revenueResourceEntries,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getSbuData: () => dispatch(getSbuData()),
+    getBuData: () => dispatch(getBuData()),
+    getSbuHeadData: () => dispatch(getSbuHeadData()),
+    getBusinessTypeData: () => dispatch(getBusinessTypeData()),
+    getLocationData: () => dispatch(getLocationData()),
+    setMilestoneData: (data) => dispatch(setMilestoneData(data)),
+    saveMileStoneDataNew: (data) => dispatch(saveMileStoneDataNew(data)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RevenueMilestoneAccordian);

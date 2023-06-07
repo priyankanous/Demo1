@@ -31,6 +31,7 @@ const getSaveTandMAPI = async (payload) => {
 };
 
 const preparePayload = (data) => {
+  console.log("thsi si the data......./////", data);
   const { resourceData, formData } = data;
   const resourceDataArry = resourceData.map((resource) => {
     return {
@@ -58,8 +59,8 @@ const preparePayload = (data) => {
       },
       resourceName: resource.resouceName,
       employeeId: resource.employeeId,
-      resourceStartDate: "10/Apr/2023",
-      resourceEndDate: "28/Nov/2023",
+      resourceStartDate: resource.startDate,
+      resourceEndDate: resource.endDate,
       cocPractice: {
         cocPracticeId: resource.cocPracticeId,
         //cocPracticeName: resource.cocPracticeName,

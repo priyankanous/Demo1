@@ -29,6 +29,20 @@ const RevenueResourceAccordian = (props) => {
   const [resourseDetails, setResourseDetails] = useState({
     index: props.id,
   });
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const updateResourceDetails = async (params) => {
     const data = { ...resourseDetails };
     data[params.resourseDetailsColumn] = params.event.target.value;
@@ -43,11 +57,25 @@ const RevenueResourceAccordian = (props) => {
       console.log("THE MANINNNN GLLF", response.data.data);
       data["leaveLossFactor"] = response.data.data;
     }
+    if (
+      params.resourseDetailsColumn == "startDate" ||
+      params.resourseDetailsColumn == "endDate"
+    ) {
+      data[params.resourseDetailsColumn] = createDate(
+        params.event.target.value
+      );
+    }
     setResourseDetails({
       ...data,
     });
   };
+  const createDate = (date) => {
+    let t = new Date(date);
+    let splitDate = date.split("-");
+    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
+  };
   const addResource = () => {
+    console.log("resource Details for set resource Data", resourseDetails);
     props.setResourceData(resourseDetails);
   };
   return (
@@ -194,8 +222,9 @@ const RevenueResourceAccordian = (props) => {
                 ></input>
               </td>
               <td style={{ borderRight: "solid" }}>
-                <select
+                <input
                   id="milestoneselect"
+                  type="date"
                   required
                   onChange={(e) => {
                     updateResourceDetails({
@@ -203,15 +232,12 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "startDate",
                     });
                   }}
-                >
-                  <option value="" disabled selected hidden>
-                    Start Date
-                  </option>
-                </select>
+                />
               </td>
               <td style={{ borderRight: "solid" }}>
-                <select
+                <input
                   id="milestoneselect"
+                  type="date"
                   required
                   onChange={(e) => {
                     updateResourceDetails({
@@ -219,11 +245,7 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "endDate",
                     });
                   }}
-                >
-                  <option value="" disabled selected hidden>
-                    End Date
-                  </option>
-                </select>
+                />
               </td>
             </tr>
             <br></br>
@@ -390,5 +412,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(RevenueResourceAccordian);
-
-//Welcome01HM*
