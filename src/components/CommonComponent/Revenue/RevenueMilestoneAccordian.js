@@ -36,6 +36,20 @@ const RevenueMilestoneAccordian = (props) => {
   };
 
   const [milestoneDetails, setMilestoneDetails] = useState({});
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const updateMilestoneDetails = (params) => {
     const data = { ...milestoneDetails };
@@ -44,9 +58,19 @@ const RevenueMilestoneAccordian = (props) => {
       data[params.selectedID] =
         params.event.target.selectedOptions[0].getAttribute(params.attrKey);
     }
+    if (params.milestoneDetailsColumn == "milestoneBillingDate") {
+      data[params.milestoneDetailsColumn] = createDate(
+        params.event.target.value
+      );
+    }
     setMilestoneDetails({
       ...data,
     });
+  };
+  const createDate = (date) => {
+    let t = new Date(date);
+    let splitDate = date.split("-");
+    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
   };
 
   const [milestones, setMilestonesData] = useState([]);
@@ -59,7 +83,10 @@ const RevenueMilestoneAccordian = (props) => {
       milestoneBillingDate: milestoneDetails.milestoneBillingDate,
       revenueResourceEntries: props.revenueResourceEntries.filter(
         (revenueResourceEntry) => {
-          return revenueResourceEntry.milestoneID == props.id + 1;
+          const milestoneID = revenueResourceEntry.milestoneID;
+          delete revenueResourceEntry.milestoneID;
+          delete revenueResourceEntry.index;
+          return milestoneID == props.id + 1;
         }
       ),
     };
@@ -124,7 +151,15 @@ const RevenueMilestoneAccordian = (props) => {
               <td> </td>
               <td>
                 <label className="required-field">Milestone Billing Date</label>
-                <input type="date"></input>
+                <input
+                  type="date"
+                  onChange={(e) => {
+                    updateMilestoneDetails({
+                      event: e,
+                      milestoneDetailsColumn: "milestoneBillingDate",
+                    });
+                  }}
+                ></input>
               </td>
               <td></td>
               <td>

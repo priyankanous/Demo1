@@ -46,74 +46,6 @@ const getSaveFPAPI = async (payload) => {
   console.log("data---> for MileStone", data.data);
 };
 
-const pay = {
-  account: {
-    accountId: 0,
-  },
-  opportunity: {
-    opportunityId: 0,
-  },
-  projectCode: "string",
-  projectStartDate: "2023-06-06",
-  projectEndDate: "2023-06-06",
-  businessDevelopmentManager: {
-    bdmId: 0,
-  },
-  currency: {
-    currencyId: 0,
-  },
-  probabilityType: {
-    probabilityTypeId: 0,
-  },
-  region: {
-    regionId: 0,
-  },
-  workOrder: {
-    workOrderId: 27,
-  },
-  workOrderEndDate: "2023-06-06",
-  workOrderStatus: "string",
-  financialYear: {
-    financialYearId: 0,
-  },
-  milestoneCount: 0,
-  pricingType: "string",
-  remarks: "string",
-  status: "string",
-  milestones: [
-    {
-      milestoneNumber: "string",
-      milestoneBillingDate: "2023-06-06",
-      milestoneRevenue: 0,
-      milestoneResourceCount: 0,
-      revenueResourceEntries: [
-        {
-          strategicBusinessUnit: {
-            sbuId: 0,
-          },
-          strategicBusinessUnitHead: {
-            sbuHeadId: 0,
-          },
-          businessUnit: {
-            businessUnitId: 0,
-          },
-          businessType: {
-            businessTypeId: 0,
-          },
-          location: {
-            locationId: 0,
-          },
-          resourceName: "string",
-          employeeId: "string",
-          resourceStartDate: "2023-06-06",
-          resourceEndDate: "2023-06-06",
-          milestoneResourceRevenue: 0,
-          allocation: 0,
-        },
-      ],
-    },
-  ],
-};
 const milestonePayLoad = (data) => {
   console.log(
     "_________________this is main data in the main payload generation",
@@ -125,6 +57,7 @@ const milestonePayLoad = (data) => {
       milestoneResourceCount: milestone.milestoneResourceCount,
       milestoneNumber: milestone.milestoneNumber,
       milestoneRevenue: milestone.milestoneRevenue,
+      milestoneBillingDate: milestone.milestoneBillingDate,
       revenueResourceEntries: milestone.revenueResourceEntries,
     };
   });
@@ -153,7 +86,8 @@ const milestonePayLoad = (data) => {
     workOrder: {
       workOrderId: 27,
     },
-
+    workOrderEndDate: "10/Apr/2023",
+    workOrderStatus: "string",
     financialYear: {
       financialYearId: formData.financialYear.financialYearID,
     },
@@ -163,88 +97,4 @@ const milestonePayLoad = (data) => {
     status: "string",
     milestones: allMilestonesArray,
   };
-};
-const obj = {
-  allMilestons: [
-    {
-      milestoneResourceCount: "2",
-      milestoneNumber: 1,
-      milestoneRevenue: "222",
-      revenueResourceEntries: [
-        {
-          index: 0,
-          milestoneID: 1,
-          sbuName: "Euro Test",
-          sbuId: "1",
-          sbuHeadName: "Ganesh",
-          sbuHeadId: "1",
-          businessUnitName: "GSS",
-          businessUnitId: "1",
-          locationName: "OffShore",
-          locationId: "1",
-          employeeId: "123",
-          milestoneMilestoneRevenue: "100",
-          businessTypeName: "ECNB",
-          businessTypeId: "1",
-          allocation: "100",
-        },
-        {
-          index: 1,
-          milestoneID: 1,
-          sbuName: "Euro Test",
-          sbuId: "1",
-          sbuHeadName: "Ganesh",
-          sbuHeadId: "1",
-          businessUnitName: "vServe",
-          businessUnitId: "2",
-          locationName: "OnSite",
-          locationId: "2",
-          employeeId: "456",
-          milestoneMilestoneRevenue: "200",
-          businessTypeName: "ECNB",
-          businessTypeId: "1",
-          allocation: "200",
-        },
-      ],
-    },
-  ],
-  formData: {
-    account: {
-      accountID: "1",
-      accountName: "2023-2024",
-    },
-    opportunity: {
-      opportunityID: "1",
-      opportunityName: "2023-2024",
-    },
-    bdm: {
-      bdmID: "1",
-      bdmName: "Peter",
-    },
-    projectCode: "2023-2024",
-    projectStartDate: "2023-2024",
-    projectEndDate: "2023-2024",
-    currency: {
-      currencyID: "2",
-      currencyName: "USD",
-    },
-    probability: {
-      probabilityTypeID: "3",
-      probabilityTypeName: "Upside",
-    },
-    region: {
-      regionID: "2",
-      regionName: "Europe",
-    },
-    workOrder: {
-      workOrderID: "1",
-      workOrderEndDate: "Signed",
-      workOrderStatus: "Signed",
-    },
-    financialYear: {
-      financialYearID: "1",
-      financialYearName: "2023-2024",
-    },
-    pricingType: "FP",
-  },
 };

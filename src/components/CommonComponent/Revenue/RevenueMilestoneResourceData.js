@@ -5,6 +5,7 @@ import { getSbuHeadData } from "../../../actions/sbuHead";
 import { getBuData } from "../../../actions/bu";
 import { getLocationData } from "../../../actions/locaion";
 import { getBusinessTypeData } from "../../../actions/businessType";
+import { getCocPracticeData } from "../../../actions/cocPractice";
 import {
   setMilestoneData,
   setRevenueResourceEntriesData,
@@ -17,11 +18,31 @@ const RevenueMilestoneResourceData = (props) => {
     props.getBusinessTypeData();
     props.getSbuHeadData();
     props.getLocationData();
+    props.getCocPracticeData();
   }, []);
+  const month = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const [milestoneDetails, setMilestoneDetails] = useState({
     index: props.id,
     milestoneID: props.milestoneId,
   });
+  const createDate = (date) => {
+    let t = new Date(date);
+    let splitDate = date.split("-");
+    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
+  };
 
   const updateMilestoneDetails = (params) => {
     const data = { ...milestoneDetails };
@@ -35,7 +56,14 @@ const RevenueMilestoneResourceData = (props) => {
     } else {
       data[params.milestoneDetailsColumn] = params.event.target.value;
     }
-
+    if (
+      params.milestoneDetailsColumn == "resourceStartDate" ||
+      params.milestoneDetailsColumn == "resourceEndDate"
+    ) {
+      data[params.milestoneDetailsColumn] = createDate(
+        params.event.target.value
+      );
+    }
     setMilestoneDetails({
       ...data,
     });
@@ -155,7 +183,12 @@ const RevenueMilestoneResourceData = (props) => {
               id="milestoneinput"
               type="text"
               placeholder="Resource Name"
-              onChange={(e) => {}}
+              onChange={(e) => {
+                updateMilestoneDetails({
+                  event: e,
+                  milestoneDetailsColumn: "resourceName",
+                });
+              }}
             ></input>
           </td>
           <td style={{ borderRight: "solid" }}>
@@ -172,42 +205,60 @@ const RevenueMilestoneResourceData = (props) => {
             ></input>
           </td>
           <td style={{ borderRight: "solid" }}>
-            <select
-              id="milestoneselect"
-              required
+            <input
+              id="milestoneinput"
+              type="date"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
-                  milestoneDetailsColumn: "startDate",
+                  milestoneDetailsColumn: "resourceStartDate",
                 });
               }}
-            >
-              <option value="" disabled selected hidden>
-                Start Date
-              </option>
-            </select>
+            />
           </td>
           <td style={{ borderRight: "solid", borderLeft: "solid" }}>
-            <select
-              id="milestoneselect"
-              required
+            <input
+              id="milestoneinput"
+              type="date"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
-                  milestoneDetailsColumn: "endDate",
+                  milestoneDetailsColumn: "resourceEndDate",
                 });
               }}
-            >
-              <option value="" disabled selected hidden>
-                End Date
-              </option>
-            </select>
+            />
           </td>
         </tr>
       </table>
       <br></br>
       <table style={{ marginLeft: "200px" }}>
         <tr className="trmilestone">
+          <td style={{ borderRight: "solid" }}>
+            <select
+              id="milestoneselect"
+              required
+              placeholder="CocPractice"
+              onChange={(e) => {
+                updateMilestoneDetails({
+                  event: e,
+                  milestoneDetailsKey: "cocPractice",
+                  milestoneDetailsColumn: "cocPracticeName",
+                  selectedID: "cocPracticeId",
+                  attrKey: "data-cocPracticeId",
+                });
+              }}
+            >
+              <option value="" disabled selected hidden>
+                CocPractice
+              </option>
+              {props.cocPracticeData.cocPracticeData &&
+                props.cocPracticeData.cocPracticeData.map((obj, id) => (
+                  <option data-cocPracticeId={obj.cocPracticeId}>
+                    {obj.cocPracticeName}
+                  </option>
+                ))}
+            </select>
+          </td>
           <td style={{ borderRight: "solid", borderLeft: "solid" }}>
             <input
               id="milestoneinput"
@@ -216,7 +267,7 @@ const RevenueMilestoneResourceData = (props) => {
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
-                  milestoneDetailsColumn: "milestoneMilestoneRevenue",
+                  milestoneDetailsColumn: "milestoneResourceRevenue",
                 });
               }}
             ></input>
@@ -229,7 +280,7 @@ const RevenueMilestoneResourceData = (props) => {
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
-                  milestoneDetailsKey: "busineeType",
+                  milestoneDetailsKey: "businessType",
                   milestoneDetailsColumn: "businessTypeName",
                   selectedID: "businessTypeId",
                   attrKey: "data-businessTypeId",
@@ -279,6 +330,7 @@ const mapStateToProps = (state) => {
 
   return {
     sbuData: state.sbuData,
+    cocPracticeData: state.cocPracticeData,
     sbuHeadData: state.sbuHeadData,
     locationData: state.locationData,
     buData: state.buData,
@@ -289,6 +341,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getSbuData: () => dispatch(getSbuData()),
+    getCocPracticeData: () => dispatch(getCocPracticeData()),
     getBuData: () => dispatch(getBuData()),
     getSbuHeadData: () => dispatch(getSbuHeadData()),
     getBusinessTypeData: () => dispatch(getBusinessTypeData()),
