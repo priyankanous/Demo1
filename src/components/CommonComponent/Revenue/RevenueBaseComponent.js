@@ -7,6 +7,7 @@ import {
 import { apiV1 } from "../../../utils/constantsValue";
 import axios from "axios";
 import RevenueEntryScreens from "./RevenueEntryScreens";
+import TableScroll from "./ScrollingTable";
 
 export function RevenueBaseComponent(props) {
   const [data, setData] = useState({});
@@ -24,6 +25,7 @@ export function RevenueBaseComponent(props) {
 
   return (
     <React.Fragment>
+      <div>
       <div className="table_main_container">
         <TableHeadingSection>
           <TableHeading>Rolling Revenue Entry</TableHeading>
@@ -53,6 +55,11 @@ export function RevenueBaseComponent(props) {
           </div>
         </React.Fragment>
       </div>
+      </div>
+      <div style={{position:"relative", top:"370px"}}>
+        <TableScroll data={data} />
+      </div>
+      
     </React.Fragment>
   );
 }

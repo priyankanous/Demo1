@@ -16,7 +16,6 @@ import GlobalLeaveLossFactor from "../components/Adminstration/GlobalLeaveLossFa
 import NotificationConfig from "../components/Adminstration/NotificationConfig";
 import BuisnessUnit from "../components/Adminstration/BusinessUnit";
 
-
 const RollingRevenueAdministration = {
     BuisnessUnit,Region,Organization,Sbu,SbuHead,Location,Bdm,Probability,BusinessType,CocPractice,PricingType,WorkOrderStatus,Status,FinancialYear,Currency,NotificationConfig,GlobalLeaveLossFactor
 }
