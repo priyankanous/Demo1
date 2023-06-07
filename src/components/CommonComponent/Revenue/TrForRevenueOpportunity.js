@@ -48,7 +48,7 @@ function TrForRevenue(props) {
       // response.data.data.opportunities.map((obj, id) => {
       //   return setOpportunityData(obj);
       // });
-      if (e.pricingType == "T&M") {
+      if (e.pricingType == "T & M") {
         setResourceData(response.data.data.tmResourceEntries);
       } else {
         setResourceData(response.data.data.fpResourceEntries);
@@ -74,31 +74,31 @@ function TrForRevenue(props) {
           +
         </td>
         <td className="rowtable">
-          <span>{props.data.opportunityId || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.opportunityId || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.projectCode || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.projectCode || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.opportunityName || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.opportunityName || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.pricingType || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.pricingType || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.projectStartDate || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.projectStartDate || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.projectEndDate || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.projectEndDate || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.cocPractice || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.cocPractice || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.noOfResources || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.noOfResources || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{props.data.leaveLossFactor || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{props.data.leaveLossFactor || "Unknown"}</span>
         </td>
       </tr>
       {isExpandedInnerRow && (
@@ -130,32 +130,33 @@ function TrForRevenue(props) {
                 })}
               </tr>
               <tbody>
+                {console.log("IMPPP RESOURCE DATA", resourceData)}
                 {resourceData.length > 0 &&
                   resourceData.map((obj, id) => (
                     <tr>
                       <td className="rowtable">
-                        <span>{obj.resourceStartDate || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.resourceStartDate || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.resourceEndDate || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.resourceEndDate || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.workOrderNumber || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.workOrderNumber || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.employeeId || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.employeeId || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.resourceName || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.resourceName || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.billingRate || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.billingRate || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.workOrderNumber || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.allocation || "Unknown"}</span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.leaveLossFactor || "Unknown"}</span>
+                        <span style={{fontSize:"14px"}}>{obj.leaveLossFactor || "Unknown"}</span>
                       </td>
                     </tr>
                   ))}
