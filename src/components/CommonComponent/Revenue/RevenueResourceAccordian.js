@@ -14,6 +14,8 @@ import { getLocationData } from "../../../actions/locaion";
 import { getBusinessTypeData } from "../../../actions/businessType";
 import { getCocPracticeData } from "../../../actions/cocPractice";
 import { setResourceData } from "../../../actions/resource";
+import axios from "axios";
+import { apiV1 } from "../../../utils/constantsValue";
 
 const RevenueResourceAccordian = (props) => {
   useEffect(() => {
@@ -24,11 +26,23 @@ const RevenueResourceAccordian = (props) => {
     props.getLocationData();
     props.getCocPracticeData();
   }, []);
-  const [resourseDetails, setResourseDetails] = useState({ index: props.id });
-  const updateResourceDetails = (params) => {
+  const [resourseDetails, setResourseDetails] = useState({
+    index: props.id,
+  });
+  const updateResourceDetails = async (params) => {
     const data = { ...resourseDetails };
     data[params.resourseDetailsColumn] = params.event.target.value;
-    data[params.selectedID] = params.attrKey;
+    if (params.attrKey) {
+      data[params.selectedID] =
+        params.event.target.selectedOptions[0].getAttribute(params.attrKey);
+    }
+    if (params.attrKey == "data-locationId") {
+      const response = await axios.get(
+        `${apiV1}/location/${props.formData.financialYear.financialYearName}/${params.event.target.value}`
+      );
+      console.log("THE MANINNNN GLLF", response.data.data);
+      data["leaveLossFactor"] = response.data.data;
+    }
     setResourseDetails({
       ...data,
     });
@@ -38,7 +52,7 @@ const RevenueResourceAccordian = (props) => {
   };
   return (
     <React.Fragment>
-      {console.log("this is form data in resouce accordian", props.formData)}
+      {console.log("this is form data in resouce accordian", resourseDetails)}
       {console.log("resoufrce--->", props.resource)}
       <br></br>
       <AccordionItem id="accordianItem">
@@ -64,13 +78,11 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   onChange={(e) => {
-                    const selectedsbuId =
-                      e.target.selectedOptions[0].getAttribute("data-sbuId");
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "sbuName",
                       selectedID: "sbuId",
-                      attrKey: selectedsbuId,
+                      attrKey: "data-sbuId",
                     });
                   }}
                 >
@@ -88,15 +100,11 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   onChange={(e) => {
-                    const selectedsbuHeadId =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-sbuHeadId"
-                      );
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "sbuHeadName",
                       selectedID: "sbuHeadId",
-                      attrKey: selectedsbuHeadId,
+                      attrKey: "data-sbuHeadId",
                     });
                   }}
                 >
@@ -116,15 +124,11 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   onChange={(e) => {
-                    const selectedbuisnessUnitId =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-buisnessUnitId"
-                      );
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "buisnessUnitName",
                       selectedID: "buisnessUnitId",
-                      attrKey: selectedbuisnessUnitId,
+                      attrKey: "data-buisnessUnitId",
                     });
                   }}
                 >
@@ -144,15 +148,11 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   onChange={(e) => {
-                    const selectedLocationId =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-locationId"
-                      );
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "locationName",
                       selectedID: "locationId",
-                      attrKey: selectedLocationId,
+                      attrKey: "data-locationId",
                     });
                   }}
                 >
@@ -175,7 +175,7 @@ const RevenueResourceAccordian = (props) => {
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
-                      resourseDetailsColumn: "resourceName",
+                      resourseDetailsColumn: "resouceName",
                     });
                   }}
                 ></input>
@@ -188,7 +188,7 @@ const RevenueResourceAccordian = (props) => {
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
-                      resourseDetailsColumn: "employeeID",
+                      resourseDetailsColumn: "employeeId",
                     });
                   }}
                 ></input>
@@ -236,15 +236,11 @@ const RevenueResourceAccordian = (props) => {
                   required
                   placeholder="BusinessType"
                   onChange={(e) => {
-                    const selectedBusinessTypeId =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-businessTypeId"
-                      );
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "businessTypeName",
                       selectedID: "businessTypeId",
-                      attrKey: selectedBusinessTypeId,
+                      attrKey: "data-businessTypeId",
                     });
                   }}
                 >
@@ -265,15 +261,11 @@ const RevenueResourceAccordian = (props) => {
                   required
                   placeholder="BusinessType"
                   onChange={(e) => {
-                    const selectedCocPracticeId =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-cocPracticeId"
-                      );
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "cocPracticeName",
                       selectedID: "cocPracticeId",
-                      attrKey: selectedCocPracticeId,
+                      attrKey: "data-cocPracticeId",
                     });
                   }}
                 >
@@ -292,14 +284,21 @@ const RevenueResourceAccordian = (props) => {
                 <select
                   id="milestoneselect"
                   required
-                  placeholder="BusinessType"
-                  onChange={(e) => {}}
+                  onChange={(e) => {
+                    updateResourceDetails({
+                      event: e,
+                      resourseDetailsColumn: "billingRateType",
+                    });
+                  }}
                 >
                   <option value="" disabled selected hidden>
                     Billing Rate Type
                   </option>
-                  <option>Common</option>
-                  <option>Resource Level</option>
+                  <option>Hourly</option>
+                  <option>Daily</option>
+                  <option>Monthly</option>
+                  <option>Quaterly</option>
+                  <option>Half Annually</option>
                 </select>
               </td>
               <td style={{ borderRight: "solid" }}>
@@ -322,8 +321,9 @@ const RevenueResourceAccordian = (props) => {
               >
                 <input
                   id="resourceinput"
-                  type="text"
+                  type="number"
                   placeholder="Leave Loss Factor"
+                  value={resourseDetails.leaveLossFactor}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -340,7 +340,7 @@ const RevenueResourceAccordian = (props) => {
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
-                      resourseDetailsColumn: "allocationPercent",
+                      resourseDetailsColumn: "allocation",
                     });
                   }}
                 ></input>
