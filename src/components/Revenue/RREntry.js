@@ -12,15 +12,15 @@ function RREntry() {
     "",
     "BU",
     "SBU",
-    "SBU HEAD",
+    "SBU Head",
     "BDM",
     "Buisness Type",
-    "ACCOUNT",
-    "REGION",
-    "LOCATION",
-    "PROBABILITY",
-    "COC-PRACTICE",
-    "STATUS",
+    "Account",
+    "Region",
+    "Location",
+    "Probability",
+    "COC-Practice",
+    "Status",
   ];
   const columns2 = [
     "",
@@ -30,7 +30,7 @@ function RREntry() {
     "Pricing Type",
     "Start Date",
     "End Date",
-    "CoC Practice",
+    "COC Practice",
     "No Of Resources",
     "Leave Ls Ftr",
   ];
@@ -129,40 +129,41 @@ function Tr({
           }}
         >
           +
+          {/* <FaIcons.FaArrowDown /> */}
         </td>
 
         <td className="rowtable">
-          <span>{businessUnit || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{businessUnit || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{strategicBusinessUnit || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{strategicBusinessUnit || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{strategicBusinessUnitHead || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{strategicBusinessUnitHead || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{businessDevelopmentManager || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{businessDevelopmentManager || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{businessType || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{businessType || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{account || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{account || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{region || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{region || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{location || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{location || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{probabilityType || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{probabilityType || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{cocPractice || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{cocPractice || "Unknown"}</span>
         </td>
         <td className="rowtable">
-          <span>{status || "Unknown"}</span>
+          <span style={{fontSize:"14px"}}>{status || "Unknown"}</span>
         </td>
       </tr>
       {isExpanded && (

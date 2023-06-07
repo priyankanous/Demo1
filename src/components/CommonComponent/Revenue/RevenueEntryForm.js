@@ -425,6 +425,7 @@ const ResourceEntryForm = (props) => {
           value="Continue"
           id="create-account"
           class="button"
+          style={{width:"70px"}}
           onClick={() => {
             props.setTabIndex({
               ...props.tabIndex,
@@ -444,6 +445,8 @@ const ResourceEntryForm = (props) => {
           value="Cancel"
           id="create-account"
           class="button"
+          style={{width:"60px"}}
+
         />
       </div>
     </React.Fragment>

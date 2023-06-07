@@ -125,7 +125,7 @@ export const TableRevenue = styled.div`
   width: 50%;
 `;
 export const TableHeading = styled.div`
-  margin: 25px 50px;
+  margin: 15px 50px;
   font-weight: 500;
   font-size: 1.1rem;
   color: #072a3a;

@@ -106,17 +106,8 @@ function RevenueEntryScreens(props) {
               >
                 <FaIcons.FaPlus />
               </a>
-              <a style={{ paddingLeft: "4px" }}>
-                <AiIcons.AiFillCopy />
-              </a>
-              <a style={{ paddingLeft: "4px" }}>
-                <AiIcons.AiOutlineEdit />
-              </a>
-              <a style={{ paddingLeft: "4px" }}>
-                <AiIcons.AiOutlineDelete />
-              </a>
             </td>
-            <td style={{ paddingLeft: "150px" }}>
+            <td style={{ paddingLeft: "200px" }}>
               <select
                 id="revenue-select"
                 onChange={(e) => {
@@ -188,6 +179,7 @@ function RevenueEntryScreens(props) {
                         name="Pricing Type"
                         checked={pricingType === "T & M"}
                         onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
                       />
                       T & M
                       <input
@@ -196,6 +188,7 @@ function RevenueEntryScreens(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
                       />
                       FP
                     </div>
@@ -274,7 +267,9 @@ function RevenueEntryScreens(props) {
                         className="button"
                         onClick={() => {
                           setGridItems([]);
-                          setIsOpen(false);
+                          // props.setIsOpen(false);
+
+                          console.log("clicked");
                         }}
                       >
                         Cancel
