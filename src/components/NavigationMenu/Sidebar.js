@@ -1,19 +1,80 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { SidebarData } from "./SideBarData";
 import SubMenu from "./SubMenu";
-import { IconContext } from "react-icons/lib";
-import {
-  LoggedInUserImage,
-  LoggedInUserName,
-  NavBarHeading,
-  SidebarNav,
-  SidebarWrap,
-  UserLoggedInSection,
-} from "../../utils/Value";
 import Nous_Infosystems from "./Images/Nous Infosystems.jpg";
-import { Menu, MenuLink, PrimaryNav } from "../../utils/Value";
-import { Navbar, Image } from "react-bootstrap";
-import axios from "axios";
+import { 
+        Box, 
+        AppBar, 
+        Typography,
+        styled } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+const AppNavBar = styled(AppBar)({
+  background: "#FFFFFF",
+  width: "1440px",
+  height: "60px",
+  border: "1px solid rgba(0, 0, 0, 0.2)",
+  boxShadow: "none",
+});
+
+const InnerBox = styled(Box)({
+  display: "flex",
+  alignItems: "center"
+
+});
+
+const Img = styled('img')({
+  width: "113",
+  height: "52px",
+  margin: "3px 0px 0px 71px"
+});
+
+const Heading = styled(Typography)({
+  paddingLeft: "102px",
+  fontSize: "24px",
+  fontWeight: "700",
+  color: "#000000",
+});
+
+const LoggedInUserSection = styled('div')({
+  display: "flex",
+  paddingLeft: "550px",
+  alignItems: "center"
+});
+
+const LoggedInUserImage = styled('img')({
+  width: "40px",
+  height: "40px",
+  position: "relative",
+  marginRight: "20px",
+  borderRadius: "50%",
+});
+
+const LoggedInUserName = styled('span')({
+  fontWeight: "400",
+  fontSize: "16px",
+  color: "rgb(0, 35, 51, 1)",
+});
+
+const SideBar = styled('Nav')({
+  background: "#FFFFFF",
+  width: "240px",
+  height: "924px",
+  top: "60px",
+  left: "0px",
+  position: "absolute",
+  cursor:"pointer",
+});
+
+const SidebarWrap = styled('div')({
+  width: "100%",
+});
+
+const ArrowDownIcon = styled(ArrowDropDownIcon)({
+  color:"#000000",
+  padding:"2px 0px 0px 5px"
+});
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(true);
@@ -36,42 +97,42 @@ const Sidebar = () => {
 
   return (
     <>
-      <Navbar style={{ backgroundColor: "green" }}>
-        <>
-          <div>
-            <PrimaryNav>
-              <Menu className="nav">
-                <NavBarHeading>Rolling Revenue</NavBarHeading>
-                <UserLoggedInSection>
-                  <LoggedInUserImage src={userObj?.picture?.thumbnail} />
-                  <LoggedInUserName>Rohit Sharma</LoggedInUserName>
-                </UserLoggedInSection>
-              </Menu>
-            </PrimaryNav>
-          </div>
-        </>
-      </Navbar>
-      <hr style={{ width: "75%", marginRight: "4rem" }} />
-      {/* <IconContext.Provider value={{ color: "yellow" }}> */}
-      <SidebarNav sidebar={sidebar}>
-        <SidebarWrap>
-          <img src={Nous_Infosystems} alt="Nous logo" className="image" />
-          <hr style={{ width: "80%", color: "#0a8b9" }}></hr>
-          {SidebarData.map((item, index) => {
-            return (
-              <SubMenu
-                item={item}
-                key={index}
-                isOpen={openSubmenu === index}
-                handleSubMenuClick={handleSubMenuClick}
-                index={index}
-                setOpenSubmenu={setOpenSubmenu}
-              />
-            );
-          })}
-        </SidebarWrap>
-      </SidebarNav>
-      {/* </IconContext.Provider> */}
+      <div>
+        <Box sx={{ flexGrow: 1, overflow: "hidden" }}  >
+          <AppNavBar position="static" >
+            <InnerBox >
+              <div>
+                <Img src={Nous_Infosystems} alt="Nous logo" />
+              </div>
+              <div>
+                <Heading>Rolling Revenue</Heading>
+              </div>
+              <LoggedInUserSection>
+                <LoggedInUserImage src={userObj?.picture?.thumbnail} />
+                <LoggedInUserName>Rohit Sharma</LoggedInUserName>
+                <ArrowDownIcon />
+              </LoggedInUserSection>
+            </InnerBox>
+          </AppNavBar>
+        </Box>
+
+        <SideBar sidebar={sidebar}>
+          <SidebarWrap>
+            {SidebarData.map((item, index) => {
+              return (
+                <SubMenu
+                  item={item}
+                  key={index}
+                  isOpen={openSubmenu === index}
+                  handleSubMenuClick={handleSubMenuClick}
+                  index={index}
+                  setOpenSubmenu={setOpenSubmenu}
+                />
+              );
+            })}
+          </SidebarWrap>
+        </SideBar>
+      </div>
     </>
   );
 };

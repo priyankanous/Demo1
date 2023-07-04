@@ -7,6 +7,11 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import { async } from "q";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 function Currency() {
   const [data, setData] = useState({
     actualDataObject: [],
@@ -32,6 +37,7 @@ function Currency() {
   useEffect(() => {
     getFinancialYearNameData();
   }, []);
+  
   const getAllCurrency = async (e) => {
     console.log("in the getALLGlobalLLF", e);
     await axios
@@ -70,7 +76,8 @@ function Currency() {
     <div>
       <MemoizedBaseComponent
         field="Currency"
-        columns={["Currency", "Name", "Symbol", "Conversion Rate"]}
+        buttonText="setup Currency"
+        columns={["Currency", "Name","Active From","Active Until",""]}
         data={data}
         Tr={(obj) => {
           return <Tr data={obj} setFinancialYearData={setFinancialYearData} />;
@@ -309,7 +316,7 @@ function Tr({ data: { currencyId, currencyName, conversionRate, symbol } }) {
           )}{" "}
         </span>
       </td>
-      <Modal
+      {/* <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={modalStyleObject}
@@ -366,7 +373,7 @@ function Tr({ data: { currencyId, currencyName, conversionRate, symbol } }) {
             </div>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </tr>
   );
 }

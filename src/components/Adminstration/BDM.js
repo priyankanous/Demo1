@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-import Modal, { defaultStyles } from "react-modal";
+import { defaultStyles } from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value.js";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
+import Modal from "react-modal";
+import { Table,  TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function Bdm() {
   const [data, setData] = useState(null);
@@ -227,10 +234,10 @@ function Bdm() {
     <div>
       <MemoizedBaseComponent
         field="BDM"
-        actionButtonName="Setup BDM"
+        buttonText="Setup BDM"
         columns={[
-          "BDM Name",
-          "BDM Display Name",
+          "Name",
+          "Display Name",
           "Active From",
           "Active Until",
           "Linked BU",
@@ -554,46 +561,52 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
+       <TableRowSection ref={wrapperRef}>
+      <TableCellSection>
         <span>{bdmName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+
+      <TableCellSection>
         <span>{bdmDisplayName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+
+      <TableCellSection>
         <span>{activeFrom}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+
+      <TableCellSection>
         <span>{activeUntil}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
-        <span>
+      </TableCellSection>
+
+      <TableCellSection>
+      <span>
           {(businessUnits &&
             businessUnits.map((_) => _.businessUnitDisplayName).join(", ")) ||
             "Unknown"}
         </span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
-        <span>
+      </TableCellSection>
+
+      <TableCellSection>
+      <span>
           {(regions && regions.map((_) => _.regionDisplayName).join(", ")) ||
             "Unknown"}
         </span>
-      </td>
-      <td>
+      </TableCellSection>
+
+      <TableCellSection>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
+            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
               <a
                 style={{ padding: "5px" }}
                 onClick={() => {
                   editBDMData(bdmId);
                 }}
               >
-                <AiIcons.AiOutlineEdit
+                <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}}
                   onClick={() => {
                     setIsOpen(true);
                   }}
@@ -601,6 +614,12 @@ function Tr({
                 Edit
               </a>
               <a
+                  style={{ padding: "5px" }}
+                >
+                  <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+                  Delete
+                </a>
+              {/* <a
                 onClick={() => {
                   activateDeactivate(bdmId);
                 }}
@@ -608,8 +627,8 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 onClick={() => {
                   activateDeactivate(bdmId);
                 }}
@@ -617,12 +636,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+              </a> */}
             </div>
           )}{" "}
         </span>
-      </td>
-    </tr>
+      </TableCellSection>
+    </TableRowSection>
   );
 }
 export default Bdm;

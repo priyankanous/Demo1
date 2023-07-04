@@ -1,20 +1,31 @@
 import React from "react";
 import * as AiIcons from "react-icons/ai";
 import * as RiIcons from "react-icons/ri";
+import HomeIcon from '@mui/icons-material/Home';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import SettingsIcon from '@mui/icons-material/Settings';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
-    icon: <AiIcons.AiFillHome />,
+    icon: <HomeIcon style={{fontSize:"medium"}} />,
     subNav: [],
   },
   {
     title: "Revenue",
     path: "/revenue",
-    icon: < AiIcons.AiFillSignal/>,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+    // icon: < AiIcons.AiFillSignal/>,
+    icon: <SignalCellularAltIcon style={{fontSize:"medium"}} />,
+    // iconClosed: <RiIcons.RiArrowDownSFill />,
+    // iconOpened: <RiIcons.RiArrowUpSFill />,
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
 
     subNav: [
       {
@@ -37,9 +48,10 @@ export const SidebarData = [
   {
     title: "Reports",
     path: "/reports",
-    icon: < AiIcons.AiFillSchedule/>,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+    // icon: < AiIcons.AiFillSchedule/>,
+    icon: < TextSnippetIcon style={{fontSize:"medium"}}/>,
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
 
     subNav: [
       {
@@ -82,9 +94,10 @@ export const SidebarData = [
   {
     title: "Settings",
     path: "/settings",
-    icon: < AiIcons.AiFillSetting/>,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+    // icon: < AiIcons.AiFillSetting/>,
+    icon: < SettingsIcon style={{fontSize:"medium"}}/>,
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
 
     subNav: [
       {
@@ -107,9 +120,11 @@ export const SidebarData = [
   {
     title: "Calendar",
     path: "/calender",
-    icon: <AiIcons.AiFillCalendar/>,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+    // icon: <AiIcons.AiFillCalendar/>,
+    icon: <CalendarMonthOutlinedIcon style={{fontSize:"medium"}} />,
+
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
     subNav: [
       {
         title: "Holiday Calender",
@@ -132,18 +147,19 @@ export const SidebarData = [
   {
     title: "Administration",
     path: "/administration",
-    icon: <AiIcons.AiFillAccountBook/>,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
+    // icon: <AiIcons.AiFillAccountBook/>,
+    icon: <AdminPanelSettingsOutlinedIcon style={{fontSize:"medium"}}/>,
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
 
     subNav: [
+      // {
+      //   title: "Organization",
+      //   path: "/administration/organization",
+      //   cName: "sub-nav",
+      // },
       {
-        title: "Organization",
-        path: "/administration/organization",
-        cName: "sub-nav",
-      },
-      {
-        title: "Business Unit",
+        title: "BU",
         path: "/administration/bu",
         cName: "sub-nav",
       },
@@ -183,7 +199,7 @@ export const SidebarData = [
         cName: "sub-nav",
       },
       {
-        title: "CoC Practice",
+        title: "COC Practice",
         path: "/administration/cocPractice",
         cName: "sub-nav",
       },

@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function SbuHead() {
   const [data, setData] = useState([]);
@@ -50,6 +55,14 @@ function SbuHead() {
   useEffect(() => {
     fetchSbuHeadData();
   }, []);
+
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const setSbuHeadData = async () => {
     const activeFromDt = `${
@@ -149,14 +162,14 @@ function SbuHead() {
     <div>
       <MemoizedBaseComponent
         field="SBU Head"
-        actionButtonName="Setup SBU Head"
+        buttonText="Setup SBU Head"
         columns={[
           "Name",
           "Display Name",
           "SBU Name",
           "Active From",
           "Active Untill",
-          " ",
+          "",
         ]}
         data={data}
         Tr={(obj) => {
@@ -172,29 +185,27 @@ function SbuHead() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={bdmStyleObject}
-        className="modal-container"
+        open={isOpen}
+        onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup SBU Head</ModalHeading>
-              <ModalIcon
+        <Box sx={MoadalStyle}>
+        <ModalHeadingSection>
+              <ModalHeadingText>Setup Business Unit</ModalHeadingText>
+              <CloseIcon
                 onClick={() => {
-                  resetStateAndData();
+                  setIsOpen(false);
                 }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
+                style={{ cursor: "pointer" }}
+              />
+            </ModalHeadingSection>
+            <ModalDetailSection>
+            <form id="reg-form">
+            <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Name</InputTextLabel>
+                  <InputField size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
                     spellcheck="false"
                     onChange={(e) => {
                       setSbuHeadName(e.target.value);
@@ -202,99 +213,105 @@ function SbuHead() {
                     value={sbuHeadName}
                   />
                 </div>
-                <div>
-                  <label for="email">Display Name</label>
-                  <input
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Display Name</InputTextLabel>
+                  <InputField size="small"
                     type="text"
                     id="email"
+                    variant="outlined"
                     spellcheck="false"
                     onChange={(e) => {
                       setSbuHeadDisplayName(e.target.value);
                     }}
                     value={sbuHeadDisplayName}
+
                   />
                 </div>
-                <div>
-                  <label for="email">SBU Name</label>
-                  <select
-                    style={{ width: "100%" }}
-                    onChange={(e) => {
-                      const sbuSelected = JSON.parse(e.target.value);
-                      setSbuName(sbuSelected);
-                    }}
-                  >
-                    <option
-                      value=""
-                      disabled
-                      selected={sbuName === null && true}
-                      hidden
+
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>SBU Name</InputTextLabel>
+                  <FormControl fullWidth>
+                    <Select
+                      size="small"
+                      style={{ background: "white" }}
+                      onChange={(e) => {
+                        const sbuSelected = JSON.parse(e.target.value);
+                        setSbuName(sbuSelected);
+                      }}
+
                     >
-                      Please choose one option
-                    </option>
-                    {sbuNameData?.map((sbuData, index) => {
+                     {sbuNameData?.map((sbuData, index) => {
                       const sbuNameData = sbuData.sbuName;
                       return (
-                        <option
-                          value={JSON.stringify(sbuData)}
-                          selected={sbuNameData === sbuName}
-                          key={index}
-                        >
+                        <MenuItem
+                        value={JSON.stringify(sbuData)}
+                        selected={sbuNameData === sbuName}
+                        key={index}
+                      >
                           {sbuNameData}
-                        </option>
+                        
+                      </MenuItem>
                       );
                     })}
-                  </select>
+                    </Select>
+                  </FormControl>
                 </div>
-                <div>
-                  <label for="email">Active From</label>
-                  <input
+
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Active From</InputTextLabel>
+                  <InputField fullWidth
+                  size="small"
                     type="date"
                     id="email"
-                    spellcheck="false"
+                    variant="outlined"
                     onChange={(e) => {
                       setActiveForm(e.target.value);
                     }}
                     value={activeForm}
+
                   />
                 </div>
-                <div>
-                  <label for="email">Active Untill</label>
-                  <input
+
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Active Untill</InputTextLabel>
+                  <InputField fullWidth
+                  size="small"
                     type="date"
                     id="email"
-                    spellcheck="false"
+                    variant="outlined"
                     onChange={(e) => {
                       setActiveUntil(e.target.value);
                     }}
                     value={activeUntil}
                   />
                 </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={() => {
-                        setSbuHeadData();
-                      }}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        resetStateAndData();
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
+
+                <ButtonSection>
+                  <ModalControlButton
+                    type="button"
+                    value="Save"
+                    id="create-account"
+                    variant="contained"
+                    onClick={() => {
+                      setSbuHeadData();
+                    }}
+
+                  >Save</ModalControlButton>
+                  <ModalControlButton
+                    type="button"
+                    variant="contained"
+                    onClick={() => {
+                      resetStateAndData();
+                    }}
+
+                    value="Cancel"
+                    id="create-account"
+
+                  >Cancel</ModalControlButton>
+                </ButtonSection>
               </form>
-            </div>
-          </div>
-        </div>
+        </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -335,41 +352,43 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
+   <TableRowSection ref={wrapperRef}>
+      <TableCellSection>
         <span>{sbuHeadName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+      <TableCellSection>
         <span>{sbuHeadDisplayName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+      <TableCellSection >
         <span>{sbuName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+      <TableCellSection>
         <span>{activeFrom || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+      <TableCellSection>
         <span>{activeUntil || "Unknown"}</span>
-      </td>
-      <td data-id={sbuHeadId}>
+      </TableCellSection>
+      <TableCellSection data-id={sbuHeadId}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
+            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
               <a
                 onClick={(e) => {
                   openTheModalWithValues(e, sbuHeadId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineEdit /> Edit
+                 <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+ Edit
               </a>
-              {/* <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
-                                <AiIcons.AiOutlineDelete /> Delete
-                            </a> */}
-              <a
+              <a onClick={() => { deleteSelectedLocation(sbuHeadId) }} href="#about" style={{ padding: "5px" }}>
+              <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+ Delete
+                            </a>
+              {/* <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(sbuHeadId);
@@ -377,8 +396,8 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(sbuHeadId);
@@ -386,12 +405,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+              </a> */}
             </div>
           )}{" "}
         </span>
-      </td>
-    </tr>
+      </TableCellSection>
+    </TableRowSection>
   );
 }
 

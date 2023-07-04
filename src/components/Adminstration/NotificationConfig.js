@@ -8,6 +8,11 @@ import {
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import EmailNotificationSetup from "./EmailNotificationSetup";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import * as AiIcons from "react-icons/ai";
+import CloseIcon from '@mui/icons-material/Close';
 
 const NotificationConfig = () => {
   const [data, setData] = useState(null);
@@ -16,6 +21,8 @@ const NotificationConfig = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [loadEmailSetup, setEmailSetup] = useState(false);
+  const [isDropdown, setDropdown] = useState(false);
+
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/users`)
@@ -27,11 +34,13 @@ const NotificationConfig = () => {
       });
   }, []);
 
+
   return (
     <div>
       <MemoizedBaseComponent
         field="Notification Templates"
-        columns={["Id", "Templ. Code", "Name", " "]}
+        buttonText="setup Notification Template"
+        columns={["Id", "Templ. Code", "Name",""]}
         data={data}
         Tr={Tr}
         setIsOpen={setIsOpen}
@@ -45,20 +54,26 @@ const NotificationConfig = () => {
 
 function Tr({ userId, id, title, completed }) {
   return (
-    <tr>
-      <td>
+    <TableRowSection >
+
+      <TableCellSection >
         <span>{id || "Unknown"}</span>
-      </td>
-      <td>
+      </TableCellSection>
+
+      <TableCellSection >
         <span>{userId || "Unknown"}</span>
-      </td>
-      <td>
+      </TableCellSection>
+
+      <TableCellSection >
         <span>{title || "Unknown"}</span>
-      </td>
-      <td>
-        <span>{completed || "Unknown"}</span>
-      </td>
-    </tr>
+      </TableCellSection>
+      <TableCellSection>
+          <span style={{ float: "right" }}>
+            <AiIcons.AiOutlineMore
+            ></AiIcons.AiOutlineMore>
+            </span>
+            </TableCellSection>
+    </TableRowSection>
   );
 }
 

@@ -20,10 +20,10 @@ function App() {
           path="/administration/region"
           component={RollingRevenueAdministration.Region}
         />
-        <Route
+        {/* <Route
           path="/administration/organization"
           component={RollingRevenueAdministration.Organization}
-        />
+        /> */}
         <Route
           path="/administration/sbu"
           component={RollingRevenueAdministration.Sbu}
@@ -81,6 +81,7 @@ function App() {
           component={RollingRevenueAdministration.GlobalLeaveLossFactor}
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
+
       </Switch>
     </Router>
   );
