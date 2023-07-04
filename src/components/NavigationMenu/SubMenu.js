@@ -1,6 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { SidebarLabel, SidebarLink, DropdownLink } from "../../utils/Value";
 import { useLocation } from "react-router";
+import { styled } from '@mui/material';
+import { DropdownLink   } from "../../utils/Value";
+
+const SidebarLink = styled('Link')({
+  display: "flex",
+  color: "#000000",
+  justifyContent: "space-between",
+  alignItems: "center",
+  height:"34px",
+  padding: "3px 0px 3px 30px",
+  listStyle: "none",
+  textDecoration: "none",
+  fontSize: "14px",
+  fontWeight: "500",
+});
+
+const SidebarLabel = styled('span')({
+  marginLeft: "1rem",
+});
 
 const SubMenu = ({
   item,
@@ -35,9 +53,9 @@ const SubMenu = ({
       <SidebarLink
         key={index}
         style={{
-          background: isMainmenuactive && "#23C5C7",
-          color: isMainmenuactive && "black",
-          fontWeight: isMainmenuactive && "600",
+          background: isMainmenuactive && "#1E4482",
+          color: isMainmenuactive && "#FFFFFF",
+          fontWeight: isMainmenuactive && "400",
         }}
         to={item.path}
         onClick={() => {
@@ -63,10 +81,8 @@ const SubMenu = ({
               }}
               to={item.path}
               key={index1}
+              style={{ borderTop: "1px solid rgba(245, 249, 252, 0.5)"}}
             >
-              <span>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </span>
               <SidebarLabel
                 className={subDropDownActive == item.path && "active"}
               >

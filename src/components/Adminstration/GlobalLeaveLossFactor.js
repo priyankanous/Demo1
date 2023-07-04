@@ -6,6 +6,10 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function GlobalLeaveLossFactor() {
   const [data, setData] = useState({
@@ -127,11 +131,16 @@ function GlobalLeaveLossFactor() {
       actualDataArray
     );
   };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
   return (
     <div>
       <MemoizedBaseComponent
         field="Global Leave Loss Factor"
-        columns={["#", "Month", "Offshore", "Onshore"]}
+        buttonText="setup bu"
+        columns={["#", "Month", "OffShore", "OnShore"]}
         data={data}
         Tr={(obj) => {
           return (
@@ -151,6 +160,7 @@ function GlobalLeaveLossFactor() {
 
       <Modal
         isOpen={isOpen}
+        onClose={handleModalClose}
         onRequestClose={() => setIsOpen(false)}
         style={bdmStyleObject}
       >

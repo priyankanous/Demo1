@@ -4,46 +4,64 @@ import { FaBars } from "react-icons/fa";
 
 export const SidebarLink = styled(Link)`
   display: flex;
-  color: white;
+  color: #000000;
   justify-content: space-between;
   align-items: center;
-  padding: 4%;
-  padding-left: 2rem;
+  height:34px;
+  padding: 3px 0px 3px 30px;
   list-style: none;
-  height: 1%;
   text-decoration: none;
-  font-size: 2vh;
+  font-size: 14px;
+  font-weight: 500;
 `;
 export const SidebarLabel = styled.span`
   margin-left: 1rem;
 `;
 
 export const DropdownLink = styled(Link)`
-  background: #0a8b9;
-  margin-left: 0rem;
-  padding-right: 1rem;
-  padding-top: 0.4rem;
-  padding-bottom: 0.25rem;
+  background: rgba(30, 68, 130, 0.2);
+  color: #000000;
+  font-size: 14px;
+  font-weight:500;
+  line-height: 15px;
   display: block;
-  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 58px;
+  // margin-left: 0rem;
+  // padding-right: 1rem;
+  // align-items: center;
   text-decoration: none;
-  color: #f5f5f5;
-  font-size: 1.5vh;
   overflow: auto;
 
   .active {
-    background: #23c5c7;
-    border-radius: 5.5rem;
-    margin-left: 0.4rem;
-    marging-right: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    color: black;
+    font-weight:700;
+    // background: rgba(30, 68, 130, 0.2);
+    // background: #23c5c7;
+    // border-radius: 10px;
+    // padding: 2px 5px;
+    // margin-left: 0.4rem;
+    // padding-left: 0.5rem;
+    // padding-right: 0.5rem;
+    // padding-top: 0.25rem;
+    // padding-bottom: 0.25rem;
+    // color: black;
   }
 `;
-
+export const SidebarNavBar = styled.nav`
+  background: #FFFFFF;
+  width: 240px;
+  height: 924px;
+  top:60px;
+  left:0px;
+  // display: flex;
+  // justify-content: center;
+  position: absolute;
+  // left: ${({ sidebar }) => (sidebar ? "0" : "-100%")};
+  // transition: 350ms;
+  // z-index: 10;
+  // overflow: auto;
+`;
 export const SidebarNav = styled.nav`
   background: #002333;
   width: 17%;
@@ -120,15 +138,17 @@ export const TableHeadingSection = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  padding-top: 5px;
 `;
 export const TableRevenue = styled.div`
   width: 50%;
 `;
 export const TableHeading = styled.div`
-  margin: 15px 50px;
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: #072a3a;
+  // margin: 15px 50px;
+  font-weight: 600;
+  font-size: 21px;
+  color: #000000;
+  padding: 7px 0px 5px 5px;
 `;
 
 export const TableButtons = styled.button`
@@ -142,7 +162,7 @@ export const TableButtons = styled.button`
   font-size: 0.9vw;
   line-height: 19px;
   color: #ffffff;
-  margin: 2.9vh 3vh 0vh 0vh;
+  // margin: 2.9vh 3vh 0vh 0vh;
 `;
 export const TableHeadingButton = styled.button`
   background-color: #002333;
@@ -173,17 +193,16 @@ export const UserLoggedInSection = styled.div`
   margin-right: 1rem;
 `;
 export const LoggedInUserImage = styled.img`
+  width: 40px;
+  height:40px
   position: relative;
-  top: 20%;
-  margin-right: 1rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  margin-right: 20px;
   border-radius: 50%;
 `;
 export const LoggedInUserName = styled.span`
-  font-weight: 500;
-  font-size: 1.2vw;
-  color: rgb(7, 46, 58);
+  font-weight: 400;
+  font-size: 16px;
+  color: rgb(0, 35, 51, 1);
 `;
 export const ModalFormButton = styled.div`
   display: flex;

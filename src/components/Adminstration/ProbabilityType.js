@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function Probability() {
   const [probabilityFormData, setProbabilityFormData] = useState({
@@ -26,6 +31,13 @@ function Probability() {
   useEffect(() => {
     fetchPercentageType();
   }, []);
+
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const setProbabilityTypeData = async () => {
     if (isEditId !== null) {
@@ -88,6 +100,7 @@ function Probability() {
     <div>
       <MemoizedBaseComponent
         field="Probability Type"
+        buttonText="setup Probability type"
         columns={["Name", "Percentage", " "]}
         data={probabilitydata}
         Tr={(obj) => {
@@ -103,79 +116,84 @@ function Probability() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        open={isOpen}
+        onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Probability</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="probability-type-name"
-                    spellcheck="false"
-                    value={probabilityFormData?.probabilityTypeName}
-                    onChange={(e) => {
-                      setProbabilityFormData({
-                        ...probabilityFormData,
-                        probabilityTypeName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Percentage</label>
-                  <input
-                    type="number"
-                    id="probability-percentage"
-                    spellcheck="false"
-                    value={probabilityFormData?.percentage}
-                    onChange={(e) => {
-                      setProbabilityFormData({
-                        ...probabilityFormData,
-                        percentage: parseInt(e.target.value),
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={() => {
-                        setProbabilityTypeData();
-                      }}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Business Unit</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+
+            <form id="reg-form">
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="probability-type-name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={probabilityFormData?.probabilityTypeName}
+                  onChange={(e) => {
+                    setProbabilityFormData({
+                      ...probabilityFormData,
+                      probabilityTypeName: e.target.value,
+                    });
+                  }}
+
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Percentage</InputTextLabel>
+                <InputField size="small"
+                  type="number"
+                  id="probability-percentage"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={probabilityFormData?.percentage}
+                  onChange={(e) => {
+                    setProbabilityFormData({
+                      ...probabilityFormData,
+                      percentage: parseInt(e.target.value),
+                    });
+                  }}
+
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    setProbabilityTypeData();
+                  }}
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -206,41 +224,44 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
+    <TableRowSection ref={wrapperRef}>
+      <TableCellSection>
         <span>{probabilityTypeName || "Unknown"}</span>
-      </td>
-      <td
-        className={!isActive && "disable-table-row"}
+      </TableCellSection>
+      <TableCellSection
         data-id={probabilityTypeId}
       >
         <span>{percentage || "Unknown"}</span>
-      </td>
-      <td>
+      </TableCellSection>
+      <TableCellSection>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
+            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
               <a
                 onClick={(e) => {
                   openTheModalWithValues(e, probabilityTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineEdit /> Edit
+                 <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+
+                 Edit
               </a>
-              {/* <a
+              <a
                 onClick={() => {
                   deleteSelectedLocation(probabilityTypeId);
                 }}
                 href="#about"
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineDelete /> Delete
-              </a> */}
-              <a
+                    <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+
+                 Delete
+              </a>
+              {/* <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(probabilityTypeId);
@@ -248,8 +269,8 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(probabilityTypeId);
@@ -257,12 +278,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+              </a> */}
             </div>
           )}{" "}
         </span>
-      </td>
-    </tr>
+      </TableCellSection>
+    </TableRowSection>
   );
 }
 export default Probability;

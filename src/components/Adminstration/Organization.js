@@ -6,6 +6,9 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from '@mui/material';
+import { TableRowSection, TableCellSection } from "../../utils/constantsValue";
+
 
 function Organization() {
   const [data, setData] = useState(null);
@@ -45,7 +48,8 @@ function Organization() {
     <div>
       <MemoizedBaseComponent
         field="Organization"
-        columns={[" Name", " Display Name"]}
+        buttonText="setup organization"
+        columns={["Organization Name", "Organization Display Name"]}
         data={data}
         Tr={(obj) => {
           return (
@@ -200,12 +204,12 @@ function Tr({
 
   return (
     <React.Fragment>
-      <tr ref={wrapperRef}>
-        <td className={!isActive && "disable-table-row"}>
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection >
           <span>{orgName || "Unknown"}</span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
+        </TableCellSection>
+        <TableCellSection>
+          <span >
             {orgDisplayName || "Unknown"}
           </span>
           <span style={{ float: "right" }}>
@@ -255,8 +259,8 @@ function Tr({
               </div>
             )}
           </span>
-        </td>
-      </tr>
+        </TableCellSection>
+      </TableRowSection>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}

@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
 
 function Location() {
   const [locationName, setLocationName] = useState([]);
@@ -26,6 +33,14 @@ function Location() {
   useEffect(() => {
     fetchLocationName();
   }, []);
+
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const setlocationDetails = async () => {
     if (isEditId !== null) {
@@ -89,7 +104,8 @@ function Location() {
     <div>
       <MemoizedBaseComponent
         field="Location"
-        columns={["Name", "Display Name", " "]}
+        buttonText="setup location"
+        columns={["Name", "Display Name",""]}
         data={locationName}
         Tr={(obj) => {
           return (
@@ -104,42 +120,44 @@ function Location() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+                  open={isOpen}
+                  onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Location</ModalHeading>
-              <ModalIcon
+                  <Box sx={MoadalStyle}>
+                  <ModalHeadingSection>
+              <ModalHeadingText>Setup Region</ModalHeadingText>
+              <CloseIcon
                 onClick={() => {
                   setIsOpen(false);
                 }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="loc-name"
-                    value={locationFormData?.locationName}
-                    onChange={(e) => {
-                      setLocationFormData({
-                        ...locationFormData,
-                        locationName: e.target.value,
-                      });
-                    }}
+                style={{ cursor: "pointer" }}
+              />
+            </ModalHeadingSection>
+            <ModalDetailSection>
+            <form id="reg-form">
+
+            <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Name</InputTextLabel>
+                  <InputField size="small"
+                      type="text"
+                      id="loc-name"
+                      variant="outlined"
+                      value={locationFormData?.locationName}
+                      onChange={(e) => {
+                        setLocationFormData({
+                          ...locationFormData,
+                          locationName: e.target.value,
+                        });
+                      }}
                   />
                 </div>
-                <div>
-                  <label for="email">Display Name</label>
-                  <input
+
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Display Name </InputTextLabel>
+                  <InputField size="small"
                     type="text"
                     id="loc-disp-name"
+                    variant="outlined"
                     value={locationFormData?.locationDisplayName}
                     onChange={(e) => {
                       setLocationFormData({
@@ -147,34 +165,36 @@ function Location() {
                         locationDisplayName: e.target.value,
                       });
                     }}
+
                   />
                 </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={() => {
-                        setlocationDetails();
-                      }}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+
+                <ButtonSection>
+                  <ModalControlButton
+                    type="button"
+                    value="Save"
+                    id="create-account"
+                    variant="contained"
+                    onClick={() => {
+                      setlocationDetails();
+                    }}
+                  
+
+                  >Save</ModalControlButton>
+                  <ModalControlButton
+                    type="button"
+                    variant="contained"
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    value="Cancel"
+                    id="create-account"
+
+                  >Cancel</ModalControlButton>
+                </ButtonSection>
+          </form>
+              </ModalDetailSection>
+          </Box>
       </Modal>
     </div>
   );
@@ -206,37 +226,39 @@ function Tr({
   };
 
   return (
-    <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
+    <TableRowSection ref={wrapperRef}>
+      <TableCellSection>
         <span>{locationName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
+      </TableCellSection>
+      <TableCellSection>
         <span>{locationDisplayName || "Unknown"}</span>
-      </td>
-      <td data-id={locationId}>
+      </TableCellSection>
+      <TableCellSection data-id={locationId}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
+            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
               <a
                 onClick={(e) => {
                   openTheModalWithValues(e, locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineEdit /> Edit
+                                  <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+ Edit
               </a>
-              {/* <a
+              <a
                 onClick={() => {
                   deleteSelectedLocation(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineDelete /> Delete
-              </a> */}
-              <a
+              <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+ Delete
+              </a>
+              {/* <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(locationId);
@@ -244,8 +266,8 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(locationId);
@@ -253,12 +275,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+              </a> */}
             </div>
           )}{" "}
         </span>
-      </td>
-    </tr>
+      </TableCellSection>
+    </TableRowSection>
   );
 }
 export default Location;

@@ -6,6 +6,12 @@ import { ModalFormButton, ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function WorkOrderStatus() {
   const [data, setData] = useState(null);
@@ -44,7 +50,8 @@ function WorkOrderStatus() {
     <div>
       <MemoizedBaseComponent
         field="Work Order status"
-        columns={["Name", "Display Name"]}
+        buttonText="setup WO Status"
+        columns={["Name", "Display Name",""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -187,28 +194,30 @@ function Tr({
   };
   // API calls to delete Record
 
-  // const DeleteRecord = () => {
-  //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus/${woStatusId}`,
-  //       responseData
-  //     )
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       getAllWorkOrderData();
-  //       setIsOpen(false);
-  //     });
-  // };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/wostatus/${woStatusId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllWorkOrderData();
+        setIsOpen(false);
+      });
+  };
   return (
     <React.Fragment>
-      <tr ref={wrapperRef}>
-        <td className={!isActive && "disable-table-row"}>
+            <TableRowSection ref={wrapperRef}>
+        <TableCellSection >
           <span>{woStatusName || "Unknown"}</span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {woStatusDisplayName || "Unknown"}
-          </span>
+        </TableCellSection>
+
+        <TableCellSection >
+          <span>{woStatusDisplayName || "Unknown"}</span>
+        </TableCellSection>
+
+        <TableCellSection >
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -216,7 +225,7 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right" }} class="dropdown-content">
+              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
                 <a
                   style={{ padding: "5px" }}
                   onClick={() => {
@@ -226,7 +235,7 @@ function Tr({
                   <AiIcons.AiOutlineEdit />
                   Edit
                 </a>
-                {/* <a
+                <a
                  
                   style={{ padding: "5px" }}
                   onClick={() => {
@@ -234,8 +243,8 @@ function Tr({
                   }}
                 >
                   <AiIcons.AiOutlineDelete /> Delete
-                </a> */}
-                <a
+                </a>
+                {/* <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
@@ -243,8 +252,8 @@ function Tr({
                   }}
                 >
                   <AiIcons.AiOutlineCheckCircle /> Activate
-                </a>
-                <a
+                </a> */}
+                {/* <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(woStatusId);
@@ -252,13 +261,13 @@ function Tr({
                   style={{ padding: "5px" }}
                 >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a>
+                </a> */}
               </div>
             )}
           </span>
-        </td>
-      </tr>
-      <Modal
+        </TableCellSection>
+      </TableRowSection>
+      {/* <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={modalStyleObject}
@@ -330,7 +339,7 @@ function Tr({
             </div>
           </div>
         </div>
-      </Modal>
+      </Modal> */}
     </React.Fragment>
   );
 }

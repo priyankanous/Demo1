@@ -4,8 +4,25 @@ import { AiFillPlusSquare } from "react-icons/ai";
 import {
   TableHeadingSection,
   TableHeading,
-  TableButtons,
+  // TableButtons,
 } from "../../utils/Value";
+import { Button, styled } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+
+
+const TableButtons = styled(Button)({
+  background: "#1E4482",
+  marginRight: "29px",
+  color: "#FFFFFF",
+  fontSize: "12px",
+  padding: "0px 10px",
+  height:"34px",
+  marginTop:"6px",
+  '&:hover': {
+    backgroundColor: '#1E4482',
+  },
+});
+
 
 export function AdminBaseComponent(props) {
   const [copyData, setCopyData] = useState({
@@ -22,7 +39,7 @@ export function AdminBaseComponent(props) {
     <div className="table_container">
       <TableHeadingSection>
         <TableHeading>Administration - {props.field}</TableHeading>
-        <TableButtons onClick={props.setIsOpen}>Add New</TableButtons>
+        <TableButtons variant="contained" onClick={props.setIsOpen}>{props.buttonText}</TableButtons>
       </TableHeadingSection>
       {(props.globalLeave && props.financialYearData) ||
       (props.currency && props.financialYearData) ? (
@@ -132,32 +149,39 @@ export function AdminBaseComponent(props) {
               {console.log("this is in BC copyFromFy", copyData.copyFromFy)}
             </span>
           </div>
-          <table style={{ overflow: "auto" }}>
-            <tr>
+          <TableContainer style={{overflow:"hidden"}}>
+          <Table style={{overflow:"hidden"}}>
+            <TableRow>
               {props.columns.map((header) => {
-                return <th className="thadministration">{header}</th>;
+                return <TableCell>{header}</TableCell>;
               })}
-            </tr>
+            </TableRow>
             <tbody>
               {props.data &&
                 props.data.actualDataObject.map((obj, id) =>
                   props.Tr({ ...obj })
                 )}
             </tbody>
-          </table>
+          </Table>
+          </TableContainer>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <table style={{ fontSize: "1vw" }}>
-            <tr>
+          <TableContainer style={{overflow:"hidden", width:"97%",marginTop:"25px"}}>
+
+          <Table style={{overflow:"hidden"}} >
+            <TableHead>
+              <TableRow style={{background:"rgba(225, 222, 222, 0.5)"}} >
               {props.columns.map((header) => {
-                return <th className="thadministration">{header}</th>;
+                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px"}}>{header}</TableCell>;
               })}
-            </tr>
+              </TableRow>
+            </TableHead>
             <tbody>
               {props.data && props.data.map((obj, id) => props.Tr({ ...obj }))}
             </tbody>
-          </table>
+          </Table>
+          </TableContainer>
         </React.Fragment>
       )}
     </div>

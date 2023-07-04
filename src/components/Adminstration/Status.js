@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function Status() {
   const [statusType, setstatusType] = useState([]);
@@ -26,6 +32,10 @@ function Status() {
   useEffect(() => {
     fetchstatusTypeData();
   }, []);
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const setstatusTypeData = async () => {
     if (isEditId !== null) {
@@ -89,6 +99,7 @@ function Status() {
     <div>
       <MemoizedBaseComponent
         field="Status"
+        buttonText="setup Status"
         columns={["Name", "Display name", " "]}
         data={statusType}
         Tr={(obj) => {
@@ -104,28 +115,33 @@ function Status() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+              open={isOpen}
+              onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Status</ModalHeading>
-              <ModalIcon
+                <Box sx={MoadalStyle}>
+
+                <ModalHeadingSection>
+              <ModalHeadingText>Setup Status</ModalHeadingText>
+              <CloseIcon
                 onClick={() => {
                   setIsOpen(false);
                 }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
+                style={{ cursor: "pointer" }}
+              />
+            </ModalHeadingSection>
+
+            <ModalDetailSection>
+
+
               <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="status-name"
+
+              <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Name</InputTextLabel>
+                  <InputField size="small"
+                      type="text"
+                      id="status-name"
+                      variant="outlined"
+                    spellcheck="false"
                     value={statusTypeFormData?.statusName}
                     onChange={(e) => {
                       setstatusTypeFormData({
@@ -135,11 +151,14 @@ function Status() {
                     }}
                   />
                 </div>
-                <div>
-                  <label for="email">Display name</label>
-                  <input
-                    type="text"
-                    id="status-display-name"
+
+                <div style={{ padding: "10px 0px" }}>
+                  <InputTextLabel>Display Name</InputTextLabel>
+                  <InputField size="small"
+                      type="text"
+                      id="status-display-name"
+                      variant="outlined"
+                    spellcheck="false"
                     value={statusTypeFormData?.statusDisplayName}
                     onChange={(e) => {
                       setstatusTypeFormData({
@@ -149,32 +168,32 @@ function Status() {
                     }}
                   />
                 </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={() => {
-                        setstatusTypeData();
-                      }}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
+
+                <ButtonSection>
+                  <ModalControlButton
+                    type="button"
+                    value="Save"
+                    id="create-account"
+                    variant="contained"
+                    onClick={() => {
+                      setstatusTypeData();
+                    }}
+
+                  >Save</ModalControlButton>
+                  <ModalControlButton
+                    type="button"
+                    variant="contained"
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                    value="Cancel"
+                    id="create-account"
+
+                  >Cancel</ModalControlButton>
+                </ButtonSection>
               </form>
-            </div>
-          </div>
-        </div>
+              </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -206,30 +225,32 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-    <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
-        <span>{statusName || "Unknown"}</span>
-      </td>
-      <td className={!isActive && "disable-table-row"}>
-        <span>{statusDisplayName || "Unknown"}</span>
-      </td>
-      <td data-id={statusId}>
+    <TableRowSection ref={wrapperRef}>
+        <TableCellSection >
+          <span>{statusName || "Unknown"}</span>
+        </TableCellSection>
+
+        <TableCellSection >
+          <span>{statusDisplayName || "Unknown"}</span>
+        </TableCellSection>
+        <TableCellSection data-id={statusId} >
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right" }} class="dropdown-content">
+            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
               <a
                 onClick={(e) => {
                   openTheModalWithValues(e, statusId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineEdit /> Edit
+                                  <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+ Edit
               </a>
-              {/* <a onClick={()=>{deleteSelectedLocation(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a> */}
-              <a
+              <a onClick={()=>{deleteSelectedLocation(statusId)}} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+              {/* <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(statusId);
@@ -237,8 +258,8 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCheckCircle /> Activate
-              </a>
-              <a
+              </a> */}
+              {/* <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(statusId);
@@ -246,12 +267,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a>
+              </a> */}
             </div>
           )}{" "}
         </span>
-      </td>
-    </tr>
+      </TableCellSection>
+    </TableRowSection>
   );
 }
 

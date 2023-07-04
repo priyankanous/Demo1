@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
 
 function Sbu() {
   const [data, setData] = useState(null);
@@ -28,6 +35,14 @@ function Sbu() {
   useEffect(() => {
     getAllSbuData();
   }, []);
+
+  const handleModalOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
 
   const getBuNameData = async () => {
     await axios
@@ -59,13 +74,14 @@ function Sbu() {
       console.log("this is the response", response.data);
       setIsOpen(false);
       getAllSbuData();
-    } catch {}
+    } catch { }
   };
   return (
     <div>
       <MemoizedBaseComponent
-        field="Strategic Business Unit"
-        columns={[" Name", " Display Name", "Parent Business Unit"]}
+        field="SBU"
+        buttonText="setup SBU"
+        columns={["Name", "Display Name", "Parent Business Unit"]}
         data={data}
         Tr={(obj) => {
           return (
@@ -80,54 +96,61 @@ function Sbu() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        open={isOpen}
+        onClose={handleModalClose}
+
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup SBU</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setSbuData({
-                        ...sbuData,
-                        sbuName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Display Name</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setSbuData({
-                        ...sbuData,
-                        sbuDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Parent Business Unit</label>
-                  <select
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup SBU</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+            <form id="reg-form">
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  onChange={(e) => {
+                    setSbuData({
+                      ...sbuData,
+                      sbuName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  onChange={(e) => {
+                    setSbuData({
+                      ...sbuData,
+                      sbuDisplayName: e.target.value,
+                    });
+                  }}
+
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Parent of BU</InputTextLabel>
+                <FormControl fullWidth>
+                  <Select
+                    // labelId="demo-simple-select-label"
+                    // id="demo-simple-select"
+                    size="small"
+                    style={{ background: "white" }}
                     onChange={(e) => {
                       const selectedBuId =
                         e.target.selectedOptions[0].getAttribute("data-buId");
@@ -162,10 +185,8 @@ function Sbu() {
                         },
                       });
                     }}
+
                   >
-                    <option value="" disabled selected hidden>
-                      Please choose one option
-                    </option>
                     {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
@@ -175,46 +196,48 @@ function Sbu() {
                       const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
-                          <option
+                          <MenuItem
                             data-buId={buId}
                             data-buDisplayName={buDisplayName}
                             data-orgId={orgId}
                             data-orgName={orgName}
                             data-orgDisplayName={orgDisplayName}
                             key={index}
+                            value={JSON.stringify(sbuData)}
                           >
+
                             {buNameData}
-                          </option>
+
+                          </MenuItem>
                         );
                       }
                     })}
-                  </select>
-                </div>
+                  </Select>
+                </FormControl>
+              </div>
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={AddDataToSbu}
 
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={AddDataToSbu}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -299,30 +322,30 @@ function Tr({
   };
   // API calls to delete record
 
-  // const DeleteRecord = () => {
-  //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
-  //       responseData
-  //     )
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       getAllSbuData();
-  //       setIsOpen(false);
-  //     });
-  // };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllSbuData();
+        setIsOpen(false);
+      });
+  };
 
   return (
     <React.Fragment>
-      <tr ref={wrapperRef}>
-        <td className={!isActive && "disable-table-row"}>
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection>
           <span>{sbuName || "Unknown"}</span>
-        </td>
-        <td className={!isActive && "disable-table-row"}>
+        </TableCellSection>
+        <TableCellSection>
           <span>{sbuDisplayName || "Unknown"}</span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
+        </TableCellSection>
+        <TableCellSection>
+          <span>
             {businessUnit.businessUnitName || "Unknown"}
           </span>
           <span style={{ float: "right" }}>
@@ -332,26 +355,28 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  <AiIcons.AiOutlineEdit />
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+
                   Edit
                 </a>
-                {/* <a
-                  
+                <a
+
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <AiIcons.AiOutlineDelete /> Delete
-                </a> */}
-                <a
+                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                  Delete
+                </a>
+                {/* <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
@@ -359,8 +384,8 @@ function Tr({
                   }}
                 >
                   <AiIcons.AiOutlineCheckCircle /> Activate
-                </a>
-                <a
+                </a> */}
+                {/* <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(sbuId);
@@ -368,12 +393,12 @@ function Tr({
                   style={{ padding: "5px" }}
                 >
                   <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a>
+                </a> */}
               </div>
             )}
           </span>
-        </td>
-      </tr>
+        </TableCellSection>
+      </TableRowSection>
       <Modal
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
