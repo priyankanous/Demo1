@@ -6,13 +6,15 @@ import { ModalHeading, ModalIcon } from "../../utils/Value.js";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import Modal from "react-modal";
-import { Table,  TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+// import Modal from "react-modal";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function Bdm() {
   const [data, setData] = useState(null);
@@ -74,22 +76,25 @@ function Bdm() {
     fetchBdmData();
   }, []);
 
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
+
+
   const postBdmData = async () => {
     const { bdmDisplayName, bdmName, activeFrom, activeUntil } = bdmFormData;
-    const activeFromDt = `${
-      parseInt(new Date(activeFrom).getDate()) < 10
-        ? "0" + parseInt(new Date(activeFrom).getDate())
-        : parseInt(new Date(activeFrom).getDate())
-    }/${month[new Date(activeFrom).getMonth()]}/${new Date(
-      activeFrom
-    ).getFullYear()}`;
-    const activeUntilDt = `${
-      parseInt(new Date(activeUntil).getDate()) < 10
-        ? "0" + parseInt(new Date(activeUntil).getDate())
-        : parseInt(new Date(activeUntil).getDate())
-    }/${month[new Date(activeUntil).getMonth()]}/${new Date(
-      activeUntil
-    ).getFullYear()}`;
+    const activeFromDt = `${parseInt(new Date(activeFrom).getDate()) < 10
+      ? "0" + parseInt(new Date(activeFrom).getDate())
+      : parseInt(new Date(activeFrom).getDate())
+      }/${month[new Date(activeFrom).getMonth()]}/${new Date(
+        activeFrom
+      ).getFullYear()}`;
+    const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10
+      ? "0" + parseInt(new Date(activeUntil).getDate())
+      : parseInt(new Date(activeUntil).getDate())
+      }/${month[new Date(activeUntil).getMonth()]}/${new Date(
+        activeUntil
+      ).getFullYear()}`;
     let bdmFromData = {
       bdmDisplayName,
       bdmName,
@@ -146,11 +151,10 @@ function Bdm() {
 
   const createDate = (date) => {
     let splitDate = date.split("/");
-    let monthDate = `${
-      month.indexOf(splitDate[1]) + 1 < 10
-        ? "0" + String(month.indexOf(splitDate[1]) + 1)
-        : month.indexOf(splitDate[1]) + 1
-    }`;
+    let monthDate = `${month.indexOf(splitDate[1]) + 1 < 10
+      ? "0" + String(month.indexOf(splitDate[1]) + 1)
+      : month.indexOf(splitDate[1]) + 1
+      }`;
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
 
@@ -257,84 +261,145 @@ function Bdm() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={bdmStyleObject}
-        className={"modal-container"}
+        open={isOpen}
+        onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup BDM</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="bdm-form">
-                <div>
-                  <label for="name">BDM Name</label>
-                  <input
-                    type="text"
-                    value={bdmFormData?.bdmName}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        bdmName: e.target.value,
-                      });
-                    }}
-                    id="bdm-name"
-                  />
-                </div>
-                <div>
-                  <label for="email">BDM Display Name</label>
-                  <input
-                    type="text"
-                    value={bdmFormData?.bdmDisplayName}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        bdmDisplayName: e.target.value,
-                      });
-                    }}
-                    id="bdm-disp-name"
-                    spellcheck="false"
-                  />
-                </div>
-                <div>
-                  <label for="email">Active From</label>
-                  <input
-                    type="date"
-                    value={bdmFormData?.activeFrom}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        activeFrom: e.target.value,
-                      });
-                    }}
-                    id="bdm-activeFrom"
-                    spellcheck="false"
-                  />
-                </div>
-                <div>
-                  <label for="email">Active Until</label>
-                  <input
-                    type="date"
-                    value={bdmFormData?.activeUntil}
-                    onChange={(e) => {
-                      setbdmFormData({
-                        ...bdmFormData,
-                        activeUntil: e.target.value,
-                      });
-                    }}
-                    id="bdm-activeUntil"
-                    spellcheck="false"
-                  />
-                </div>
-                <div>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup BDM</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
+
+            <form id="bdm-form">
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="bdm-name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={bdmFormData?.bdmName}
+                  onChange={(e) => {
+                    setbdmFormData({
+                      ...bdmFormData,
+                      bdmName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="bdm-disp-name"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={bdmFormData?.bdmDisplayName}
+                  onChange={(e) => {
+                    setbdmFormData({
+                      ...bdmFormData,
+                      bdmDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Active From</InputTextLabel>
+                <InputField fullWidth
+                  size="small"
+                  type="date"
+                  id="bdm-activeFrom"
+                  variant="outlined"
+                  value={bdmFormData?.activeFrom}
+                  onChange={(e) => {
+                    setbdmFormData({
+                      ...bdmFormData,
+                      activeFrom: e.target.value,
+                    });
+                  }}
+
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Active Untill</InputTextLabel>
+                <InputField fullWidth
+                  size="small"
+                  type="date"
+                  id="bdm-activeUntil"
+                  value={bdmFormData?.activeUntil}
+                  onChange={(e) => {
+                    setbdmFormData({
+                      ...bdmFormData,
+                      activeUntil: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Linked Region</InputTextLabel>
+                <FormControl fullWidth>
+                  <Select
+                    size="small"
+                    style={{ background: "white" }}
+                  // onChange={(e) => {
+                  //   const sbuSelected = JSON.parse(e.target.value);
+                  //   setSbuName(sbuSelected);
+                  // }}
+
+                  >
+                    {businessUnit &&
+                      businessUnit.map((value, index) => {
+                        // const sbuNameData = sbuData.sbuName;
+                        return (
+                          <MenuItem
+                          >
+
+
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Linked BU</InputTextLabel>
+                <FormControl fullWidth>
+                  <Select
+                    size="small"
+                    style={{ background: "white" }}
+                  // onChange={(e) => {
+                  //   const sbuSelected = JSON.parse(e.target.value);
+                  //   setSbuName(sbuSelected);
+                  // }}
+
+                  >
+                    {businessUnit &&
+                      businessUnit.map((value, index) => {
+                        // const sbuNameData = sbuData.sbuName;
+                        return (
+                          <MenuItem
+                          >
+
+
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+              </div>
+              {/* <div>
                   <label className="label-bdm">
                     <input
                       onClick={() => {
@@ -411,8 +476,8 @@ function Bdm() {
                         })}
                     </ul>
                   </div>
-                </div>
-                <div>
+                </div> */}
+              {/* <div>
                   <label className="label-bdm">
                     <input
                       onClick={() => {
@@ -489,39 +554,34 @@ function Bdm() {
                         })}
                     </ul>
                   </div>
-                </div>
-                <div>
-                  <label
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={() => {
-                        postBdmData();
-                      }}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+                </div> */}
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    postBdmData();
+                  }}
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -561,33 +621,33 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
   return (
-       <TableRowSection ref={wrapperRef}>
-      <TableCellSection>
+    <TableRowSection ref={wrapperRef}>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{bdmName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{bdmDisplayName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{activeFrom}</span>
       </TableCellSection>
 
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{activeUntil}</span>
       </TableCellSection>
 
-      <TableCellSection>
-      <span>
+      <TableCellSection className={!isActive && "disable-table-row"}>
+        <span>
           {(businessUnits &&
             businessUnits.map((_) => _.businessUnitDisplayName).join(", ")) ||
             "Unknown"}
         </span>
       </TableCellSection>
 
-      <TableCellSection>
-      <span>
+      <TableCellSection className={!isActive && "disable-table-row"}>
+        <span>
           {(regions && regions.map((_) => _.regionDisplayName).join(", ")) ||
             "Unknown"}
         </span>
@@ -599,14 +659,16 @@ function Tr({
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
               <a
+                className={!isActive && "disable-table-row"}
+
                 style={{ padding: "5px" }}
                 onClick={() => {
                   editBDMData(bdmId);
                 }}
               >
-                <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}}
+                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
@@ -614,29 +676,38 @@ function Tr({
                 Edit
               </a>
               <a
-                  style={{ padding: "5px" }}
-                >
-                  <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
-                  Delete
-                </a>
-              {/* <a
+                className={!isActive && "disable-table-row"}
+                style={{ padding: "5px" }}
+              >
+                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                Delete
+              </a>
+              <a
                 onClick={() => {
                   activateDeactivate(bdmId);
                 }}
                 className={isActive && "disable-table-row"}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a> */}
-              {/* <a
+                <div style={{ display: "flex" }}>
+
+                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                </div>
+              </a>
+              <a
                 onClick={() => {
                   activateDeactivate(bdmId);
                 }}
                 className={!isActive && "disable-table-row"}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a> */}
+                <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+              </a>
             </div>
           )}{" "}
         </span>

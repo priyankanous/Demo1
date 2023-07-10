@@ -12,6 +12,8 @@ import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 
 function Sbu() {
@@ -25,11 +27,11 @@ function Sbu() {
       businessUnitId: "",
       businessUnitName: "",
       businessUnitDisplayName: "",
-      organization: {
-        id: 0,
-        orgName: "",
-        orgDisplayName: "",
-      },
+      // organization: {
+      //   id: 0,
+      //   orgName: "",
+      //   orgDisplayName: "",
+      // },
     },
   });
   useEffect(() => {
@@ -158,16 +160,16 @@ function Sbu() {
                         e.target.selectedOptions[0].getAttribute(
                           "data-buDisplayName"
                         );
-                      const selectedOrgId =
-                        e.target.selectedOptions[0].getAttribute("data-orgId");
-                      const selectedOrgDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgDisplayName"
-                        );
-                      const selectedOrgName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgName"
-                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
 
                       setSbuData({
                         ...sbuData,
@@ -176,12 +178,12 @@ function Sbu() {
                           businessUnitId: selectedBuId,
                           businessUnitName: e.target.value,
                           businessUnitDisplayName: selectedBuDispName,
-                          organization: {
-                            ...sbuData.businessUnit.organization,
-                            id: selectedOrgId,
-                            orgName: selectedOrgName,
-                            orgDisplayName: selectedOrgDispName,
-                          },
+                          // organization: {
+                          //   ...sbuData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
                         },
                       });
                     }}
@@ -191,17 +193,17 @@ function Sbu() {
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <MenuItem
                             data-buId={buId}
                             data-buDisplayName={buDisplayName}
-                            data-orgId={orgId}
-                            data-orgName={orgName}
-                            data-orgDisplayName={orgDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
                             key={index}
                             value={JSON.stringify(sbuData)}
                           >
@@ -258,11 +260,11 @@ function Tr({
       businessUnitId: businessUnit.businessUnitId,
       businessUnitName: businessUnit.businessUnitName,
       businessUnitDisplayName: businessUnit.businessUnitDisplayName,
-      organization: {
-        id: businessUnit.organization.id,
-        orgName: businessUnit.organization.orgName,
-        orgDisplayName: businessUnit.organization.orgDisplayName,
-      },
+      // organization: {
+      //   id: businessUnit.organization.id,
+      //   orgName: businessUnit.organization.orgName,
+      //   orgDisplayName: businessUnit.organization.orgDisplayName,
+      // },
     },
   });
 
@@ -309,11 +311,11 @@ function Tr({
           businessUnitId: "",
           businessUnitName: "",
           businessUnitDisplayName: "",
-          organization: {
-            id: 0,
-            orgName: "",
-            orgDisplayName: "",
-          },
+          // organization: {
+          //   id: 0,
+          //   orgName: "",
+          //   orgDisplayName: "",
+          // },
         },
       });
       setIsOpen(false);
@@ -338,16 +340,18 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{sbuName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{sbuDisplayName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>
             {businessUnit.businessUnitName || "Unknown"}
           </span>
+          </TableCellSection>
+          <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -357,6 +361,7 @@ function Tr({
             {isDropdown && (
               <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
+                className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
@@ -367,7 +372,7 @@ function Tr({
                   Edit
                 </a>
                 <a
-
+className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
@@ -376,24 +381,32 @@ function Tr({
                   <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
                   Delete
                 </a>
-                {/* <a
+                <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(sbuId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a> */}
-                {/* <a
+                                  <div style={{ display: "flex" }}>
+
+<ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+<p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+</div>
+                </a>
+                <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(sbuId);
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a> */}
+                                  <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+                </a>
               </div>
             )}
           </span>
@@ -458,16 +471,16 @@ function Tr({
                         e.target.selectedOptions[0].getAttribute(
                           "data-buDisplayName"
                         );
-                      const selectedOrgId =
-                        e.target.selectedOptions[0].getAttribute("data-orgId");
-                      const selectedOrgDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgDisplayName"
-                        );
-                      const selectedOrgName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgName"
-                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
 
                       setResponseData({
                         ...responseData,
@@ -476,12 +489,12 @@ function Tr({
                           businessUnitId: selectedBuId,
                           businessUnitName: e.target.value,
                           businessUnitDisplayName: selectedBuDispName,
-                          organization: {
-                            ...responseData.businessUnit.organization,
-                            id: selectedOrgId,
-                            orgName: selectedOrgName,
-                            orgDisplayName: selectedOrgDispName,
-                          },
+                          // organization: {
+                          //   ...responseData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
                         },
                       });
                     }}
@@ -493,17 +506,17 @@ function Tr({
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <option
                             data-buId={buId}
                             data-buDisplayName={buDisplayName}
-                            data-orgId={orgId}
-                            data-orgName={orgName}
-                            data-orgDisplayName={orgDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
                             key={index}
                           >
                             {buNameData}

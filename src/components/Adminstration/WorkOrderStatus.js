@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalFormButton, ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function WorkOrderStatus() {
   const [data, setData] = useState(null);
@@ -36,6 +38,11 @@ function WorkOrderStatus() {
         setData(actualDataObject);
       });
   };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
+
   const AddDataToWorkOrderStatus = async (e) => {
     try {
       const response = await axios.post(
@@ -44,14 +51,14 @@ function WorkOrderStatus() {
       );
       setIsOpen(false);
       getAllWorkOrderData();
-    } catch {}
+    } catch { }
   };
   return (
     <div>
       <MemoizedBaseComponent
         field="Work Order status"
         buttonText="setup WO Status"
-        columns={["Name", "Display Name",""]}
+        columns={["Name", "Display Name", ""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -65,75 +72,80 @@ function WorkOrderStatus() {
         setIsOpen={setIsOpen}
       />
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        open={isOpen}
+        onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Work Order Status</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setWoStatusData({
-                        ...woStatusData,
-                        woStatusName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Display Name</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setWoStatusData({
-                        ...woStatusData,
-                        woStatusDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={AddDataToWorkOrderStatus}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Work Order Status</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+
+          <ModalDetailSection>
+
+            <form id="reg-form">
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  variant="outlined"
+                  spellcheck="false"
+                  onChange={(e) => {
+                    setWoStatusData({
+                      ...woStatusData,
+                      woStatusName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  variant="outlined"
+                  spellcheck="false"
+                  onChange={(e) => {
+                    setWoStatusData({
+                      ...woStatusData,
+                      woStatusDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={AddDataToWorkOrderStatus}
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -208,12 +220,12 @@ function Tr({
   };
   return (
     <React.Fragment>
-            <TableRowSection ref={wrapperRef}>
-        <TableCellSection >
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{woStatusName || "Unknown"}</span>
         </TableCellSection>
 
-        <TableCellSection >
+        <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{woStatusDisplayName || "Unknown"}</span>
         </TableCellSection>
 
@@ -225,43 +237,55 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  <AiIcons.AiOutlineEdit />
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+
                   Edit
                 </a>
                 <a
-                 
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <AiIcons.AiOutlineDelete /> Delete
+                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+
+                  Delete
                 </a>
-                {/* <a
+                <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(woStatusId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a> */}
-                {/* <a
+                  <div style={{ display: "flex" }}>
+
+                    <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
+                </a>
+                <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(woStatusId);
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a> */}
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
+                </a>
               </div>
             )}
           </span>

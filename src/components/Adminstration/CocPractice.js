@@ -27,11 +27,11 @@ function CocPractice() {
       businessUnitId: "",
       businessUnitName: "",
       businessUnitDisplayName: "",
-      organization: {
-        id: 0,
-        orgName: "",
-        orgDisplayName: "",
-      },
+      // organization: {
+      //   id: 0,
+      //   orgName: "",
+      //   orgDisplayName: "",
+      // },
     },
   });
 
@@ -157,16 +157,16 @@ function CocPractice() {
                           e.target.selectedOptions[0].getAttribute(
                             "data-buDisplayName"
                           );
-                        const selectedOrgId =
-                          e.target.selectedOptions[0].getAttribute("data-orgId");
-                        const selectedOrgDispName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgDisplayName"
-                          );
-                        const selectedOrgName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgName"
-                          );
+                        // const selectedOrgId =
+                        //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                        // const selectedOrgDispName =
+                        //   e.target.selectedOptions[0].getAttribute(
+                        //     "data-orgDisplayName"
+                        //   );
+                        // const selectedOrgName =
+                        //   e.target.selectedOptions[0].getAttribute(
+                        //     "data-orgName"
+                        //   );
   
                         setCocPracticeData({
                           ...cocPracticeData,
@@ -175,12 +175,12 @@ function CocPractice() {
                             businessUnitId: selectedBuId,
                             businessUnitName: e.target.value,
                             businessUnitDisplayName: selectedBuDispName,
-                            organization: {
-                              ...cocPracticeData.businessUnit.organization,
-                              id: selectedOrgId,
-                              orgName: selectedOrgName,
-                              orgDisplayName: selectedOrgDispName,
-                            },
+                            // organization: {
+                            //   ...cocPracticeData.businessUnit.organization,
+                            //   id: selectedOrgId,
+                            //   orgName: selectedOrgName,
+                            //   orgDisplayName: selectedOrgDispName,
+                            // },
                           },
                         });
                       }}
@@ -190,18 +190,18 @@ function CocPractice() {
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <MenuItem
                           key={index}
                           data-buId={buId}
                           data-buDisplayName={buDisplayName}
-                          data-orgId={orgId}
-                          data-orgName={orgName}
-                          data-orgDisplayName={orgDisplayName}
+                          // data-orgId={orgId}
+                          // data-orgName={orgName}
+                          // data-orgDisplayName={orgDisplayName}
                           value={JSON.stringify(buNameData)}
 
                         >
@@ -268,11 +268,11 @@ function Tr({
       businessUnitId: businessUnit.businessUnitId,
       businessUnitName: businessUnit.businessUnitName,
       businessUnitDisplayName: businessUnit.businessUnitDisplayName,
-      organization: {
-        id: businessUnit.organization.id,
-        orgName: businessUnit.organization.orgName,
-        orgDisplayName: businessUnit.organization.orgDisplayName,
-      },
+      // organization: {
+      //   id: businessUnit.organization.id,
+      //   orgName: businessUnit.organization.orgName,
+      //   orgDisplayName: businessUnit.organization.orgDisplayName,
+      // },
     },
   });
   const OutsideClick = (ref) => {
@@ -317,11 +317,11 @@ function Tr({
           businessUnitId: "",
           businessUnitName: "",
           businessUnitDisplayName: "",
-          organization: {
-            id: 0,
-            orgName: "",
-            orgDisplayName: "",
-          },
+          // organization: {
+          //   id: 0,
+          //   orgName: "",
+          //   orgDisplayName: "",
+          // },
         },
       });
       setIsOpen(false);
@@ -467,16 +467,16 @@ function Tr({
                         e.target.selectedOptions[0].getAttribute(
                           "data-buDisplayName"
                         );
-                      const selectedOrgId =
-                        e.target.selectedOptions[0].getAttribute("data-orgId");
-                      const selectedOrgDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgDisplayName"
-                        );
-                      const selectedOrgName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgName"
-                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
 
                       setResponseData({
                         ...responseData,
@@ -485,12 +485,12 @@ function Tr({
                           businessUnitId: selectedBuId,
                           businessUnitName: e.target.value,
                           businessUnitDisplayName: selectedBuDispName,
-                          organization: {
-                            ...responseData.businessUnit.organization,
-                            id: selectedOrgId,
-                            orgName: selectedOrgName,
-                            orgDisplayName: selectedOrgDispName,
-                          },
+                          // organization: {
+                          //   ...responseData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
                         },
                       });
                     }}
@@ -502,17 +502,17 @@ function Tr({
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <option
                             data-buId={buId}
                             data-buDisplayName={buDisplayName}
-                            data-orgId={orgId}
-                            data-orgName={orgName}
-                            data-orgDisplayName={orgDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
                             key={index}
                           >
                             {buNameData}

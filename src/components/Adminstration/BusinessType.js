@@ -12,6 +12,8 @@ import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function BusinessType() {
   const [businessType, setBusinessType] = useState([]);
@@ -87,7 +89,7 @@ function BusinessType() {
     if (data?.message === "Success" && data?.responseCode === 200) {
       setbusinessTypeFormData({
         businessTypeName: "",
-        businessTypeDisplayName: "",        
+        businessTypeDisplayName: "",
       });
       setIsOpen(false);
       setIsEditId(null);
@@ -130,12 +132,12 @@ function BusinessType() {
         setIsOpen={setIsOpen}
       />
       <Modal
-                open={isOpen}
-                onClose={handleModalClose}
+        open={isOpen}
+        onClose={handleModalClose}
       >
         <Box sx={MoadalStyle}>
-        <ModalHeadingSection>
-            <ModalHeadingText>Setup Business Unit</ModalHeadingText>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Business Type</ModalHeadingText>
             <CloseIcon
               onClick={() => {
                 setIsOpen(false);
@@ -145,7 +147,7 @@ function BusinessType() {
           </ModalHeadingSection>
           <ModalDetailSection>
 
-              <form id="reg-form">
+            <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
                 <InputField size="small"
@@ -208,8 +210,8 @@ function BusinessType() {
                   id="create-account"
                 >Cancel</ModalControlButton>
               </ButtonSection>
-              </form>
-              </ModalDetailSection>
+            </form>
+          </ModalDetailSection>
         </Box>
       </Modal>
     </div>
@@ -244,7 +246,7 @@ function Tr({
   };
   return (
     <TableRowSection ref={wrapperRef}>
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{businessTypeName || "Unknown"}</span>
       </TableCellSection>
       <TableCellSection className={!isActive && "disable-table-row"}>
@@ -256,36 +258,48 @@ function Tr({
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
               <a
+                className={!isActive && "disable-table-row"}
                 onClick={(e) => {
                   openTheModalWithValues(e, businessTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                                  <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
- Edit
+                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                Edit
               </a>
-              <a onClick={() => { deleteSelectedLocation(businessTypeId) }} style={{ padding: '5px' }}> <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
- Delete</a>
-              {/* <a
+              <a
+                className={!isActive && "disable-table-row"}
+                onClick={() => { deleteSelectedLocation(businessTypeId) }} style={{ padding: '5px' }}>
+                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                Delete</a>
+              <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(businessTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a> */}
-              {/* <a
+                <div style={{ display: "flex" }}>
+
+                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                </div>
+              </a>
+              <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(businessTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a> */}
+                <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+              </a>
             </div>
           )}{" "}
         </span>

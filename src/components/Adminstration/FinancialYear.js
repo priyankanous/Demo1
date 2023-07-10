@@ -12,6 +12,8 @@ import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function FinanicalYear() {
   const [financialYear, setFinancialYear] = useState([]);
@@ -63,14 +65,14 @@ function FinanicalYear() {
     } = financialYearFormData;
     console.log(startingFrom);
     const startingFromDt = `${parseInt(new Date(startingFrom).getDate()) < 10
-        ? "0" + parseInt(new Date(startingFrom).getDate())
-        : parseInt(new Date(startingFrom).getDate())
+      ? "0" + parseInt(new Date(startingFrom).getDate())
+      : parseInt(new Date(startingFrom).getDate())
       }/${month[new Date(startingFrom).getMonth()]}/${new Date(
         startingFrom
       ).getFullYear()}`;
     const endingOnDt = `${parseInt(new Date(endingOn).getDate()) < 10
-        ? "0" + parseInt(new Date(endingOn).getDate())
-        : parseInt(new Date(endingOn).getDate())
+      ? "0" + parseInt(new Date(endingOn).getDate())
+      : parseInt(new Date(endingOn).getDate())
       }/${month[new Date(endingOn).getMonth()]}/${new Date(
         endingOn
       ).getFullYear()}`;
@@ -123,8 +125,8 @@ function FinanicalYear() {
   const createDate = (date) => {
     let splitDate = date.split("/");
     let monthDate = `${month.indexOf(splitDate[1]) + 1 < 10
-        ? "0" + String(month.indexOf(splitDate[1]) + 1)
-        : month.indexOf(splitDate[1]) + 1
+      ? "0" + String(month.indexOf(splitDate[1]) + 1)
+      : month.indexOf(splitDate[1]) + 1
       }`;
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
@@ -201,103 +203,103 @@ function FinanicalYear() {
           </ModalHeadingSection>
           <ModalDetailSection>
 
-          <form id="reg-form">
+            <form id="reg-form">
 
-            <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Name</InputTextLabel>
-              <InputField size="small"
-                type="text"
-                id="business-type-name"
-                variant="outlined"
-                spellcheck="false"
-                value={financialYearFormData?.financialYearName}
-                onChange={(e) => {
-                  setfinancialYearFormData({
-                    ...financialYearFormData,
-                    financialYearName: e.target.value,
-                  });
-                }}
-              />
-            </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="business-type-name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={financialYearFormData?.financialYearName}
+                  onChange={(e) => {
+                    setfinancialYearFormData({
+                      ...financialYearFormData,
+                      financialYearName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
 
-            <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Display</InputTextLabel>
-              <InputField size="small"
-                type="text"
-                id="business-type-display-name"
-                variant="outlined"
-                spellcheck="false"
-                value={financialYearFormData?.financialYearCustomName}
-                onChange={(e) => {
-                  setfinancialYearFormData({
-                    ...financialYearFormData,
-                    financialYearCustomName: e.target.value,
-                  });
-                }}
-              />
-            </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="business-type-display-name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={financialYearFormData?.financialYearCustomName}
+                  onChange={(e) => {
+                    setfinancialYearFormData({
+                      ...financialYearFormData,
+                      financialYearCustomName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
 
-            <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Active From</InputTextLabel>
-              <InputField fullWidth
-                size="small"
-                type="date"
-                id="email"
-                variant="outlined"
-                spellcheck="false"
-                value={financialYearFormData?.startingFrom}
-                onChange={(e) => {
-                  setfinancialYearFormData({
-                    ...financialYearFormData,
-                    startingFrom: e.target.value,
-                  });
-                }}
-              />
-            </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Active From</InputTextLabel>
+                <InputField fullWidth
+                  size="small"
+                  type="date"
+                  id="email"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={financialYearFormData?.startingFrom}
+                  onChange={(e) => {
+                    setfinancialYearFormData({
+                      ...financialYearFormData,
+                      startingFrom: e.target.value,
+                    });
+                  }}
+                />
+              </div>
 
 
-            <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Active Untill</InputTextLabel>
-              <InputField fullWidth
-                size="small"
-                type="date"
-                id="email"
-                variant="outlined"
-                spellcheck="false"
-                value={financialYearFormData?.endingOn}
-                onChange={(e) => {
-                  setfinancialYearFormData({
-                    ...financialYearFormData,
-                    endingOn: e.target.value,
-                  });
-                }}
-              />
-            </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Active Untill</InputTextLabel>
+                <InputField fullWidth
+                  size="small"
+                  type="date"
+                  id="email"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={financialYearFormData?.endingOn}
+                  onChange={(e) => {
+                    setfinancialYearFormData({
+                      ...financialYearFormData,
+                      endingOn: e.target.value,
+                    });
+                  }}
+                />
+              </div>
 
-            <ButtonSection>
-              <ModalControlButton
-                type="button"
-                value="Save"
-                id="create-account"
-                variant="contained"
-                onClick={() => {
-                  setFinancialYearData();
-                }}
-              >Save</ModalControlButton>
-              <ModalControlButton
-                type="button"
-                variant="contained"
-                onClick={() => {
-                  setIsOpen(false);
-                  setIsEditId(null);
-                }}
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    setFinancialYearData();
+                  }}
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsEditId(null);
+                  }}
 
-                value="Cancel"
-                id="create-account"
+                  value="Cancel"
+                  id="create-account"
 
-              >Cancel</ModalControlButton>
-            </ButtonSection>
-          </form>
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
 
           </ModalDetailSection>
         </Box>
@@ -340,19 +342,19 @@ function Tr({
   };
   return (
     <TableRowSection ref={wrapperRef}>
-      <TableCellSection >
+      <TableCellSection className={!isActive && "disable-table-row"} >
         <span>{financialYearName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection >
+      <TableCellSection className={!isActive && "disable-table-row"} >
         <span>{financialYearCustomName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection >
+      <TableCellSection className={!isActive && "disable-table-row"} >
         <span>{startingFrom || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection >
+      <TableCellSection className={!isActive && "disable-table-row"} >
         <span>{endingOn || "Unknown"}</span>
       </TableCellSection>
 
@@ -362,45 +364,55 @@ function Tr({
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
               <a
+                className={!isActive && "disable-table-row"}
                 onClick={(e) => {
                   openTheModalWithValues(e, financialYearId);
                 }}
                 style={{ padding: "5px" }}
               >
-                       <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
 
-                 Edit
+                Edit
               </a>
               <a
+                className={!isActive && "disable-table-row"}
                 onClick={() => {
                   deleteSelectedLocation(financialYearId);
                 }}
                 href="#about"
                 style={{ padding: "5px" }}
               >
-                   <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
- Delete
+                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                Delete
               </a>
-              {/* <a
+              <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(financialYearId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a> */}
-              {/* <a
+                <div style={{ display: "flex" }}>
+
+                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                </div>
+              </a>
+              <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(financialYearId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a> */}
+                <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+              </a>
             </div>
           )}{" "}
         </span>

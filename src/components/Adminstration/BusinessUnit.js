@@ -1,27 +1,29 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button, Checkbox } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 
 function BuisnessUnit() {
   const [data, setData] = useState(null);
-  const [orgNameData, setOrgNameData] = useState([]);
+  // const [orgNameData, setOrgNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [businessUnitData, setBusinessUnitData] = useState({
     businessUnitName: "",
     businessUnitDisplayName: "",
-    organization: { id: "", orgName: "", orgDisplayName: "" },
+    // organization: { id: "", orgName: "", orgDisplayName: "" },
   });
 
   useEffect(() => {
@@ -37,7 +39,7 @@ function BuisnessUnit() {
   };
 
   const getAllBuData = () => {
-    getOrgNameData();
+    // getOrgNameData();
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
@@ -47,14 +49,14 @@ function BuisnessUnit() {
         setData(actualDataObject);
       });
   };
-  const getOrgNameData = () => {
-    axios
-      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        setOrgNameData(actualDataObject);
-      });
-  };
+  // const getOrgNameData = () => {
+  //   axios
+  //     .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       setOrgNameData(actualDataObject);
+  //     });
+  // };
   const AddDataToBu = async (e) => {
     try {
       const response = await axios.post(
@@ -66,71 +68,71 @@ function BuisnessUnit() {
     } catch { }
   };
 
-  return (   
-      <div>
-        <MemoizedBaseComponent
-          field="BU"
-          buttonText="setup bu"
-          columns={["Name","Display Name",""]}
-          data={data}
-          Tr={(obj) => {
-            return (
-              <Tr
-                data={obj}
-                getAllBuData={getAllBuData}
-                orgNameData={orgNameData}
-                setBusinessUnitData={setBusinessUnitData}
-              />
-            );
-          }}
-          setIsOpen={setIsOpen}
-        />
-        <Modal
-          open={isOpen}
-          onClose={handleModalClose}
-        >
-          <Box sx={MoadalStyle}>
-            <ModalHeadingSection>
-              <ModalHeadingText>Setup Business Unit</ModalHeadingText>
-              <CloseIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            </ModalHeadingSection>
-            <ModalDetailSection>
-              <form id="reg-form">
-                <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Name</InputTextLabel>
-                  <InputField size="small"
-                      type="text"
-                      id="name"
-                      variant="outlined"
-                    onChange={(e) => {
-                      setBusinessUnitData({
-                        ...businessUnitData,
-                        businessUnitName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Display Name </InputTextLabel>
-                  <InputField size="small"
-                    type="text"
-                    id="email"
-                    variant="outlined"
-                    onChange={(e) => {
-                      setBusinessUnitData({
-                        ...businessUnitData,
-                        businessUnitDisplayName: e.target.value,
-                      });
-                    }}
+  return (
+    <div>
+      <MemoizedBaseComponent
+        field="BU"
+        buttonText="setup bu"
+        columns={["Name", "Display Name", ""]}
+        data={data}
+        Tr={(obj) => {
+          return (
+            <Tr
+              data={obj}
+              getAllBuData={getAllBuData}
+              // orgNameData={orgNameData}
+              setBusinessUnitData={setBusinessUnitData}
+            />
+          );
+        }}
+        setIsOpen={setIsOpen}
+      />
+      <Modal
+        open={isOpen}
+        onClose={handleModalClose}
+      >
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Business Unit</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+            <form id="reg-form">
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  variant="outlined"
+                  onChange={(e) => {
+                    setBusinessUnitData({
+                      ...businessUnitData,
+                      businessUnitName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name </InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  variant="outlined"
+                  onChange={(e) => {
+                    setBusinessUnitData({
+                      ...businessUnitData,
+                      businessUnitDisplayName: e.target.value,
+                    });
+                  }}
 
-                  />
-                </div>
-                <div style={{ padding: "10px 0px" }}>
+                />
+              </div>
+              {/* <div style={{ padding: "10px 0px" }}>
                   <InputTextLabel>Parent Org</InputTextLabel>
                   <FormControl fullWidth>
                     <Select
@@ -177,47 +179,47 @@ function BuisnessUnit() {
                       })}
                     </Select>
                   </FormControl>
-                </div>
-                <ButtonSection>
-                  <ModalControlButton
-                    type="button"
-                    value="Save"
-                    id="create-account"
-                    variant="contained"
-                    onClick={AddDataToBu}
+                </div> */}
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={AddDataToBu}
 
-                  >Save</ModalControlButton>
-                  <ModalControlButton
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                    value="Cancel"
-                    id="create-account"
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
 
-                  >Cancel</ModalControlButton>
-                </ButtonSection>
-              </form>
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
 
-            </ModalDetailSection>
-          </Box>
-        </Modal>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
 
-      </div>
+    </div>
   );
 }
 
 function Tr({
   getAllBuData,
   setBusinessUnitData,
-  orgNameData,
+  // orgNameData,
   data: {
     businessUnitId,
     businessUnitName,
     businessUnitDisplayName,
     isActive,
-    organization,
+    // organization,
   },
 }) {
   const [isDropdown, setDropdown] = useState(false);
@@ -226,12 +228,14 @@ function Tr({
     businessUnitId: businessUnitId,
     businessUnitName: businessUnitName,
     businessUnitDisplayName: businessUnitDisplayName,
-    organization: {
-      id: organization.id,
-      orgName: organization.orgName,
-      orgDisplayName: organization.orgDisplayName,
-    },
+    // organization: {
+    //   id: organization.id,
+    //   orgName: organization.orgName,
+    //   orgDisplayName: organization.orgDisplayName,
+    // },
   });
+
+  console.log("businessUnitId", businessUnitId)
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -286,7 +290,7 @@ function Tr({
       setBusinessUnitData({
         businessUnitName: "",
         businessUnitDisplayName: "",
-        organization: { id: "", orgName: "", orgDisplayName: "" },
+        // organization: { id: "", orgName: "", orgDisplayName: "" },
       });
       setIsOpen(false);
       getAllBuData();
@@ -296,10 +300,10 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-        <TableCellSection >
+        <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{businessUnitName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{businessUnitDisplayName || "Unknown"}</span>
         </TableCellSection>
         {/* <TableCellSection>
@@ -307,7 +311,7 @@ function Tr({
             {organization.orgName || "Unknown"}
           </span>
           </TableCellSection> */}
-          <TableCellSection>
+        <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -315,43 +319,55 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
+
                   }}
                 >
-                  <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
                   Edit
                 </a>
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
                   Delete
                 </a>
-                {/* <a
+                <a
+                  // className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
-                  className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(businessUnitId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a> */}
-                {/* <a
+                  <div style={{ display: "flex" }}>
+
+                    <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
+                </a>
+                <a
                   className={!isActive && "disable-table-row"}
+
                   onClick={() => {
                     activeDeactivateTableData(businessUnitId);
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a> */}
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
+                </a>
               </div>
             )}
           </span>
