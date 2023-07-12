@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -37,6 +38,10 @@ function WorkOrderStatus() {
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
+  };
+
+  const handleModalopen = () => {
+    setIsOpen(true);
   };
 
   const handleModalClose = () => {
@@ -218,6 +223,10 @@ function Tr({
         setIsOpen(false);
       });
   };
+
+  const handleModalopen = () => {
+    setIsOpen(true);
+  };
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
@@ -242,7 +251,7 @@ function Tr({
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
-                    setIsOpen(true);
+                    handleModalopen();
                   }}
                 >
                   <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
@@ -291,79 +300,80 @@ function Tr({
           </span>
         </TableCellSection>
       </TableRowSection>
-      {/* <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+      <Modal
+        open={isOpen}
+      // onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Edit Work Order Status</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="financial_year_name">Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.woStatusName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        woStatusName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="financial_year_disp_name">Display Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.woStatusDisplayName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        woStatusDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={OnSubmit}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </Modal> */}
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Edit Work Order Status</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+            <form id="reg-form">
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData.woStatusName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      woStatusName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData.woStatusDisplayName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      woStatusDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
     </React.Fragment>
   );
 }

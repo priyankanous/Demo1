@@ -83,7 +83,7 @@ function Sbu() {
       <MemoizedBaseComponent
         field="SBU"
         buttonText="setup SBU"
-        columns={["Name", "Display Name", "Parent Business Unit"]}
+        columns={["Name", "Display Name", "Parent Business Unit",""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -113,7 +113,7 @@ function Sbu() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form">
+            <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
                 <InputField size="small"
@@ -145,7 +145,7 @@ function Sbu() {
 
                 />
               </div>
-              <div style={{ padding: "10px 0px" }}>
+              {/* <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Parent of BU</InputTextLabel>
                 <FormControl fullWidth>
                   <Select
@@ -216,7 +216,76 @@ function Sbu() {
                     })}
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
+
+<div>
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
+                  <select
+                  style={{height:"35px", width:"100%", marginBottom:"10px"}}
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
+
+                      setSbuData({
+                        ...sbuData,
+                        businessUnit: {
+                          ...sbuData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          // organization: {
+                          //   ...sbuData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
+                        },
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
+
+              
               <ButtonSection>
                 <ModalControlButton
                   type="button"

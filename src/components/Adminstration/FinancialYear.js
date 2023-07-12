@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -381,7 +382,7 @@ function Tr({
                 onClick={() => {
                   deleteSelectedLocation(financialYearId);
                 }}
-                href="#about"
+                // href="#about"
                 style={{ padding: "5px" }}
               >
                 <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />

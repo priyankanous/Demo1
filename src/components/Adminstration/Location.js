@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -79,6 +80,7 @@ function Location() {
   };
 
   const deleteSelectedLocation = async (id) => {
+    console.log("id deleting",id);
     const { data } = await axios.delete(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`
     );
@@ -236,6 +238,7 @@ function Tr({
         <span>{locationDisplayName || "Unknown"}</span>
       </TableCellSection>
       <TableCellSection data-id={locationId}>
+        {console.log("location", locationId)}
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
@@ -255,6 +258,7 @@ function Tr({
               <a
               className={!isActive && "disable-table-row"}
                 onClick={() => {
+                  console.log("onclick", locationId);
                   deleteSelectedLocation(locationId);
                 }}
                 style={{ padding: "5px" }}

@@ -346,6 +346,66 @@ function Bdm() {
                 />
               </div>
 
+              <div class="container">
+                    <div
+                      onClick={() => {
+                        setdropdownOpenReg(!dropdownOpenReg);
+                      }}
+                      style={{ width: "100%", position: "sticky", top: "0" }}
+                      class="select-btn"
+                      className={`select-btn ${dropdownOpenReg && "open"}`}
+                    >
+                      <span class="btn-text">Select Region</span>
+                      <span class="arrow-dwn">
+                        <i class="fa-solid fa-chevron-down">
+                          <AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp>
+                        </i>
+                      </span>
+                    </div>
+
+                    <ul
+                      style={{
+                        overflowY: "auto",
+                        height: "200px",
+                        width: "90%",
+                      }}
+                      class="list-items open-list-items"
+                      className={`list-items ${
+                        dropdownOpenReg && "open-list-items"
+                      }`}
+                    >
+                      {region &&
+                        region.map((value, index) => {
+                          return (
+                            <li
+                              onClick={() => {
+                                selectMarkDropdown(value, "reg");
+                              }}
+                              key={index}
+                              class={`item ${
+                                checkElementInArray(value, "reg") && "checked"
+                              }`}
+                            >
+                              <span
+                                style={{
+                                  borderRadius: isRegionLinked && "50%",
+                                }}
+                                class="checkbox"
+                              >
+                                {!isRegionLinked && (
+                                  <i class="fa-solid fa-check check-icon">
+                                    <AiIcons.AiOutlineCheck />
+                                  </i>
+                                )}
+                              </span>
+                              <span class="item-text">{value?.regionName}</span>
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  </div>
+
+                  
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Linked Region</InputTextLabel>
                 <FormControl fullWidth>
@@ -669,9 +729,6 @@ function Tr({
                 }}
               >
                 <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }}
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
                 />{" "}
                 Edit
               </a>

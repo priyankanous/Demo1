@@ -235,7 +235,6 @@ function Tr({
     // },
   });
 
-  console.log("businessUnitId", businessUnitId)
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -325,7 +324,6 @@ function Tr({
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
-
                   }}
                 >
                   <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
