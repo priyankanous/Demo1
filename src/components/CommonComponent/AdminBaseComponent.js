@@ -6,7 +6,7 @@ import {
   TableHeading,
   // TableButtons,
 } from "../../utils/Value";
-import { Button, styled } from "@mui/material";
+import { Button, Typography, styled } from "@mui/material";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 
@@ -45,8 +45,10 @@ export function AdminBaseComponent(props) {
       (props.currency && props.financialYearData) ? (
         <React.Fragment>
           <div class="filter">
-            <span style={{ paddingRight: "2%" }}>
+            <div style={{ paddingRight: "2%", display:"flex" }}>
+              <Typography>
               Financial year:
+              </Typography>
               <select
                 id="filterSelect"
                 onChange={(e) => {
@@ -55,6 +57,7 @@ export function AdminBaseComponent(props) {
                   }
                   props.getAllGlobalLLF(e.target.value);
                 }}
+                style={{height:"30px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -64,16 +67,18 @@ export function AdminBaseComponent(props) {
                   return <option key={index}>{fyNameData}</option>;
                 })}
               </select>
-            </span>
+            </div>
+            <div style={{margin:"8px 0px"}}>
             <span
               style={{
                 display: props.globalLeave ? "none" : "",
                 paddingRight: "2%",
+                fontSize:"15px"
               }}
             >
-              Base Currency: <input type="text" id="email" spellcheck="false" />{" "}
+              Base Currency: <input type="text" id="email" spellcheck="false" style={{height:"20px"}} />{" "}
             </span>
-            <span style={{ paddingRight: "2%" }}>
+            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
               Copy From:{" "}
               <select
                 id="filterSelect"
@@ -81,6 +86,7 @@ export function AdminBaseComponent(props) {
                 onChange={(e) => {
                   setCopyData({ ...copyData, copyFromFy: e.target.value });
                 }}
+                style={{height:"30px",marginLeft:"32px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -91,7 +97,7 @@ export function AdminBaseComponent(props) {
                 })}
               </select>
             </span>
-            <span style={{ paddingRight: "2%" }}>
+            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
               Copy To:{" "}
               <select
                 type="text"
@@ -119,6 +125,7 @@ export function AdminBaseComponent(props) {
                     },
                   });
                 }}
+                style={{height:"30px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -139,15 +146,16 @@ export function AdminBaseComponent(props) {
                 })}
               </select>
             </span>
-            <span style={{ paddingRight: "2%" }}>
-              <button
+            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
+              <TableButtons
                 id="filterButton"
                 onClick={(e) => props.copyFromFyToNewFy(copyData)}
               >
                 Apply
-              </button>
+              </TableButtons>
               {console.log("this is in BC copyFromFy", copyData.copyFromFy)}
             </span>
+            </div>
           </div>
           <TableContainer style={{overflow:"hidden"}}>
           <Table style={{overflow:"hidden"}}>

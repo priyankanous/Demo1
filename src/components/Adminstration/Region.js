@@ -6,11 +6,13 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import { Table, Modal, Box, TableBody, TableCell, TableContainer, TableHead, TableRow,styled } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { Table, Modal, Box, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, Typography } from '@mui/material';
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function Region() {
   const [data, setData] = useState(null);
@@ -21,6 +23,8 @@ function Region() {
     regionName: "",
     regionDisplayName: "",
   });
+  const [isEditId, setIsEditId] = useState(null);
+
 
   useEffect(() => {
     getAllRegionData();
@@ -44,19 +48,33 @@ function Region() {
       console.log("this is the response", response.data);
       getAllRegionData();
       setIsOpen(false);
-    } catch {}
+    } catch { }
   };
 
   const handleModalClose = () => {
     setIsOpen(false);
   };
 
+  // const openTheModalWithValues = async (e, id) => {
+  //   const { data } = await axios.get(
+  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${id}`
+  //   );
+  //   if (data?.message === "Success" && data?.responseCode === 200) {
+  //     setRegionData({
+  //       regionName: data?.data?.regionName,
+  //       regionDisplayName: data?.data?.regionDisplayName,
+  //     });
+  //     setIsOpen(true);
+  //     // setIsEditId(id);
+  //   }
+  // };
+
   return (
     <div>
       <MemoizedBaseComponent
         field="Region"
         buttonText="setup Region"
-        columns={["Name", "Display Name",""]}
+        columns={["Name", "Display Name", ""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -70,74 +88,74 @@ function Region() {
         setIsOpen={setIsOpen}
       />
       <Modal
-          open={isOpen}
-          onClose={handleModalClose}
+        open={isOpen}
+        onClose={handleModalClose}
       >
         <Box sx={MoadalStyle}>
-        <ModalHeadingSection>
-              <ModalHeadingText>Setup Region</ModalHeadingText>
-              <CloseIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            </ModalHeadingSection>
-            <ModalDetailSection>
-              <form id="reg-form">
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Region</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+            <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Name</InputTextLabel>
-                  <InputField size="small"
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    variant="outlined"
-                    onChange={(e) => {
-                      setRegionData({
-                        ...regionData,
-                        regionName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  onChange={(e) => {
+                    setRegionData({
+                      ...regionData,
+                      regionName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Display Name</InputTextLabel>
-                  <InputField
+                <InputField
                   size="small"
-                    type="text"
-                    id="email"
-                    variant="outlined"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setRegionData({
-                        ...regionData,
-                        regionDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <ButtonSection>
+                  type="text"
+                  id="email"
+                  variant="outlined"
+                  spellcheck="false"
+                  onChange={(e) => {
+                    setRegionData({
+                      ...regionData,
+                      regionDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <ButtonSection>
                 <ModalControlButton
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      onClick={AddDataToRegion}
-                      >Save</ModalControlButton>
-                     <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  onClick={AddDataToRegion}
+                >Save</ModalControlButton>
+                <ModalControlButton
 
-                      type="button"
-                      variant="contained"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      >Cancel</ModalControlButton>
-                                 </ButtonSection>
-     
-              </form>
-              </ModalDetailSection>
-              </Box>
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+
+            </form>
+          </ModalDetailSection>
+        </Box>
 
       </Modal>
     </div>
@@ -211,19 +229,24 @@ function Tr({
         setIsOpen(false);
       });
   };
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
+
+  console.log("regionId",regionId)
 
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{regionName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>
             {regionDisplayName || "Unknown"}
           </span>
-          </TableCellSection>
-          <TableCellSection>
+        </TableCellSection>
+        <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -231,44 +254,52 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
                   Edit
                 </a>
                 <a
-                 
+
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-            <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
- Delete
+                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                  Delete
                 </a>
-                {/* <a
+                <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(regionId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a> */}
-                {/* <a
+                  <div style={{ display: "flex" }}>
+                    <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
+                </a>
+                <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(regionId);
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a> */}
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
+                </a>
               </div>
             )}
           </span>
@@ -276,8 +307,7 @@ function Tr({
       </TableRowSection>
       <Modal
         isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+        onClose={handleModalClose}
       >
         <div>
           <div class="main" className="ModalContainer">

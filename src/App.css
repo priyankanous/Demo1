@@ -130,6 +130,7 @@ h3 {
   /* height: 82%; */
   left: 20%;
   top: 11%;
+  height: 800px;
   /* box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
   border-radius: 20px; */
 }
@@ -339,9 +340,9 @@ select {
 }
 
 .filter {
-  padding-left: 4%;
-  padding-bottom: 1%;
-  margin-top: -2%;
+  /* padding-left: 4%; */
+  /* padding-bottom: 1%; */
+  margin-top: 5px;
   font-size: 1vw;
 }
 
@@ -362,15 +363,9 @@ filter .dropdown {
 }
 
 #filterButton {
-  background-color: white;
-  border: none;
-  border-radius: 15px;
-  color: black;
-  padding: 7px 20px;
-  font-size: 13px;
-  margin: 20px;
   cursor: pointer;
-  box-shadow: 0px 2px 5px grey;
+  margin-bottom: 10px;
+
 }
 a:hover {
   cursor: pointer;

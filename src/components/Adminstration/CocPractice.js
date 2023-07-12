@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -12,6 +13,8 @@ import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 
 function CocPractice() {
@@ -27,11 +30,11 @@ function CocPractice() {
       businessUnitId: "",
       businessUnitName: "",
       businessUnitDisplayName: "",
-      organization: {
-        id: 0,
-        orgName: "",
-        orgDisplayName: "",
-      },
+      // organization: {
+      //   id: 0,
+      //   orgName: "",
+      //   orgDisplayName: "",
+      // },
     },
   });
 
@@ -71,7 +74,7 @@ function CocPractice() {
       console.log("this is the response", response.data);
       getAllCocData();
       setIsOpen(false);
-    } catch {}
+    } catch { }
   };
 
   return (
@@ -79,7 +82,7 @@ function CocPractice() {
       <MemoizedBaseComponent
         field="COC Practice"
         buttonText="setup COC Practice"
-        columns={["Name", "Display Name", "Parents Business Unit",""]}
+        columns={["Name", "Display Name", "Parents Business Unit", ""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -94,11 +97,11 @@ function CocPractice() {
         setIsOpen={setIsOpen}
       />
       <Modal
-              open={isOpen}
-              onClose={handleModalClose}
+        open={isOpen}
+        onClose={handleModalClose}
       >
-                <Box sx={MoadalStyle}>
-                <ModalHeadingSection>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
             <ModalHeadingText>Setup COC Practice</ModalHeadingText>
             <CloseIcon
               onClick={() => {
@@ -109,7 +112,7 @@ function CocPractice() {
           </ModalHeadingSection>
           <ModalDetailSection>
 
-              <form id="reg-form">
+            <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
                 <InputField size="small"
@@ -144,102 +147,172 @@ function CocPractice() {
                 />
               </div>
 
-              <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Parent Business Unit</InputTextLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      size="small"
-                      style={{ background: "white" }}
-                      onChange={(e) => {
-                        const selectedBuId =
-                          e.target.selectedOptions[0].getAttribute("data-buId");
-                        const selectedBuDispName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-buDisplayName"
-                          );
-                        const selectedOrgId =
-                          e.target.selectedOptions[0].getAttribute("data-orgId");
-                        const selectedOrgDispName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgDisplayName"
-                          );
-                        const selectedOrgName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgName"
-                          );
-  
-                        setCocPracticeData({
-                          ...cocPracticeData,
-                          businessUnit: {
-                            ...cocPracticeData.businessUnit,
-                            businessUnitId: selectedBuId,
-                            businessUnitName: e.target.value,
-                            businessUnitDisplayName: selectedBuDispName,
-                            organization: {
-                              ...cocPracticeData.businessUnit.organization,
-                              id: selectedOrgId,
-                              orgName: selectedOrgName,
-                              orgDisplayName: selectedOrgDispName,
-                            },
-                          },
-                        });
-                      }}
+              {/* <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Parent Business Unit</InputTextLabel>
+                <FormControl fullWidth>
+                  <Select
+                    size="small"
+                    style={{ background: "white" }}
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
 
-                    >
-             {buNameData.map((buData, index) => {
+                      setCocPracticeData({
+                        ...cocPracticeData,
+                        businessUnit: {
+                          ...cocPracticeData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          // organization: {
+                          //   ...cocPracticeData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
+                        },
+                      });
+                    }}
+
+                  >
+                    {buNameData.map((buData, index) => {
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <MenuItem
-                          key={index}
-                          data-buId={buId}
-                          data-buDisplayName={buDisplayName}
-                          data-orgId={orgId}
-                          data-orgName={orgName}
-                          data-orgDisplayName={orgDisplayName}
-                          value={JSON.stringify(buNameData)}
+                            key={index}
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
+                            value={JSON.stringify(buNameData)}
 
-                        >
+                          >
                             {buNameData}
-                          
-                        </MenuItem>
+
+                          </MenuItem>
                         );
                       }
                     })}
-                    </Select>
-                  </FormControl>
-                </div>
-                
-                <ButtonSection>
-                  <ModalControlButton
-                    type="button"
-                    value="Save"
-                    id="create-account"
-                    variant="contained"
-                    onClick={AddDataToCocPractice}
+                  </Select>
+                </FormControl>
+              </div> */}
 
 
-                  >Save</ModalControlButton>
-                  <ModalControlButton
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      setIsOpen(false);
+<div >
+                  <label style={{fontWeight:"400",fontSize:"16px"}} for="email">Parent Business Unit</label>
+                  <select
+                                    style={{height:"35px", width:"100%", marginBottom:"10px"}}
+
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+                      // const selectedOrgId =
+                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                      // const selectedOrgDispName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgDisplayName"
+                      //   );
+                      // const selectedOrgName =
+                      //   e.target.selectedOptions[0].getAttribute(
+                      //     "data-orgName"
+                      //   );
+
+                      setCocPracticeData({
+                        ...cocPracticeData,
+                        businessUnit: {
+                          ...cocPracticeData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                          // organization: {
+                          //   ...cocPracticeData.businessUnit.organization,
+                          //   id: selectedOrgId,
+                          //   orgName: selectedOrgName,
+                          //   orgDisplayName: selectedOrgDispName,
+                          // },
+                        },
+                      });
                     }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {buNameData}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
 
 
-                    value="Cancel"
-                    id="create-account"
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={AddDataToCocPractice}
 
-                  >Cancel</ModalControlButton>
-                </ButtonSection>
-              </form>
-              </ModalDetailSection>
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+
+
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
         </Box>
       </Modal>
     </div>
@@ -268,11 +341,11 @@ function Tr({
       businessUnitId: businessUnit.businessUnitId,
       businessUnitName: businessUnit.businessUnitName,
       businessUnitDisplayName: businessUnit.businessUnitDisplayName,
-      organization: {
-        id: businessUnit.organization.id,
-        orgName: businessUnit.organization.orgName,
-        orgDisplayName: businessUnit.organization.orgDisplayName,
-      },
+      // organization: {
+      //   id: businessUnit.organization.id,
+      //   orgName: businessUnit.organization.orgName,
+      //   orgDisplayName: businessUnit.organization.orgDisplayName,
+      // },
     },
   });
   const OutsideClick = (ref) => {
@@ -317,11 +390,11 @@ function Tr({
           businessUnitId: "",
           businessUnitName: "",
           businessUnitDisplayName: "",
-          organization: {
-            id: 0,
-            orgName: "",
-            orgDisplayName: "",
-          },
+          // organization: {
+          //   id: 0,
+          //   orgName: "",
+          //   orgDisplayName: "",
+          // },
         },
       });
       setIsOpen(false);
@@ -345,8 +418,8 @@ function Tr({
 
   return (
     <React.Fragment>
-            <TableRowSection ref={wrapperRef}>
-            <TableCellSection >
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection >
           <span>{cocPracticeName || "Unknown"}</span>
         </TableCellSection>
         <TableCellSection >
@@ -365,100 +438,119 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                                    <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
 
                   Edit
                 </a>
                 <a
+                  className={!isActive && "disable-table-row"}
+
                   style={{ padding: "5px" }}
                   onClick={(e) => {
                     DeleteRecord();
                   }}
                 >
-                                    <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
- Delete
+                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                  Delete
                 </a>
-                {/* <a
+                <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(cocPracticeId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a> */}
-                {/* <a
+                  <div style={{ display: "flex" }}>
+
+                    <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
+                </a>
+                <a
                   className={!isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(cocPracticeId);
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a> */}
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
+                </a>
               </div>
             )}
           </span>
-          </TableCellSection>
-        </TableRowSection>
+        </TableCellSection>
+      </TableRowSection>
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+                open={isOpen}
+                // onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Edit Business Unit</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="coc_name">Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.cocPracticeName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        cocPracticeName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="coc_disp_name">Display Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.cocPracticeDisplayName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        cocPracticeDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Parent Business Unit</label>
+                <Box sx={MoadalStyle}>
+
+                <ModalHeadingSection>
+            <ModalHeadingText>Edit COC Practice</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+
+              <form id="reg-form" style={{ padding: "0px 30px" }}>
+
+                <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData.cocPracticeName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      cocPracticeName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData.cocPracticeDisplayName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      cocPracticeDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+
+                <div >
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
                   <select
+                  style={{height:"35px", width:"100%", marginBottom:"10px"}}
                     value={responseData.businessUnit.businessUnitName}
                     onChange={(e) => {
                       const selectedBuId =
@@ -466,16 +558,6 @@ function Tr({
                       const selectedBuDispName =
                         e.target.selectedOptions[0].getAttribute(
                           "data-buDisplayName"
-                        );
-                      const selectedOrgId =
-                        e.target.selectedOptions[0].getAttribute("data-orgId");
-                      const selectedOrgDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgDisplayName"
-                        );
-                      const selectedOrgName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-orgName"
                         );
 
                       setResponseData({
@@ -485,12 +567,6 @@ function Tr({
                           businessUnitId: selectedBuId,
                           businessUnitName: e.target.value,
                           businessUnitDisplayName: selectedBuDispName,
-                          organization: {
-                            ...responseData.businessUnit.organization,
-                            id: selectedOrgId,
-                            orgName: selectedOrgName,
-                            orgDisplayName: selectedOrgDispName,
-                          },
                         },
                       });
                     }}
@@ -502,17 +578,17 @@ function Tr({
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;
-                      const orgId = buData.organization.id;
-                      const orgName = buData.organization.orgName;
-                      const orgDisplayName = buData.organization.orgDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
                       if (buData.isActive) {
                         return (
                           <option
                             data-buId={buId}
                             data-buDisplayName={buDisplayName}
-                            data-orgId={orgId}
-                            data-orgName={orgName}
-                            data-orgDisplayName={orgDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
                             key={index}
                           >
                             {buNameData}
@@ -522,30 +598,30 @@ function Tr({
                     })}
                   </select>
                 </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={OnSubmit}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
+
+                <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
               </form>
-            </div>
-          </div>
-        </div>
+              </ModalDetailSection>
+        </Box>
       </Modal>
     </React.Fragment>
   );

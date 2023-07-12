@@ -11,6 +11,8 @@ import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 function Probability() {
   const [probabilityFormData, setProbabilityFormData] = useState({
@@ -121,7 +123,7 @@ function Probability() {
       >
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
-            <ModalHeadingText>Setup Business Unit</ModalHeadingText>
+            <ModalHeadingText>Setup Probability Type</ModalHeadingText>
             <CloseIcon
               onClick={() => {
                 setIsOpen(false);
@@ -225,10 +227,11 @@ function Tr({
   };
   return (
     <TableRowSection ref={wrapperRef}>
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{probabilityTypeName || "Unknown"}</span>
       </TableCellSection>
       <TableCellSection
+        className={!isActive && "disable-table-row"}
         data-id={probabilityTypeId}
       >
         <span>{percentage || "Unknown"}</span>
@@ -239,46 +242,57 @@ function Tr({
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
               <a
+                className={!isActive && "disable-table-row"}
+
                 onClick={(e) => {
                   openTheModalWithValues(e, probabilityTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                 <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
+                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
 
-                 Edit
+                Edit
               </a>
               <a
+                className={!isActive && "disable-table-row"}
                 onClick={() => {
                   deleteSelectedLocation(probabilityTypeId);
                 }}
                 href="#about"
                 style={{ padding: "5px" }}
               >
-                    <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
+                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
 
-                 Delete
+                Delete
               </a>
-              {/* <a
+              <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(probabilityTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a> */}
-              {/* <a
+                <div style={{ display: "flex" }}>
+
+                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                </div>
+              </a>
+              <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(probabilityTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a> */}
+                <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+              </a>
             </div>
           )}{" "}
         </span>

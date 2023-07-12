@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -7,11 +8,13 @@ import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel,InputField, ButtonSection,ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
 
 function Location() {
@@ -77,6 +80,7 @@ function Location() {
   };
 
   const deleteSelectedLocation = async (id) => {
+    console.log("id deleting",id);
     const { data } = await axios.delete(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`
     );
@@ -105,7 +109,7 @@ function Location() {
       <MemoizedBaseComponent
         field="Location"
         buttonText="setup location"
-        columns={["Name", "Display Name",""]}
+        columns={["Name", "Display Name", ""]}
         data={locationName}
         Tr={(obj) => {
           return (
@@ -120,81 +124,81 @@ function Location() {
         setIsOpen={setIsOpen}
       />
       <Modal
-                  open={isOpen}
-                  onClose={handleModalClose}
+        open={isOpen}
+        onClose={handleModalClose}
       >
-                  <Box sx={MoadalStyle}>
-                  <ModalHeadingSection>
-              <ModalHeadingText>Setup Region</ModalHeadingText>
-              <CloseIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-                style={{ cursor: "pointer" }}
-              />
-            </ModalHeadingSection>
-            <ModalDetailSection>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Setup Location</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
             <form id="reg-form">
 
-            <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Name</InputTextLabel>
-                  <InputField size="small"
-                      type="text"
-                      id="loc-name"
-                      variant="outlined"
-                      value={locationFormData?.locationName}
-                      onChange={(e) => {
-                        setLocationFormData({
-                          ...locationFormData,
-                          locationName: e.target.value,
-                        });
-                      }}
-                  />
-                </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="loc-name"
+                  variant="outlined"
+                  value={locationFormData?.locationName}
+                  onChange={(e) => {
+                    setLocationFormData({
+                      ...locationFormData,
+                      locationName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
 
-                <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Display Name </InputTextLabel>
-                  <InputField size="small"
-                    type="text"
-                    id="loc-disp-name"
-                    variant="outlined"
-                    value={locationFormData?.locationDisplayName}
-                    onChange={(e) => {
-                      setLocationFormData({
-                        ...locationFormData,
-                        locationDisplayName: e.target.value,
-                      });
-                    }}
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name </InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="loc-disp-name"
+                  variant="outlined"
+                  value={locationFormData?.locationDisplayName}
+                  onChange={(e) => {
+                    setLocationFormData({
+                      ...locationFormData,
+                      locationDisplayName: e.target.value,
+                    });
+                  }}
 
-                  />
-                </div>
+                />
+              </div>
 
-                <ButtonSection>
-                  <ModalControlButton
-                    type="button"
-                    value="Save"
-                    id="create-account"
-                    variant="contained"
-                    onClick={() => {
-                      setlocationDetails();
-                    }}
-                  
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    setlocationDetails();
+                  }}
 
-                  >Save</ModalControlButton>
-                  <ModalControlButton
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      setIsOpen(false);
-                    }}
-                    value="Cancel"
-                    id="create-account"
 
-                  >Cancel</ModalControlButton>
-                </ButtonSection>
-          </form>
-              </ModalDetailSection>
-          </Box>
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </div>
   );
@@ -227,55 +231,69 @@ function Tr({
 
   return (
     <TableRowSection ref={wrapperRef}>
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{locationName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection>
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{locationDisplayName || "Unknown"}</span>
       </TableCellSection>
       <TableCellSection data-id={locationId}>
+        {console.log("location", locationId)}
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
               <a
+              className={!isActive && "disable-table-row"}
                 onClick={(e) => {
                   openTheModalWithValues(e, locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                                  <BorderColorOutlinedIcon style={{fontSize:"12px", paddingRight:"5px"}} />
- Edit
+                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                Edit
               </a>
               <a
+              className={!isActive && "disable-table-row"}
                 onClick={() => {
+                  console.log("onclick", locationId);
                   deleteSelectedLocation(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-              <DeleteOutlinedIcon style={{fontSize:"15px", paddingRight:"5px"}} /> 
- Delete
+                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                Delete
               </a>
-              {/* <a
+              <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCheckCircle /> Activate
-              </a> */}
-              {/* <a
+                <div style={{ display: "flex" }}>
+
+                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                </div>
+              </a>
+
+
+              <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
                   activeDeactivateTableData(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <AiIcons.AiOutlineCloseCircle /> Deactivate
-              </a> */}
+                <div style={{ display: "flex" }}>
+                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                </div>
+
+              </a>
             </div>
           )}{" "}
         </span>
