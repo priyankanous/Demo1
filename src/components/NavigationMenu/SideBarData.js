@@ -115,6 +115,21 @@ export const SidebarData = [
         path: "/settings/roles",
         cName: "sub-nav",
       },
+      {
+        title: "Roles User Permission",
+        path: "/settings/role-user-permission",
+        cName: "sub-nav",
+      },
+      {
+        title: "Explicit Permission",
+        path: "/settings/explicit-permission",
+        cName: "sub-nav",
+      },
+      {
+        title: "Annual Target Entry",
+        path: "/settings/annual-target-entry",
+        cName: "sub-nav",
+      },
     ],
   },
   {

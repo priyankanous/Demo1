@@ -5,6 +5,8 @@ import HomePage from "./components/Home/HomePage";
 import "./css/style.scss";
 import RollingRevenueAdministration from "./utils/RollingRevenueAdministration";
 import { RevenueEntry } from "./utils/RevenueEntry";
+import { Reports } from "./utils/Reports";
+import { Settings } from "./utils/Settings";
 
 function App() {
   return (
@@ -20,10 +22,10 @@ function App() {
           path="/administration/region"
           component={RollingRevenueAdministration.Region}
         />
-        {/* <Route
+        <Route
           path="/administration/organization"
           component={RollingRevenueAdministration.Organization}
-        /> */}
+        />
         <Route
           path="/administration/sbu"
           component={RollingRevenueAdministration.Sbu}
@@ -81,7 +83,24 @@ function App() {
           component={RollingRevenueAdministration.GlobalLeaveLossFactor}
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
-
+        <Route
+          path="/reports/businesstypewiseview"
+          component={Reports.BusinessType}
+        />
+        <Route path="/settings/account" component={Settings.Account} />
+        <Route path="/settings/opportunity" component={Settings.Opportunity} />
+        <Route
+          path="/settings/role-user-permission"
+          component={Settings.RoleUserPermission}
+        />
+        <Route
+          path="/settings/explicit-permission"
+          component={Settings.ExplicitPermission}
+        />
+        <Route
+          path="/settings/annual-target-entry"
+          component={Settings.AnnualTargetEntry}
+        />
       </Switch>
     </Router>
   );
