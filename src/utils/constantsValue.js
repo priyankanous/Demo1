@@ -121,11 +121,17 @@ export const InputTextLabel = styled(InputLabel)({
   color: "#000000"
 });
 
-export const InputField = styled(TextField)({
-  background: "white", 
-  boxShadow: "none",
+// export const InputField = styled(TextField)({
+//   background: "white", 
+//   boxShadow: "none !important",
+// });
 
-});
+export const InputField = styled(TextField)`
+  && {
+    background: white;
+    box-shadow: none;
+  }
+`;
 
 export const ButtonSection = styled('div')({
   display: "flex", 

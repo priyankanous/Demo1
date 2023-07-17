@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -61,6 +62,7 @@ function GlobalLeaveLossFactor() {
       setIsOpen(false);
     } catch { }
   };
+  
   const getFinancialYearNameData = async () => {
     console.log("in financial year data");
     await axios
@@ -139,6 +141,7 @@ function GlobalLeaveLossFactor() {
   const handleModalClose = () => {
     setIsOpen(false);
   };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -184,7 +187,8 @@ function GlobalLeaveLossFactor() {
                 <div>
                   <label for="name">Financial Year</label>
                   <select
-                    style={{ width: "100%",height:"35px" }}
+                    style={{ width: "100%",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"
+                  }}
                     value={
                       globalLeaveLossFactorData.financialYear.financialYearName
                     }
@@ -336,7 +340,9 @@ function GlobalLeaveLossFactor() {
 
 function Tr({
   setFinancialYearData,
+  getAllGlobalLLF,
   openTheModalWithValues,
+  setGlobalLeaveLoseFactorData,
   data: { leaveLossFactorId, month, onSite, offShore, financialYear, isActive },
 }) {
   const [isDropdown, setDropdown] = useState(false);
@@ -375,26 +381,36 @@ function Tr({
       });
   };
 
-  // const activeDeactivateTableData = async (id) => {
-  //   const { data } = await axios.put(
-  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
-  //   );
-  //   if (data?.message === "Success" && data?.responseCode === 200) {
-  //     setRegionData({ regionName: "", regionDisplayName: "" });
-  //     setIsOpen(false);
-  //     getAllRegionData();
-  //   }
-  // };
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setGlobalLeaveLoseFactorData({
+        month: "",
+        onSite: "",
+        offShore: "",
+        financialYear: {
+          financialYearId: "",
+          financialYearName: "",
+          financialYearCustomName: "",
+          startingFrom: "",
+          endingOn: "",
+        },
+       });
+      setIsOpen(false);
+    }
+  };
 
   // const DeleteRecord = () => {
   //   axios
   //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${leaveLossFactorId}`,
   //       responseData
   //     )
   //     .then((response) => {
   //       const actualDataObject = response.data.data;
-  //       getAllRegionData();
+  //       getAllGlobalLLF();
   //       setIsOpen(false);
   //     });
   // };
@@ -435,25 +451,31 @@ function Tr({
 
 
                   style={{ padding: "5px" }}
-                  onClick={(e) => {
-                    openTheModalWithValues(e, financialYear.financialYearName);
+                  // onClick={(e) => {
+                  //   openTheModalWithValues(e, financialYear.financialYearName);
+                  // }}
+                  onClick={() => {
+                    setIsOpen(true);
+                    console.log("clicked")
                   }}
                 >
                   <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
 
                   Edit
                 </a>
-                <a
+                {/* <a
                   className={!isActive && "disable-table-row"}
+                  onClick={() => { DeleteRecord(leaveLossFactorId) }} 
 
                   style={{ padding: "5px" }}>
-
                   <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
                   Delete
-                </a>
+                </a> */}
                 <a
-                  className={!isActive && "disable-table-row"}
-
+                  // className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(leaveLossFactorId);
+                  }}
                   style={{ padding: "5px" }}>
 
                   <div style={{ display: "flex" }}>
@@ -463,9 +485,9 @@ function Tr({
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
-                  // onClick={() => {
-                  //   activeDeactivateTableData(leaveLossFactorId);
-                  // }}
+                  onClick={() => {
+                    activeDeactivateTableData(leaveLossFactorId);
+                  }}
 
                   style={{ padding: "5px" }}>
 
@@ -479,112 +501,125 @@ function Tr({
           </span>
         </TableCellSection>
         <Modal
-          isOpen={isOpen}
-          onRequestClose={() => setIsOpen(false)}
-          style={modalStyleObject}
+                  open={isOpen}
+                  // onClose={handleModalClose}
         >
-          <div>
-            <div class="main" className="ModalContainer">
-              <div class="register">
-                <ModalHeading>Edit Global Leave loss Factor</ModalHeading>
-                <ModalIcon
+                          <Box sx={MoadalStyle}>
+
+                          <ModalHeadingSection>
+            <ModalHeadingText>Edit Global Leave loss Factor</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
+
+
+                <form id="reg-form">
+
+                <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Financial Year</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.financialYear.financialYearName}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>No</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.leaveLossFactorId}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Month</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.month}
+                  onChange={(e) =>
+                    setResponseData({
+                      ...responseData,
+                      month: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>OffShore</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.offShore}
+                  onChange={(e) =>
+                    setResponseData({
+                      ...responseData,
+                      offShore: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>OnSite</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.onSite}
+                  onChange={(e) =>
+                    setResponseData({
+                      ...responseData,
+                      onSite: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+
+
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
                   onClick={() => {
                     setIsOpen(false);
                   }}
-                >
-                  <AiOutlineClose></AiOutlineClose>
-                </ModalIcon>
-                <hr color="#62bdb8"></hr>
-                <form id="reg-form">
-                  <div>
-                    <label for="name">Financial Year</label>
-                    <input
-                      type="text"
-                      id="id"
-                      spellcheck="false"
-                      value={responseData.financialYear.financialYearName}
-                    />
-                  </div>
-                  <div>
-                    <label for="name">#</label>
-                    <input
-                      type="text"
-                      id="id"
-                      spellcheck="false"
-                      value={responseData.leaveLossFactorId}
-                    />
-                  </div>
-                  <div>
-                    <label for="email">Months</label>
-                    <input
-                      type="text"
-                      id="email"
-                      spellcheck="false"
-                      value={responseData.month}
-                      onChange={(e) =>
-                        setResponseData({
-                          ...responseData,
-                          month: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label for="email">OffShore</label>
-                    <input
-                      type="text"
-                      id="email"
-                      spellcheck="false"
-                      value={responseData.offShore}
-                      onChange={(e) =>
-                        setResponseData({
-                          ...responseData,
-                          offShore: e.target.value,
-                        })
-                      }
-                    />{" "}
-                    <span>%</span>
-                  </div>
-                  <div>
-                    <label for="email">OnSite</label>
-                    <input
-                      type="text"
-                      id="email"
-                      spellcheck="false"
-                      value={responseData.onSite}
-                      onChange={(e) =>
-                        setResponseData({
-                          ...responseData,
-                          onSite: e.target.value,
-                        })
-                      }
-                    />
-                    %
-                  </div>
-                  <div>
-                    <label>
-                      <input
-                        type="button"
-                        value="Save"
-                        id="create-account"
-                        class="button"
-                        onClick={OnSubmit}
-                      />
-                      <input
-                        type="button"
-                        onClick={() => {
-                          setIsOpen(false);
-                        }}
-                        value="Cancel"
-                        id="create-account"
-                        class="button"
-                      />
-                    </label>
-                  </div>
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+
+
                 </form>
-              </div>
-            </div>
-          </div>
+                </ModalDetailSection>
+          </Box>
         </Modal>
       </TableRowSection>
     </React.Fragment>

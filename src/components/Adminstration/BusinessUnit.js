@@ -105,7 +105,8 @@ function BuisnessUnit() {
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+                <InputField 
+                  size="small"
                   type="text"
                   id="name"
                   variant="outlined"
@@ -117,6 +118,7 @@ function BuisnessUnit() {
                   }}
                 />
               </div>
+              
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Display Name </InputTextLabel>
                 <InputField size="small"
@@ -371,6 +373,82 @@ function Tr({
           </span>
         </TableCellSection>
       </TableRowSection>
+      <Modal
+                open={isOpen}
+      >
+                <Box sx={MoadalStyle}>
+                <ModalHeadingSection>
+            <ModalHeadingText>Edit Setup SBU</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+
+             
+              <form id="reg-form">
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  value={responseData.businessUnitName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      businessUnitName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name </InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  variant="outlined"
+                  value={responseData.businessUnitDisplayName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      businessUnitDisplayName: e.target.value,
+                    });
+                  }}
+
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+
+              </form>
+              </ModalDetailSection>
+        </Box>
+      </Modal>
 
     </React.Fragment>
   );

@@ -345,6 +345,9 @@ select {
   margin-top: 5px;
   font-size: 1vw;
 }
+.MuiInputBase-input {
+  box-shadow: none;
+}
 
 filter .dropdown {
   width: 53%;

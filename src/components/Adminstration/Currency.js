@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { AiOutlineClose, AiOutlineMore } from "react-icons/ai";
@@ -178,7 +179,9 @@ function Currency() {
                 <InputTextLabel>Financial Year</InputTextLabel>
                 {/* <label for="name">Financial Year</label> */}
                 <select
-                  style={{ width: "100%", height: "40px" }}
+                  // style={{ width: "100%", height: "40px" }}
+                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+
                   onChange={(e) => {
                     const selectedFyId =
                       e.target.selectedOptions[0].getAttribute("data-fyId");
@@ -342,21 +345,6 @@ function Currency() {
                 />
               </div>
 
-              {/* <div>
-                  <label for="username">Conversion Rate</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
-                    onChange={(e) => {
-                      setCurrencyData({
-                        ...currencyData,
-                        conversionRate: e.target.value,
-                      });
-                    }}
-                  />
-                </div> */}
-
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -380,26 +368,6 @@ function Currency() {
                 >Cancel</ModalControlButton>
               </ButtonSection>
 
-              {/* <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={AddDataToCurrency}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div> */}
             </form>
           </ModalDetailSection>
         </Box>
@@ -408,15 +376,29 @@ function Currency() {
   );
 }
 
-function Tr({ data: { currencyId, currencyName, currency, conversionRate, symbol, isActive } }) {
+function Tr({
+  AddDataToCurrency,
+  getFinancialYearNameData,
+  financialYearData,
+  setCurrencyData,
+  getAllCurrency,
+   data: { currencyId, currencyName, currency, conversionRate, symbol, isActive,financialYear } }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdown, setDropdown] = useState(false);
-  // const [responseData, setResponseData] = useState({
-  //   id: id,
-  //   name: name,
-  //   symbol: symbol,
-  //   rate: rate,
-  // });
+  const [responseData, setResponseData] = useState({
+    // currencyId:currencyId,
+    currency:currency,
+    currencyName:currencyName,
+    symbol:symbol,
+    conversionRate:conversionRate,
+    financialYear: {
+      financialYearId: financialYear.financialYearId,
+      financialYearName: "",
+      financialYearCustomName: "",
+      startingFrom: "",
+      endingOn: "",
+    },
+  });
   const OutsideClick = (ref) => {
     useEffect(() => {
       const handleOutsideClick = (event) => {
@@ -432,6 +414,45 @@ function Tr({ data: { currencyId, currencyName, currency, conversionRate, symbol
   const closeDropDown = (isopen, id) => {
     isopen ? setDropdown(false) : setDropdown(true);
   };
+
+  const OnSubmit = () => {
+    axios
+      .put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/${currencyId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllCurrency();
+        setIsOpen(false);
+      });
+  };
+
+  const activeDeactivateTableData = async (id) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/activate-or-deactivate/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setCurrencyData({ 
+      currency: "",
+      currencyName: "",
+      conversionRate: "",
+      symbol: "",
+      financialYear: {
+        financialYearId: "",
+        financialYearName: "",
+        financialYearCustomName: "",
+        startingFrom: "",
+        endingOn: "", 
+      }
+      });
+
+      setIsOpen(false);
+      getAllCurrency();
+    }
+  };
+
+  console.log("currencyId",currencyId);
 
   return (
     <React.Fragment>
@@ -468,35 +489,40 @@ function Tr({ data: { currencyId, currencyName, currency, conversionRate, symbol
                 class="dropdown-content"
                 id="dropdown"
               >
-                <a
+
+<a
                   className={!isActive && "disable-table-row"}
-                  style={{ padding: "5px" }}>
-                  <AiIcons.AiOutlineEdit
-                    onClick={() => {
-                      setIsOpen(true);
-                    }}
-                  />{" "}
+                  style={{ padding: "5px" }}
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
+                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+
                   Edit
                 </a>
-                <a
+
+                {/* <a
                   className={!isActive && "disable-table-row"}
                   href="#about" style={{ padding: "5px" }}>
                   <AiIcons.AiOutlineDelete /> Delete
-                </a>
+                </a> */}
                 <a
-                  className={!isActive && "disable-table-row"}
-
+                  // className={!isActive && "disable-table-row"}
+                  onClick={() => {
+                    activeDeactivateTableData(currencyId);
+                  }}
                   style={{ padding: "5px" }}>
                   <div style={{ display: "flex" }}>
-
                     <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
-
                     <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                   </div>
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
-
+                  onClick={() => {
+                    activeDeactivateTableData(currencyId);
+                  }}
                   style={{ padding: "5px" }}>
                   <div style={{ display: "flex" }}>
                     <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
@@ -508,41 +534,173 @@ function Tr({ data: { currencyId, currencyName, currency, conversionRate, symbol
           </span>
         </TableCellSection>
       </TableRowSection>
-      {/* <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+      <Modal
+      open={isOpen}
+
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Setup Currency</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
+                        <Box sx={MoadalStyle}>
+
+                        <ModalHeadingSection>
+            <ModalHeadingText>Edit Setup Currency</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+
+          <ModalDetailSection>
+
               <form id="reg-form">
-                <div>
-                  <label for="name">Currency</label>
-                  <input type="text" id="id" spellcheck="false" />
-                </div>
-                <div>
-                  <label for="email">Name</label>
-                  <input type="text" id="name" spellcheck="false" />
-                </div>
-                <div>
-                  <label for="username">Symbol</label>
-                  <input type="text" id="symbol" spellcheck="false" />
-                </div>
-                <div>
-                  <label for="username">Conversion Rate</label>
-                  <input type="text" id="rate" spellcheck="false" />
-                </div>
-                <div>
+                
+              {/* <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Financial Year</InputTextLabel>
+                <select
+                  style={{ width: "100%", height: "40px" }}
+                  onChange={(e) => {
+                    const selectedFyId =
+                      e.target.selectedOptions[0].getAttribute("data-fyId");
+                    const selectedfyDispName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-fyDispName"
+                      );
+                    const selectedFyStartingFrom =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-fyStartingFrom"
+                      );
+                    const selectedfyEndingOn =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-fyEndingOn"
+                      );
+                    setCurrencyData({
+                      ...responseData,
+                      financialYear: {
+                        ...responseData.financialYear,
+                        financialYearId: selectedFyId,
+                        financialYearName: e.target.value,
+                        financialYearCustomName: selectedfyDispName,
+                        startingFrom: selectedFyStartingFrom,
+                        endingOn: selectedfyEndingOn,
+                      },
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {financialYearData.map((fyData, index) => {
+                    const fyNameData = fyData.financialYearName;
+                    const fyId = fyData.financialYearId;
+                    const fyDispName = fyData.financialYearCustomName;
+                    const fyStartingFrom = fyData.startingFrom;
+                    const fyEndingOn = fyData.endingOn;
+                    if(fyData.isActive){
+                    return (
+                      <option
+                        data-fyId={fyId}
+                        data-fyDispName={fyDispName}
+                        data-fyStartingFrom={fyStartingFrom}
+                        data-fyEndingOn={fyEndingOn}
+                        key={index}
+                      >
+                        {fyNameData}
+                      </option>
+                    );
+                    }
+                  })}
+                </select>
+              </div> */}
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Currency</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.currency}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      currency: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.currencyName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      currencyName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Symbol</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.symbol}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      symbol: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Conversion Rate</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="id"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.conversionRate}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      conversionRate: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  onClick={OnSubmit}
+                >Save</ModalControlButton>
+                <ModalControlButton
+
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >Cancel</ModalControlButton>
+              </ButtonSection>
+
+
+                {/* <div>
                   <label>
                     <input
                       type="button"
@@ -560,12 +718,12 @@ function Tr({ data: { currencyId, currencyName, currency, conversionRate, symbol
                       class="button"
                     />
                   </label>
-                </div>
+                </div> */}
               </form>
-            </div>
-          </div>
-        </div>
-      </Modal> */}
+              </ModalDetailSection>
+        </Box>
+      </Modal>
+
     </React.Fragment>
   );
 }
