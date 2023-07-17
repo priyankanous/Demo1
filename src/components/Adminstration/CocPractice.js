@@ -222,8 +222,7 @@ function CocPractice() {
 <div >
                   <label style={{fontWeight:"400",fontSize:"16px"}} for="email">Parent Business Unit</label>
                   <select
-                                    style={{height:"35px", width:"100%", marginBottom:"10px"}}
-
+                     style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
                     onChange={(e) => {
                       const selectedBuId =
                         e.target.selectedOptions[0].getAttribute("data-buId");
@@ -550,7 +549,8 @@ function Tr({
                 <div >
                   <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
                   <select
-                  style={{height:"35px", width:"100%", marginBottom:"10px"}}
+                   style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+
                     value={responseData.businessUnit.businessUnitName}
                     onChange={(e) => {
                       const selectedBuId =

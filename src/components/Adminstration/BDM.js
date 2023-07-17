@@ -24,6 +24,16 @@ function Bdm() {
     bdmDisplayName: "",
     activeFrom: "",
     activeUntil: "",
+    businessUnit: {
+      businessUnitId: "",
+      businessUnitName: "",
+      businessUnitDisplayName: "",
+    },
+    regionUnit: {
+      regionId: "",
+      regionName: "",
+      regionDisplayName: "",
+    }
   });
   const [isBusinessUnitLinked, setBusinessUnitLinked] = useState(false);
   const [isRegionLinked, setRegionLinked] = useState(false);
@@ -34,6 +44,9 @@ function Bdm() {
   const [selectedBusinessUnit, setselectedBusinessUnit] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [isEditId, setIsEditId] = useState(null);
+  const [buNameData, setBuNameData] = useState([]);
+  const [regionData, setRegionData] = useState([]);
+
   const month = [
     "Jan",
     "Feb",
@@ -49,12 +62,38 @@ function Bdm() {
     "Dec",
   ];
 
+  const getBuNameData = async () => {
+    await axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
+      )
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setBuNameData(actualDataObject);
+      });
+  };
+
+  const getAllRegionData = async () => {
+    await axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setRegionData(actualDataObject);
+      });
+  };
+
   const fetchBusinessUnitData = async () => {
+    getBuNameData();
+    getAllRegionData();
     const { data } = await axios.get(
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit"
     );
     setBusinessUnit(data?.data);
   };
+
+
 
   const fetchRegionData = async () => {
     const { data } = await axios.get(
@@ -63,14 +102,27 @@ function Bdm() {
     setRegion(data?.data);
   };
 
+  // const fetchBdmData = async () => {
+  //   fetchBusinessUnitData();
+  //   fetchRegionData();
+  //   const { data } = await axios.get(
+  //     "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm"
+  //   );
+  //   setData(data?.data);
+  // };
+
   const fetchBdmData = async () => {
-    fetchBusinessUnitData();
+        fetchBusinessUnitData();
     fetchRegionData();
-    const { data } = await axios.get(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm"
-    );
-    setData(data?.data);
+    await axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm`)
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setData(actualDataObject);
+      });
   };
+
 
   useEffect(() => {
     fetchBdmData();
@@ -255,6 +307,9 @@ function Bdm() {
               data={obj}
               editBDMData={editBDMData}
               activateDeactivate={activateDeactivate}
+              buNameData={buNameData}
+              regionData={regionData}
+              fetchBdmData={fetchBdmData}
             />
           );
         }}
@@ -276,7 +331,7 @@ function Bdm() {
           </ModalHeadingSection>
           <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
 
-            <form id="bdm-form">
+            <form id="bdm-form" style={{ padding: "0px 30px" }}>
 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
@@ -345,120 +400,109 @@ function Bdm() {
                   }}
                 />
               </div>
-
-              <div class="container">
-                    <div
-                      onClick={() => {
-                        setdropdownOpenReg(!dropdownOpenReg);
-                      }}
-                      style={{ width: "100%", position: "sticky", top: "0" }}
-                      class="select-btn"
-                      className={`select-btn ${dropdownOpenReg && "open"}`}
-                    >
-                      <span class="btn-text">Select Region</span>
-                      <span class="arrow-dwn">
-                        <i class="fa-solid fa-chevron-down">
-                          <AiIcons.AiOutlineCaretUp></AiIcons.AiOutlineCaretUp>
-                        </i>
-                      </span>
-                    </div>
-
-                    <ul
-                      style={{
-                        overflowY: "auto",
-                        height: "200px",
-                        width: "90%",
-                      }}
-                      class="list-items open-list-items"
-                      className={`list-items ${
-                        dropdownOpenReg && "open-list-items"
-                      }`}
-                    >
-                      {region &&
-                        region.map((value, index) => {
-                          return (
-                            <li
-                              onClick={() => {
-                                selectMarkDropdown(value, "reg");
-                              }}
-                              key={index}
-                              class={`item ${
-                                checkElementInArray(value, "reg") && "checked"
-                              }`}
-                            >
-                              <span
-                                style={{
-                                  borderRadius: isRegionLinked && "50%",
-                                }}
-                                class="checkbox"
-                              >
-                                {!isRegionLinked && (
-                                  <i class="fa-solid fa-check check-icon">
-                                    <AiIcons.AiOutlineCheck />
-                                  </i>
-                                )}
-                              </span>
-                              <span class="item-text">{value?.regionName}</span>
-                            </li>
-                          );
-                        })}
-                    </ul>
-                  </div>
-
                   
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Linked Region</InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    size="small"
-                    style={{ background: "white" }}
-                  // onChange={(e) => {
-                  //   const sbuSelected = JSON.parse(e.target.value);
-                  //   setSbuName(sbuSelected);
-                  // }}
-
-                  >
-                    {businessUnit &&
-                      businessUnit.map((value, index) => {
-                        // const sbuNameData = sbuData.sbuName;
-                        return (
-                          <MenuItem
-                          >
-
-
-                          </MenuItem>
+<div>
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Linked Business Unit</label>
+                  <select
+                  style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
                         );
-                      })}
-                  </Select>
-                </FormControl>
-              </div>
 
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Linked BU</InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    size="small"
-                    style={{ background: "white" }}
-                  // onChange={(e) => {
-                  //   const sbuSelected = JSON.parse(e.target.value);
-                  //   setSbuName(sbuSelected);
-                  // }}
-
+                        setbdmFormData({
+                        ...bdmFormData,
+                        businessUnit: {
+                          ...bdmFormData.businessUnit,
+                          businessUnitId: selectedBuId,
+                          businessUnitName: e.target.value,
+                          businessUnitDisplayName: selectedBuDispName,
+                        },
+                      });
+                    }}
                   >
-                    {businessUnit &&
-                      businessUnit.map((value, index) => {
-                        // const sbuNameData = sbuData.sbuName;
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {buNameData.map((buData, index) => {
+                      const buNameData = buData.businessUnitName;
+                      const buId = buData.businessUnitId;
+                      const buDisplayName = buData.businessUnitDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
                         return (
-                          <MenuItem
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
+                            key={index}
                           >
-
-
-                          </MenuItem>
+                            {buNameData}
+                          </option>
                         );
-                      })}
-                  </Select>
-                </FormControl>
-              </div>
+                      }
+                    })}
+                  </select>
+                </div>
+
+                <div>
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Linked Rigion</label>
+                  <select
+                  style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                    onChange={(e) => {
+                      const selectedBuId =
+                        e.target.selectedOptions[0].getAttribute("data-buId");
+                      const selectedBuDispName =
+                        e.target.selectedOptions[0].getAttribute(
+                          "data-buDisplayName"
+                        );
+
+                        setbdmFormData({
+                        ...bdmFormData,
+                        regionUnit: {
+                          ...bdmFormData.regionUnit,
+                          regionId: selectedBuId,
+                          regionName: e.target.value,
+                          regionDisplayName: selectedBuDispName,
+                        },
+                      });
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      Please choose one option
+                    </option>
+                    {regionData.map((buData, index) => {
+                      const regionData = buData.regionName;
+                      const buId = buData.regionId;
+                      const buDisplayName = buData.regionDisplayName;
+                      // const orgId = buData.organization.id;
+                      // const orgName = buData.organization.orgName;
+                      // const orgDisplayName = buData.organization.orgDisplayName;
+                      if (buData.isActive) {
+                        return (
+                          <option
+                            data-buId={buId}
+                            data-buDisplayName={buDisplayName}
+                            // data-orgId={orgId}
+                            // data-orgName={orgName}
+                            // data-orgDisplayName={orgDisplayName}
+                            key={index}
+                          >
+                            {regionData}
+                          </option>
+                        );
+                      }
+                    })}
+                  </select>
+                </div>
+
               {/* <div>
                   <label className="label-bdm">
                     <input
@@ -656,12 +700,30 @@ function Tr({
     businessUnits,
     regions,
     bdmId,
+    bdmFormData,
+    fetchBdmData
   },
   activateDeactivate,
   editBDMData,
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+    const [responseData, setResponseData] = useState({
+      bdmName: "",
+    bdmDisplayName: "",
+    activeFrom: "",
+    activeUntil: "",
+    businessUnit: {
+      businessUnitId: "",
+      businessUnitName: "",
+      businessUnitDisplayName: "",
+    },
+    regionUnit: {
+      regionId: "",
+      regionName: "",
+      regionDisplayName: "",
+    }
+  });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -680,6 +742,20 @@ function Tr({
   const closeDropDown = () => {
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
+
+    const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/${bdmId}`,
+        bdmFormData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        fetchBdmData();
+        setIsOpen(false);
+      });
+  };
+
   return (
     <TableRowSection ref={wrapperRef}>
       <TableCellSection className={!isActive && "disable-table-row"}>
@@ -735,6 +811,9 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 style={{ padding: "5px" }}
+                                  onClick={() => {
+                    DeleteRecord();
+                  }}
               >
                 <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
                 Delete

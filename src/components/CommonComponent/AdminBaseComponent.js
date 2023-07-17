@@ -50,6 +50,7 @@ export function AdminBaseComponent(props) {
               Financial year:
               </Typography>
               <select
+            
                 id="filterSelect"
                 onChange={(e) => {
                   if (props.currency == true) {
@@ -57,7 +58,9 @@ export function AdminBaseComponent(props) {
                   }
                   props.getAllGlobalLLF(e.target.value);
                 }}
-                style={{height:"30px"}}
+                // style={{height:"35px", borderRadius:"7px"}}
+                style={{height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -73,10 +76,10 @@ export function AdminBaseComponent(props) {
               style={{
                 display: props.globalLeave ? "none" : "",
                 paddingRight: "2%",
-                fontSize:"15px"
+                fontSize:"15px",
               }}
             >
-              Base Currency: <input type="text" id="email" spellcheck="false" style={{height:"20px"}} />{" "}
+              Base Currency: <input type="text" id="email" spellcheck="false" style={{height:"23px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}} />{" "}
             </span>
             <span style={{ paddingRight: "2%",fontSize:"15px" }}>
               Copy From:{" "}
@@ -86,7 +89,7 @@ export function AdminBaseComponent(props) {
                 onChange={(e) => {
                   setCopyData({ ...copyData, copyFromFy: e.target.value });
                 }}
-                style={{height:"30px",marginLeft:"32px"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -125,7 +128,7 @@ export function AdminBaseComponent(props) {
                     },
                   });
                 }}
-                style={{height:"30px"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one

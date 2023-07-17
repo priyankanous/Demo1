@@ -221,7 +221,7 @@ function Sbu() {
 <div>
                   <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
                   <select
-                  style={{height:"35px", width:"100%", marginBottom:"10px"}}
+                  style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
                     onChange={(e) => {
                       const selectedBuId =
                         e.target.selectedOptions[0].getAttribute("data-buId");
@@ -482,56 +482,62 @@ className={!isActive && "disable-table-row"}
         </TableCellSection>
       </TableRowSection>
       <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
+                open={isOpen}
+                // onClose={handleModalClose}
       >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Edit SBU</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
+                <Box sx={MoadalStyle}>
+
+                <ModalHeadingSection>
+            <ModalHeadingText>Edit SBU</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+
+
+              <form id="reg-form" style={{ padding: "0px 30px" }}>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.sbuName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      sbuName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Display Name</InputTextLabel>
+                <InputField size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.sbuDisplayName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      sbuDisplayName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
                 <div>
-                  <label for="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    spellcheck="false"
-                    value={responseData.sbuName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        sbuName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Display Name</label>
-                  <input
-                    type="text"
-                    id="email"
-                    spellcheck="false"
-                    value={responseData.sbuDisplayName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        sbuDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="email">Parent Business Unit</label>
+                  <label for="email"  style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
                   <select
+                  style={{height:"35px", width:"100%", marginBottom:"10px", borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
                     value={responseData.businessUnit.businessUnitName}
                     onChange={(e) => {
                       const selectedBuId =
@@ -595,30 +601,31 @@ className={!isActive && "disable-table-row"}
                     })}
                   </select>
                 </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={OnSubmit}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
+
+                <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+
+
+                >Save</ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+
+                >Cancel</ModalControlButton>
+              </ButtonSection>
               </form>
-            </div>
-          </div>
-        </div>
+              </ModalDetailSection>
+        </Box>
       </Modal>
     </React.Fragment>
   );
