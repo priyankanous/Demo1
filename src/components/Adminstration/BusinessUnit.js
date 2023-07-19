@@ -300,19 +300,19 @@ function Tr({
 
   return (
     <React.Fragment>
-      <TableRowSection ref={wrapperRef}>
-        <TableCellSection className={!isActive && "disable-table-row"} >
-          <span>{businessUnitName || "Unknown"}</span>
+            <TableRowSection ref={wrapperRef}>
+
+      <TableCellSection className={!isActive && "disable-table-row"} >
+                                  <span>{businessUnitName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection className={!isActive && "disable-table-row"}>
-          <span>{businessUnitDisplayName || "Unknown"}</span>
+
+              <TableCellSection className={!isActive && "disable-table-row"} >
+                          <span>{businessUnitDisplayName || "Unknown"}</span>
+
         </TableCellSection>
-        {/* <TableCellSection>
-          <span>
-            {organization.orgName || "Unknown"}
-          </span>
-          </TableCellSection> */}
-        <TableCellSection>
+
+          <TableCellSection>
+
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -322,42 +322,42 @@ function Tr({
             {isDropdown && (
               <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
                 <a
-                  className={!isActive && "disable-table-row"}
+                                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                                    <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+
                   Edit
                 </a>
                 <a
-                  className={!isActive && "disable-table-row"}
+                                  className={!isActive && "disable-table-row"}
+
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
-                  Delete
+                                    <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+
+                   Delete
                 </a>
                 <a
-                  // className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
+                  className={isActive && "disable-table-row"}
                   onClick={() => {
                     activeDeactivateTableData(businessUnitId);
                   }}
                 >
-                  <div style={{ display: "flex" }}>
-
+                     <div style={{ display: "flex" }}>
                     <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
-
                     <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                   </div>
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
-
                   onClick={() => {
                     activeDeactivateTableData(businessUnitId);
                   }}
@@ -373,7 +373,7 @@ function Tr({
           </span>
         </TableCellSection>
       </TableRowSection>
-      <Modal
+            <Modal
                 open={isOpen}
       >
                 <Box sx={MoadalStyle}>
@@ -449,8 +449,8 @@ function Tr({
               </ModalDetailSection>
         </Box>
       </Modal>
-
     </React.Fragment>
+
   );
 }
 
