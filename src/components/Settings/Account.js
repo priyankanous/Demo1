@@ -12,13 +12,17 @@ import {
   ModalControlButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
-import { Box, Typography, IconButton, Checkbox,MenuItem } from "@mui/material";
+import { Box, Typography, IconButton, Checkbox, MenuItem } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/Settings/settingBasedComponent";
 import * as AiIcons from "react-icons/ai";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import axios from "axios";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import {
   Table,
   Modal,
@@ -37,16 +41,24 @@ import {
 function AccountSettings() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [regionNameData, setRegionNameData] = useState([]);
+  const [accountId, setAccountId] = useState(null);
   const [accountName, setAccountName] = useState(null);
+  const [isDropdown, setDropdown] = useState(false);
   const [regionDisplayName, setRegionDisplayName] = useState(null);
-  const[accountId, setAccountId]=useState(null)
-  const [regionData, setRegionData] = useState({
+  const [accountData, setAccountData] = useState({
     accountName: "",
-    regionDisplayName: "",
+    accountId: 0,
+    accountOrClientCode: "string",
+    regions: {
+      regionId: 0,
+      regionName: "",
+      regionDisplayName: "",
+    },
   });
 
   useEffect(() => {
-    getAllRegionData();
+    getAllAccountsData();
   }, []);
 
   const handleModalClose = () => {
@@ -55,72 +67,76 @@ function AccountSettings() {
 
   const getAllRegionData = async () => {
     await axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setRegionNameData(actualDataObject);
+      });
+  };
+  const getAllAccountsData = async () => {
+    getAllRegionData();
+    await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts`)
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
   };
   const AddDataToAccount = async (e) => {
-    console.log("check",e.target.value)
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
-        regionData
+        accountData
       );
-      console.log("this is the response", response.data);
-      getAllRegionData();
       setIsOpen(false);
+      getAllAccountsData();
     } catch {}
   };
 
-  const setAccountsData = async () => {
-    const postaccountData = {
-      accountName,
-      regionDisplayName,
-      accountId: 0,
-    };
-    if (accountId !== null) {
-      var { data } = await axios.put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
-        postaccountData
-      );
-    } else {
-      var { data } = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
-        postaccountData
-      );
-    }
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setIsOpen(false);
-      getAllRegionData();
-    }
-  };
+  // const setAccountsData = async () => {
+  //   const postaccountData = {
+  //     accountName,
+  //     regionDisplayName,
+  //     accountId: 0,
+  //   };
+  //   if (accountId !== null) {
+  //     var { data } = await axios.put(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
+  //       postaccountData
+  //     );
+  //   } else {
+  //     var { data } = await axios.post(
+  //       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
+  //       postaccountData
+  //     );
+  //   }
+  //   if (data?.message === "Success" && data?.responseCode === 200) {
+  //     setIsOpen(false);
+  //     getAllRegionData();
+  //   }
+  // };
 
   const resetData = () => {
     setIsOpen(false);
     getAllRegionData();
     setAccountName(null);
-    setRegionDisplayName(null)
+    setRegionDisplayName(null);
   };
-
-  const childAccount=[1, 2, 3]
 
   return (
     <div>
       <MemoizedBaseComponent
-        field="Region"
-        columns={["No." ,"Name", "Region"]}
+        field="Account"
+        columns={["No.", "Name", "Region", ""]}
         data={data}
         buttonText="Add New"
         Tr={(obj) => {
           return (
             <Tr
-              accData={data}
               data={obj}
-              getAllRegionData={getAllRegionData}
-              setRegionData={setRegionData}
+              getAllAccountsData={getAllAccountsData}
+              regionNameData={regionNameData}
+              setAccountData={setAccountData}
             />
           );
         }}
@@ -129,7 +145,7 @@ function AccountSettings() {
       <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
-            <ModalHeadingText>Set Account</ModalHeadingText>
+            <ModalHeadingText>Setup Account</ModalHeadingText>
             <CloseIcon
               onClick={() => {
                 setIsOpen(false);
@@ -141,9 +157,8 @@ function AccountSettings() {
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Name</span>
-                
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
                 </InputTextLabel>
                 <InputField
                   size="small"
@@ -152,68 +167,70 @@ function AccountSettings() {
                   variant="outlined"
                   spellcheck="false"
                   onChange={(e) => {
-                    setAccountName(e.target.value);
+                    setAccountData({
+                      ...accountData,
+                      accountName: e.target.value,
+                    });
                   }}
-                  value={accountName}
                 />
               </div>
-              {/* <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Child of SBU</span>
-                </InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    size="small"
-                    style={{ background: "white" }}
-                    onChange={(e) => {
-                      setRegionDisplayName(e.target.value);
-                    }}
-                    value={regionDisplayName}
-                  >
-                    {childAccount?.map((accountName, index) => {
+
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  Region
+                </label>
+                <select
+                  style={{
+                    height: "37px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                  }}
+                  onChange={(e) => {
+                    const selectedRegionId =
+                      e.target.selectedOptions[0].getAttribute("data-regionId");
+                    const selectedRegionDispName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-regionDisplayName"
+                      );
+
+                    setAccountData({
+                      ...accountData,
+                      regions: {
+                        ...accountData.regions,
+                        regionId: selectedRegionId,
+                        regionName: e.target.value,
+                        regionDisplayName: selectedRegionDispName,
+                      },
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {regionNameData?.map((regions, index) => {
+                    const regionNameData = regions.regionName;
+                    const regionId = regions.regionId;
+                    const regionDisplayName = regions.regionDisplayName;
+
+                    if (regions.isActive) {
                       return (
-                        <MenuItem
-                        value={JSON.stringify(accountName)}
-                        selected={childAccount === childAccount}
-                        key={index}
-                      >
+                        <option
+                          data-regionId={regionId}
+                          data-regionDisplayName={regionDisplayName}
+                          key={index}
+                        >
                           {regionDisplayName}
-                        
-                      </MenuItem>
+                        </option>
                       );
-                    })}
-                  </Select>
-                </FormControl>
-              </div> */}
-                    
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel style={{marginTop:"-6px", marginLeft:"-4px"}}>
-                  <span style={{color:"red"}}>*</span>
-                <span>Region</span></InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    size="small"
-                    style={{ background: "white" }}
-                    onChange={(e) => {
-                      setRegionDisplayName(e.target.value);
-                    }}
-                    value={regionDisplayName}
-                  >
-                   {childAccount?.map((ele, index) => {
-                      return (
-                        <MenuItem
-                        value={JSON.stringify(ele)}
-                        selected={regionDisplayName === regionDisplayName}
-                        key={index}
-                      >
-                          {ele}
-                        
-                      </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
+                    }
+                  })}
+                </select>
               </div>
 
               <ButtonSection>
@@ -222,7 +239,7 @@ function AccountSettings() {
                   value="Save"
                   id="create-account"
                   variant="contained"
-                  onClick={setAccountsData}
+                  onClick={AddDataToAccount}
                 >
                   Save
                 </ModalControlButton>
@@ -230,7 +247,7 @@ function AccountSettings() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    resetData()
+                    resetData();
                   }}
                   value="Cancel"
                   id="create-account"
@@ -246,19 +263,29 @@ function AccountSettings() {
   );
 }
 function Tr({
-  getAllRegionData,
+  getAllAccountsData,
+  regionNameData,
   setRegionData,
-  accData,
-  data: { accountId, accountName, regionDisplayName, isActive },
+  setAccountData,
+  data,
 }) {
-  console.log("data",accData[0].locations[0].regionDisplayName)
+  const { accountId, accountName, regionDisplayName,regions, isActive } = data
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [responseData, setResponseData] = useState({
-    accountId: accountId,
-    accountName: accountName,
-    regionDisplayName: accData[0].locations[0].regionDisplayName,
+    accountName: "",
+    accountId: "",
+    accountOrClientCode: "",
+    regions: {
+      regionId:"",
+      regionName: "",
+      regionDisplayName: "",
+    },
   });
+
+  useEffect(() => {
+    setResponseData({...responseData, ...data})
+  }, [data])
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -279,58 +306,66 @@ function Tr({
   };
 
   const OnSubmit = () => {
-    console.log("accid",accountId)
+    console.log("accid", accountId);
     axios
       .put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
         responseData
       )
       .then((response) => {
-        console.log("res",response)
+        console.log("res", response);
         const actualDataObject = response.data.data;
-        getAllRegionData(actualDataObject);
+        getAllAccountsData();
         setIsOpen(false);
       });
   };
 
   const activeDeactivateTableData = async (id) => {
     const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
     );
     if (data?.message === "Success" && data?.responseCode === 200) {
-      setRegionData({ accountName: "", regionDisplayName: "" });
+      setAccountData({
+        accountName: "",
+        accountId: "",
+        accountOrClientCode: "string",
+        regions: {
+          regionName: "",
+          regionDisplayName: "",
+        },
+      });
       setIsOpen(false);
-      getAllRegionData();
+      getAllAccountsData();
     }
   };
   // API calls to delete Record
 
-  // const DeleteRecord = () => {
-  //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${accountId}`,
-  //       responseData
-  //     )
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       getAllRegionData();
-  //       setIsOpen(false);
-  //     });
-  // };
+  const DeleteRecord = () => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
+        responseData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllAccountsData();
+        setIsOpen(false);
+      });
+  };
 
   return (
     <React.Fragment>
-      <tr ref={wrapperRef}>
-      <td className={!isActive && "disable-table-row"}>
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{accountId || "Unknown"}</span>
-        </td>
-        <td className={!isActive && "disable-table-row"}>
+        </TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{accountName || "Unknown"}</span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {responseData.regionDisplayName || "Unknown"}
-          </span>
+        </TableCellSection>
+        <TableCellSection className={!isActive && "disable-table-row"}>
+          <span>{regions?.regionDisplayName || "Unknown"}</span>
+        </TableCellSection>
+        <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -338,25 +373,34 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right:"20px",position:"fixed" }} class="dropdown-content">
+              <div
+                style={{ float: "right", right: "20px", position: "fixed" }}
+                class="dropdown-content"
+              >
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  <AiIcons.AiOutlineEdit />
+                  <BorderColorOutlinedIcon
+                    style={{ fontSize: "12px", paddingRight: "5px" }}
+                  />
                   Edit
                 </a>
-                {/* <a
-                 
+                <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <AiIcons.AiOutlineDelete /> Delete
-                </a> */}
+                  <DeleteOutlinedIcon
+                    style={{ fontSize: "15px", paddingRight: "5px" }}
+                  />
+                  Delete
+                </a>
                 <a
                   style={{ padding: "5px" }}
                   className={isActive && "disable-table-row"}
@@ -364,7 +408,13 @@ function Tr({
                     activeDeactivateTableData(accountId);
                   }}
                 >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
+                  <div style={{ display: "flex" }}>
+                    <ToggleOnIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
+
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
@@ -373,85 +423,145 @@ function Tr({
                   }}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
                 </a>
               </div>
             )}
           </span>
-        </td>
-      </tr>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
-      >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Edit Region</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="region_name">Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.accountName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        accountName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="region_disp_name">Location</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.regionDisplayName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        regionDisplayName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={OnSubmit}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
+        </TableCellSection>
+      </TableRowSection>
+      <Modal open={isOpen}>
+        <Box sx={MoadalStyle}>
+        <ModalHeadingSection>
+            <ModalHeadingText>Edit Account</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+          <form id="reg-form" style={{ padding: "0px 30px" }}>
+            <div  style={{ padding: "10px 0px" }}>
+              <InputTextLabel>Name</InputTextLabel>
+              <InputField
+                  size="small"
+                  type="text"
+                  id="name"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.accountName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      accountName: e.target.value,
+                    });
+                  }}
+                />
             </div>
-          </div>
-        </div>
+            {/* <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Region</InputTextLabel>
+                <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  value={responseData.regions.regionDisplayName}
+                  onChange={(e) => {
+                    const temp = {...responseData}
+                    temp["regions"] = {...responseData?.regions, regionDisplayName: e.target.value}
+                    setResponseData(temp);
+                  }}
+                />
+              </div> */}
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  Region
+                </label>
+                <select
+                  style={{
+                    height: "35px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                  }}
+                  value={responseData.regions.regionDisplayName}
+                  onChange={(e) => {
+                    const selectedRegionId =
+                      e.target.selectedOptions[0].getAttribute("data-regionId");
+                    const selectedRegionDispName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-regionDisplayName"
+                      );
+                    setResponseData({
+                      ...responseData,
+                      regions: {
+                        ...responseData.regions,
+                        regionId: selectedRegionId,
+                        regionName: e.target.value,
+                        regionDisplayName: selectedRegionDispName,
+                      }
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {regionNameData?.map((regions, index) => {
+                    const regionNameData = regions.regionName;
+                    const regionId = regions.regionId;
+                    const regionDisplayName = regions.regionDisplayName;
+                    if (regions.isActive) {
+                      return (
+                        <option
+                          data-regionId={regionId}
+                          data-regionDisplayName={regionDisplayName}
+                          key={index}
+                        >
+                          {regionDisplayName}
+                        </option>
+                      );
+                    }
+                  })}
+                </select>
+              </div>
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+                >
+                  Save
+                </ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
+              </ButtonSection>
+          </form>
+          </ModalDetailSection>
+        </Box>
       </Modal>
     </React.Fragment>
   );

@@ -4,6 +4,8 @@ import { modalStyleObject } from "../../utils/constantsValue";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/Settings/settingBasedComponent";
 import * as AiIcons from "react-icons/ai";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import axios from "axios";
 import {
   Table,
@@ -18,7 +20,7 @@ import {
   InputLabel,
   FormControl,
   Select,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import { Box, Typography, IconButton } from "@mui/material";
 import {
@@ -40,12 +42,21 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 function Opportunity() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [opportunityName, setOpportunityName] = useState(null);
-  const [accountName, setAccountName] = useState(null);
-  const [projectCode, setProjectCode] = useState(null);
-  const [projectStartDate, setProjectStartDate] = useState(null);
-  const [projectEndDate, setProjectEndDate] = useState(null);
-  const [opportunityId, setOpportunityId] = useState(null);
+  const [accountNameData, setAccountnameData] = useState([]);
+  const [isEditId, setIsEditId] = useState(null);
+  const [opportunityData, setOpportunityData] = useState({
+    opportunityId: 1,
+    opportunityName: "",
+    account: {
+      accountId: 10,
+      // accountName: "",
+      // accountOrClientCode: "string",
+    },
+    projectCode: "",
+    projectStartDate: "",
+    projectEndDate: "",
+  });
+
   const month = [
     "Jan",
     "Feb",
@@ -61,47 +72,41 @@ function Opportunity() {
     "Dec",
   ];
 
-  const [regionData, setRegionData] = useState({
-    opportunityName: "",
-    projectCode: "",
-    accountName: "",
-    projectStartDate: "",
-    projectEndDate: "",
-  });
-
   useEffect(() => {
-    getAllRegionData();
+    getAllOpportunityData();
   }, []);
-
-  // console.log("accountname",data?.map((ele)=>{
-  //   return ele.account.accountName
-  // }))
 
   const handleModalClose = () => {
     setIsOpen(false);
   };
-
-  const getAllRegionData = async () => {
+  const getAllAccountData = async () => {
+    await axios
+      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts`)
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setAccountnameData(actualDataObject);
+      });
+  };
+  const getAllOpportunityData = async () => {
+    getAllAccountData();
     await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity`)
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
   };
-  const AddDataToRegion = async (e) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
-        regionData
-      );
-      console.log("this is the response", response.data);
-      getAllRegionData();
-      setIsOpen(false);
-    } catch {}
-  };
+
   const setSbuHeadData = async () => {
+    const {
+      opportunityId,
+      opportunityName,
+      projectCode,
+      projectStartDate,
+      projectEndDate,
+      account,
+    } = opportunityData;
+
     const activeFromDt = `${
       parseInt(new Date(projectStartDate).getDate()) < 10
         ? "0" + parseInt(new Date(projectStartDate).getDate())
@@ -117,16 +122,16 @@ function Opportunity() {
       projectEndDate
     ).getFullYear()}`;
     const postSbuHeadData = {
+      opportunityId,
       opportunityName,
       projectCode,
-      accountName,
-      projectStartDate:activeFromDt,
-      projectStartDate:activeUntilDt,
-      opportunityId: 0,
+      account,
+      projectStartDate: activeFromDt,
+      projectEndDate: activeUntilDt,
     };
-    if (opportunityId !== null) {
+    if (isEditId !== null) {
       var { data } = await axios.put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`,
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${isEditId}`,
         postSbuHeadData
       );
     } else {
@@ -137,22 +142,86 @@ function Opportunity() {
     }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
-      getAllRegionData();
+      setIsEditId(null);
+      getAllOpportunityData();
+      setOpportunityData({
+        opportunityId: "",
+        opportunityName: "",
+        account: {
+          accountId: "",
+          // accountName: "",
+          // accountOrClientCode: "string",
+        },
+        projectCode: "",
+        projectStartDate: "",
+        projectEndDate: "",
+      });
     }
   };
 
-  const resetData = () => {
-    setIsOpen(false);
-    getAllRegionData();
-    setOpportunityId(null);
-    setOpportunityName(null);
-    setProjectCode(null);
-    setAccountName(null);
-    setProjectStartDate(null);
-    setProjectEndDate(null)
+  const activeDeactivateTableData = async (opportunityId) => {
+    const { data } = await axios.put(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/activate-or-deactivate/${opportunityId}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      setOpportunityData({
+        opportunityId: "",
+        opportunityName: "",
+        projectCode: "",
+        projectStartDate: "",
+        projectEndDate: "",
+        account: {
+          accountId: "",
+        },
+      });
+      setIsOpen(false);
+      getAllOpportunityData();
+    }
   };
-  const childAccount=["nous", "nous1", "nous2"]
+  // API calls to delete Record
 
+  const DeleteRecord = (opportunityId) => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`,
+        
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        getAllOpportunityData();
+        setIsOpen(false);
+      });
+  };
+
+  const openTheModalWithValues = async (e, id) => {
+    const { data } = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${id}`
+    );
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      
+      setOpportunityData({
+        opportunityId: data?.data?.opportunityId,
+        opportunityName: data?.data?.opportunityName,
+        projectCode: data?.data?.projectCode,
+        projectStartDate: createDate(data?.data?.projectStartDate),
+        projectEndDate: createDate(data?.data?.projectEndDate),
+        accountName: data.data.account.accountName,
+      });
+      console.log("openTheModalWithValues---->>", opportunityData.projectCode);
+      setIsOpen(true);
+      setIsEditId(id);
+    }
+  };
+
+  const createDate = (date) => {
+    let splitDate = date.split("/");
+    let monthDate = `${
+      month.indexOf(splitDate[1]) + 1 < 10
+        ? "0" + String(month.indexOf(splitDate[1]) + 1)
+        : month.indexOf(splitDate[1]) + 1
+    }`;
+    return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
+  };
 
   return (
     <div>
@@ -160,20 +229,24 @@ function Opportunity() {
         field="Region"
         columns={[
           "Name",
-          "Project Code",
           "Child of Account",
+          "Project Code",
           "Project Start Date",
           "Project End Date",
+          "",
         ]}
         data={data}
         buttonText="Add New"
         Tr={(obj) => {
           return (
             <Tr
-              accData={data}
               data={obj}
-              getAllRegionData={getAllRegionData}
-              setRegionData={setRegionData}
+              accountNameData={accountNameData}
+              getAllOpportunityData={getAllOpportunityData}
+              setOpportunityData={setOpportunityData}
+              openTheModalWithValues={openTheModalWithValues}
+              DeleteRecord={DeleteRecord}
+              activeDeactivateTableData={activeDeactivateTableData}
             />
           );
         }}
@@ -182,7 +255,7 @@ function Opportunity() {
       <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
-            <ModalHeadingText>Set Opportunity</ModalHeadingText>
+            <ModalHeadingText>Setup Opportunity</ModalHeadingText>
             <CloseIcon
               onClick={() => {
                 setIsOpen(false);
@@ -190,12 +263,12 @@ function Opportunity() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection>
-            <form id="reg-form">
+          <ModalDetailSection style={{overflow:"auto", height:"300px"}}>
+            <form style={{padding:"0px 30px"}} id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Name</span>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
                 </InputTextLabel>
                 <InputField
                   size="small"
@@ -203,63 +276,96 @@ function Opportunity() {
                   id="name"
                   variant="outlined"
                   spellcheck="false"
+                  value={opportunityData?.opportunityName}
                   onChange={(e) => {
-                    setOpportunityName(e.target.value);
+                    setOpportunityData({
+                      ...opportunityData,
+                      opportunityName: e.target.value,
+                    });
                   }}
-                  value={opportunityName}
                 />
               </div>
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Child of Account</span>
-                </InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    size="small"
-                    style={{ background: "white" }}
-                    onChange={(e) => {
-                      setAccountName(e.target.value);
-                    }}
-                    value={accountName}
-                  >
-                    {childAccount?.map((accountName, index) => {
-                      return (
-                        <MenuItem
-                        value={JSON.stringify(accountName)}
-                        selected={childAccount === childAccount}
-                        key={index}
-                      >
-                          {accountName}
-                        
-                      </MenuItem>
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  Child of Account
+                </label>
+                <select
+                  style={{
+                    height: "37px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                  }}
+                  value={opportunityData?.account?.accountName}
+                  onChange={(e) => {
+                    const selectedAccountId =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-accountId"
                       );
-                    })}
-                  </Select>
-                </FormControl>
-              </div>
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Project Code</span>
-                </InputTextLabel>
-                <InputField
-                  size="small"
-                  type="text"
-                  id="name"
-                  variant="outlined"
-                  spellcheck="false"
-                  onChange={(e) => {
-                    setProjectCode(e.target.value);
+                    const selectedAccountName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-accountNameData"
+                      );
+
+                    setOpportunityData({
+                      ...opportunityData,
+                      account: {
+                        ...opportunityData.account,
+                        accountId: selectedAccountId,
+                        accountNameData: selectedAccountName,
+                      },
+                    });
                   }}
-                  value={projectCode}
-                />
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {accountNameData?.map((account, index) => {
+                    const accountName = account.accountName;
+                    const accountId = account.accountId;
+                    if (account.isActive) {
+                      return (
+                        <option
+                          data-accountId={accountId}
+                          data-accountNameData={accountName}
+                          key={index}
+                        >
+                          {accountName}
+                        </option>
+                      );
+                    }
+                  })}
+                </select>
               </div>
 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                <span style={{color:"red"}}>*</span>
-                <span>Project Start date</span>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Project Code</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
+                  type="text"
+                  id="name"
+                  variant="outlined"
+                  spellcheck="false"
+                  onChange={(e) => {
+                    setOpportunityData({
+                      ...opportunityData,
+                      projectCode: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Project Start date</span>
                 </InputTextLabel>
                 <InputField
                   fullWidth
@@ -268,12 +374,14 @@ function Opportunity() {
                   id="email"
                   variant="outlined"
                   onChange={(e) => {
-                    setProjectStartDate(e.target.value);
+                    setOpportunityData({
+                      ...opportunityData,
+                      projectStartDate: e.target.value,
+                    });
                   }}
-                  value={projectStartDate}
+                  value={opportunityData?.projectStartDate}
                 />
               </div>
-
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Project End Date</InputTextLabel>
                 <InputField
@@ -283,12 +391,14 @@ function Opportunity() {
                   id="email"
                   variant="outlined"
                   onChange={(e) => {
-                    setProjectEndDate(e.target.value);
+                    setOpportunityData({
+                      ...opportunityData,
+                      projectEndDate: e.target.value,
+                    });
                   }}
-                  value={projectEndDate}
+                  value={opportunityData?.projectEndDate}
                 />
               </div>
-
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -305,7 +415,7 @@ function Opportunity() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    resetData()
+                    setIsOpen(false);
                   }}
                   value="Cancel"
                   id="create-account"
@@ -320,33 +430,43 @@ function Opportunity() {
     </div>
   );
 }
+
 function Tr({
-  getAllRegionData,
-  setRegionData,
-  accData,
-  data: {
-    regionId,
+  getAllOpportunityData,
+  setOpportunityData,
+  data,
+  openTheModalWithValues,
+  DeleteRecord,
+  activeDeactivateTableData
+}) {
+  const {
+    opportunityId,
+    opportunityData,
     opportunityName,
     projectCode,
-    accountName,
+    accountNameData,
     projectStartDate,
     projectEndDate,
+    account,
     isActive,
-  },
-}) {
+  } = data;
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const childOfAccount = accData?.map((ele) => {
-    return ele.account.accountName;
-  });
+
   const [responseData, setResponseData] = useState({
-    regionId: regionId,
-    opportunityName: opportunityName,
-    projectCode: projectCode,
-    accountName: childOfAccount,
-    projectStartDate: projectStartDate,
-    projectEndDate: projectEndDate,
+    opportunityId: "",
+    opportunityName: "",
+    projectCode: "",
+    projectStartDate: "",
+    projectEndDate: "",
+    account: {
+      accountId: "",
+    },
   });
+
+  useEffect(() => {
+    setResponseData({ ...responseData, ...data });
+  }, [data]);
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -366,80 +486,48 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
 
-  const OnSubmit = () => {
-    axios
-      .put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllRegionData();
-        setIsOpen(false);
-      });
-  };
-
-  const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setRegionData({
-        opportunityName: "",
-        projectCode: "",
-        accountName: "",
-        projectStartDate: "",
-        projectEndDate: "",
-      });
-      setIsOpen(false);
-      getAllRegionData();
-    }
-  };
-  // API calls to delete Record
-
-  // const DeleteRecord = () => {
+  // const OnSubmit = () => {
   //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
+  //     .put(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`,
   //       responseData
   //     )
   //     .then((response) => {
   //       const actualDataObject = response.data.data;
-  //       getAllRegionData();
+  //       getAllOpportunityData();
   //       setIsOpen(false);
   //     });
   // };
 
+
+
   return (
     <React.Fragment>
-      <tr ref={wrapperRef}>
-        <td className={!isActive && "disable-table-row"}>
+      <TableRowSection ref={wrapperRef}>
+        <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{opportunityName || "Unknown"}</span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {projectCode || "Unknown"}
-          </span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {responseData.accountName || "Unknown"}
-          </span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {projectStartDate || "Unknown"}
-          </span>
-        </td>
-        <td>
-          <span className={!isActive && "disable-table-row"}>
-            {projectEndDate || "Unknown"}
-          </span>
+        </TableCellSection>
+
+        <TableCellSection className={!isActive && "disable-table-row"}>
+          <span>{account?.accountName || "Unknown"}</span>
+        </TableCellSection>
+
+        <TableCellSection className={!isActive && "disable-table-row"}>
+          <span>{projectCode}</span>
+        </TableCellSection>
+
+        <TableCellSection className={!isActive && "disable-table-row"}>
+          <span>{projectStartDate}</span>
+        </TableCellSection>
+
+        <TableCellSection className={!isActive && "disable-table-row"}>
+          <span>{projectEndDate}</span>
+        </TableCellSection>
+
+        <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
-              onClick={(e) => {
-                closeDropDown();
-              }}
+              onClick={(e) => closeDropDown()}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
               <div
@@ -447,119 +535,238 @@ function Tr({
                 class="dropdown-content"
               >
                 <a
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
-                  onClick={() => {
-                    setIsOpen(true);
+                  onClick={(e) => {
+                    // setIsOpen(true);
+                    openTheModalWithValues(e, opportunityId);
                   }}
                 >
-                  <AiIcons.AiOutlineEdit />
+                  <BorderColorOutlinedIcon
+                    style={{ fontSize: "12px", paddingRight: "5px" }}
+                  />
                   Edit
-                </a>
-                {/* <a
-                 
-                  style={{ padding: "5px" }}
-                  onClick={() => {
-                    DeleteRecord();
-                  }}
-                >
-                  <AiIcons.AiOutlineDelete /> Delete
-                </a> */}
-                <a
-                  style={{ padding: "5px" }}
-                  className={isActive && "disable-table-row"}
-                  onClick={() => {
-                    activeDeactivateTableData(regionId);
-                  }}
-                >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
+                  style={{ padding: "5px" }}
                   onClick={() => {
-                    activeDeactivateTableData(regionId);
+                    DeleteRecord(opportunityId);
                   }}
+                >
+                  <DeleteOutlinedIcon
+                    style={{ fontSize: "15px", paddingRight: "5px" }}
+                  />
+                  Delete
+                </a>
+                <a
+                  onClick={() => {
+                    activeDeactivateTableData(opportunityId);
+                  }}
+                  className={isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                 >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
+                  <div style={{ display: "flex" }}>
+                    <ToggleOnIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
+
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
+                </a>
+                <a
+                  onClick={() => {
+                    activeDeactivateTableData(opportunityId);
+                  }}
+                  className={!isActive && "disable-table-row"}
+                  style={{ padding: "5px" }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
                 </a>
               </div>
             )}
           </span>
-        </td>
-      </tr>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={modalStyleObject}
-      >
-        <div>
-          <div class="main" className="ModalContainer">
-            <div class="register">
-              <ModalHeading>Edit Region</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <AiOutlineClose></AiOutlineClose>
-              </ModalIcon>
-              <hr color="#62bdb8"></hr>
-              <form id="reg-form">
-                <div>
-                  <label for="region_name">Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.opportunityName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        opportunityName: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label for="region_disp_name">Display Name</label>
-                  <input
-                    type="text"
-                    id="id"
-                    spellcheck="false"
-                    value={responseData.projectCode}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        projectCode: e.target.value,
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label>
-                    <input
-                      type="button"
-                      value="Save"
-                      id="create-account"
-                      class="button"
-                      onClick={OnSubmit}
-                    />
-                    <input
-                      type="button"
-                      onClick={() => {
-                        setIsOpen(false);
-                      }}
-                      value="Cancel"
-                      id="create-account"
-                      class="button"
-                    />
-                  </label>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </Modal>
+        </TableCellSection>
+      </TableRowSection>
+      {/* <Modal open={isOpen}>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
+            <ModalHeadingText>Edit Opportunity</ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection>
+            <form id="reg-form">
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
+                  type="text"
+                  id="name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData?.opportunityName}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...opportunityData,
+                      opportunityName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  Child of Account
+                </label>
+                <select
+                  style={{
+                    height: "37px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                  }}
+                  value={responseData?.account?.accountName}
+                  onChange={(e) => {
+                    const selectedAccountId =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-accountId"
+                      );
+                    const selectedAccountName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-accountNameData"
+                      );
+
+                    setResponseData({
+                      ...responseData,
+                      account: {
+                        ...responseData.account,
+                        accountId: selectedAccountId,
+                        accountNameData: selectedAccountName,
+                      },
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {accountNameData?.map((account, index) => {
+                    const accountName = account.accountName;
+                    const accountId = account.accountId;
+                    if (account.isActive) {
+                      return (
+                        <option
+                          data-accountId={accountId}
+                          data-accountNameData={accountName}
+                          key={index}
+                        >
+                          {accountNameData}
+                        </option>
+                      );
+                    }
+                  })}
+                </select>
+              </div>
+
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Project Code</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
+                  type="text"
+                  id="name"
+                  variant="outlined"
+                  spellcheck="false"
+                  value={responseData.projectCode}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      projectCode: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Project Start date</span>
+                </InputTextLabel>
+                <InputField
+                  fullWidth
+                  size="small"
+                  type="date"
+                  id="email"
+                  variant="outlined"
+                  value={responseData.projectStartDate}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      projectStartDate: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Project End Date</InputTextLabel>
+                <InputField
+                  fullWidth
+                  size="small"
+                  type="date"
+                  id="email"
+                  variant="outlined"
+                  value={responseData.projectEndDate}
+                  onChange={(e) => {
+                    setResponseData({
+                      ...responseData,
+                      projectEndDate: e.target.value,
+                    });
+                  }}
+                />
+              </div>
+              <ButtonSection>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={onsubmit}
+                >
+                  Save
+                </ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal> */}
     </React.Fragment>
   );
 }
