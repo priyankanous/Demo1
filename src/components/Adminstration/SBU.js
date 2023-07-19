@@ -261,6 +261,7 @@ function Sbu() {
                       Please choose one option
                     </option>
                     {buNameData.map((buData, index) => {
+                      {console.log("name",buData.businessUnitName)}
                       const buNameData = buData.businessUnitName;
                       const buId = buData.businessUnitId;
                       const buDisplayName = buData.businessUnitDisplayName;

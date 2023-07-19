@@ -198,7 +198,7 @@ function SbuHead() {
             />
           </ModalHeadingSection>
           <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
-            <form id="reg-form">
+            <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
                 <InputField size="small"
@@ -226,7 +226,7 @@ function SbuHead() {
 
                 />
               </div>
-
+{/* 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>SBU Name</InputTextLabel>
                 <FormControl fullWidth>
@@ -254,7 +254,42 @@ function SbuHead() {
                     })}
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
+
+<div>
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>SBU Name</label>
+                  <select
+                                    style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+
+                    onChange={(e) => {
+                      const sbuSelected = JSON.parse(e.target.value);
+                      setSbuName(sbuSelected);
+                    }}
+                  >
+                    <option
+                      value=""
+                      disabled selected hidden
+                    >
+                      Please choose one option
+                    </option>
+                    {sbuNameData?.map((sbuData, index) => {
+                      const sbuNameData = sbuData.sbuName;
+                      if (sbuData.isActive) {
+
+                      return (
+                        <option
+                          value={JSON.stringify(sbuData)}
+                          selected={sbuNameData === sbuName}
+                          key={index}
+                        >
+                          {sbuNameData}
+                        </option>
+                      );
+                      }
+                    })}
+                  </select>
+                </div>
+
 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Active From</InputTextLabel>

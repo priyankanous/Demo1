@@ -168,6 +168,7 @@ function Bdm() {
     }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
+      fetchBdmData();
       setIsEditId(null);
       setBusinessUnitLinked(false);
       setRegionLinked(false);
@@ -175,7 +176,7 @@ function Bdm() {
       setSelectedRegion([]);
       setdropdownOpenBU(false);
       setdropdownOpenReg(false);
-      fetchBdmData();
+      
     }
   };
 
@@ -331,7 +332,7 @@ function Bdm() {
           </ModalHeadingSection>
           <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
 
-            <form id="bdm-form" style={{ padding: "0px 30px" }}>
+            <form id="bdm-form">
 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
@@ -401,7 +402,7 @@ function Bdm() {
                 />
               </div>
                   
-<div>
+{/* <div>
                   <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Linked Business Unit</label>
                   <select
                   style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
@@ -450,9 +451,9 @@ function Bdm() {
                       }
                     })}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Linked Rigion</label>
                   <select
                   style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
@@ -501,9 +502,9 @@ function Bdm() {
                       }
                     })}
                   </select>
-                </div>
+                </div> */}
 
-              {/* <div>
+              <div>
                   <label className="label-bdm">
                     <input
                       onClick={() => {
@@ -515,6 +516,8 @@ function Bdm() {
                         isBusinessUnitLinked && "checkit"
                       }`}
                       type="checkbox"
+                      style={{border:"1px solid darkgray"}}
+
                     />
                     <span
                       style={{ verticalAlign: "middle", fontSize: "0.8rem" }}
@@ -527,7 +530,8 @@ function Bdm() {
                       onClick={() => {
                         setdropdownOpenBU(!dropdownOpenBU);
                       }}
-                      style={{ position: "sticky", top: "0", width: "100%" }}
+                      style={{ position: "sticky", backgroundColor:"#FFFFFF", top: "0", width: "95%",height:"35px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"
+                    }}
                       className={`select-btn ${dropdownOpenBU && "open"}`}
                     >
                       <span class="btn-text">Select Business Unit</span>
@@ -580,8 +584,8 @@ function Bdm() {
                         })}
                     </ul>
                   </div>
-                </div> */}
-              {/* <div>
+                </div>
+              <div>
                   <label className="label-bdm">
                     <input
                       onClick={() => {
@@ -593,6 +597,7 @@ function Bdm() {
                         isRegionLinked && "checkit"
                       }`}
                       type="checkbox"
+                      style={{border:"1px solid darkgray"}}
                     />
                     <span
                       style={{ verticalAlign: "middle", fontSize: "0.8rem" }}
@@ -605,7 +610,8 @@ function Bdm() {
                       onClick={() => {
                         setdropdownOpenReg(!dropdownOpenReg);
                       }}
-                      style={{ width: "100%", position: "sticky", top: "0" }}
+                      style={{ position: "sticky",backgroundColor:"#FFFFFF", top: "0", width: "95%",height:"35px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"
+                    }}
                       class="select-btn"
                       className={`select-btn ${dropdownOpenReg && "open"}`}
                     >
@@ -658,7 +664,7 @@ function Bdm() {
                         })}
                     </ul>
                   </div>
-                </div> */}
+                </div>
 
               <ButtonSection>
                 <ModalControlButton
