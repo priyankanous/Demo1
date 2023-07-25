@@ -46,6 +46,7 @@ function AccountSettings() {
   const [accountName, setAccountName] = useState(null);
   const [isDropdown, setDropdown] = useState(false);
   const [regionDisplayName, setRegionDisplayName] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [accountData, setAccountData] = useState({
     accountName: "",
     accountId: 0,
@@ -62,7 +63,17 @@ function AccountSettings() {
   }, []);
 
   const handleModalClose = () => {
-    setIsOpen(false);
+    setAccountData({
+        accountName: "",
+        accountId: 0,
+        accountOrClientCode: "string",
+        regions: {
+          regionId: "",
+          regionName: "",
+          regionDisplayName: "",
+        },
+      })
+      setIsOpen(false);
   };
 
   const getAllRegionData = async () => {
@@ -83,14 +94,29 @@ function AccountSettings() {
       });
   };
   const AddDataToAccount = async (e) => {
+    if (!accountData?.accountName || !accountData?.regions?.regionDisplayName) {
+      setIsSubmitted(true);
+    } else{
     try {
+      setIsSubmitted(false);
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
         accountData
       );
       setIsOpen(false);
+      setAccountData({
+        accountName: "",
+        accountId: 0,
+        accountOrClientCode: "string",
+        regions: {
+          regionId: "",
+          regionName: "",
+          regionDisplayName: "",
+        },
+      })
       getAllAccountsData();
     } catch {}
+  }
   };
 
   // const setAccountsData = async () => {
@@ -115,6 +141,10 @@ function AccountSettings() {
   //     getAllRegionData();
   //   }
   // };
+  const inputStyle = {
+    border: isSubmitted && !accountData.accountName ? '1px solid red' : '',
+    borderRadius:"4px"
+  };
 
   const resetData = () => {
     setIsOpen(false);
@@ -122,12 +152,13 @@ function AccountSettings() {
     setAccountName(null);
     setRegionDisplayName(null);
   };
+ 
 
   return (
     <div>
       <MemoizedBaseComponent
         field="Account"
-        columns={["No.", "Name", "Region", ""]}
+        columns={["Name", "Region", ""]}
         data={data}
         buttonText="Add New"
         Tr={(obj) => {
@@ -161,6 +192,7 @@ function AccountSettings() {
                   <span>Name</span>
                 </InputTextLabel>
                 <InputField
+                style={inputStyle}
                   size="small"
                   type="text"
                   id="name"
@@ -177,20 +209,23 @@ function AccountSettings() {
 
               <div>
                 <label
-                  for="email"
+                  id="region"
                   style={{ fontWeight: "400", fontSize: "16px" }}
                 >
+                  <span style={{ color: "red" }}>*</span>
                   Region
                 </label>
                 <select
                   style={{
                     height: "37px",
-                    width: "100%",
+                    width: "92%",
                     marginBottom: "10px",
+                    marginTop:"2px",
                     borderRadius: "7px",
                     boxShadow: "none",
-                    border: "1px solid lightgray",
+                    border: isSubmitted && !accountData?.regions?.regionDisplayName ? '1px solid red' : '1px solid lightgray',
                   }}
+                  
                   onChange={(e) => {
                     const selectedRegionId =
                       e.target.selectedOptions[0].getAttribute("data-regionId");
@@ -210,7 +245,7 @@ function AccountSettings() {
                     });
                   }}
                 >
-                  <option value="" disabled selected hidden>
+                  <option  value="" disabled selected hidden>
                     Please choose one option
                   </option>
                   {regionNameData?.map((regions, index) => {
@@ -237,7 +272,7 @@ function AccountSettings() {
                 <ModalControlButton
                   type="button"
                   value="Save"
-                  id="create-account"
+                  id="submitButton"
                   variant="contained"
                   onClick={AddDataToAccount}
                 >
@@ -250,7 +285,7 @@ function AccountSettings() {
                     resetData();
                   }}
                   value="Cancel"
-                  id="create-account"
+                  id="cancel"
                 >
                   Cancel
                 </ModalControlButton>
@@ -306,14 +341,12 @@ function Tr({
   };
 
   const OnSubmit = () => {
-    console.log("accid", accountId);
     axios
       .put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
         responseData
       )
       .then((response) => {
-        console.log("res", response);
         const actualDataObject = response.data.data;
         getAllAccountsData();
         setIsOpen(false);
@@ -338,9 +371,8 @@ function Tr({
       getAllAccountsData();
     }
   };
-  // API calls to delete Record
 
-  const DeleteRecord = () => {
+  const deleteRecord = (accountId) => {
     axios
       .delete(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
@@ -356,9 +388,9 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-        <TableCellSection className={!isActive && "disable-table-row"}>
+        {/* <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{accountId || "Unknown"}</span>
-        </TableCellSection>
+        </TableCellSection> */}
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{accountName || "Unknown"}</span>
         </TableCellSection>
@@ -393,7 +425,7 @@ function Tr({
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
-                    DeleteRecord();
+                    deleteRecord(accountId);
                   }}
                 >
                   <DeleteOutlinedIcon

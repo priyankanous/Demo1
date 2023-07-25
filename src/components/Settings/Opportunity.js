@@ -44,11 +44,12 @@ function Opportunity() {
   const [isOpen, setIsOpen] = useState(false);
   const [accountNameData, setAccountnameData] = useState([]);
   const [isEditId, setIsEditId] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [opportunityData, setOpportunityData] = useState({
     opportunityId: 1,
     opportunityName: "",
     account: {
-      accountId: 10,
+      accountId: "10",
       // accountName: "",
       // accountOrClientCode: "string",
     },
@@ -77,6 +78,18 @@ function Opportunity() {
   }, []);
 
   const handleModalClose = () => {
+    setOpportunityData({
+      opportunityId: "",
+      opportunityName: "",
+      account: {
+        accountId: "",
+        // accountName: "",
+        // accountOrClientCode: "string",
+      },
+      projectCode: "",
+      projectStartDate: "",
+      projectEndDate: "",
+    });
     setIsOpen(false);
   };
   const getAllAccountData = async () => {
@@ -107,20 +120,28 @@ function Opportunity() {
       account,
     } = opportunityData;
 
-    const activeFromDt = `${
-      parseInt(new Date(projectStartDate).getDate()) < 10
-        ? "0" + parseInt(new Date(projectStartDate).getDate())
-        : parseInt(new Date(projectStartDate).getDate())
-    }/${month[new Date(projectStartDate).getMonth()]}/${new Date(
-      projectStartDate
-    ).getFullYear()}`;
-    const activeUntilDt = `${
-      parseInt(new Date(projectEndDate).getDate()) < 10
-        ? "0" + parseInt(new Date(projectEndDate).getDate())
-        : parseInt(new Date(projectEndDate).getDate())
-    }/${month[new Date(projectEndDate).getMonth()]}/${new Date(
-      projectEndDate
-    ).getFullYear()}`;
+    let activeFromDt,
+      activeUntilDt = "";
+    if (projectStartDate) {
+      activeFromDt = `${
+        parseInt(new Date(projectStartDate).getDate()) < 10
+          ? "0" + parseInt(new Date(projectStartDate).getDate())
+          : parseInt(new Date(projectStartDate).getDate())
+      }/${month[new Date(projectStartDate).getMonth()]}/${new Date(
+        projectStartDate
+      ).getFullYear()}`;
+    }
+
+    if (projectEndDate) {
+      activeUntilDt = `${
+        parseInt(new Date(projectEndDate).getDate()) < 10
+          ? "0" + parseInt(new Date(projectEndDate).getDate())
+          : parseInt(new Date(projectEndDate).getDate())
+      }/${month[new Date(projectEndDate).getMonth()]}/${new Date(
+        projectEndDate
+      ).getFullYear()}`;
+    }
+
     const postSbuHeadData = {
       opportunityId,
       opportunityName,
@@ -134,7 +155,16 @@ function Opportunity() {
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${isEditId}`,
         postSbuHeadData
       );
+    } else if (
+      !opportunityData?.opportunityName ||
+      !opportunityData?.account?.accountNameData ||
+      !opportunityData.projectCode ||
+      !opportunityData.projectStartDate
+    ) {
+      setIsSubmitted(true);
     } else {
+      setIsSubmitted(false);
+
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity",
         postSbuHeadData
@@ -149,8 +179,6 @@ function Opportunity() {
         opportunityName: "",
         account: {
           accountId: "",
-          // accountName: "",
-          // accountOrClientCode: "string",
         },
         projectCode: "",
         projectStartDate: "",
@@ -178,13 +206,11 @@ function Opportunity() {
       getAllOpportunityData();
     }
   };
-  // API calls to delete Record
 
   const DeleteRecord = (opportunityId) => {
     axios
       .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`,
-        
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
@@ -197,30 +223,36 @@ function Opportunity() {
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${id}`
     );
+
     if (data?.message === "Success" && data?.responseCode === 200) {
-      
+      const response = data?.data;
       setOpportunityData({
-        opportunityId: data?.data?.opportunityId,
-        opportunityName: data?.data?.opportunityName,
-        projectCode: data?.data?.projectCode,
-        projectStartDate: createDate(data?.data?.projectStartDate),
-        projectEndDate: createDate(data?.data?.projectEndDate),
-        accountName: data.data.account.accountName,
+        ...opportunityData,
+        ...response,
+        projectStartDate: createDate(response?.projectStartDate),
+        projectEndDate: createDate(response?.projectEndDate),
       });
-      console.log("openTheModalWithValues---->>", opportunityData.projectCode);
       setIsOpen(true);
       setIsEditId(id);
     }
   };
 
   const createDate = (date) => {
-    let splitDate = date.split("/");
+    if (!date) {
+      return ""; 
+    }
+    let splitDate = date?.split("/");
     let monthDate = `${
-      month.indexOf(splitDate[1]) + 1 < 10
-        ? "0" + String(month.indexOf(splitDate[1]) + 1)
-        : month.indexOf(splitDate[1]) + 1
+      month?.indexOf(splitDate[1]) + 1 < 10
+        ? "0" + String(month?.indexOf(splitDate[1]) + 1)
+        : month?.indexOf(splitDate[1]) + 1
     }`;
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
+  };
+  const inputStyle = {
+    border:
+      isSubmitted && !opportunityData.opportunityName ? "1px solid red" : "",
+    borderRadius: "4px",
   };
 
   return (
@@ -263,8 +295,8 @@ function Opportunity() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{overflow:"auto", height:"300px"}}>
-            <form style={{padding:"0px 30px"}} id="reg-form">
+          <ModalDetailSection>
+            <form style={{ padding: "0px 30px" }} id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
@@ -276,6 +308,7 @@ function Opportunity() {
                   id="name"
                   variant="outlined"
                   spellcheck="false"
+                  style={inputStyle}
                   value={opportunityData?.opportunityName}
                   onChange={(e) => {
                     setOpportunityData({
@@ -286,6 +319,7 @@ function Opportunity() {
                 />
               </div>
               <div>
+                <span style={{ color: "red" }}>*</span>
                 <label
                   for="email"
                   style={{ fontWeight: "400", fontSize: "16px" }}
@@ -299,7 +333,10 @@ function Opportunity() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
-                    border: "1px solid lightgray",
+                    border:
+                      isSubmitted && !opportunityData?.account?.accountNameData
+                        ? "1px solid red"
+                        : "1px solid lightgray",
                   }}
                   value={opportunityData?.account?.accountName}
                   onChange={(e) => {
@@ -353,7 +390,15 @@ function Opportunity() {
                   type="text"
                   id="name"
                   variant="outlined"
+                  style={{
+                    border:
+                      isSubmitted && !opportunityData.projectCode
+                        ? "1px solid red"
+                        : "",
+                    borderRadius: "4px",
+                  }}
                   spellcheck="false"
+                  value={opportunityData?.projectCode}
                   onChange={(e) => {
                     setOpportunityData({
                       ...opportunityData,
@@ -373,6 +418,13 @@ function Opportunity() {
                   type="date"
                   id="email"
                   variant="outlined"
+                  style={{
+                    border:
+                      isSubmitted && !opportunityData.projectStartDate
+                        ? "1px solid red"
+                        : "",
+                    borderRadius: "4px",
+                  }}
                   onChange={(e) => {
                     setOpportunityData({
                       ...opportunityData,
@@ -399,6 +451,7 @@ function Opportunity() {
                   value={opportunityData?.projectEndDate}
                 />
               </div>
+
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -437,7 +490,7 @@ function Tr({
   data,
   openTheModalWithValues,
   DeleteRecord,
-  activeDeactivateTableData
+  activeDeactivateTableData,
 }) {
   const {
     opportunityId,
@@ -498,8 +551,6 @@ function Tr({
   //       setIsOpen(false);
   //     });
   // };
-
-
 
   return (
     <React.Fragment>
