@@ -218,8 +218,9 @@ function AccountSettings() {
                 <select
                   style={{
                     height: "37px",
-                    width: "100%",
+                    width: "92%",
                     marginBottom: "10px",
+                    marginTop:"2px",
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: isSubmitted && !accountData?.regions?.regionDisplayName ? '1px solid red' : '1px solid lightgray',
