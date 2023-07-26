@@ -15,8 +15,12 @@
   /* background-color: #0a8b9c; */
 }
 .body{
-  overflow-x: hidden;
-  background: red;
+  overflow: hidden !important;
+}
+.MuiTableContainer-root
+{
+  height: 320px;
+  overflow-y: scroll !important;
 }
 .Modal {
   position: absolute;

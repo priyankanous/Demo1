@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 // import Modal from "react-modal";
 import { bdmStyleObject } from "../../utils/constantsValue";
@@ -23,6 +24,7 @@ function SbuHead() {
   const [activeForm, setActiveForm] = useState(null);
   const [activeUntil, setActiveUntil] = useState(null);
   const [sbuName, setSbuName] = useState(null);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isEditId, setIsEditId] = useState(null);
   const month = [
     "Jan",
@@ -38,6 +40,7 @@ function SbuHead() {
     "Nov",
     "Dec",
   ];
+
 
   const fetchSbuDetails = async () => {
     const data = await axios.get(
@@ -64,21 +67,46 @@ function SbuHead() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setSbuHeadName("");
+    setSbuName("");
+    setSbuHeadDisplayName("");
+    setActiveForm("");
   };
 
   const setSbuHeadData = async () => {
-    const activeFromDt = `${parseInt(new Date(activeForm).getDate()) < 10
-      ? "0" + parseInt(new Date(activeForm).getDate())
-      : parseInt(new Date(activeForm).getDate())
-      }/${month[new Date(activeForm).getMonth()]}/${new Date(
-        activeForm
-      ).getFullYear()}`;
-    const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10
-      ? "0" + parseInt(new Date(activeUntil).getDate())
-      : parseInt(new Date(activeUntil).getDate())
-      }/${month[new Date(activeUntil).getMonth()]}/${new Date(
-        activeUntil
-      ).getFullYear()}`;
+    let activeFromDt ="",
+    activeUntilDt = "";
+  if (activeForm) {
+    activeFromDt = `${
+      parseInt(new Date(activeForm).getDate()) < 10
+        ? "0" + parseInt(new Date(activeForm).getDate())
+        : parseInt(new Date(activeForm).getDate())
+    }/${month[new Date(activeForm).getMonth()]}/${new Date(
+      activeForm
+    ).getFullYear()}`;
+  } 
+
+  if (activeUntil) {
+    activeUntilDt = `${
+      parseInt(new Date(activeUntil).getDate()) < 10
+        ? "0" + parseInt(new Date(activeUntil).getDate())
+        : parseInt(new Date(activeUntil).getDate())
+    }/${month[new Date(activeUntil).getMonth()]}/${new Date(
+      activeUntil
+    ).getFullYear()}`;
+  }
+    // const activeFromDt = `${parseInt(new Date(activeForm).getDate()) < 10
+    //   ? "0" + parseInt(new Date(activeForm).getDate())
+    //   : parseInt(new Date(activeForm).getDate())
+    //   }/${month[new Date(activeForm).getMonth()]}/${new Date(
+    //     activeForm
+    //   ).getFullYear()}`;
+    // const activeUntilDt = `${parseInt(new Date(activeUntil).getDate()) < 10
+    //   ? "0" + parseInt(new Date(activeUntil).getDate())
+    //   : parseInt(new Date(activeUntil).getDate())
+    //   }/${month[new Date(activeUntil).getMonth()]}/${new Date(
+    //     activeUntil
+    //   ).getFullYear()}`;
     const postSbuHeadData = {
       sbuHeadName,
       sbuHeadDisplayName,
@@ -92,7 +120,16 @@ function SbuHead() {
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/${isEditId}`,
         postSbuHeadData
       );
+    } else if(
+      !sbuHeadName ||
+      !sbuHeadDisplayName  ||
+      !sbuName ||
+      !postSbuHeadData.activeFrom     
+    ){
+      setIsSubmitted(true);
+
     } else {
+      setIsSubmitted(false);
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead",
         postSbuHeadData
@@ -101,6 +138,7 @@ function SbuHead() {
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       fetchSbuHeadData();
+      handleModalClose();
     }
   };
 
@@ -119,7 +157,20 @@ function SbuHead() {
     }
   };
 
+  // const createDate = (date) => {
+  //   let splitDate = date.split("/");
+  //   let monthDate = `${month.indexOf(splitDate[1]) + 1 < 10
+  //     ? "0" + String(month.indexOf(splitDate[1]) + 1)
+  //     : month.indexOf(splitDate[1]) + 1
+  //     }`;
+  //   return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
+  // };
+
   const createDate = (date) => {
+    if (!date) {
+      return ""; // Return an empty string or any other default value if date is not provided
+    }
+  
     let splitDate = date.split("/");
     let monthDate = `${month.indexOf(splitDate[1]) + 1 < 10
       ? "0" + String(month.indexOf(splitDate[1]) + 1)
@@ -127,6 +178,7 @@ function SbuHead() {
       }`;
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
+  
 
   const deleteSelectedLocation = async (id) => {
     const { data } = await axios.delete(
@@ -197,10 +249,13 @@ function SbuHead() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
+          <ModalDetailSection>
             <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="name"
@@ -210,10 +265,15 @@ function SbuHead() {
                     setSbuHeadName(e.target.value);
                   }}
                   value={sbuHeadName}
+                  style={{    border:
+                    isSubmitted && !sbuHeadName ? "1px solid red" : "",
+                  borderRadius: "4px",}}
                 />
               </div>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
+                <InputTextLabel>
+                <span style={{ color: "red" }}>*</span>
+                <span>Display Name</span></InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="email"
@@ -223,7 +283,9 @@ function SbuHead() {
                     setSbuHeadDisplayName(e.target.value);
                   }}
                   value={sbuHeadDisplayName}
-
+                  style={{    border:
+                    isSubmitted && !sbuHeadDisplayName ? "1px solid red" : "",
+                  borderRadius: "4px",}}
                 />
               </div>
 {/* 
@@ -257,14 +319,20 @@ function SbuHead() {
               </div> */}
 
 <div>
-                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>SBU Name</label>
+                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>
+                  <span style={{ color: "red" }}>*</span>
+
+                    <span>SBU Name</span></label>
                   <select
-                                    style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                   style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:
+                   isSubmitted && !sbuHeadName ? "1px solid red" : "1px solid lightgray",
+                 borderRadius: "4px"}}
 
                     onChange={(e) => {
                       const sbuSelected = JSON.parse(e.target.value);
                       setSbuName(sbuSelected);
                     }}
+                    
                   >
                     <option
                       value=""
@@ -292,7 +360,10 @@ function SbuHead() {
 
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Active From</InputTextLabel>
+                <InputTextLabel>
+                <span style={{ color: "red" }}>*</span>
+
+                <span>Active From</span></InputTextLabel>
                 <InputField fullWidth
                   size="small"
                   type="date"
@@ -302,7 +373,12 @@ function SbuHead() {
                     setActiveForm(e.target.value);
                   }}
                   value={activeForm}
-
+                  style={{                    border:
+                    isSubmitted && !activeForm
+                      ? "1px solid red"
+                      : "1px solid lightgray",
+                    borderRadius:"4px"}}
+                
                 />
               </div>
 
@@ -400,7 +476,7 @@ function Tr({
         <span>{activeFrom || "Unknown"}</span>
       </TableCellSection>
       <TableCellSection className={!isActive && "disable-table-row"}>
-        <span>{activeUntil || "Unknown"}</span>
+        <span>{activeUntil || ""}</span>
       </TableCellSection>
       <TableCellSection data-id={sbuHeadId}>
         <span style={{ float: "right" }}>

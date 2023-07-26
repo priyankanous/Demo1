@@ -60,11 +60,23 @@ const LoggedInUserName = styled('span')({
 const SideBar = styled('Nav')({
   background: "#FFFFFF",
   width: "240px",
-  height: "924px",
+  height: "520px",
   top: "60px",
   left: "0px",
   position: "absolute",
   cursor:"pointer",
+  overflowY:"scroll",
+  scrollbarWidth: "none",
+  "&::-webkit-scrollbar": {
+    width: "0.2em", // Customize scrollbar width for webkit browsers
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "#FFFFFF", // Customize scrollbar track color for webkit browsers
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#888", // Customize scrollbar thumb color for webkit browsers
+    borderRadius: "4px", // Customize scrollbar thumb border radius for webkit browsers
+  },
 });
 
 const SidebarWrap = styled('div')({
@@ -116,7 +128,7 @@ const Sidebar = () => {
           </AppNavBar>
         </Box>
 
-        <SideBar sidebar={sidebar}>
+        <SideBar sidebar={sidebar} >
           <SidebarWrap>
             {SidebarData.map((item, index) => {
               return (

@@ -26,6 +26,9 @@ function Region() {
   });
   const [isEditId, setIsEditId] = useState(null);
 
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+
 
   useEffect(() => {
     getAllRegionData();
@@ -40,7 +43,31 @@ function Region() {
         setData(actualDataObject);
       });
   };
+
+    const handleModalClose = () => {
+    setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setRegionData({ 
+      regionName: "", 
+      regionDisplayName: ""
+     });
+  };
+
   const AddDataToRegion = async (e) => {
+    if (regionData.regionName.trim() === '') {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (regionData.regionDisplayName.trim() === '') {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+    if (!isNameEmpty && !isDisplayNameEmpty) {
+
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
@@ -48,13 +75,12 @@ function Region() {
       );
       console.log("this is the response", response.data);
       getAllRegionData();
-      setIsOpen(false);
+      // setIsOpen(false);
+      handleModalClose();
     } catch { }
+  }
   };
 
-  const handleModalClose = () => {
-    setIsOpen(false);
-  };
 
   // const openTheModalWithValues = async (e, id) => {
   //   const { data } = await axios.get(
@@ -105,7 +131,10 @@ function Region() {
           <ModalDetailSection>
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+                <InputTextLabel>
+                                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="name"
@@ -117,10 +146,15 @@ function Region() {
                       regionName: e.target.value,
                     });
                   }}
+                                    style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
+                  borderRadius: '5px',}}
                 />
               </div>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
+                <InputTextLabel>
+                                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
                 <InputField
                   size="small"
                   type="text"
@@ -132,6 +166,10 @@ function Region() {
                       ...regionData,
                       regionDisplayName: e.target.value,
                     });
+                  }}
+                                    style={{
+                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
+                    borderRadius: '5px',
                   }}
                 />
               </div>
@@ -247,7 +285,7 @@ function Tr({
             {regionDisplayName || "Unknown"}
           </span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection style={{position:"relative"}}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -255,7 +293,9 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+              <div style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+ 
+              class="dropdown-content">
                 <a
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
@@ -324,7 +364,10 @@ function Tr({
               <form id="reg-form">
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+                <InputTextLabel>
+                                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="id"
@@ -341,7 +384,10 @@ function Tr({
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
+                <InputTextLabel>
+                                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
                 <InputField
                   size="small"
                   type="text"

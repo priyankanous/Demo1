@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -6,14 +7,28 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import {
+
+  Modal,
+} from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import { Box } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
 function PricingType() {
   const [pricingType, setpricingType] = useState([]);
@@ -23,6 +38,9 @@ function PricingType() {
     pricingTypeDisplayName: "",
   });
   const [isEditId, setIsEditId] = useState(null);
+
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
   const fetchpricingTypeData = async () => {
     const { data } = await axios.get(
@@ -37,10 +55,28 @@ function PricingType() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setpricingTypeFormData({
+      pricingTypeName: "",
+      pricingTypeDisplayName: "",
+    });
   };
 
   const setpricingTypeData = async () => {
-    if (isEditId !== null) {
+    if (pricingTypeFormData.pricingTypeName.trim() === '') {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (pricingTypeFormData.pricingTypeDisplayName.trim() === '') {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+
+    if (!isNameEmpty && !isDisplayNameEmpty && isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${isEditId}`,
         pricingTypeFormData
@@ -55,6 +91,7 @@ function PricingType() {
       setIsOpen(false);
       setIsEditId(null);
       fetchpricingTypeData();
+      handleModalClose();
     }
   };
 
@@ -122,10 +159,7 @@ function PricingType() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
             <ModalHeadingText>Setup Pricing Type</ModalHeadingText>
@@ -137,12 +171,14 @@ function PricingType() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-
             <form id="reg-form">
-
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="pricing-type-name"
                   variant="outlined"
@@ -154,12 +190,18 @@ function PricingType() {
                       pricingTypeName: e.target.value,
                     });
                   }}
+                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
+                  borderRadius: '5px',}}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="pricing-type-display-name"
                   variant="outlined"
@@ -170,6 +212,10 @@ function PricingType() {
                       ...pricingTypeFormData,
                       pricingTypeDisplayName: e.target.value,
                     });
+                  }}
+                  style={{
+                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
+                    borderRadius: '5px',
                   }}
                 />
               </div>
@@ -183,21 +229,21 @@ function PricingType() {
                   onClick={() => {
                     setpricingTypeData();
                   }}
-
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
                   onClick={() => {
                     setIsOpen(false);
                   }}
-
                   value="Cancel"
                   id="create-account"
-
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
-
             </form>
           </ModalDetailSection>
         </Box>
@@ -235,41 +281,45 @@ function Tr({
 
   return (
     <TableRowSection ref={wrapperRef}>
-      <TableCellSection className={!isActive && "disable-table-row"} >
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{pricingTypeName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection className={!isActive && "disable-table-row"} >
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{pricingTypeDisplayName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection data-id={pricingTypeId}>
+      <TableCellSection data-id={pricingTypeId} style={{position:"relative"}}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div
+            style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+              class="dropdown-content"
+            >
               <a
                 className={!isActive && "disable-table-row"}
-
                 onClick={(e) => {
                   openTheModalWithValues(e, pricingTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
-
+                <BorderColorOutlinedIcon
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
+                />
                 Edit
               </a>
               <a
                 className={!isActive && "disable-table-row"}
-
                 onClick={() => {
                   deleteSelectedLocation(pricingTypeId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                <DeleteOutlinedIcon
+                  style={{ fontSize: "15px", paddingRight: "5px" }}
+                />
                 Delete
               </a>
               <a
@@ -280,8 +330,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-
-                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOnIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
 
                   <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                 </div>
@@ -294,7 +345,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOffIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
                   <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                 </div>
               </a>
@@ -303,7 +356,6 @@ function Tr({
         </span>
       </TableCellSection>
     </TableRowSection>
-
   );
 }
 

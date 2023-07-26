@@ -42,6 +42,7 @@ function Currency() {
   useEffect(() => {
     getFinancialYearNameData();
   }, []);
+  
   const handleModalClose = () => {
     setIsOpen(false);
   };
@@ -58,6 +59,16 @@ function Currency() {
       });
   };
 
+  const AddDataToCurrency = async (e) => {
+    try {
+      const response = await axios.post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency",
+        currencyData
+      );
+      setIsOpen(false);
+    } catch { }
+  };
+
   const getFinancialYearNameData = async () => {
     console.log("in financial year data");
     await axios
@@ -71,15 +82,40 @@ function Currency() {
         setFinancialYearData(actualDataObject);
       });
   };
-  const AddDataToCurrency = async (e) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency",
-        currencyData
-      );
-      setIsOpen(false);
-    } catch { }
+
+  const copyFromFyToNewFy = async (copyData) => {
+    console.log("in copy functionn first", copyData);
+
+    const response = await axios.get(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financialyear/${copyData.copyFromFy}`
+    );
+
+    const actualDataObject = response.data.data;
+    const actualDataArray = [];
+    actualDataObject.map((copiedData, index) => {
+      actualDataArray.push({
+        ...currencyData,
+        currency: copiedData.currency,
+        currencyName: copiedData.currencyName,
+        conversionRate: copiedData.conversionRate,
+        symbol: copiedData.symbol,
+        financialYear: {
+          ...currencyData.financialYear,
+          financialYearName: copyData.copyToFy.financialYearName,
+          financialYearId: copyData.copyToFy.financialYearId,
+          financialYearCustomName: copyData.copyToFy.financialYearCustomName,
+          startingFrom: copyData.copyToFy.startingFrom,
+          endingOn: copyData.copyToFy.endingOn,
+        },
+      });
+    });
+
+    const resOfPOST = await axios.post(
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/save-all",
+      actualDataArray
+    );
   };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -94,6 +130,7 @@ function Currency() {
         currency={isCurrency}
         financialYearData={financialYearData}
         getAllCurrency={getAllCurrency}
+        copyFromFyToNewFy={copyFromFyToNewFy}
       />
       <Modal
         open={isOpen}
@@ -423,7 +460,7 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        getAllCurrency();
+        // getAllCurrency();
         setIsOpen(false);
       });
   };
