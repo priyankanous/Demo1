@@ -184,7 +184,7 @@ function GlobalLeaveLossFactor() {
           <ModalDetailSection style={{ height: "370px", overflow: "auto" }}>
 
               <form id="reg-form"
-              style={{padding:"0px 20px"}}
+              style={{padding:"0px 30px"}}
               >
                 <div>
                   <label for="name">Financial Year</label>
