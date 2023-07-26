@@ -5,12 +5,9 @@ import HomePage from "./components/Home/HomePage";
 import "./css/style.scss";
 import RollingRevenueAdministration from "./utils/RollingRevenueAdministration";
 import { RevenueEntry } from "./utils/RevenueEntry";
-<<<<<<< Updated upstream
 import { Reports } from "./utils/Reports";
 import { Settings } from "./utils/Settings";
-=======
 import Calendar from "./utils/Calendar";
->>>>>>> Stashed changes
 
 function App() {
   return (
@@ -88,7 +85,6 @@ function App() {
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
         <Route
-<<<<<<< Updated upstream
           path="/reports/businesstypewiseview"
           component={Reports.BusinessType}
         />
@@ -106,7 +102,7 @@ function App() {
           path="/settings/annual-target-entry"
           component={Settings.AnnualTargetEntry}
         />
-=======
+        <Route
          path="/calender/holidaycalender"
          component={Calendar.HolidayCalendar}
         />
@@ -118,8 +114,6 @@ function App() {
          path="/calender/monthlybdmmeetings"
          component={Calendar.BdmMeetings}
         />
-
->>>>>>> Stashed changes
       </Switch>
     </Router>
   );
