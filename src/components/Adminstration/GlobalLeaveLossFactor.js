@@ -76,6 +76,7 @@ function GlobalLeaveLossFactor() {
         setFinancialYearData(actualDataObject);
       });
   };
+  
   const openTheModalWithValues = async (e, id) => {
     console.log(id, "HERE");
     await axios
@@ -155,6 +156,7 @@ function GlobalLeaveLossFactor() {
               data={obj}
               setFinancialYearData={setFinancialYearData}
               openTheModalWithValues={openTheModalWithValues}
+              setGlobalLeaveLoseFactorData={setGlobalLeaveLoseFactorData}
             />
           );
         }}
@@ -179,7 +181,7 @@ function GlobalLeaveLossFactor() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
+          <ModalDetailSection style={{ height: "370px", overflow: "auto" }}>
 
               <form id="reg-form"
               style={{padding:"0px 20px"}}
@@ -376,7 +378,8 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        setFinancialYearData(actualDataObject);
+        // setFinancialYearData(actualDataObject);
+        // setGlobalLeaveLoseFactorData(actualDataObject);
         setIsOpen(false);
       });
   };
@@ -437,7 +440,7 @@ function Tr({
         </TableCellSection>
 
 
-        <TableCellSection>
+        <TableCellSection style={{position:"relative"}}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -445,7 +448,11 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none" }} class="dropdown-content">
+              <div 
+              // style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none" }} 
+              style={{ float: "left", right: "20px", position: "initial", overflow: "hidden", width: "100px", boxShadow: "none" }} 
+
+              class="dropdown-content">
                 <a
                   className={!isActive && "disable-table-row"}
 

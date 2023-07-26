@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -6,14 +7,28 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import {
+  
+  Modal,
+} from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import { Box } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
 function Status() {
   const [statusType, setstatusType] = useState([]);
@@ -23,6 +38,9 @@ function Status() {
     statusDisplayName: "",
   });
   const [isEditId, setIsEditId] = useState(null);
+
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
   const fetchstatusTypeData = async () => {
     const { data } = await axios.get(
@@ -37,10 +55,28 @@ function Status() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setstatusTypeFormData({
+      statusName: "",
+      statusDisplayName: "",
+    });
   };
 
   const setstatusTypeData = async () => {
-    if (isEditId !== null) {
+    if (statusTypeFormData.statusName.trim() === '') {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (statusTypeFormData.statusDisplayName.trim() === '') {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+
+    if (!isNameEmpty && !isDisplayNameEmpty && isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${isEditId}`,
         statusTypeFormData
@@ -55,6 +91,8 @@ function Status() {
       setIsOpen(false);
       fetchstatusTypeData();
       setIsEditId(null);
+      handleModalClose();
+
     }
   };
 
@@ -116,12 +154,8 @@ function Status() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
-
           <ModalHeadingSection>
             <ModalHeadingText>Setup Status</ModalHeadingText>
             <CloseIcon
@@ -133,13 +167,14 @@ function Status() {
           </ModalHeadingSection>
 
           <ModalDetailSection>
-
-
             <form id="reg-form">
-
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="status-name"
                   variant="outlined"
@@ -151,12 +186,18 @@ function Status() {
                       statusName: e.target.value,
                     });
                   }}
+                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
+                  borderRadius: '5px',}}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="status-display-name"
                   variant="outlined"
@@ -167,6 +208,10 @@ function Status() {
                       ...statusTypeFormData,
                       statusDisplayName: e.target.value,
                     });
+                  }}
+                  style={{
+                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
+                    borderRadius: '5px',
                   }}
                 />
               </div>
@@ -180,8 +225,9 @@ function Status() {
                   onClick={() => {
                     setstatusTypeData();
                   }}
-
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
@@ -190,8 +236,9 @@ function Status() {
                   }}
                   value="Cancel"
                   id="create-account"
-
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -232,16 +279,19 @@ function Tr({
         <span>{statusName || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection className={!isActive && "disable-table-row"} >
+      <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{statusDisplayName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection data-id={statusId}  >
+      <TableCellSection data-id={statusId} style={{position:"relative"}}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div
+            style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+            class="dropdown-content"
+            >
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={(e) => {
@@ -249,12 +299,20 @@ function Tr({
                 }}
                 style={{ padding: "5px" }}
               >
-                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                <BorderColorOutlinedIcon
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
+                />
                 Edit
               </a>
               <a
                 className={!isActive && "disable-table-row"}
-                onClick={() => { deleteSelectedLocation(statusId) }} style={{ padding: '5px' }}><AiIcons.AiOutlineDelete /> Delete</a>
+                onClick={() => {
+                  deleteSelectedLocation(statusId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <AiIcons.AiOutlineDelete /> Delete
+              </a>
               <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
@@ -263,8 +321,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-
-                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOnIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
 
                   <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                 </div>
@@ -277,7 +336,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOffIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
                   <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                 </div>
               </a>

@@ -35,6 +35,7 @@ export function AdminBaseComponent(props) {
       endingOn: "",
     },
   });
+  
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -135,6 +136,7 @@ export function AdminBaseComponent(props) {
                 </option>
                 {props.data.financialYearData.map((fyData, index) => {
                   const fyNameData = fyData.financialYearName;
+                  if (fyNameData !== copyData.copyFromFy) {
                   return (
                     <option
                       data-fyId={fyData.financialYearId}
@@ -146,7 +148,9 @@ export function AdminBaseComponent(props) {
                       {fyNameData}
                     </option>
                   );
-                })}
+                }
+                return null;
+              })}
               </select>
             </span>
             <span style={{ paddingRight: "2%",fontSize:"15px" }}>
@@ -178,9 +182,10 @@ export function AdminBaseComponent(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <TableContainer style={{overflow:"hidden", width:"97%",marginTop:"25px"}}>
+          <TableContainer style={{ width:"97%",marginTop:"25px",overflowY:"scroll",height:"70vh"     
+        }}>
 
-          <Table style={{overflow:"hidden"}} >
+          <Table >
             <TableHead>
               <TableRow style={{background:"rgba(225, 222, 222, 0.5)"}} >
               {props.columns.map((header) => {

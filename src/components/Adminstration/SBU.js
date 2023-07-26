@@ -6,15 +6,27 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-
+import {
+  Modal
+} from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import { Box } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
 function Sbu() {
   const [data, setData] = useState(null);
@@ -34,6 +46,12 @@ function Sbu() {
       // },
     },
   });
+
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+  const [isBu, setIsBu] = useState(false);
+
+
   useEffect(() => {
     getAllSbuData();
   }, []);
@@ -44,6 +62,23 @@ function Sbu() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setIsBu(false);
+    setSbuData({
+      sbuName: "",
+      sbuDisplayName: "",
+      businessUnit: {
+        businessUnitId: "",
+        businessUnitName: "",
+        businessUnitDisplayName: "",
+        // organization: {
+        //   id: 0,
+        //   orgName: "",
+        //   orgDisplayName: "",
+        // },
+      },
+    });
   };
 
   const getBuNameData = async () => {
@@ -57,6 +92,7 @@ function Sbu() {
         setBuNameData(actualDataObject);
       });
   };
+
   const getAllSbuData = async () => {
     getBuNameData();
     await axios
@@ -68,6 +104,24 @@ function Sbu() {
   };
 
   const AddDataToSbu = async (e) => {
+    if (sbuData.sbuName.trim() === '') {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (sbuData.sbuDisplayName.trim() === '') {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+    if (sbuData.businessUnit.businessUnitName.trim() === '') {
+      setIsBu(true);
+    } else {
+      setIsBu(false);
+    }
+    if (!isNameEmpty && !isDisplayNameEmpty && !isBu) {
+
     try {
       const response = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu",
@@ -76,14 +130,17 @@ function Sbu() {
       console.log("this is the response", response.data);
       setIsOpen(false);
       getAllSbuData();
-    } catch { }
+      handleModalClose();
+
+    } catch {}
+  }
   };
   return (
     <div>
       <MemoizedBaseComponent
         field="SBU"
         buttonText="setup SBU"
-        columns={["Name", "Display Name", "Parent Business Unit",""]}
+        columns={["Name", "Display Name", "Parent Business Unit", ""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -97,11 +154,7 @@ function Sbu() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
             <ModalHeadingText>Setup SBU</ModalHeadingText>
@@ -115,8 +168,12 @@ function Sbu() {
           <ModalDetailSection>
             <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="name"
                   spellcheck="false"
@@ -127,11 +184,17 @@ function Sbu() {
                       sbuName: e.target.value,
                     });
                   }}
+                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
+                  borderRadius: '5px',}}
                 />
               </div>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="name"
                   spellcheck="false"
@@ -142,7 +205,10 @@ function Sbu() {
                       sbuDisplayName: e.target.value,
                     });
                   }}
-
+                  style={{
+                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
+                    borderRadius: '5px',
+                  }}
                 />
               </div>
               {/* <div style={{ padding: "10px 0px" }}>
@@ -218,75 +284,89 @@ function Sbu() {
                 </FormControl>
               </div> */}
 
-<div>
-                  <label for="email" style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
-                  <select
-                  style={{height:"37px", width:"100%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
-                    onChange={(e) => {
-                      const selectedBuId =
-                        e.target.selectedOptions[0].getAttribute("data-buId");
-                      const selectedBuDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-buDisplayName"
-                        );
-                      // const selectedOrgId =
-                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
-                      // const selectedOrgDispName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgDisplayName"
-                      //   );
-                      // const selectedOrgName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgName"
-                      //   );
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  <span style={{color:"red"}}>*</span>
+                  <span>Parent BU</span>
+                </label>
+                <select
+                  style={{
+                    height: "37px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: isBu ? '1px solid red' : '1px solid lightgray',
+                  }}
+                  onChange={(e) => {
+                    const selectedBuId =
+                      e.target.selectedOptions[0].getAttribute("data-buId");
+                    const selectedBuDispName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-buDisplayName"
+                      );
+                    // const selectedOrgId =
+                    //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                    // const selectedOrgDispName =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-orgDisplayName"
+                    //   );
+                    // const selectedOrgName =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-orgName"
+                    //   );
 
-                      setSbuData({
-                        ...sbuData,
-                        businessUnit: {
-                          ...sbuData.businessUnit,
-                          businessUnitId: selectedBuId,
-                          businessUnitName: e.target.value,
-                          businessUnitDisplayName: selectedBuDispName,
-                          // organization: {
-                          //   ...sbuData.businessUnit.organization,
-                          //   id: selectedOrgId,
-                          //   orgName: selectedOrgName,
-                          //   orgDisplayName: selectedOrgDispName,
-                          // },
-                        },
-                      });
-                    }}
-                  >
-                    <option value="" disabled selected hidden>
-                      Please choose one option
-                    </option>
-                    {buNameData.map((buData, index) => {
-                      {console.log("name",buData.businessUnitName)}
-                      const buNameData = buData.businessUnitName;
-                      const buId = buData.businessUnitId;
-                      const buDisplayName = buData.businessUnitDisplayName;
-                      // const orgId = buData.organization.id;
-                      // const orgName = buData.organization.orgName;
-                      // const orgDisplayName = buData.organization.orgDisplayName;
-                      if (buData.isActive) {
-                        return (
-                          <option
-                            data-buId={buId}
-                            data-buDisplayName={buDisplayName}
-                            // data-orgId={orgId}
-                            // data-orgName={orgName}
-                            // data-orgDisplayName={orgDisplayName}
-                            key={index}
-                          >
-                            {buNameData}
-                          </option>
-                        );
-                      }
-                    })}
-                  </select>
-                </div>
+                    setSbuData({
+                      ...sbuData,
+                      businessUnit: {
+                        ...sbuData.businessUnit,
+                        businessUnitId: selectedBuId,
+                        businessUnitName: e.target.value,
+                        businessUnitDisplayName: selectedBuDispName,
+                        // organization: {
+                        //   ...sbuData.businessUnit.organization,
+                        //   id: selectedOrgId,
+                        //   orgName: selectedOrgName,
+                        //   orgDisplayName: selectedOrgDispName,
+                        // },
+                      },
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {buNameData.map((buData, index) => {
+                    {
+                      console.log("name", buData.businessUnitName);
+                    }
+                    const buNameData = buData.businessUnitName;
+                    const buId = buData.businessUnitId;
+                    const buDisplayName = buData.businessUnitDisplayName;
+                    // const orgId = buData.organization.id;
+                    // const orgName = buData.organization.orgName;
+                    // const orgDisplayName = buData.organization.orgDisplayName;
+                    if (buData.isActive) {
+                      return (
+                        <option
+                          data-buId={buId}
+                          data-buDisplayName={buDisplayName}
+                          // data-orgId={orgId}
+                          // data-orgName={orgName}
+                          // data-orgDisplayName={orgDisplayName}
+                          key={index}
+                        >
+                          {buNameData}
+                        </option>
+                      );
+                    }
+                  })}
+                </select>
+              </div>
 
-              
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -294,8 +374,9 @@ function Sbu() {
                   id="create-account"
                   variant="contained"
                   onClick={AddDataToSbu}
-
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
@@ -304,8 +385,9 @@ function Sbu() {
                   }}
                   value="Cancel"
                   id="create-account"
-
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -417,11 +499,9 @@ function Tr({
           <span>{sbuDisplayName || "Unknown"}</span>
         </TableCellSection>
         <TableCellSection className={!isActive && "disable-table-row"}>
-          <span>
-            {businessUnit.businessUnitName || "Unknown"}
-          </span>
-          </TableCellSection>
-          <TableCellSection>
+          <span>{businessUnit.businessUnitName || "Unknown"}</span>
+        </TableCellSection>
+        <TableCellSection style={{position:"relative"}}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -429,26 +509,33 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+              <div
+              style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+
+                class="dropdown-content"
+              >
                 <a
-                className={!isActive && "disable-table-row"}
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     setIsOpen(true);
                   }}
                 >
-                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
-
+                  <BorderColorOutlinedIcon
+                    style={{ fontSize: "12px", paddingRight: "5px" }}
+                  />
                   Edit
                 </a>
                 <a
-className={!isActive && "disable-table-row"}
+                  className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                  <DeleteOutlinedIcon
+                    style={{ fontSize: "15px", paddingRight: "5px" }}
+                  />
                   Delete
                 </a>
                 <a
@@ -458,12 +545,13 @@ className={!isActive && "disable-table-row"}
                     activeDeactivateTableData(sbuId);
                   }}
                 >
-                                  <div style={{ display: "flex" }}>
+                  <div style={{ display: "flex" }}>
+                    <ToggleOnIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
 
-<ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
-
-<p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
-</div>
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
+                  </div>
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
@@ -472,10 +560,12 @@ className={!isActive && "disable-table-row"}
                   }}
                   style={{ padding: "5px" }}
                 >
-                                  <div style={{ display: "flex" }}>
-                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
-                  <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
-                </div>
+                  <div style={{ display: "flex" }}>
+                    <ToggleOffIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
+                    <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
+                  </div>
                 </a>
               </div>
             )}
@@ -483,12 +573,11 @@ className={!isActive && "disable-table-row"}
         </TableCellSection>
       </TableRowSection>
       <Modal
-                open={isOpen}
-                // onClose={handleModalClose}
+        open={isOpen}
+        // onClose={handleModalClose}
       >
-                <Box sx={MoadalStyle}>
-
-                <ModalHeadingSection>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
             <ModalHeadingText>Edit SBU</ModalHeadingText>
             <CloseIcon
               onClick={() => {
@@ -498,13 +587,14 @@ className={!isActive && "disable-table-row"}
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-
-
-              <form id="reg-form" style={{ padding: "0px 30px" }}>
-
+            <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="name"
                   spellcheck="false"
@@ -520,8 +610,12 @@ className={!isActive && "disable-table-row"}
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
-                <InputField size="small"
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="email"
                   spellcheck="false"
@@ -535,84 +629,96 @@ className={!isActive && "disable-table-row"}
                   }}
                 />
               </div>
-                <div>
-                  <label for="email"  style={{fontWeight:"400",fontSize:"16px"}}>Parent Business Unit</label>
-                  <select
-                  style={{height:"35px", width:"100%", marginBottom:"10px", borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
-                    value={responseData.businessUnit.businessUnitName}
-                    onChange={(e) => {
-                      const selectedBuId =
-                        e.target.selectedOptions[0].getAttribute("data-buId");
-                      const selectedBuDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-buDisplayName"
-                        );
-                      // const selectedOrgId =
-                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
-                      // const selectedOrgDispName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgDisplayName"
-                      //   );
-                      // const selectedOrgName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgName"
-                      //   );
+              <div>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  Parent Business Unit
+                </label>
+                <select
+                  style={{
+                    height: "35px",
+                    width: "100%",
+                    marginBottom: "10px",
+                    borderRadius: "7px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                  }}
+                  value={responseData.businessUnit.businessUnitName}
+                  onChange={(e) => {
+                    const selectedBuId =
+                      e.target.selectedOptions[0].getAttribute("data-buId");
+                    const selectedBuDispName =
+                      e.target.selectedOptions[0].getAttribute(
+                        "data-buDisplayName"
+                      );
+                    // const selectedOrgId =
+                    //   e.target.selectedOptions[0].getAttribute("data-orgId");
+                    // const selectedOrgDispName =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-orgDisplayName"
+                    //   );
+                    // const selectedOrgName =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-orgName"
+                    //   );
 
-                      setResponseData({
-                        ...responseData,
-                        businessUnit: {
-                          ...responseData.businessUnit,
-                          businessUnitId: selectedBuId,
-                          businessUnitName: e.target.value,
-                          businessUnitDisplayName: selectedBuDispName,
-                          // organization: {
-                          //   ...responseData.businessUnit.organization,
-                          //   id: selectedOrgId,
-                          //   orgName: selectedOrgName,
-                          //   orgDisplayName: selectedOrgDispName,
-                          // },
-                        },
-                      });
-                    }}
-                  >
-                    <option value="" disabled selected hidden>
-                      Please choose one option
-                    </option>
-                    {buNameData.map((buData, index) => {
-                      const buNameData = buData.businessUnitName;
-                      const buId = buData.businessUnitId;
-                      const buDisplayName = buData.businessUnitDisplayName;
-                      // const orgId = buData.organization.id;
-                      // const orgName = buData.organization.orgName;
-                      // const orgDisplayName = buData.organization.orgDisplayName;
-                      if (buData.isActive) {
-                        return (
-                          <option
-                            data-buId={buId}
-                            data-buDisplayName={buDisplayName}
-                            // data-orgId={orgId}
-                            // data-orgName={orgName}
-                            // data-orgDisplayName={orgDisplayName}
-                            key={index}
-                          >
-                            {buNameData}
-                          </option>
-                        );
-                      }
-                    })}
-                  </select>
-                </div>
+                    setResponseData({
+                      ...responseData,
+                      businessUnit: {
+                        ...responseData.businessUnit,
+                        businessUnitId: selectedBuId,
+                        businessUnitName: e.target.value,
+                        businessUnitDisplayName: selectedBuDispName,
+                        // organization: {
+                        //   ...responseData.businessUnit.organization,
+                        //   id: selectedOrgId,
+                        //   orgName: selectedOrgName,
+                        //   orgDisplayName: selectedOrgDispName,
+                        // },
+                      },
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    Please choose one option
+                  </option>
+                  {buNameData.map((buData, index) => {
+                    const buNameData = buData.businessUnitName;
+                    const buId = buData.businessUnitId;
+                    const buDisplayName = buData.businessUnitDisplayName;
+                    // const orgId = buData.organization.id;
+                    // const orgName = buData.organization.orgName;
+                    // const orgDisplayName = buData.organization.orgDisplayName;
+                    if (buData.isActive) {
+                      return (
+                        <option
+                          data-buId={buId}
+                          data-buDisplayName={buDisplayName}
+                          // data-orgId={orgId}
+                          // data-orgName={orgName}
+                          // data-orgDisplayName={orgDisplayName}
+                          key={index}
+                        >
+                          {buNameData}
+                        </option>
+                      );
+                    }
+                  })}
+                </select>
+              </div>
 
-                <ButtonSection>
+              <ButtonSection>
                 <ModalControlButton
                   type="button"
                   value="Save"
                   id="create-account"
                   variant="contained"
                   onClick={OnSubmit}
-
-
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
@@ -621,11 +727,12 @@ className={!isActive && "disable-table-row"}
                   }}
                   value="Cancel"
                   id="create-account"
-
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
-              </form>
-              </ModalDetailSection>
+            </form>
+          </ModalDetailSection>
         </Box>
       </Modal>
     </React.Fragment>

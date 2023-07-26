@@ -19,6 +19,7 @@ import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 function FinanicalYear() {
   const [financialYear, setFinancialYear] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [financialYearFormData, setfinancialYearFormData] = useState({
     financialYearName: "",
     financialYearCustomName: "",
@@ -55,6 +56,12 @@ function FinanicalYear() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setfinancialYearFormData({
+      financialYearName: "",
+      financialYearCustomName: "",
+      startingFrom: "",
+      endingOn: "",
+    })
   };
 
   const setFinancialYearData = async () => {
@@ -88,7 +95,18 @@ function FinanicalYear() {
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year/${isEditId}`,
         financialYearData
       );
+    } else if(
+      !financialYearFormData?.financialYearName ||
+      !financialYearFormData?.financialYearCustomName ||
+      !financialYearFormData.startingFrom ||
+      !financialYearFormData.endingOn
+      
+    ){
+      setIsSubmitted(true);
+
     } else {
+      setIsSubmitted(false);
+
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year",
         financialYearData
@@ -165,6 +183,12 @@ function FinanicalYear() {
     }
   };
 
+  // const inputStyle = {
+  //   border:
+  //     isSubmitted && !financialYearFormData?.financialYearName ? "1px solid red" : "",
+  //   borderRadius: "4px",
+  // };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -207,12 +231,16 @@ function FinanicalYear() {
             <form id="reg-form">
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+              <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="business-type-name"
                   variant="outlined"
                   spellcheck="false"
+                  // style={inputStyle}
                   value={financialYearFormData?.financialYearName}
                   onChange={(e) => {
                     setfinancialYearFormData({
@@ -220,11 +248,17 @@ function FinanicalYear() {
                       financialYearName: e.target.value,
                     });
                   }}
+                  style={{    border:
+                    isSubmitted && !financialYearFormData?.financialYearName ? "1px solid red" : "",
+                  borderRadius: "4px",}}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display</InputTextLabel>
+                <InputTextLabel>
+                <span style={{ color: "red" }}>*</span>
+<span>
+                Display</span></InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="business-type-display-name"
@@ -237,6 +271,9 @@ function FinanicalYear() {
                       financialYearCustomName: e.target.value,
                     });
                   }}
+                  style={{    border:
+                    isSubmitted && !financialYearFormData?.financialYearCustomName ? "1px solid red" : "",
+                  borderRadius: "4px",}}
                 />
               </div>
 
@@ -255,6 +292,11 @@ function FinanicalYear() {
                       startingFrom: e.target.value,
                     });
                   }}
+                  style={{                    border:
+                    isSubmitted && !financialYearFormData.startingFrom
+                      ? "1px solid red"
+                      : "1px solid lightgray",
+                    borderRadius:"4px"}}
                 />
               </div>
 
@@ -274,6 +316,12 @@ function FinanicalYear() {
                       endingOn: e.target.value,
                     });
                   }}
+                  style={{                    border:
+                    isSubmitted && !financialYearFormData.endingOn
+                      ? "1px solid red"
+                      : "1px solid lightgray",
+                    borderRadius:"4px"}}
+                  
                 />
               </div>
 
@@ -359,13 +407,16 @@ function Tr({
         <span>{endingOn || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection >
+      <TableCellSection style={{position:"relative"}}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div 
+                        style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+
+            class="dropdown-content">
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={(e) => {

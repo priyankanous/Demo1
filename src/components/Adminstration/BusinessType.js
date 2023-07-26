@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -6,14 +7,40 @@ import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import {
+  Table,
+  Modal,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  styled,
+  TextField,
+  InputLabel,
+  FormControl,
+  Select,
+  MenuItem,
+  Button,
+} from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import { Box, Typography, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 
 function BusinessType() {
   const [businessType, setBusinessType] = useState([]);
@@ -23,6 +50,9 @@ function BusinessType() {
     businessTypeDisplayName: "",
   });
   const [isEditId, setIsEditId] = useState(null);
+
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
   console.log("Bussiness", businessTypeFormData);
 
@@ -42,10 +72,27 @@ function BusinessType() {
   };
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setbusinessTypeFormData({
+      businessTypeName: "",
+      businessTypeDisplayName: "",
+    });
   };
 
   const setBusinessTypeData = async () => {
-    if (isEditId !== null) {
+    if (businessTypeFormData.businessTypeName.trim() === "") {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (businessTypeFormData.businessTypeDisplayName.trim() === "") {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+    if (!isNameEmpty && !isDisplayNameEmpty && isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/${isEditId}`,
         businessTypeFormData
@@ -64,6 +111,7 @@ function BusinessType() {
         businessTypeDisplayName: "",
       });
       fetchBusinessTypeData();
+      handleModalClose();
     }
   };
 
@@ -131,10 +179,7 @@ function BusinessType() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
             <ModalHeadingText>Setup Business Type</ModalHeadingText>
@@ -146,11 +191,14 @@ function BusinessType() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
-                <InputField size="small"
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="business-type-name"
                   variant="outlined"
@@ -162,13 +210,22 @@ function BusinessType() {
                       businessTypeName: e.target.value,
                     });
                   }}
-
+                  style={{
+                    border: isNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
+                  }}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
-                <InputField size="small"
+                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
+                <InputField
+                  size="small"
                   type="text"
                   id="business-type-display-name"
                   variant="outlined"
@@ -180,8 +237,12 @@ function BusinessType() {
                       businessTypeDisplayName: e.target.value,
                     });
                   }}
-
-
+                  style={{
+                    border: isDisplayNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
+                  }}
                 />
               </div>
 
@@ -194,7 +255,9 @@ function BusinessType() {
                   onClick={() => {
                     setBusinessTypeData();
                   }}
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
@@ -208,7 +271,9 @@ function BusinessType() {
                   }}
                   value="Cancel"
                   id="create-account"
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -252,13 +317,26 @@ function Tr({
       <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{businessTypeDisplayName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection data-id={businessTypeId}>
+      <TableCellSection
+        data-id={businessTypeId}
+        style={{ position: "relative" }}
+      >
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div
+              style={{
+                float: "right",
+                right: "20px",
+                position: "absolute",
+                overflow: "hidden",
+                width: "100px",
+                boxShadow: "none",
+              }}
+              class="dropdown-content"
+            >
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={(e) => {
@@ -266,14 +344,23 @@ function Tr({
                 }}
                 style={{ padding: "5px" }}
               >
-                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                <BorderColorOutlinedIcon
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
+                />
                 Edit
               </a>
               <a
                 className={!isActive && "disable-table-row"}
-                onClick={() => { deleteSelectedLocation(businessTypeId) }} style={{ padding: '5px' }}>
-                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
-                Delete</a>
+                onClick={() => {
+                  deleteSelectedLocation(businessTypeId);
+                }}
+                style={{ padding: "5px" }}
+              >
+                <DeleteOutlinedIcon
+                  style={{ fontSize: "15px", paddingRight: "5px" }}
+                />
+                Delete
+              </a>
               <a
                 className={isActive && "disable-table-row"}
                 onClick={() => {
@@ -282,8 +369,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-
-                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOnIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
 
                   <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                 </div>
@@ -296,7 +384,9 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOffIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
                   <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                 </div>
               </a>

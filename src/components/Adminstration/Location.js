@@ -25,6 +25,9 @@ function Location() {
     locationDisplayName: "",
   });
   const [isEditId, setIsEditId] = useState(null);
+    
+  const [isNameEmpty, setIsNameEmpty] = useState(false);
+  const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
   const fetchLocationName = async () => {
     const { data } = await axios.get(
@@ -43,10 +46,27 @@ function Location() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsNameEmpty(false);
+    setIsDisplayNameEmpty(false);
+    setLocationFormData({
+      locationName: "",
+      locationDisplayName: "",
+    });
   };
 
   const setlocationDetails = async () => {
-    if (isEditId !== null) {
+    if (locationFormData.locationName.trim() === '') {
+      setIsNameEmpty(true);
+    } else {
+      setIsNameEmpty(false);
+    }
+
+    if (locationFormData.locationDisplayName.trim() === '') {
+      setIsDisplayNameEmpty(true);
+    } else {
+      setIsDisplayNameEmpty(false);
+    }
+    if (!isNameEmpty && !isDisplayNameEmpty && isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${isEditId}`,
         locationFormData
@@ -61,6 +81,7 @@ function Location() {
       setIsOpen(false);
       setIsEditId(null);
       fetchLocationName();
+      handleModalClose();
     }
   };
 
@@ -141,7 +162,10 @@ function Location() {
             <form id="reg-form">
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+                                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="loc-name"
@@ -153,11 +177,16 @@ function Location() {
                       locationName: e.target.value,
                     });
                   }}
+                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
+                  borderRadius: '5px',}}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name </InputTextLabel>
+                                <InputTextLabel>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
                 <InputField size="small"
                   type="text"
                   id="loc-disp-name"
@@ -168,6 +197,10 @@ function Location() {
                       ...locationFormData,
                       locationDisplayName: e.target.value,
                     });
+                  }}
+                                    style={{
+                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
+                    borderRadius: '5px',
                   }}
 
                 />
@@ -237,14 +270,15 @@ function Tr({
       <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{locationDisplayName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection data-id={locationId}>
-        {console.log("location", locationId)}
+      <TableCellSection data-id={locationId} style={{position:"relative"}}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div  
+            style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+            class="dropdown-content">
               <a
               className={!isActive && "disable-table-row"}
                 onClick={(e) => {
