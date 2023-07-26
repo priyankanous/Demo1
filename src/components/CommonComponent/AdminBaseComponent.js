@@ -182,7 +182,7 @@ export function AdminBaseComponent(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <TableContainer style={{ width:"97%",marginTop:"25px",overflowY:"scroll",height:"70vh"     
+          <TableContainer style={{ width:"98%",marginTop:"25px",overflowY:"scroll",height:"70vh"     
         }}>
 
           <Table >

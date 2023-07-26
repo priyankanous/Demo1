@@ -202,7 +202,8 @@ export const LoggedInUserImage = styled.img`
 export const LoggedInUserName = styled.span`
   font-weight: 400;
   font-size: 16px;
-  color: rgb(0, 35, 51, 1);
+  // color: rgb(0, 35, 51, 1);
+  color: #000000;
 `;
 export const ModalFormButton = styled.div`
   display: flex;
