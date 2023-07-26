@@ -86,7 +86,7 @@ export const TableRowSection = styled(TableRow)({
 export const TableCellSection = styled(TableCell)({
   fontSize:"14px", 
   fontWeight:"500", 
-  color:"#002333",
+  color:"#000000",
   textAlign:"left",
   padding:"7px 15px"
 });

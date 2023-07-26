@@ -165,6 +165,7 @@ h3 {
 }
 .revenue_table_container::-webkit-scrollbar-thumb {
   background: #007a7e;
+  
   border-radius: 25px;
 }
 
@@ -443,6 +444,7 @@ input {
 
 .dropdown a:hover {
   background-color: #0a8b9c;
+  
 }
 
 .show {

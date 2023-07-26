@@ -629,7 +629,9 @@ function Bdm() {
                   <ul
                     style={{
                       overflowY: "auto",
-                      height: "200px",
+                      // height: "200px",
+                      height: "auto",
+
                       width: "90%",
                     }}
                     className={`list-items ${
@@ -719,7 +721,9 @@ function Bdm() {
                   <ul
                     style={{
                       overflowY: "auto",
-                      height: "200px",
+                      // height: "200px",
+                      height: "auto",
+
                       width: "90%",
                     }}
                     class="list-items open-list-items"
