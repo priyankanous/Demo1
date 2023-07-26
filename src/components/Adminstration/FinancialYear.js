@@ -280,7 +280,6 @@ function FinanicalYear() {
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
-                <span style={{ color: "red" }}>*</span>
                 <span>Active From</span></InputTextLabel>
                 <InputField fullWidth
                   size="small"
