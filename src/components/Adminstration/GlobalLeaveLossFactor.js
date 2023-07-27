@@ -190,7 +190,7 @@ function GlobalLeaveLossFactor() {
       <MemoizedBaseComponent
         field="Global Leave Loss Factor"
         buttonText="setup global leave loss factor"
-        columns={["No", "Month", "OffShore", "OnShore", ""]}
+        columns={["Month", "OffShore", "OnShore", ""]}
         data={data}
         Tr={(obj) => {
           return (
@@ -536,9 +536,9 @@ function Tr({
   return (
     <React.Fragment style={{ height: "200px" }}>
       <TableRowSection ref={wrapperRef}>
-        <TableCellSection className={!isActive && "disable-table-row"}>
+        {/* <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{leaveLossFactorId || "Unknown"}</span>
-        </TableCellSection>
+        </TableCellSection> */}
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{month || "Unknown"}</span>
         </TableCellSection>
