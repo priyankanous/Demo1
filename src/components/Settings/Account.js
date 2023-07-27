@@ -64,16 +64,16 @@ function AccountSettings() {
 
   const handleModalClose = () => {
     setAccountData({
-        accountName: "",
-        accountId: 0,
-        accountOrClientCode: "string",
-        regions: {
-          regionId: "",
-          regionName: "",
-          regionDisplayName: "",
-        },
-      })
-      setIsOpen(false);
+      accountName: "",
+      accountId: 0,
+      accountOrClientCode: "string",
+      regions: {
+        regionId: "",
+        regionName: "",
+        regionDisplayName: "",
+      },
+    });
+    setIsOpen(false);
   };
 
   const getAllRegionData = async () => {
@@ -96,27 +96,27 @@ function AccountSettings() {
   const AddDataToAccount = async (e) => {
     if (!accountData?.accountName || !accountData?.regions?.regionDisplayName) {
       setIsSubmitted(true);
-    } else{
-    try {
-      setIsSubmitted(false);
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
-        accountData
-      );
-      setIsOpen(false);
-      setAccountData({
-        accountName: "",
-        accountId: 0,
-        accountOrClientCode: "string",
-        regions: {
-          regionId: "",
-          regionName: "",
-          regionDisplayName: "",
-        },
-      })
-      getAllAccountsData();
-    } catch {}
-  }
+    } else {
+      try {
+        setIsSubmitted(false);
+        const response = await axios.post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts",
+          accountData
+        );
+        setIsOpen(false);
+        setAccountData({
+          accountName: "",
+          accountId: 0,
+          accountOrClientCode: "string",
+          regions: {
+            regionId: "",
+            regionName: "",
+            regionDisplayName: "",
+          },
+        });
+        getAllAccountsData();
+      } catch {}
+    }
   };
 
   // const setAccountsData = async () => {
@@ -142,8 +142,8 @@ function AccountSettings() {
   //   }
   // };
   const inputStyle = {
-    border: isSubmitted && !accountData.accountName ? '1px solid red' : '',
-    borderRadius:"4px"
+    border: isSubmitted && !accountData.accountName ? "1px solid red" : "",
+    borderRadius: "4px",
   };
 
   const resetData = () => {
@@ -152,7 +152,6 @@ function AccountSettings() {
     setAccountName(null);
     setRegionDisplayName(null);
   };
- 
 
   return (
     <div>
@@ -192,7 +191,7 @@ function AccountSettings() {
                   <span>Name</span>
                 </InputTextLabel>
                 <InputField
-                style={inputStyle}
+                  style={inputStyle}
                   size="small"
                   type="text"
                   id="name"
@@ -220,12 +219,14 @@ function AccountSettings() {
                     height: "37px",
                     width: "92%",
                     marginBottom: "10px",
-                    marginTop:"2px",
+                    marginTop: "2px",
                     borderRadius: "7px",
                     boxShadow: "none",
-                    border: isSubmitted && !accountData?.regions?.regionDisplayName ? '1px solid red' : '1px solid lightgray',
+                    border:
+                      isSubmitted && !accountData?.regions?.regionDisplayName
+                        ? "1px solid red"
+                        : "1px solid lightgray",
                   }}
-                  
                   onChange={(e) => {
                     const selectedRegionId =
                       e.target.selectedOptions[0].getAttribute("data-regionId");
@@ -245,7 +246,7 @@ function AccountSettings() {
                     });
                   }}
                 >
-                  <option  value="" disabled selected hidden>
+                  <option value="" disabled selected hidden>
                     Please choose one option
                   </option>
                   {regionNameData?.map((regions, index) => {
@@ -304,7 +305,7 @@ function Tr({
   setAccountData,
   data,
 }) {
-  const { accountId, accountName, regionDisplayName,regions, isActive } = data
+  const { accountId, accountName, regionDisplayName, regions, isActive } = data;
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [responseData, setResponseData] = useState({
@@ -312,15 +313,15 @@ function Tr({
     accountId: "",
     accountOrClientCode: "",
     regions: {
-      regionId:"",
+      regionId: "",
       regionName: "",
       regionDisplayName: "",
     },
   });
 
   useEffect(() => {
-    setResponseData({...responseData, ...data})
-  }, [data])
+    setResponseData({ ...responseData, ...data });
+  }, [data]);
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -397,7 +398,7 @@ function Tr({
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{regions?.regionDisplayName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection>
+        <TableCellSection style={{position:"relative"}}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -406,7 +407,14 @@ function Tr({
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
               <div
-                style={{ float: "right", right: "20px", position: "fixed" }}
+                style={{
+                  float: "right",
+                  right: "20px",
+                  position: "absolute",
+                  overflow: "hidden",
+                  width: "100px",
+                  boxShadow: "none",
+                }}
                 class="dropdown-content"
               >
                 <a
@@ -469,7 +477,7 @@ function Tr({
       </TableRowSection>
       <Modal open={isOpen}>
         <Box sx={MoadalStyle}>
-        <ModalHeadingSection>
+          <ModalHeadingSection>
             <ModalHeadingText>Edit Account</ModalHeadingText>
             <CloseIcon
               onClick={() => {
@@ -479,10 +487,10 @@ function Tr({
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-          <form id="reg-form" style={{ padding: "0px 30px" }}>
-            <div  style={{ padding: "10px 0px" }}>
-              <InputTextLabel>Name</InputTextLabel>
-              <InputField
+            <form id="reg-form" style={{ padding: "0px 30px" }}>
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel>Name</InputTextLabel>
+                <InputField
                   size="small"
                   type="text"
                   id="name"
@@ -496,8 +504,8 @@ function Tr({
                     });
                   }}
                 />
-            </div>
-            {/* <div style={{ padding: "10px 0px" }}>
+              </div>
+              {/* <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Region</InputTextLabel>
                 <InputField
                   size="small"
@@ -544,7 +552,7 @@ function Tr({
                         regionId: selectedRegionId,
                         regionName: e.target.value,
                         regionDisplayName: selectedRegionDispName,
-                      }
+                      },
                     });
                   }}
                 >
@@ -591,7 +599,7 @@ function Tr({
                   Cancel
                 </ModalControlButton>
               </ButtonSection>
-          </form>
+            </form>
           </ModalDetailSection>
         </Box>
       </Modal>
