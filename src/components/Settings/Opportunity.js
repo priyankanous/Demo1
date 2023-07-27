@@ -239,7 +239,7 @@ function Opportunity() {
 
   const createDate = (date) => {
     if (!date) {
-      return ""; 
+      return "";
     }
     let splitDate = date?.split("/");
     let monthDate = `${
@@ -575,14 +575,21 @@ function Tr({
           <span>{projectEndDate}</span>
         </TableCellSection>
 
-        <TableCellSection>
+        <TableCellSection style={{ position: "relative" }}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => closeDropDown()}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
               <div
-                style={{ float: "right", right: "20px", position: "fixed" }}
+                style={{
+                  float: "right",
+                  right: "20px",
+                  position: "absolute",
+                  overflow: "hidden",
+                  width: "100px",
+                  boxShadow: "none",
+                }}
                 class="dropdown-content"
               >
                 <a

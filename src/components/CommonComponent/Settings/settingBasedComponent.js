@@ -43,7 +43,7 @@ export function SettingBaseComponent(props) {
       </TableHeadingSection>
       
         <React.Fragment>
-          <TableContainer style={{overflow:"hidden", width:"97%",marginTop:"25px"}}>
+          <TableContainer style={{overflow:"hidden", width:"98%",marginTop:"25px"}}>
 
           <Table style={{overflow:"hidden"}} >
             <TableHead>
