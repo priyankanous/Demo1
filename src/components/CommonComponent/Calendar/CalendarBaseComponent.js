@@ -42,6 +42,7 @@ export function CalendarBaseComponent(props) {
         <TableButtons variant="contained" onClick={props.setIsOpen}>{props.buttonText}</TableButtons>
       </TableHeadingSection>
       {(props.holiday && props.financialYearData) ||
+        (props.fortnightlyMeetings && props.financialYearData) ||
         (props.bdmMeetings && props.financialYearData) ? (
         <React.Fragment>
          <div class="filter">
@@ -54,9 +55,11 @@ export function CalendarBaseComponent(props) {
                   onChange={(e) => {
                   if (props.holiday == true) {
                   props.getAllHcData(e.target.value);
-                  }
+                  } else if(props.bdmMeetings ==true ){
                   props.fetchBdmMeetingsData(e.target.value);
-                  }}
+                  } else {
+                  props.fetchFornightlyMeetingsData(e.target.value);
+                  }}}
               // style={{height:"35px", borderRadius:"7px"}}
                   style={{height:"30px", width:"22%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
                   >
@@ -69,7 +72,7 @@ export function CalendarBaseComponent(props) {
                   })}
                 </select>
             </div>
-            <div>
+            {props.holiday && <div>
             <span style={{ paddingRight: "2%",fontSize:"15px" }}>
               <TableButtons
                 id="filterButton"
@@ -86,11 +89,11 @@ export function CalendarBaseComponent(props) {
                 ONSITE
               </TableButtons>
             </span>
-            </div>
+            </div>}
           </div>
           <TableContainer style={{overflow:"hidden"}}>
           <Table style={{overflow:"hidden"}}>
-            <TableRow>
+            <TableRow style={{background:"rgba(225, 222, 222, 0.5)"}}>
               {props.columns.map((header) => {
                 return <TableCell>{header}</TableCell>;
               })}
@@ -108,9 +111,9 @@ export function CalendarBaseComponent(props) {
         <React.Fragment>
           <TableContainer style={{overflow:"hidden", width:"97%",marginTop:"25px"}}>
 
-          <Table style={{overflow:"hidden"}} >
+          <Table  >
             <TableHead>
-              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}} >
+              <TableRow >
               {props.columns.map((header) => {
                 return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px"}}>{header}</TableCell>;
               })}

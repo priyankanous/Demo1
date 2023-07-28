@@ -388,18 +388,16 @@ function BdmMeetings() {
                 >
                   <option value="" disabled selected hidden></option>
                 { bdm.map((item,index) =>{
-                const bdmName= item.bdmDisplayName;
-                return(
-                    <option
-                    key={index}
-                    onChange={() => {
-                        selectMarkDropdown(bdmName, "bdmdisname");
-                      }}
-                  >
-                    {bdmName}
+                //const bdmName= item.bdmDisplayName;
+                if(item.isActive){
+                  return(
+                      <option
+                      key={index}
+                    >
+                      {item.bdmDisplayName}
                   </option>
-                )
-                  })}
+                  )
+                }})}
                 </select>
               </div>
 
@@ -416,16 +414,16 @@ function BdmMeetings() {
                 >
                 <option value="" disabled selected hidden></option>
                  { region.map((item,index) =>{
-                const regName= item.regionName;
+                //const regName= item.regionName;
+                  if(item.isActive){
                 return(
                     <option
-                   
                     key={index}
                   >
-                    {regName}
+                    {item.regionName}
                   </option>
                 )
-                  })}
+                  }})}
                 </select>
               </div>
 
@@ -453,7 +451,7 @@ function BdmMeetings() {
                 <InputField fullWidth
                   size="small"
                   type="date"
-                  id="bdm-activeUntil"
+                  id="bdm-date"
                   value={bdmFormData?.meetingDate}
                   onChange={(e) => {
                     setbdmFormData({
@@ -470,7 +468,7 @@ function BdmMeetings() {
                 <InputField fullWidth
                   size="small"
                   type="time"
-                  id="bdm-activeUntil"
+                  id="bdm-time"
                   value={bdmFormData?.meetingTime}
                   onChange={(e) => {
                     setbdmFormData({

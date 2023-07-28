@@ -107,6 +107,15 @@ export const ModalHeadingText = styled(Typography)({
   color: "#000000"
 });
 
+export const ModalDetailSection2 = styled('div')({
+  background: "#F5F9FC", 
+  display: "flex", 
+  paddingLeft: "35px",
+  paddingTop: "25px",
+  justifyContent: "Left", 
+  borderRadius: "10px"
+});
+
 export const ModalDetailSection = styled('div')({
   background: "#F5F9FC", 
   padding: "12px 10px",

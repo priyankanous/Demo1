@@ -107,8 +107,8 @@ function App() {
          component={Calendar.HolidayCalendar}
         />
         <Route
-         path="/calender/holidaycalender"
-         component={Calendar.HolidayCalendar}
+         path="/calender/fortnightlymeeting"
+         component={Calendar.FortnightlyMeetings}
         />
         <Route
          path="/calender/monthlybdmmeetings"

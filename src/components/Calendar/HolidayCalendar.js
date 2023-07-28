@@ -22,24 +22,28 @@ function HolidayCalendar() {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isHoliday, setIsHoliday] = useState(true);
+  const [loc, setLoc] = useState([]);
+  const [locationData, setLocationData] = useState([]);
   const [financialYearData, setFinancialYearData] = useState([]);
   const [selectedFinancialYear, setSelectedFinancialYear] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState([])
   const [isEditId, setIsEditId] = useState(null);
 
   const [holidayCalendarData, setHolidayCalendarData] = useState({
-    holidayId: 1,
-    holidayName: "",
+    //holidayId: 1,
+    holidayName: "Independence Day",
     holidayDate: "29/Jul/2023",
     financialYear: {
-      financialYearId: "",
-      financialYearName: "",
+      financialYearId: "1",
+      financialYearName: "2022",
       financialYearCustomName: "",
       startingFrom: "",
       endingOn: "",
     },
     location: {
       locationId: 1,
+      locationName: "string",
+      locationDisplayName: "string"
     },
   });
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
@@ -77,6 +81,8 @@ function HolidayCalendar() {
   };
 
   const getAllHcData = async (e) => {
+    getFinancialYearNameData();
+    fetchLocationData();
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/financial-year/${e}`
@@ -102,8 +108,21 @@ function HolidayCalendar() {
       });
   };
 
+  const fetchLocationData = async () => {
+    await axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location`
+      )
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setData({ ...data, locationData: actualDataObject });
+        setLocationData(actualDataObject);
+      });
+  };
+
   const AddDataToHc = async () => {
-    const { holidayName, holidayDate } = holidayCalendarData;
+    const { holidayName, holidayDate, financialYear, location } = holidayCalendarData;
     console.log(holidayCalendarData,"holidayCalendarData");
     const activeFromDt = `${
       parseInt(new Date(holidayDate).getDate()) < 10
@@ -116,8 +135,10 @@ function HolidayCalendar() {
     let holidayData = {
       holidayName,
       holidayDate: activeFromDt,
-      financialYears: selectedFinancialYear,
-      locations: selectedLocation,
+      //financialYears: selectedFinancialYear,
+      financialYear,
+      //locations: selectedLocation,
+      location,
     };
 
     if (isEditId !== null) {
@@ -140,6 +161,7 @@ function HolidayCalendar() {
       setSelectedLocation([]);
       
     }
+    window.location.reload();
   };
 
   const editHCData = async (id) => {
@@ -185,6 +207,8 @@ function HolidayCalendar() {
       setSelectedLocation([]);
     }
   };
+
+  
     // setHolidayCalendarData({...holidayCalendarData,
     //   holidayDate:activeFromDt})
     // console.log(activeFromDt,"activeFromDt");
@@ -221,7 +245,9 @@ function HolidayCalendar() {
   //  };
 
   return (
+    
     <div >
+      
       <MemoizedBaseComponent
         field="Holidays "
         buttonText="Add Holiday"
@@ -229,9 +255,10 @@ function HolidayCalendar() {
         data={data}
         Tr={(obj) => {
           return (
-            <Tr style={{backgroundColor: "rgba(225, 222, 222, 0.5)"}}
+            <Tr
               data={obj}
               setFinancialYearData={setFinancialYearData}
+              setLocationData={setLocationData}
               setHolidayCalendarData={setHolidayCalendarData}
             />
           );
@@ -239,6 +266,7 @@ function HolidayCalendar() {
         setIsOpen={setIsOpen}
         holiday={isHoliday}
         financialYearData={financialYearData}
+        locationData={locationData}
         getAllHcData={getAllHcData}
       />
       <Modal
@@ -315,7 +343,34 @@ function HolidayCalendar() {
                   })}
                 </select>
               </div>
-
+              <div style={{ padding: "10px 0px" }}>
+                <InputTextLabel><span style={{color:"red"}}>*</span>
+                <span>Location</span></InputTextLabel>
+                <select
+                 style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                 onChange={(e) => {
+                  setHolidayCalendarData({
+                    ...holidayCalendarData,
+                    location: {
+                      ...holidayCalendarData.location,
+                      locationName: e.target.value,
+                      },
+                    });
+                 }}
+                >
+                  <option value="" disabled selected hidden></option>
+                { locationData.map((item,index) =>{
+                const locName= item.locationName;
+                return(
+                    <option
+                    key={index}
+                  >
+                    {locName}
+                  </option>
+                )
+                  })}
+                </select>
+              </div>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 <span style={{color:"red"}}>*</span>
@@ -349,12 +404,14 @@ function HolidayCalendar() {
                   }}
                 />
               </div>
-              <div style={{ padding: "10px 0px" }}>
+              {/* <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Holiday Day</InputTextLabel>
                 <InputField size="small"
                   type="text"
+                  disabled
                   id="name"
                   variant="outlined"
+                  value={}
                   onChange={(e) => {
                     setHolidayCalendarData({
                       ...holidayCalendarData,
@@ -362,7 +419,7 @@ function HolidayCalendar() {
                     });
                   }}
                   />
-              </div>
+              </div> */}
               
               <ButtonSection>
                 <ModalControlButton
@@ -401,9 +458,10 @@ function Tr({
     holidayId,
     holidayName,
     holidayDate,
-    holidayDay,
+    //holidayDay,
     isActive,
-    financialYear
+    financialYear,
+    location
   },
 }) {
   const [isDropdown, setDropdown] = useState(false);
@@ -412,13 +470,18 @@ function Tr({
     holidayId: holidayId,
     holidayName: holidayName,
     holidayDate: holidayDate,
-    holidayDay: holidayDay,
+    //holidayDay: holidayDay,
     financialYear: {
       financialYearId: financialYear.financialYearId,
       financialYearName: "",
       financialYearCustomName: "",
       startingFrom: "",
       endingOn: "",
+    },
+    location: {
+      locationId: location.locationId,
+      locationName: "",
+      locationDisplayName: "",
     },
   });
 
@@ -491,6 +554,14 @@ function Tr({
     }
   };
 
+  const getDayName = (dateString) => {
+    const [day, month, year] = dateString.split('/');
+    const dateObject = new Date(`${month} ${day}, ${year}`);
+    const options = { weekday: 'long' };
+    const dayName = dateObject.toLocaleDateString('en-US', options);
+    return dayName;
+  }
+
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
@@ -504,8 +575,8 @@ function Tr({
           <span>{holidayDate || "Unknown"}</span>
         </TableCellSection>
         <TableCellSection className={!isActive && "disable-table-row"}>
-          <span>{holidayDay || "Unknown"}</span>
-        </TableCellSection>
+          <span>{getDayName(holidayDate)}</span>
+        </TableCellSection> 
         <TableCellSection>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
