@@ -629,8 +629,9 @@ function Bdm() {
                   <ul
                     style={{
                       overflowY: "auto",
-                      height: "200px",
-                      width: "90%",
+                      // height: "200px",
+                      height: "auto",
+                      width: "83%",
                     }}
                     className={`list-items ${
                       dropdownOpenBU && "open-list-items"
@@ -638,6 +639,7 @@ function Bdm() {
                   >
                     {businessUnit &&
                       businessUnit.map((value, index) => {
+                        if(value.isActive){
                         return (
                           <li
                             onClick={() => {
@@ -665,6 +667,7 @@ function Bdm() {
                             </span>
                           </li>
                         );
+                              }
                       })}
                   </ul>
                 </div>
@@ -701,9 +704,7 @@ function Bdm() {
                       borderRadius: "7px",
                       boxShadow: "none",
                       // border:"1px solid lightgray"
-                      border:isSubmitted && !bdmFormData.regions ? "1px solid red" : "1px solid lightgray",
-
-                      
+                      border:isSubmitted && !bdmFormData.regions ? "1px solid red" : "1px solid lightgray",                     
                     }}
                     class="select-btn"
                     className={`select-btn ${dropdownOpenReg && "open"}`}
@@ -719,8 +720,10 @@ function Bdm() {
                   <ul
                     style={{
                       overflowY: "auto",
-                      height: "200px",
-                      width: "90%",
+                      // height: "200px",
+                      height: "auto",
+
+                      width: "83%",
                     }}
                     class="list-items open-list-items"
                     className={`list-items ${
@@ -728,7 +731,8 @@ function Bdm() {
                     }`}
                   >
                     {region &&
-                      region.map((value, index) => {
+                      region.map((value, index) => {  
+                        if(value.isActive){                  
                         return (
                           <li
                             onClick={() => {
@@ -754,6 +758,7 @@ function Bdm() {
                             <span class="item-text">{value?.regionName}</span>
                           </li>
                         );
+                              }
                       })}
                   </ul>
                 </div>

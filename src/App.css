@@ -19,8 +19,8 @@
 }
 .MuiTableContainer-root
 {
-  height: 320px;
-  overflow-y: scroll !important;
+  height: 50%;
+  overflow-y: auto !important;
 }
 .Modal {
   position: absolute;
@@ -165,11 +165,12 @@ h3 {
 }
 .revenue_table_container::-webkit-scrollbar-thumb {
   background: #007a7e;
+  
   border-radius: 25px;
 }
 
 table {
-  overflow-x: auto;
+  overflow: visible !important;
   border-collapse: collapse;
   /* width: 90%; */
   /* margin-left: 3%; */
@@ -443,6 +444,7 @@ input {
 
 .dropdown a:hover {
   background-color: #0a8b9c;
+  
 }
 
 .show {
