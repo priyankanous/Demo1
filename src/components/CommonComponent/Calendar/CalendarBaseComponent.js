@@ -61,7 +61,7 @@ export function CalendarBaseComponent(props) {
                   props.fetchFornightlyMeetingsData(e.target.value);
                   }}}
               // style={{height:"35px", borderRadius:"7px"}}
-                  style={{height:"30px", width:"22%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                  style={{height:"30px", width:"25%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
                   >
                   <option value="" disabled selected hidden>
                   Please choose one

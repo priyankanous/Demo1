@@ -34,7 +34,13 @@ function BdmMeetings() {
         startingFrom: "",
         endingOn: "",
       },
-});
+      businessDevelopmentManager: {
+      bdmId: "",
+      },
+    region: {
+      regionId: ""
+     }, 
+    });
   
   const [isBdmLinked, setBdmLinked] = useState(false);
   const [bdm, setBdm] = useState([]);
@@ -45,8 +51,8 @@ function BdmMeetings() {
   const [region, setRegion] = useState([]);
   const [dropdownOpenBU, setdropdownOpenBU] = useState(false);
   const [dropdownOpenReg, setdropdownOpenReg] = useState(false);
-  const [selectedBdmDisName, setselectedBdmDisName] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState([]);
+  const [selectedBdmDisName, setselectedBdmDisName] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null);
   const [isEditId, setIsEditId] = useState(null);
   const month = [
     "Jan",
@@ -77,7 +83,7 @@ function BdmMeetings() {
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm"
     );
     setBdm(data?.data);
-    console.log("bdm data", bdm);
+      console.log("bdm", data);
   };
 
   const fetchRegionData = async () => {
@@ -88,14 +94,18 @@ function BdmMeetings() {
     console.log("Region", data);
   };
 
-  const fetchBdmMeetingsData = async () => {
+  const fetchBdmMeetingsData = async (e) => {
     fetchBdmData();
     fetchRegionData();
-    const { data } = await axios.get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/financial-year`
-    );
-    setData(data?.data?.data);
-  };
+    await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/financial-year/${e}`
+    )
+        .then((response) => {
+          const actualDataObject = response.data.data;
+          setData({ ...data, actualDataObject: actualDataObject });
+          console.log("data  ",data)
+      });
+    };
 
   const getFinancialYearNameData = async () => {
     console.log("in financial year data");
@@ -112,6 +122,7 @@ function BdmMeetings() {
   };
 
   const postBdmMeetingsData = async () => {
+    console.log("bdm ",bdm)
     const { meetingName, meetingDate, meetingTime } = bdmFormData;
     const activeFromDt = `${parseInt(new Date(meetingDate).getDate()) < 10
       ? "0" + parseInt(new Date(meetingDate).getDate())
@@ -119,22 +130,18 @@ function BdmMeetings() {
       }/${month[new Date(meetingDate).getMonth()]}/${new Date(
         meetingDate
       ).getFullYear()}`;
-    let bdmFromData = {
-      meetingName,
-      meetingDate: activeFromDt,
-      meetingTime,
-      bdmNames: selectedBdmDisName,
-      regions: selectedRegion,
+    let postData = {
+      bdmFormData,
     };
     if (isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/${isEditId}`,
-        bdmFromData
+        postData
       );
     } else {
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting",
-        bdmFromData
+        postData
       );
     }
     if (data?.message === "Success" && data?.responseCode === 200) {
@@ -153,18 +160,13 @@ function BdmMeetings() {
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/financial-year/${id}`
     );
-    if (data?.data) {
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      const response = data?.data;
       setbdmFormData({
-        meetingName: data?.data?.meetingName,
+        ...bdmDisNameLinked,
+        ...response,
         meetingDate: createDate(data?.data?.meetingDate),
-        meetingTime: data?.data?.meetingTime,
       });
-      setBdmDisNameLinked(
-        data?.data?.bdmNames.length < 2 ? true : false
-      );
-      setRegionLinked(data?.data?.regions.length < 2 ? true : false);
-      setselectedBdmDisName(data?.data?.bdmNames);
-      setSelectedRegion(data?.data?.regions);
       setIsOpen(true);
       setIsEditId(id);
     }
@@ -182,39 +184,11 @@ function BdmMeetings() {
   const selectMarkDropdown = (value, type) => {
     console.log(value);
     if (type === "bdmdisname") {
-      const indexOfSelectedValue = selectedBdmDisName.findIndex(
-        (valueObj) => {
-          return valueObj.bdmDisplayName === value?.bdmDisplayName;
-        }
-      );
-      if (indexOfSelectedValue === -1) {
-        if (isBdmLinked) {
-          setselectedBdmDisName([value]);
-        } else {
-          setselectedBdmDisName([...selectedBdmDisName, value]);
-        }
-      } else {
-        const arrayData = selectedBdmDisName.filter((valueObj) => {
-          return valueObj?.bdmDisplayName !== value?.bdmDisplayName;
-        });
-        setselectedBdmDisName(arrayData);
-      }
+        setselectedBdmDisName(value);
+    
     } else if (type === "reg") {
-      const indexOfSelectedValue = selectedRegion.findIndex((valueObj) => {
-        return valueObj.regionName === value?.regionName;
-      });
-      if (indexOfSelectedValue === -1) {
-        if (isRegionLinked) {
-          setSelectedRegion([value]);
-        } else {
-          setSelectedRegion([...selectedRegion, value]);
-        }
-      } else {
-        const arrayData = selectedRegion.filter((valueObj) => {
-          return valueObj?.regionName !== value?.regionName;
-        });
-        setSelectedRegion(arrayData);
-      }
+          setSelectedRegion(value);
+     
     }
   };
 
@@ -239,21 +213,6 @@ function BdmMeetings() {
     return true;
   };
 
-  const DeleteRecord = async (id) => {
-    const { data } = await axios.delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/${id}`,
-      )
-      if (data?.message === "Success" && data?.responseCode === 200) {
-        setIsOpen(false);
-        setBdmDisNameLinked(false);
-        setRegionLinked(false);
-        setselectedBdmDisName([]);
-        setSelectedRegion([]);
-        setdropdownOpenReg(false);
-        fetchBdmMeetingsData();
-    }
-  };
-
   const activateDeactivate = async (id) => {
     const { data } = await axios.put(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/activate-or-deactivate/${id}`
@@ -275,7 +234,6 @@ function BdmMeetings() {
         field="BDM Meetings"
         buttonText="Add Meetings"
         columns={[
-          "No",
           "BDM Name",
           "Region",
           "Meeting Name",
@@ -329,24 +287,21 @@ function BdmMeetings() {
                     const selectedfyDispName =
                       e.target.selectedOptions[0].getAttribute(
                         "data-fyDispName"
-                      );
-                    const selectedFyStartingFrom =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyStartingFrom"
-                      );
-                    const selectedfyEndingOn =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyEndingOn"
-                      );
+                    );
+                    // const selectedFyStartingFrom =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyStartingFrom"
+                    //   );
+                    // const selectedfyEndingOn =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyEndingOn"
+                    //   );
                       setbdmFormData({
                         ...bdmFormData,
                       financialYear: {
                         ...bdmFormData.financialYear,
-                        financialYearId: selectedFyId,
+                        financialYearId:selectedFyId,
                         financialYearName: e.target.value,
-                        financialYearCustomName: selectedfyDispName,
-                        startingFrom: selectedFyStartingFrom,
-                        endingOn: selectedfyEndingOn,
                       },
                     });
                   }}
@@ -356,22 +311,18 @@ function BdmMeetings() {
                   </option>
                   {financialYearData.map((fyData, index) => {
                     const fyNameData = fyData.financialYearName;
-                    const fyId = fyData.financialYearId;
-                    const fyDispName = fyData.financialYearCustomName;
-                    const fyStartingFrom = fyData.startingFrom;
-                    const fyEndingOn = fyData.endingOn;
-                    return (
-                      <option
-                        data-fyId={fyId}
-                        data-fyDispName={fyDispName}
-                        data-fyStartingFrom={fyStartingFrom}
-                        data-fyEndingOn={fyEndingOn}
-                        key={index}
-                      >
-                        {fyNameData}
+                    const fId = fyData.financialYearId;
+                    
+                    if(fyData.isActive){
+                      return(
+                          <option
+                          data-fyId ={fId}
+                          key={index}
+                        >
+                          {fyNameData}
                       </option>
                     );
-                  })}
+                  }})}
                 </select>
               </div>
 
@@ -380,21 +331,38 @@ function BdmMeetings() {
                 <span>BDM Name</span></InputTextLabel>
                 <select
                  onChange={(e) => {
-                    selectMarkDropdown(e.target.value, "bdmdisname");
-                  }}
+                  const selectedBdmId =
+                  e.target.selectedOptions[0].getAttribute("data-bId");
+                const selectedBdmDispName =
+                  e.target.selectedOptions[0].getAttribute(
+                    "data-bDisplayName"
+                  );
+                  setbdmFormData({
+                    ...bdmFormData,
+                  businessDevelopmentManager:{
+                    ...bdmFormData.businessDevelopmentManager,
+                    bdmId: selectedBdmId,
+                    bdmDisplayName: selectedBdmDispName,
+                  },
+                });
+                  //   selectMarkDropdown(e.target.value, "bdmdisname");
+                }}
                   // style={{ width: "100%", height: "40px" }}
                   style={{height:"40px", width:"100%", marginBottom:"5px",borderRadius:"5px",
                   border:"1px solid lightgray", boxShadow: "black", textAlign: "Left", paddingLeft: "8px"}}
                 >
                   <option value="" disabled selected hidden></option>
                 { bdm.map((item,index) =>{
-                //const bdmName= item.bdmDisplayName;
+                  const bdmsId= item.bdmId
+                  const bdmsName= item.bdmDisplayName;
                 if(item.isActive){
                   return(
                       <option
+                      data-bId = {bdmsId}
+                      data-bDisplayName = {bdmsName}
                       key={index}
                     >
-                      {item.bdmDisplayName}
+                      {bdmsName}
                   </option>
                   )
                 }})}
@@ -406,7 +374,22 @@ function BdmMeetings() {
                 <span>Region</span></InputTextLabel>
                 <select
                  onChange={(e) => {
-                    selectMarkDropdown(e.target.value, "reg");
+                  const selectedRegId =
+                  e.target.selectedOptions[0].getAttribute("data-rId");
+                  const selectedRegDispName =
+                  e.target.selectedOptions[0].getAttribute(
+                    "data-rDisplayName"
+                  );
+                  setbdmFormData({
+                    ...bdmFormData,
+                  region: {
+                    ...bdmFormData.region,
+                    regionId: selectedRegId,
+                    regionName: selectedRegDispName,
+                  },
+                });
+                    // selectMarkDropdown(e.target.value, "reg");
+
                   }}
                   // style={{ width: "100%", height: "40px" }}
                   style={{height:"40px", width:"100%", marginBottom:"5px",borderRadius:"5px", 
@@ -414,13 +397,16 @@ function BdmMeetings() {
                 >
                 <option value="" disabled selected hidden></option>
                  { region.map((item,index) =>{
-                //const regName= item.regionName;
+                  const regId= item.regionId;
+                  const regName= item.regionName;
                   if(item.isActive){
-                return(
+                  return(
                     <option
+                    data-rId= {regId}
+                    data-rDisplayName= {regName}
                     key={index}
                   >
-                    {item.regionName}
+                    {regName}
                   </option>
                 )
                   }})}
@@ -507,26 +493,28 @@ function BdmMeetings() {
         </Box>
       </Modal>
     </div>
-  );
+  )
 }
 
 function Tr({
     fetchBdmMeetingsData,
+    bdmFormData,
     setbdmFormData,
+    activateDeactivate,
+    editBDMData,
   data: {
     isActive,
     bdmMeetingId,
     meetingName,
     meetingDate,
     meetingTime,
+    businessDevelopmentManager:{bdmName},
     bdmNames,
-    regions,
+    region:{regionName},
     financialYear
   },
-  activateDeactivate,
-  editBDMData,
-  DeleteRecord,
 }) {
+ 
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -548,15 +536,33 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
 
+  const DeleteRecord = async (id) => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm-meeting/${id}`,
+        bdmFormData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        fetchBdmMeetingsData();
+        setIsOpen(false);
+      });
+  };
+
   return (
     <React.Fragment>
     <TableRowSection ref={wrapperRef}>
+    <TableCellSection className={!isActive && "disable-table-row"}>
+        <span>
+         {bdmName}
+        </span>
+      </TableCellSection>
       <TableCellSection className={!isActive && "disable-table-row"}>
-        <span>{meetingName || "Unknown"}</span>
+        {regionName}
       </TableCellSection>
 
       <TableCellSection className={!isActive && "disable-table-row"}>
-        <span>{meetingTime || "Unknown"}</span>
+        <span>{meetingName || "Unknown"}</span>
       </TableCellSection>
 
       <TableCellSection className={!isActive && "disable-table-row"}>
@@ -564,19 +570,9 @@ function Tr({
       </TableCellSection>
 
       <TableCellSection className={!isActive && "disable-table-row"}>
-        <span>
-          {(bdmNames &&
-            bdmNames.map((_) => _.bdmDisplayName).join(", ")) ||
-            "Unknown"}
-        </span>
+        <span>{meetingTime || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection className={!isActive && "disable-table-row"}>
-        <span>
-          {(regions && regions.map((_) => _.regionDisplayName).join(", ")) ||
-            "Unknown"}
-        </span>
-      </TableCellSection>
       <TableCellSection>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore

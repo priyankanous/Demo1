@@ -24,7 +24,7 @@ function FortnightlyMeetings() {
   const [selectedFinancialYear, setSelectedFinancialYear] = useState([]);
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
   const [fortnightlyMeetingsData, setFortnightlyMeetingsData] = useState ({
-    meetingId: "",
+    //meetingId: "",
     meetingDate: "",
     meetingName1: "",
     meetingName2: "",
@@ -33,9 +33,9 @@ function FortnightlyMeetings() {
     financialYear: {
       financialYearId: "",
       financialYearName: "",
-      financialYearCustomName: "",
-      startingFrom: "",
-      endingOn: "",
+      // financialYearCustomName: "",
+      // startingFrom: "",
+      // endingOn: "",
     },
   });
   const [isFortnightlyMeetings, setIsFortnightlyMeetings] = useState(true);
@@ -65,11 +65,15 @@ function FortnightlyMeetings() {
     setIsOpen(false);
   };
 
-  const fetchFornightlyMeetingsData = async () => {
-    const { data } = await axios.get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting`
-    );
-    setData(data?.data?.data);
+  const fetchFornightlyMeetingsData = async (e) => {
+    getFinancialYearNameData();
+    await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/${e}`
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
+      setData({ ...data, actualDataObject: actualDataObject });
+    });
   };
 
   const getFinancialYearNameData = async () => {
@@ -87,7 +91,7 @@ function FortnightlyMeetings() {
   };
 
   const postFortnightlyMeetingsData = async () => {
-    const { meetingDate, meetingName1, meetingName2, meetingName3, meetingName4 } = fortnightlyMeetingsData;
+    const { financialYear, meetingDate, meetingName1, meetingName2, meetingName3, meetingName4 } = fortnightlyMeetingsData;
     const activeFromDt = `${parseInt(new Date(meetingDate).getDate()) < 10
       ? "0" + parseInt(new Date(meetingDate).getDate())
       : parseInt(new Date(meetingDate).getDate())
@@ -95,6 +99,7 @@ function FortnightlyMeetings() {
         meetingDate
       ).getFullYear()}`;
     let fortnightlyMeetingsData = {
+      financialYear,
       meetingDate: activeFromDt,
       meetingName1,meetingName2,
       meetingName3,meetingName4,
@@ -114,27 +119,23 @@ function FortnightlyMeetings() {
       setIsOpen(false);
       setIsEditId(null);
       setdropdownOpenReg(false);
-      fetchFornightlyMeetingsData();
+      //fetchFornightlyMeetingsData();
+      setFinancialYearLinked(false);
+      setSelectedFinancialYear([]);
     }
   };
 
   const editFortnightlyMeetingsData = async (id) => {
     const { data } = await axios.get(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${id}`
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/${id}`
     );
-    if (data?.data) {
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      const response = data?.data;
       setFortnightlyMeetingsData({
-        meetingId: data?.data?.meetingId,
+        ...fortnightlyMeetingsData,
+        ...response,
         meetingDate: createDate(data?.data?.meetingDate),
-        meetingName1: data?.data?.meetingName1,
-        meetingName2: data?.data?.meetingName2,
-        meetingName3: data?.data?.meetingName3,
-        meetingName4: data?.data?.meetingName4,
       });
-      setFinancialYearLinked(
-        data?.data?.financialYears.length < 10 ? true : false
-      );
-      setSelectedFinancialYear(data?.data?.financialYears);
       setIsOpen(true);
       setIsEditId(id);
     }
@@ -156,7 +157,7 @@ function FortnightlyMeetings() {
     if (data?.message === "Success" && data?.responseCode === 200) {
         setIsOpen(false);
         setdropdownOpenReg(false);
-        fetchFornightlyMeetingsData();
+        //fetchFornightlyMeetingsData();
     }
   };
 
@@ -174,6 +175,7 @@ function FortnightlyMeetings() {
               setFinancialYearData={setFinancialYearData}
               editFortnightlyMeetingsData={editFortnightlyMeetingsData}
               setFortnightlyMeetingsData={setFortnightlyMeetingsData}
+              
             />
           );
         }}
@@ -211,23 +213,20 @@ function FortnightlyMeetings() {
                       e.target.selectedOptions[0].getAttribute(
                         "data-fyDispName"
                       );
-                    const selectedFyStartingFrom =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyStartingFrom"
-                      );
-                    const selectedfyEndingOn =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyEndingOn"
-                      );
+                    // const selectedFyStartingFrom =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyStartingFrom"
+                    //   );
+                    // const selectedfyEndingOn =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyEndingOn"
+                    //   );
                       setFortnightlyMeetingsData({
                       ...fortnightlyMeetingsData,
                       financialYear: {
                         ...fortnightlyMeetingsData.financialYear,
-                        financialYearId: selectedFyId,
+                        financialYearId:selectedFyId,
                         financialYearName: e.target.value,
-                        financialYearCustomName: selectedfyDispName,
-                        startingFrom: selectedFyStartingFrom,
-                        endingOn: selectedfyEndingOn,
                       },
                     });
                   }}
@@ -236,23 +235,18 @@ function FortnightlyMeetings() {
                     Please choose one option
                   </option>
                   {financialYearData.map((fyData, index) => {
+                    const fId = fyData.financialYearId;
                     const fyNameData = fyData.financialYearName;
-                    const fyId = fyData.financialYearId;
-                    const fyDispName = fyData.financialYearCustomName;
-                    const fyStartingFrom = fyData.startingFrom;
-                    const fyEndingOn = fyData.endingOn;
-                    return (
-                      <option
-                        data-fyId={fyId}
-                        data-fyDispName={fyDispName}
-                        data-fyStartingFrom={fyStartingFrom}
-                        data-fyEndingOn={fyEndingOn}
-                        key={index}
-                      >
-                        {fyNameData}
+                    if(fyData.isActive){
+                      return(
+                          <option
+                          data-fyId = {fId}
+                          key={index}
+                        >
+                          {fyNameData}
                       </option>
                     );
-                  })}
+                  }})}
                 </select>
               </span>
               <span style={{ paddingLeft: "10%" }}>
@@ -376,6 +370,7 @@ function FortnightlyMeetings() {
 function Tr({
   fetchBdmMeetingsData,
   setbdmFormData,
+  setFortnightlyMeetingsData,
 data: {
   isActive,
   meetingId,
@@ -386,6 +381,7 @@ data: {
   meetingName4,
   financialYear
 },
+fetchFornightlyMeetingsData,
 activateDeactivate,
 editFortnightlyMeetingsData,
 DeleteRecord,
@@ -411,23 +407,28 @@ const closeDropDown = () => {
   isDropdown ? setDropdown(false) : setDropdown(true);
 };
 
+const getDayName = (dateString) => {
+  const [day, month, year] = dateString.split('/');
+  const dateObject = new Date(`${month} ${day}, ${year}`);
+  const options = { weekday: 'long' };
+  const dayName = dateObject.toLocaleDateString('en-US', options);
+  return dayName;
+}
+
 return (
   <React.Fragment>
   <TableRowSection ref={wrapperRef}>
     <TableCellSection className={!isActive && "disable-table-row"}>
-      <span>{meetingDate}</span>
+      <span>{meetingDate || "Unknown"}</span>
     </TableCellSection>
     <TableCellSection className={!isActive && "disable-table-row"}>
-      <span>{meetingName1 || "Unknown"}</span>
+      <span>{meetingName1 || "Unknown"}</span><br></br>
+      <span>{meetingName2 || "Unknown"}</span><br></br>
+      <span>{meetingName3 || "Unknown"}</span><br></br>
+      <span>{meetingName4 || "Unknown"}</span><br></br>
     </TableCellSection>
     <TableCellSection className={!isActive && "disable-table-row"}>
-      <span>{meetingName2 || "Unknown"}</span>
-    </TableCellSection>
-    <TableCellSection className={!isActive && "disable-table-row"}>
-      <span>{meetingName3 || "Unknown"}</span>
-    </TableCellSection>
-    <TableCellSection className={!isActive && "disable-table-row"}>
-      <span>{meetingName4 || "Unknown"}</span>
+      <span>{getDayName(meetingDate)}</span>
     </TableCellSection>
     <TableCellSection>
       <span style={{ float: "right" }}>

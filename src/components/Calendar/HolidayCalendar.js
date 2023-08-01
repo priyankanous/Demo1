@@ -31,19 +31,19 @@ function HolidayCalendar() {
 
   const [holidayCalendarData, setHolidayCalendarData] = useState({
     //holidayId: 1,
-    holidayName: "Independence Day",
-    holidayDate: "29/Jul/2023",
+    holidayName: "",
+    holidayDate: "",
     financialYear: {
-      financialYearId: "1",
-      financialYearName: "2022",
-      financialYearCustomName: "",
-      startingFrom: "",
-      endingOn: "",
+      //financialYearId: "",
+      financialYearName: "",
+      // financialYearCustomName: "",
+      // startingFrom: "",
+      // endingOn: "",
     },
     location: {
-      locationId: 1,
-      locationName: "string",
-      locationDisplayName: "string"
+      // locationId: "",
+      locationName: "",
+      // locationDisplayName: ""
     },
   });
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
@@ -65,11 +65,8 @@ function HolidayCalendar() {
   ];
 
   useEffect(() => {
-    getFinancialYearNameData();
-  }, []);
-
-  useEffect(() => {
     getAllHcData();
+    getFinancialYearNameData();
   }, []);
 
   const handleModalOpen = () => {
@@ -121,7 +118,7 @@ function HolidayCalendar() {
       });
   };
 
-  const AddDataToHc = async () => {
+  const AddDataToHc = async (e) => {
     const { holidayName, holidayDate, financialYear, location } = holidayCalendarData;
     console.log(holidayCalendarData,"holidayCalendarData");
     const activeFromDt = `${
@@ -132,54 +129,49 @@ function HolidayCalendar() {
       holidayDate
     ).getFullYear()}`;
 
-    let holidayData = {
+    const postCal = {
       holidayName,
       holidayDate: activeFromDt,
-      //financialYears: selectedFinancialYear,
-      financialYear,
-      //locations: selectedLocation,
-      location,
+      location: holidayCalendarData.location,
+      // financialYear:financialYear
+      financialYear: {
+        financialYearId: financialYear.financialYearId,
+        financialYearName: financialYear.financialYearName,
+        financialYearCustomName: financialYear.financialYearCustomName,
+        startingFrom: financialYear.startingFrom,
+        endingOn: financialYear.endingOn
+      },
     };
-
     if (isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${isEditId}`,
-        holidayData
+        postCal
       );
     } else {
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar",
-        holidayData
+        postCal
       );
     }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       setIsEditId(null);
-      setFinancialYearLinked(false);
-      setLocationLinked(false);
-      setSelectedFinancialYear([]);
       setSelectedLocation([]);
-      
     }
-    window.location.reload();
+    //window.location.reload();
   };
 
   const editHCData = async (id) => {
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${id}`
     );
-    if (data?.data) {
+    if (data?.message === "Success" && data?.responseCode === 200) {
+      const response = data?.data;
       setHolidayCalendarData({
-        holidayName: data?.data?.holidayName,
-        holidayId: data?.data?.holidayId,
+        ...holidayCalendarData,
+        ...response,
         holidayDate: createDate(data?.data?.holidayDate),
       });
-      setFinancialYearLinked(
-        data?.data?.financialYears.length < 10 ? true : false
-      );
-      setLocationLinked(data?.data?.locations.length < 10 ? true : false);
-      setSelectedFinancialYear(data?.data?.financialYears);
-      setSelectedLocation(data?.data?.locations);
       setIsOpen(true);
       setIsEditId(id);
     }
@@ -194,69 +186,18 @@ function HolidayCalendar() {
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
 
-  const activateDeactivate = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setIsOpen(false);
-      setIsEditId(null);
-      setFinancialYearLinked(false);
-      setLocationLinked(false);
-      setSelectedFinancialYear([]);
-      setSelectedLocation([]);
-    }
-  };
-
-  
-    // setHolidayCalendarData({...holidayCalendarData,
-    //   holidayDate:activeFromDt})
-    // console.log(activeFromDt,"activeFromDt");
-    // console.log(holidayCalendarData,"holidayCalendarData");
-
-    // const calData = {
-    //   holidayCalendarData
-    // }
-
-  //   if (holidayCalendarData.holidayId !== null) {
-  //     var { data } = await axios.put(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${holidayCalendarData.holidayId}`,
-  //       holidayCalendarData
-  //     );
-  //   } else {
-  //     var { data } = await axios.post(
-  //       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar",
-  //       holidayCalendarData
-  //     );
-  //   }
-  //   if (data?.message === "Success" && data?.responseCode === 200) {
-  //     setIsOpen(false);
-  //     getAllHcData();
-  //   }
-  // };
-  //  try {
-  // const response = await axios.post(
-  // "http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar",
-  //  calData
-  //     );
-  //      setIsOpen(false);
-  //       getAllHcData();
-  //    } catch { }
-  //  };
-
   return (
-    
     <div >
-      
       <MemoizedBaseComponent
         field="Holidays "
         buttonText="Add Holiday"
-        columns={["No","Holiday Name", "Holiday Date", "Holiday Day", ""]}
+        columns={["Holiday Name", "Holiday Date", "Holiday Day", ""]}
         data={data}
         Tr={(obj) => {
           return (
             <Tr
               data={obj}
+              editHCData={editHCData}
               setFinancialYearData={setFinancialYearData}
               setLocationData={setLocationData}
               setHolidayCalendarData={setHolidayCalendarData}
@@ -287,11 +228,9 @@ function HolidayCalendar() {
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Financial Year</InputTextLabel>
-                {/* <label for="name">Financial Year</label> */}
                 <select
-                  // style={{ width: "100%", height: "40px" }}
                   style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
-
+                  value={holidayCalendarData?.financialYear.financialYearName}
                   onChange={(e) => {
                     const selectedFyId =
                       e.target.selectedOptions[0].getAttribute("data-fyId");
@@ -299,23 +238,20 @@ function HolidayCalendar() {
                       e.target.selectedOptions[0].getAttribute(
                         "data-fyDispName"
                       );
-                    const selectedFyStartingFrom =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyStartingFrom"
-                      );
-                    const selectedfyEndingOn =
-                      e.target.selectedOptions[0].getAttribute(
-                        "data-fyEndingOn"
-                      );
+                    // const selectedFyStartingFrom =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyStartingFrom"
+                    //   );
+                    // const selectedfyEndingOn =
+                    //   e.target.selectedOptions[0].getAttribute(
+                    //     "data-fyEndingOn"
+                    //   );
                       setHolidayCalendarData({
                       ...holidayCalendarData,
                       financialYear: {
                         ...holidayCalendarData.financialYear,
-                        financialYearId: selectedFyId,
+                        financialYearId:selectedFyId,
                         financialYearName: e.target.value,
-                        financialYearCustomName: selectedfyDispName,
-                        startingFrom: selectedFyStartingFrom,
-                        endingOn: selectedfyEndingOn,
                       },
                     });
                   }}
@@ -325,22 +261,24 @@ function HolidayCalendar() {
                   </option>
                   {financialYearData.map((fyData, index) => {
                     const fyNameData = fyData.financialYearName;
-                    const fyId = fyData.financialYearId;
-                    const fyDispName = fyData.financialYearCustomName;
-                    const fyStartingFrom = fyData.startingFrom;
-                    const fyEndingOn = fyData.endingOn;
-                    return (
-                      <option
-                        data-fyId={fyId}
-                        data-fyDispName={fyDispName}
-                        data-fyStartingFrom={fyStartingFrom}
-                        data-fyEndingOn={fyEndingOn}
-                        key={index}
-                      >
-                        {fyNameData}
+                    const fId = fyData.financialYearId;
+
+                    return <option 
+                    data-fyId = {fId}
+                    // data-fyDispName ={}
+                    key={index}>{fyNameData}</option>;
+                  })}
+                  {/* {financialYearData.map((item, index) => {
+                    //const fyNameData = fyData.financialYearName;
+                    if(item.isActive){
+                      return(
+                          <option
+                          key={index}
+                        >
+                          {item.financialYearName}
                       </option>
                     );
-                  })}
+                  }})} */}
                 </select>
               </div>
               <div style={{ padding: "10px 0px" }}>
@@ -348,26 +286,42 @@ function HolidayCalendar() {
                 <span>Location</span></InputTextLabel>
                 <select
                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                 value={holidayCalendarData?.location.locationName}
                  onChange={(e) => {
+                  const selectedLocId =
+                  e.target.selectedOptions[0].getAttribute("data-lId");
+                const selectedLocDispName =
+                  e.target.selectedOptions[0].getAttribute(
+                    "data-lDisplayName"
+                  );
                   setHolidayCalendarData({
                     ...holidayCalendarData,
                     location: {
                       ...holidayCalendarData.location,
-                      locationName: e.target.value,
-                      },
-                    });
-                 }}
+                      locationId: selectedLocId,
+                      locationName: selectedLocDispName,
+                    },
+                  });
+                }}
+                //  onChange={(e) => {
+                //   setHolidayCalendarData({
+                //     ...holidayCalendarData,
+                //     location: {
+                //       ...holidayCalendarData.location,
+                //       locationName: e.target.value,
+                //       },
+                //     });
+                //  }}
                 >
                   <option value="" disabled selected hidden></option>
                 { locationData.map((item,index) =>{
                 const locName= item.locationName;
-                return(
-                    <option
-                    key={index}
-                  >
-                    {locName}
-                  </option>
-                )
+                const locId = item.locationId;
+                const locDisplayName = item.locationDisplayName;
+                return <option 
+                    data-lId ={locId}
+                    data-lDisplayName = {locName}
+                    key={index}>{locName}</option>;
                   })}
                 </select>
               </div>
@@ -380,6 +334,7 @@ function HolidayCalendar() {
                   type="text"
                   id="name"
                   variant="outlined"
+                  value={holidayCalendarData?.holidayName}
                   onChange={(e) => {
                     setHolidayCalendarData({
                       ...holidayCalendarData,
@@ -396,6 +351,7 @@ function HolidayCalendar() {
                   type="date"
                   id="email"
                   variant="outlined"
+                  value={holidayCalendarData?.holidayDate}
                   onChange={(e) => {
                     setHolidayCalendarData({
                       ...holidayCalendarData,
@@ -404,23 +360,6 @@ function HolidayCalendar() {
                   }}
                 />
               </div>
-              {/* <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Holiday Day</InputTextLabel>
-                <InputField size="small"
-                  type="text"
-                  disabled
-                  id="name"
-                  variant="outlined"
-                  value={}
-                  onChange={(e) => {
-                    setHolidayCalendarData({
-                      ...holidayCalendarData,
-                      holidayDay: e.target.value,
-                    });
-                  }}
-                  />
-              </div> */}
-              
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -428,7 +367,6 @@ function HolidayCalendar() {
                   id="create-account"
                   variant="contained"
                   onClick={AddDataToHc}
-
                 >Save</ModalControlButton>
                 <ModalControlButton
                   type="button"
@@ -438,11 +376,9 @@ function HolidayCalendar() {
                   }}
                   value="Cancel"
                   id="create-account"
-
                 >Cancel</ModalControlButton>
               </ButtonSection>
             </form>
-
           </ModalDetailSection>
         </Box>
       </Modal>
@@ -454,6 +390,7 @@ function HolidayCalendar() {
 function Tr({
   getAllHcData,
   setHolidayCalendarData,
+  editHCData,
   data: {
     holidayId,
     holidayName,
@@ -565,9 +502,9 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-      <TableCellSection className={!isActive && "disable-table-row"} >
+      {/* <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{holidayId || "Unknown"}</span>
-        </TableCellSection>
+        </TableCellSection> */}
         <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{holidayName || "Unknown"}</span>
         </TableCellSection>
@@ -590,7 +527,7 @@ function Tr({
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
-                    setIsOpen(true);
+                    editHCData(holidayId);
                   }}
                 >
                   <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
@@ -639,11 +576,10 @@ function Tr({
         </TableCellSection>
       </TableRowSection>
 
-      <Modal
+      {/* <Modal
       open={isOpen}
       >
             <Box sx={MoadalStyle}>
-
             <ModalHeadingSection>
             <ModalHeadingText>Edit Setup Holiday</ModalHeadingText>
             <CloseIcon
@@ -663,6 +599,7 @@ function Tr({
                   type="text"
                   id="name"
                   variant="outlined"
+                  //value={holidayCalendarData?.location.locationName}
                   onChange={(e) => {
                     setResponseData({
                       ...responseData,
@@ -723,7 +660,7 @@ function Tr({
             </form>
             </ModalDetailSection>
         </Box>
-      </Modal>
+      </Modal> */}
 
     </React.Fragment>
   );
