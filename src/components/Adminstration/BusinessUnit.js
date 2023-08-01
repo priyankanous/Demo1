@@ -27,6 +27,8 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function BuisnessUnit() {
   const [data, setData] = useState(null);
@@ -40,6 +42,9 @@ function BuisnessUnit() {
 
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+  
+  const [showSnackbar, setShowSnackbar] = useState(true);
+	const [snackMessage, setSnackMessage] = useState("");
 
   useEffect(() => {
     getAllBuData();
@@ -58,6 +63,7 @@ function BuisnessUnit() {
       businessUnitDisplayName: "",
     });
   };
+
 
   const getAllBuData = () => {
     // getOrgNameData();
@@ -253,6 +259,7 @@ function BuisnessUnit() {
           </ModalDetailSection>
         </Box>
       </Modal>
+
     </div>
   );
 }
@@ -281,6 +288,9 @@ function Tr({
     //   orgDisplayName: organization.orgDisplayName,
     // },
   });
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+	const [snackMessage, setSnackMessage] = useState("");
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -314,18 +324,40 @@ function Tr({
   };
   // API calls to delete Record
 
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllBuData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
   const DeleteRecord = () => {
     axios
       .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
-        responseData
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
+        // setShowSnackbar(true); 
+        // setSnackMessage("Deleted");
         getAllBuData();
         setIsOpen(false);
+      })
+      .catch((error) => {
+        // Handle error if delete operation fails
+        setShowSnackbar(true); // Show the Snackbar with error message
+        setSnackMessage(error.response.data.details); // Set the error message for the Snackbar
+        // setSnackMessage("Error deleting the record"); 
+
       });
-  };
+    };
+
 
   const activeDeactivateTableData = async (id) => {
     const { data } = await axios.put(
@@ -345,6 +377,7 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
+        
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{businessUnitName || "Unknown"}</span>
         </TableCellSection>
@@ -501,6 +534,12 @@ function Tr({
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </React.Fragment>
   );
 }

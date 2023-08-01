@@ -459,7 +459,7 @@ function Bdm() {
               <div style={{ padding: "2px 0px" }}>
                 <InputTextLabel>
                 
-                Active Untill</InputTextLabel>
+                Active Until</InputTextLabel>
                 <InputField
                   fullWidth
                   size="small"
