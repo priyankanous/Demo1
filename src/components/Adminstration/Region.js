@@ -14,6 +14,8 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function Region() {
   const [data, setData] = useState(null);
@@ -213,6 +215,10 @@ function Tr({
     regionDisplayName: regionDisplayName,
   });
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
+
   const OutsideClick = (ref) => {
     useEffect(() => {
       const handleOutsideClick = (event) => {
@@ -266,8 +272,15 @@ function Tr({
         const actualDataObject = response.data.data;
         getAllRegionData();
         setIsOpen(false);
-      });
+      })
+      .catch((error)=>{
+        setShowSnackbar(true);
+        setSnackMessage("Error deleting the record"); 
+      })
   };
+
+
+
   const handleModalClose = () => {
     setIsOpen(false);
   };
@@ -426,6 +439,13 @@ function Tr({
               </ModalDetailSection>
         </Box>
       </Modal>
+
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </React.Fragment>
   );
 }

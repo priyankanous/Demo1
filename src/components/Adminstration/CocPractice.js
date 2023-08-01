@@ -122,7 +122,7 @@ function CocPractice() {
       <MemoizedBaseComponent
         field="COC Practice"
         buttonText="setup COC Practice"
-        columns={["Name", "Display Name", "Parents BU", ""]}
+        columns={["Name", "Display Name", "Parent BU", ""]}
         data={data}
         Tr={(obj) => {
           return (
