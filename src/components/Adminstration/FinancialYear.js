@@ -307,7 +307,7 @@ function FinanicalYear() {
                 <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
 
-               <span>Active Untill</span> </InputTextLabel>
+               <span>Active Until</span> </InputTextLabel>
                 <InputField fullWidth
                   size="small"
                   type="date"

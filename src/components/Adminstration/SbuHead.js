@@ -219,7 +219,7 @@ function SbuHead() {
           "Display Name",
           "SBU Name",
           "Active From",
-          "Active Untill",
+          "Active Until",
           "",
         ]}
         data={data}
@@ -383,7 +383,7 @@ function SbuHead() {
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Active Untill</InputTextLabel>
+                <InputTextLabel>Active Until</InputTextLabel>
                 <InputField fullWidth
                   size="small"
                   type="date"
