@@ -22,6 +22,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import SnackBar from "../CommonComponent/SnackBar";
 import { Box, Typography, IconButton } from "@mui/material";
 import {
   TableRowSection,
@@ -43,6 +44,8 @@ function Opportunity() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [accountNameData, setAccountnameData] = useState([]);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
   const [isEditId, setIsEditId] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [opportunityData, setOpportunityData] = useState({
@@ -207,18 +210,6 @@ function Opportunity() {
     }
   };
 
-  const DeleteRecord = (opportunityId) => {
-    axios
-      .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllOpportunityData();
-        setIsOpen(false);
-      });
-  };
-
   const openTheModalWithValues = async (e, id) => {
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${id}`
@@ -238,9 +229,9 @@ function Opportunity() {
   };
 
   const createDate = (date) => {
-    if (!date) {
-      return "";
-    }
+    // if (!date) {
+    //   return "";
+    // }
     let splitDate = date?.split("/");
     let monthDate = `${
       month?.indexOf(splitDate[1]) + 1 < 10
@@ -258,7 +249,7 @@ function Opportunity() {
   return (
     <div>
       <MemoizedBaseComponent
-        field="Region"
+        field="Opportunity"
         columns={[
           "Name",
           "Child of Account",
@@ -277,7 +268,6 @@ function Opportunity() {
               getAllOpportunityData={getAllOpportunityData}
               setOpportunityData={setOpportunityData}
               openTheModalWithValues={openTheModalWithValues}
-              DeleteRecord={DeleteRecord}
               activeDeactivateTableData={activeDeactivateTableData}
             />
           );
@@ -442,6 +432,13 @@ function Opportunity() {
                   type="date"
                   id="email"
                   variant="outlined"
+                  style={{
+                    border:
+                      isSubmitted && !opportunityData.projectEndDate
+                        ? "1px solid red"
+                        : "",
+                    borderRadius: "4px",
+                  }}
                   onChange={(e) => {
                     setOpportunityData({
                       ...opportunityData,
@@ -480,6 +477,12 @@ function Opportunity() {
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+      />
     </div>
   );
 }
@@ -489,7 +492,6 @@ function Tr({
   setOpportunityData,
   data,
   openTheModalWithValues,
-  DeleteRecord,
   activeDeactivateTableData,
 }) {
   const {
@@ -505,6 +507,8 @@ function Tr({
   } = data;
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const [responseData, setResponseData] = useState({
     opportunityId: "",
@@ -532,6 +536,25 @@ function Tr({
     }, [ref]);
   };
 
+  const DeleteRecord = (opportunityId) => {
+    axios
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/${opportunityId}`
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        // setShowSnackbar(true);
+        // setSnackMessage("Deleted");
+        getAllOpportunityData();
+        setIsOpen(false);
+      })
+      .catch((error) => {
+        // Handle error if delete operation fails
+        setShowSnackbar(true); // Show the Snackbar with error message
+        setSnackMessage(error.response.data.details); // Set the error message for the Snackbar
+        // setSnackMessage("Error deleting the record");
+      });
+  };
   const wrapperRef = useRef(null);
   OutsideClick(wrapperRef);
 

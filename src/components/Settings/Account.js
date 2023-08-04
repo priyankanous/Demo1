@@ -15,6 +15,7 @@ import {
 import { Box, Typography, IconButton, Checkbox, MenuItem } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { modalStyleObject } from "../../utils/constantsValue";
+import SnackBar from "../CommonComponent/SnackBar";
 import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/Settings/settingBasedComponent";
 import * as AiIcons from "react-icons/ai";
@@ -308,6 +309,8 @@ function Tr({
   const { accountId, accountName, regionDisplayName, regions, isActive } = data;
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+	const [snackMessage, setSnackMessage] = useState("");
   const [responseData, setResponseData] = useState({
     accountName: "",
     accountId: "",
@@ -376,14 +379,25 @@ function Tr({
   const deleteRecord = (accountId) => {
     axios
       .delete(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`,
-        responseData
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`
+        
       )
       .then((response) => {
         const actualDataObject = response.data.data;
+        // setShowSnackbar(true); 
+        // setSnackMessage("Deleted");
+
         getAllAccountsData();
         setIsOpen(false);
+      })
+      .catch((error) => {
+        // Handle error if delete operation fails
+        setShowSnackbar(true); // Show the Snackbar with error message
+        setSnackMessage(error.response.data.details); // Set the error message for the Snackbar
+        // setSnackMessage("Error deleting the record"); 
+
       });
+
   };
 
   return (
@@ -603,6 +617,13 @@ function Tr({
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
+
     </React.Fragment>
   );
 }
