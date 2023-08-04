@@ -48,6 +48,8 @@ function HolidayCalendar() {
   });
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
   const [isLocationLinked, setLocationLinked] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
 
   const month = [
     "Jan",
@@ -75,6 +77,17 @@ function HolidayCalendar() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setIsSubmitted(false);
+    setHolidayCalendarData({
+    holidayName: "",
+    holidayDate: "",
+    financialYear: {
+      financialYearName: "",
+    },
+    location: {
+      locationName: "",
+    }
+    });
   };
 
   const getAllHcData = async (e) => {
@@ -129,11 +142,10 @@ function HolidayCalendar() {
       holidayDate
     ).getFullYear()}`;
 
-    const postCal = {
+    let postCal = {
       holidayName,
       holidayDate: activeFromDt,
       location: holidayCalendarData.location,
-      // financialYear:financialYear
       financialYear: {
         financialYearId: financialYear.financialYearId,
         financialYearName: financialYear.financialYearName,
@@ -147,7 +159,15 @@ function HolidayCalendar() {
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${isEditId}`,
         postCal
       );
+    } else if (
+      !holidayCalendarData?.holidayName ||
+      !holidayCalendarData?.holidayDate ||
+      !holidayCalendarData?.location.locationName ||
+      !holidayCalendarData?.financialYear.financialYearName
+    ){
+      setIsSubmitted(true);
     } else {
+      setIsSubmitted(false);
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar",
         postCal
@@ -156,9 +176,10 @@ function HolidayCalendar() {
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       setIsEditId(null);
+      setIsSubmitted(false);
+      handleModalClose();
       setSelectedLocation([]);
     }
-    //window.location.reload();
   };
 
   const editHCData = async (id) => {
@@ -229,7 +250,9 @@ function HolidayCalendar() {
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Financial Year</InputTextLabel>
                 <select
-                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
+                  border: isSubmitted && !holidayCalendarData?.financialYear.financialYearName ? "1px solid red" : "1px solid lightgray",
+                  borderRadius: "4px"}}
                   value={holidayCalendarData?.financialYear.financialYearName}
                   onChange={(e) => {
                     const selectedFyId =
@@ -238,14 +261,6 @@ function HolidayCalendar() {
                       e.target.selectedOptions[0].getAttribute(
                         "data-fyDispName"
                       );
-                    // const selectedFyStartingFrom =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-fyStartingFrom"
-                    //   );
-                    // const selectedfyEndingOn =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-fyEndingOn"
-                    //   );
                       setHolidayCalendarData({
                       ...holidayCalendarData,
                       financialYear: {
@@ -268,24 +283,16 @@ function HolidayCalendar() {
                     // data-fyDispName ={}
                     key={index}>{fyNameData}</option>;
                   })}
-                  {/* {financialYearData.map((item, index) => {
-                    //const fyNameData = fyData.financialYearName;
-                    if(item.isActive){
-                      return(
-                          <option
-                          key={index}
-                        >
-                          {item.financialYearName}
-                      </option>
-                    );
-                  }})} */}
                 </select>
               </div>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel><span style={{color:"red"}}>*</span>
                 <span>Location</span></InputTextLabel>
                 <select
-                 style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                 style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
+                 border:  isSubmitted && !holidayCalendarData?.location.locationName ? '1px solid red' : '1px solid lightgray',
+                 borderRadius: "5px"
+                }}
                  value={holidayCalendarData?.location.locationName}
                  onChange={(e) => {
                   const selectedLocId =
@@ -303,15 +310,6 @@ function HolidayCalendar() {
                     },
                   });
                 }}
-                //  onChange={(e) => {
-                //   setHolidayCalendarData({
-                //     ...holidayCalendarData,
-                //     location: {
-                //       ...holidayCalendarData.location,
-                //       locationName: e.target.value,
-                //       },
-                //     });
-                //  }}
                 >
                   <option value="" disabled selected hidden></option>
                 { locationData.map((item,index) =>{
@@ -341,13 +339,22 @@ function HolidayCalendar() {
                       holidayName: e.target.value,
                     });
                   }}
+                  style={{    border:
+                    isSubmitted && !holidayCalendarData?.holidayName ? "1px solid red" : "",
+                  borderRadius: "4px",}}
                 />
               </div>
               <div style={{ padding: "10px 0px"}}>
                 <InputTextLabel>
                 <span style={{color:"red"}}>*</span>
                 <span>Holiday Date</span></InputTextLabel>
-                <InputField style={{ width: "100%", backgroundColor: "white"}} size="small" 
+                <InputField style={{ width: "100%", backgroundColor: "white",
+              border:
+              isSubmitted && !holidayCalendarData?.holidayDate
+                ? "1px solid red"
+                : "1px solid lightgray",
+              borderRadius:"4px"  
+              }} size="small" 
                   type="date"
                   id="email"
                   variant="outlined"
@@ -358,6 +365,7 @@ function HolidayCalendar() {
                       holidayDate: e.target.value,
                     });
                   }}
+
                 />
               </div>
               <ButtonSection>
@@ -395,7 +403,6 @@ function Tr({
     holidayId,
     holidayName,
     holidayDate,
-    //holidayDay,
     isActive,
     financialYear,
     location
@@ -407,7 +414,6 @@ function Tr({
     holidayId: holidayId,
     holidayName: holidayName,
     holidayDate: holidayDate,
-    //holidayDay: holidayDay,
     financialYear: {
       financialYearId: financialYear.financialYearId,
       financialYearName: "",
@@ -453,7 +459,6 @@ function Tr({
         getAllHcData();
       });
   };
-  // API calls to delete Record
 
   const DeleteRecord = async (id) => {
     axios
@@ -502,9 +507,6 @@ function Tr({
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-      {/* <TableCellSection className={!isActive && "disable-table-row"} >
-          <span>{holidayId || "Unknown"}</span>
-        </TableCellSection> */}
         <TableCellSection className={!isActive && "disable-table-row"} >
           <span>{holidayName || "Unknown"}</span>
         </TableCellSection>
@@ -518,7 +520,7 @@ function Tr({
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
-                closeDropDown();
+                closeDropDown(isDropdown);
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
@@ -543,23 +545,19 @@ function Tr({
                   <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
                   Delete
                 </a>
-                <a
-                  // className={!isActive && "disable-table-row"}
+                {/* <a
                   style={{ padding: "5px" }}
                   onClick={() => {
                     activeDeactivateTableData(holidayId);
                   }}
                 >
                   <div style={{ display: "flex" }}>
-
                     <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
-
                     <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                   </div>
                 </a>
                 <a
                   className={!isActive && "disable-table-row"}
-
                   onClick={() => {
                     activeDeactivateTableData(holidayId);
                   }}
@@ -569,98 +567,12 @@ function Tr({
                     <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
                     <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                   </div>
-                </a>
+                </a> */}
               </div>
             )}
           </span>
         </TableCellSection>
       </TableRowSection>
-
-      {/* <Modal
-      open={isOpen}
-      >
-            <Box sx={MoadalStyle}>
-            <ModalHeadingSection>
-            <ModalHeadingText>Edit Setup Holiday</ModalHeadingText>
-            <CloseIcon
-              onClick={() => {
-                setIsOpen(false);
-              }}
-              style={{ cursor: "pointer" }}
-            />
-          </ModalHeadingSection>
-
-          <ModalDetailSection>
-
-              <form id="reg-form">
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Holiday Name</InputTextLabel>
-                <InputField size="small"
-                  type="text"
-                  id="name"
-                  variant="outlined"
-                  //value={holidayCalendarData?.location.locationName}
-                  onChange={(e) => {
-                    setResponseData({
-                      ...responseData,
-                      holidayName: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Holiday Date </InputTextLabel>
-                <InputField size="small"
-                  type="date"
-                  id="email"
-                  variant="outlined"
-                  onChange={(e) => {
-                    setResponseData({
-                      ...responseData,
-                      holidayDate: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Holiday Day</InputTextLabel>
-                <InputField size="small"
-                  type="text"
-                  id="name"
-                  variant="outlined"
-                  onChange={(e) => {
-                    setResponseData({
-                      ...responseData,
-                      holidayDay: e.target.value,
-                    });
-                  }}
-                  />
-              </div>
-              
-              <ButtonSection>
-                <ModalControlButton
-                  type="button"
-                  value="Save"
-                  id="create-account"
-                  variant="contained"
-                  onClick={OnSubmit}
-
-                >Save</ModalControlButton>
-                <ModalControlButton
-                  type="button"
-                  variant="contained"
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                  value="Cancel"
-                  id="create-account"
-
-                >Cancel</ModalControlButton>
-              </ButtonSection>
-            </form>
-            </ModalDetailSection>
-        </Box>
-      </Modal> */}
 
     </React.Fragment>
   );

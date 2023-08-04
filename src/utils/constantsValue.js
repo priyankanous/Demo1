@@ -169,4 +169,17 @@ export const MoadalStyle = {
   // p: 1,
 };
 
+export const MoadalStyle2 = {
+  position: 'absolute',
+  top: '50%',
+  left: '55%',
+  transform: 'translate(-50%, -50%)',
+  width: '400px',
+  bgcolor: 'background.paper',
+  border: '1px solid transparent',
+  borderRadius: "10px"
+  // boxShadow: 24,
+  // p: 1,
+};
+
 export const apiV1 = "http://192.168.16.55:8080/rollingrevenuereport/api/v1";

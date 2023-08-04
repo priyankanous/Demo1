@@ -6,7 +6,7 @@ import { MemoizedBaseComponent } from "../CommonComponent/Calendar/CalendarBaseC
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button, Checkbox } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle, MoadalStyle2 } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
@@ -23,6 +23,7 @@ function FortnightlyMeetings() {
   const [financialYearData, setFinancialYearData] = useState([]);
   const [selectedFinancialYear, setSelectedFinancialYear] = useState([]);
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [fortnightlyMeetingsData, setFortnightlyMeetingsData] = useState ({
     //meetingId: "",
     meetingDate: "",
@@ -98,36 +99,49 @@ function FortnightlyMeetings() {
       }/${month[new Date(meetingDate).getMonth()]}/${new Date(
         meetingDate
       ).getFullYear()}`;
-    let fortnightlyMeetingsData = {
-      financialYear,
+    let postFortData = {
       meetingDate: activeFromDt,
       meetingName1,meetingName2,
       meetingName3,meetingName4,
+      financialYear: {
+        financialYearId: financialYear.financialYearId,
+        financialYearName: financialYear.financialYearName,
+        financialYearCustomName: financialYear.financialYearCustomName,
+        startingFrom: financialYear.startingFrom,
+        endingOn: financialYear.endingOn
+      },
     };
     if (isEditId !== null) {
       var { data } = await axios.put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/${isEditId}`,
-        fortnightlyMeetingsData
+        postFortData      
       );
+    } else if (
+      !fortnightlyMeetingsData?.meetingDate ||
+      !fortnightlyMeetingsData?.meetingName1 || 
+      !fortnightlyMeetingsData?.meetingName2 || 
+      !fortnightlyMeetingsData?.meetingName3 || 
+      !fortnightlyMeetingsData?.meetingName4 ||
+      !fortnightlyMeetingsData?.location.locationName ||
+      !fortnightlyMeetingsData?.financialYear.financialYearName
+    ){
+      setIsSubmitted(true);
     } else {
+      setIsSubmitted(false);
       var { data } = await axios.post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting",
-        fortnightlyMeetingsData
+        postFortData
       );
     }
     if (data?.message === "Success" && data?.responseCode === 200) {
       setIsOpen(false);
       setIsEditId(null);
-      setdropdownOpenReg(false);
-      //fetchFornightlyMeetingsData();
-      setFinancialYearLinked(false);
-      setSelectedFinancialYear([]);
     }
   };
 
   const editFortnightlyMeetingsData = async (id) => {
     const { data } = await axios.get(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/${id}`
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/meetingId/${id}`
     );
     if (data?.message === "Success" && data?.responseCode === 200) {
       const response = data?.data;
@@ -202,10 +216,18 @@ function FortnightlyMeetings() {
           <ModalDetailSection2>
             
               <span>
-                <InputTextLabel><span style={{color:"red"}}>*</span>Financial Year</InputTextLabel>
+                <InputTextLabel>
+                <span style={{color:"red"}}>*</span>
+                <span>Financial Year</span></InputTextLabel>
                 <select
-                  style={{height:"40px", width:"100%", marginBottom:"5px",borderRadius:"5px",boxShadow:"none", border:"1px solid lightgray"}}
-
+                  style={{height:"40px", width:"100%", marginBottom:"5px",borderRadius:"5px",boxShadow:"none", 
+                  border:
+                      isSubmitted && !fortnightlyMeetingsData?.financialYear?.financialYearName
+                        ? "1px solid red"
+                        : "1px solid lightgray",
+                  borderRadius: "5px"
+                  }}
+                  value={fortnightlyMeetingsData?.financialYear.financialYearName}
                   onChange={(e) => {
                     const selectedFyId =
                       e.target.selectedOptions[0].getAttribute("data-fyId");
@@ -253,7 +275,15 @@ function FortnightlyMeetings() {
                 <InputTextLabel>
                 <span style={{color:"red"}}>*</span>
                 <span>First Meeting Date</span></InputTextLabel>
-                <InputField style={{ width: "110%", backgroundColor: "white"}} size="small" 
+                <InputField style={{ width: "110%", backgroundColor: "white",
+                border:
+                isSubmitted && !fortnightlyMeetingsData?.meetingDate
+                  ? "1px solid red"
+                  : "1px solid lightgray",
+                borderRadius: "5px", marginTop: "-1px"
+                }} 
+                value={fortnightlyMeetingsData?.meetingDate}
+                  size="small" 
                   type="date"
                   id="email"
                   variant="outlined"
@@ -273,7 +303,15 @@ function FortnightlyMeetings() {
                 <InputTextLabel style={{marginBottom:"-4%", marginTop:"-8%"}}>
                 <span style={{color:"red", fontSize:"Medium"}}>*</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField style={{
+                border:
+                isSubmitted && !fortnightlyMeetingsData?.meetingName1
+                  ? "1px solid red"
+                  : "1px solid lightgray",
+                borderRadius: "5px"
+                }} 
+                value={fortnightlyMeetingsData?.meetingName1}
+                  size="small"
                   type="text"
                   id="inputID"
                   placeholder="Meeting Name"
@@ -290,7 +328,15 @@ function FortnightlyMeetings() {
                 <InputTextLabel style={{marginBottom:"-4%", marginTop:"-8%"}}>
                 <span style={{color:"red", fontSize:"Medium"}}>*</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField style={{
+                border:
+                isSubmitted && !fortnightlyMeetingsData?.meetingName2
+                  ? "1px solid red"
+                  : "1px solid lightgray",
+                borderRadius: "5px"
+                }} 
+                value={fortnightlyMeetingsData?.meetingName2}
+                  size="small"
                   type="text"
                   id="inputID"
                   placeholder="Meeting Name"
@@ -307,7 +353,15 @@ function FortnightlyMeetings() {
                 <InputTextLabel style={{marginBottom:"-4%", marginTop:"-8%"}}>
                 <span style={{color:"red", fontSize:"Medium"}}>*</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField style={{
+                border:
+                isSubmitted && !fortnightlyMeetingsData?.meetingName3
+                  ? "1px solid red"
+                  : "1px solid lightgray",
+                borderRadius: "5px"
+                }} 
+                value={fortnightlyMeetingsData?.meetingName3}
+                  size="small"
                   type="text"
                   id="inputID"
                   placeholder="Meeting Name"
@@ -324,7 +378,16 @@ function FortnightlyMeetings() {
                 <InputTextLabel style={{marginBottom:"-4%", marginTop:"-8%"}}>
                 <span style={{color:"red", fontSize:"Medium"}}>*</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField 
+                  style={{
+                    border:
+                    isSubmitted && !fortnightlyMeetingsData?.meetingName4
+                      ? "1px solid red"
+                      : "1px solid lightgray",
+                    borderRadius: "5px"
+                    }} 
+                    value={fortnightlyMeetingsData?.meetingName4}
+                  size="small"
                   type="text"
                   id="inputID"
                   placeholder="Meeting Name"
@@ -379,7 +442,7 @@ data: {
   meetingName2,
   meetingName3,
   meetingName4,
-  financialYear
+  financialYear,
 },
 fetchFornightlyMeetingsData,
 activateDeactivate,
@@ -388,6 +451,20 @@ DeleteRecord,
 }) {
 const [isDropdown, setDropdown] = useState(false);
 const [isOpen, setIsOpen] = useState(false);
+const [responseData, setResponseData] = useState({
+  meetingId: meetingId,
+  meetingName1: meetingName1,
+  meetingName2: meetingName2,
+  meetingName3: meetingName3,
+  meetingName4: meetingName4,
+  financialYear: {
+    financialYearId: financialYear.financialYearId,
+    financialYearName: "",
+    financialYearCustomName: "",
+    startingFrom: "",
+    endingOn: "",
+  },
+});
 
 const OutsideClick = (ref) => {
   useEffect(() => {
@@ -442,14 +519,17 @@ return (
 
               style={{ padding: "5px" }}
               onClick={() => {
-                editFortnightlyMeetingsData(meetingId);
+                setIsOpen(true);
               }}
+              // onClick={() => {
+              //   editFortnightlyMeetingsData(meetingId);
+              // }}
             >
               <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }}
               />{" "}
               Edit
             </a>
-            <a
+            {/* <a
               className={!isActive && "disable-table-row"}
               style={{ padding: "5px" }}
               onClick={() => {
@@ -458,8 +538,8 @@ return (
             >
               <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
               Delete
-            </a>
-            <a
+            </a> */}
+            {/* <a
               onClick={() => {
                 activateDeactivate(meetingId);
               }}
@@ -484,13 +564,49 @@ return (
                 <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
                 <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
               </div>
-            </a>
+            </a> */}
           </div>
         )}{" "}
       </span>
     </TableCellSection>
   </TableRowSection>
-
+  <Modal open={isOpen}>
+        <Box sx={MoadalStyle2}>
+          <ModalDetailSection>
+            <form id="reg-form">
+              <div style = {{ padding:"0px 10px" }}>
+              <p>Changing the <b>Meeting Date / Meeting Name </b> 
+                will Change the Whole occurance of the Fortnightly meeting.</p>
+              </div>
+              <ButtonSection style = {{ padding:"0px 65px"}}>
+                <ModalControlButton
+                  type="button"
+                  value="Save"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    editFortnightlyMeetingsData(meetingId);
+                    setIsOpen(false);
+                   }}
+                >
+                  Proceed
+                </ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
+              </ButtonSection>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
   </React.Fragment>
 );
 }
