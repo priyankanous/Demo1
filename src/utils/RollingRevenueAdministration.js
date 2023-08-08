@@ -15,9 +15,29 @@ import Currency from "../components/Adminstration/Currency";
 import GlobalLeaveLossFactor from "../components/Adminstration/GlobalLeaveLossFactor";
 import NotificationConfig from "../components/Adminstration/NotificationConfig";
 import BuisnessUnit from "../components/Adminstration/BusinessUnit";
+import AccountSettings from "../components/Adminstration/Account";
+import Opportunity from "../components/Adminstration/Opportunity";
 
 const RollingRevenueAdministration = {
-    BuisnessUnit,Region,Organization,Sbu,SbuHead,Location,Bdm,Probability,BusinessType,CocPractice,PricingType,WorkOrderStatus,Status,FinancialYear,Currency,NotificationConfig,GlobalLeaveLossFactor
-}
+  BuisnessUnit,
+  Region,
+  Organization,
+  Sbu,
+  SbuHead,
+  Location,
+  Bdm,
+  Probability,
+  BusinessType,
+  CocPractice,
+  PricingType,
+  WorkOrderStatus,
+  Status,
+  FinancialYear,
+  Currency,
+  NotificationConfig,
+  GlobalLeaveLossFactor,
+  AccountSettings,
+  Opportunity,
+};
 
 export default RollingRevenueAdministration;
