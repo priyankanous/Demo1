@@ -30,6 +30,7 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
 
 function Bdm() {
   const [data, setData] = useState(null);
@@ -830,6 +831,9 @@ function Tr({
     },
   });
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
   const OutsideClick = (ref) => {
     useEffect(() => {
       const handleOutsideClick = (event) => {
@@ -858,10 +862,15 @@ function Tr({
         const actualDataObject = response.data.data;
         fetchBdmData();
         setIsOpen(false);
-      });
+      })
+      .catch((error)=>{
+        setShowSnackbar(true);
+        setSnackMessage(error.response.data.details); 
+      })
   };
 
   return (
+    <>
     <TableRowSection ref={wrapperRef}>
       <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{bdmName || "Unknown"}</span>
@@ -963,6 +972,13 @@ function Tr({
         </span>
       </TableCellSection>
     </TableRowSection>
+          <SnackBar
+          open={showSnackbar}
+          message={snackMessage}
+          onClose={() => setShowSnackbar(false)}
+          autoHideDuration={10000}
+        />
+        </>
   );
 }
 export default Bdm;

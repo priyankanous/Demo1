@@ -27,6 +27,8 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function Probability() {
   const [probabilityFormData, setProbabilityFormData] = useState({
@@ -39,6 +41,9 @@ function Probability() {
 
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isPercentageEmpty, setIsPercentageEmpty] = useState(false);
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const fetchPercentageType = async () => {
     const { data } = await axios.get(
@@ -110,16 +115,23 @@ function Probability() {
     }
   };
 
-  const deleteSelectedLocation = async (id) => {
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+  const deleteRecord = async (id) => {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/${id}`,
+      probabilityFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setProbabilityFormData({ probabilityTypeName: "", percentage: "" });
       setIsOpen(false);
       setIsEditId(null);
       fetchPercentageType();
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
 
   const activeDeactivateTableData = async (id) => {
@@ -146,7 +158,7 @@ function Probability() {
             <Tr
               activeDeactivateTableData={activeDeactivateTableData}
               openTheModalWithValues={openTheModalWithValues}
-              deleteSelectedLocation={deleteSelectedLocation}
+              deleteRecord={deleteRecord}
               data={obj}
             />
           );
@@ -254,6 +266,13 @@ function Probability() {
           </ModalDetailSection>
         </Box>
       </Modal>
+
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </div>
   );
 }
@@ -261,7 +280,7 @@ function Tr({
   data: { probabilityTypeName, percentage, probabilityTypeId, isActive },
   openTheModalWithValues,
   activeDeactivateTableData,
-  deleteSelectedLocation,
+  deleteRecord,
 }) {
   const [isDropdown, setDropdown] = useState(false);
 
@@ -319,7 +338,7 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
-                  deleteSelectedLocation(probabilityTypeId);
+                  deleteRecord(probabilityTypeId);
                 }}
                 href="#about"
                 style={{ padding: "5px" }}

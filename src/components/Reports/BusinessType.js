@@ -42,11 +42,10 @@ export default function BusinessType() {
     else {
       setTableData(rawData.filter(c => c.day === barIndex && c.type === 2))
     }
-  }
+  } 
 
   return (
-    <div className="BusinessType">  
-         
+    <div className="BusinessType">         
       <Box sx={{ marginLeft: 30, textAlign: 'left' }}>
         <Grid container spacing={2}>
           <Grid item xs={4} md={3}><SearchComponent/>            

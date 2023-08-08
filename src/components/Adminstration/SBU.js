@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
 import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
 // import Modal from "react-modal";
@@ -27,6 +28,7 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
 
 function Sbu() {
   const [data, setData] = useState(null);
@@ -420,6 +422,9 @@ function Tr({
     },
   });
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+	const [snackMessage, setSnackMessage] = useState("");
+
   const OutsideClick = (ref) => {
     useEffect(() => {
       const handleOutsideClick = (event) => {
@@ -476,6 +481,19 @@ function Tr({
   };
   // API calls to delete record
 
+  // const DeleteRecord = () => {
+  //   axios
+  //     .delete(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
+  //       responseData
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       getAllSbuData();
+  //       setIsOpen(false);
+  //     });
+  // };
+
   const DeleteRecord = () => {
     axios
       .delete(
@@ -486,7 +504,11 @@ function Tr({
         const actualDataObject = response.data.data;
         getAllSbuData();
         setIsOpen(false);
-      });
+      })
+      .catch((error)=>{
+        setShowSnackbar(true);
+        setSnackMessage(error.response.data.details);
+      })
   };
 
   return (
@@ -735,6 +757,12 @@ function Tr({
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </React.Fragment>
   );
 }

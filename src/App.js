@@ -66,6 +66,14 @@ function App() {
           path="/administration/status"
           component={RollingRevenueAdministration.Status}
         />
+       <Route
+          path="/administration/account"
+          component={RollingRevenueAdministration.AccountSettings}
+        />
+         <Route
+          path="/administration/opportunity"
+          component={RollingRevenueAdministration.Opportunity}
+        />
         <Route
           path="/administration/financialYear"
           component={RollingRevenueAdministration.FinancialYear}
