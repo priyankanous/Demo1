@@ -15,6 +15,8 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function FinanicalYear() {
   const [financialYear, setFinancialYear] = useState([]);
@@ -41,6 +43,9 @@ function FinanicalYear() {
     "Nov",
     "Dec",
   ];
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const fetchFinancialYearData = async () => {
     const { data } = await axios.get(
@@ -150,11 +155,14 @@ function FinanicalYear() {
     return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
 
-  const deleteSelectedLocation = async (id) => {
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+  const deleteRecord = async (id) => {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year/${id}`,
+      financialYearFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setIsOpen(false);
       fetchFinancialYearData();
       setIsEditId(null);
@@ -164,8 +172,13 @@ function FinanicalYear() {
         startingFrom: "",
         endingOn: "",
       });
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
+
   const activeDeactivateTableData = async (id) => {
     const { data } = await axios.put(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year/activate-or-deactivate/${id}`
@@ -202,7 +215,7 @@ function FinanicalYear() {
             <Tr
               activeDeactivateTableData={activeDeactivateTableData}
               openTheModalWithValues={openTheModalWithValues}
-              deleteSelectedLocation={deleteSelectedLocation}
+              deleteRecord={deleteRecord}
               data={obj}
             />
           );
@@ -301,12 +314,9 @@ function FinanicalYear() {
                     borderRadius:"4px"}}
                 />
               </div>
-
-
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
-
                <span>Active Until</span> </InputTextLabel>
                 <InputField fullWidth
                   size="small"
@@ -321,7 +331,7 @@ function FinanicalYear() {
                       endingOn: e.target.value,
                     });
                   }}
-                  style={{                    border:
+                  style={{border:
                     isSubmitted && !financialYearFormData.endingOn
                       ? "1px solid red"
                       : "1px solid lightgray",
@@ -358,6 +368,12 @@ function FinanicalYear() {
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </div>
   );
 }
@@ -373,7 +389,7 @@ function Tr({
   },
   activeDeactivateTableData,
   openTheModalWithValues,
-  deleteSelectedLocation,
+  deleteRecord,
 }) {
   const [isDropdown, setDropdown] = useState(false);
 
@@ -436,7 +452,7 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
-                  deleteSelectedLocation(financialYearId);
+                  deleteRecord(financialYearId);
                 }}
                 // href="#about"
                 style={{ padding: "5px" }}

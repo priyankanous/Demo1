@@ -8,8 +8,7 @@ import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import {
-
-  Modal,
+  Modal
 } from "@mui/material";
 import {
   TableRowSection,
@@ -29,6 +28,8 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function PricingType() {
   const [pricingType, setpricingType] = useState([]);
@@ -41,6 +42,9 @@ function PricingType() {
 
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const fetchpricingTypeData = async () => {
     const { data } = await axios.get(
@@ -110,11 +114,14 @@ function PricingType() {
     }
   };
 
-  const deleteSelectedLocation = async (id) => {
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+  const deleteRecord = async (id) => {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/pricing-type/${id}`,
+      pricingTypeFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setpricingTypeFormData({
         pricingTypeName: "",
         pricingTypeDisplayName: "",
@@ -122,7 +129,11 @@ function PricingType() {
       setIsOpen(false);
       setIsEditId(null);
       fetchpricingTypeData();
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
 
   const activeDeactivateTableData = async (id) => {
@@ -152,7 +163,7 @@ function PricingType() {
             <Tr
               activeDeactivateTableData={activeDeactivateTableData}
               openTheModalWithValues={openTheModalWithValues}
-              deleteSelectedLocation={deleteSelectedLocation}
+              deleteRecord={deleteRecord}
               data={obj}
             />
           );
@@ -256,7 +267,7 @@ function Tr({
   data: { pricingTypeDisplayName, pricingTypeName, isActive, pricingTypeId },
   activeDeactivateTableData,
   openTheModalWithValues,
-  deleteSelectedLocation,
+  deleteRecord,
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -313,7 +324,7 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
-                  deleteSelectedLocation(pricingTypeId);
+                  deleteRecord(pricingTypeId);
                 }}
                 style={{ padding: "5px" }}
               >

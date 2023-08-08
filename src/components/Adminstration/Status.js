@@ -29,6 +29,8 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
+
 
 function Status() {
   const [statusType, setstatusType] = useState([]);
@@ -41,6 +43,8 @@ function Status() {
 
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const fetchstatusTypeData = async () => {
     const { data } = await axios.get(
@@ -111,16 +115,23 @@ function Status() {
     }
   };
 
-  const deleteSelectedLocation = async (id) => {
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+  const deleteRecord = async (id) => {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${id}`,
+      statusTypeFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setstatusTypeFormData({ statusName: "", statusDisplayName: "" });
       setIsOpen(false);
       setIsEditId(null);
       fetchstatusTypeData();
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
 
   const activeDeactivateTableData = async (id) => {
@@ -147,7 +158,7 @@ function Status() {
             <Tr
               activeDeactivateTableData={activeDeactivateTableData}
               openTheModalWithValues={openTheModalWithValues}
-              deleteSelectedLocation={deleteSelectedLocation}
+              deleteRecord={deleteRecord}
               data={obj}
             />
           );
@@ -252,7 +263,7 @@ function Tr({
   data: { statusName, statusDisplayName, isActive, statusId },
   activeDeactivateTableData,
   openTheModalWithValues,
-  deleteSelectedLocation,
+  deleteRecord,
 }) {
   const [isDropdown, setDropdown] = useState(false);
 
@@ -307,7 +318,7 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
-                  deleteSelectedLocation(statusId);
+                  deleteRecord(statusId);
                 }}
                 style={{ padding: "5px" }}
               >

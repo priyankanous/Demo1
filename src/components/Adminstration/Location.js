@@ -15,7 +15,7 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
-
+import SnackBar from "../CommonComponent/SnackBar";
 
 function Location() {
   const [locationName, setLocationName] = useState([]);
@@ -28,6 +28,9 @@ function Location() {
     
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
+
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
 
   const fetchLocationName = async () => {
     const { data } = await axios.get(
@@ -101,16 +104,22 @@ function Location() {
   };
 
   const deleteSelectedLocation = async (id) => {
-    console.log("id deleting",id);
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`,
+      locationFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setLocationFormData({ locationName: "", locationDisplayName: "" });
       setIsOpen(false);
       setIsEditId(null);
       fetchLocationName();
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
 
   const activeDeactivateTableData = async (id) => {
@@ -233,6 +242,12 @@ function Location() {
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </div>
   );
 }

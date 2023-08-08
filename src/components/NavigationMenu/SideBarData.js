@@ -184,6 +184,16 @@ export const SidebarData = [
         cName: "sub-nav",
       },
       {
+        title: "Account",
+        path: "/administration/account",
+        cName: "sub-nav",
+      },
+      {
+        title: "Opportunity",
+        path: "/administration/opportunity",
+        cName: "sub-nav",
+      },
+      {
         title: "SBU",
         path: "/administration/sbu",
         cName: "sub-nav",
@@ -229,7 +239,7 @@ export const SidebarData = [
         cName: "sub-nav",
       },
       {
-        title: "WO Status",
+        title: "Work Order",
         path: "/administration/wostatus",
         cName: "sub-nav",
       },

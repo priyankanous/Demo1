@@ -8,20 +8,7 @@ import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import {
-  Table,
-  Modal,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  styled,
-  TextField,
-  InputLabel,
-  FormControl,
-  Select,
-  MenuItem,
-  Button,
+  Modal
 } from "@mui/material";
 import {
   TableRowSection,
@@ -41,6 +28,7 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
 
 function BusinessType() {
   const [businessType, setBusinessType] = useState([]);
@@ -54,7 +42,9 @@ function BusinessType() {
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
-  console.log("Bussiness", businessTypeFormData);
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
 
   const fetchBusinessTypeData = async () => {
     const { data } = await axios.get(
@@ -130,11 +120,14 @@ function BusinessType() {
     }
   };
 
-  const deleteSelectedLocation = async (id) => {
-    const { data } = await axios.delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
+  const deleteRecord = async (id) => {
+    axios
+    .delete(
+      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/${id}`,
+      businessTypeFormData
+    )
+    .then((response) => {
+      const actualDataObject = response.data.data;
       setbusinessTypeFormData({
         businessTypeName: "",
         businessTypeDisplayName: "",
@@ -142,7 +135,11 @@ function BusinessType() {
       setIsOpen(false);
       setIsEditId(null);
       fetchBusinessTypeData();
-    }
+    })
+    .catch((error)=>{
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details); 
+    })
   };
 
   const activeDeactivateTableData = async (id) => {
@@ -172,7 +169,7 @@ function BusinessType() {
             <Tr
               activeDeactivateTableData={activeDeactivateTableData}
               openTheModalWithValues={openTheModalWithValues}
-              deleteSelectedLocation={deleteSelectedLocation}
+              deleteRecord={deleteRecord}
               data={obj}
             />
           );
@@ -279,6 +276,13 @@ function BusinessType() {
           </ModalDetailSection>
         </Box>
       </Modal>
+
+      <SnackBar
+				open={showSnackbar}
+				message={snackMessage}
+				onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+			/>
     </div>
   );
 }
@@ -287,7 +291,7 @@ function Tr({
   data: { businessTypeName, businessTypeDisplayName, isActive, businessTypeId },
   activeDeactivateTableData,
   openTheModalWithValues,
-  deleteSelectedLocation,
+  deleteRecord,
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -352,7 +356,7 @@ function Tr({
               <a
                 className={!isActive && "disable-table-row"}
                 onClick={() => {
-                  deleteSelectedLocation(businessTypeId);
+                  deleteRecord(businessTypeId);
                 }}
                 style={{ padding: "5px" }}
               >

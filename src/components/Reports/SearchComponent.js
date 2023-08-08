@@ -240,6 +240,7 @@ const mapStateToProps = (state) => {
     bdmData: state.bdmData,
   };
 };
+
 const mapDispatchToProps = (dispatch) => {
   return {
     getRegionData: () => dispatch(getRegionData()),

@@ -275,7 +275,7 @@ function Tr({
       })
       .catch((error)=>{
         setShowSnackbar(true);
-        setSnackMessage("Error deleting the record"); 
+        setSnackMessage(error.response.data.details); 
       })
   };
 
