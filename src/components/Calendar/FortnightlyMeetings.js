@@ -25,7 +25,7 @@ function FortnightlyMeetings() {
   const [isFinancialYearLinked, setFinancialYearLinked] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [fortnightlyMeetingsData, setFortnightlyMeetingsData] = useState ({
-    //meetingId: "",
+    meetingId: "",
     meetingDate: "",
     meetingName1: "",
     meetingName2: "",
@@ -64,6 +64,21 @@ function FortnightlyMeetings() {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setFortnightlyMeetingsData({
+    meetingId: 0,
+    meetingDate: "",
+    meetingName1: "",
+    meetingName2: "",
+    meetingName3: "",
+    meetingName4: "",
+    financialYear: {
+      financialYearId: "",
+      financialYearName: "",
+      financialYearCustomName: "",
+      startingFrom: "",
+      endingOn: "",
+    },
+    });
   };
 
   const fetchFornightlyMeetingsData = async (e) => {
@@ -92,7 +107,7 @@ function FortnightlyMeetings() {
   };
 
   const postFortnightlyMeetingsData = async () => {
-    const { financialYear, meetingDate, meetingName1, meetingName2, meetingName3, meetingName4 } = fortnightlyMeetingsData;
+    const { financialYear, meetingId, meetingDate, meetingName1, meetingName2, meetingName3, meetingName4 } = fortnightlyMeetingsData;
     const activeFromDt = `${parseInt(new Date(meetingDate).getDate()) < 10
       ? "0" + parseInt(new Date(meetingDate).getDate())
       : parseInt(new Date(meetingDate).getDate())
@@ -100,6 +115,7 @@ function FortnightlyMeetings() {
         meetingDate
       ).getFullYear()}`;
     let postFortData = {
+      meetingId,
       meetingDate: activeFromDt,
       meetingName1,meetingName2,
       meetingName3,meetingName4,
@@ -113,7 +129,7 @@ function FortnightlyMeetings() {
     };
     if (isEditId !== null) {
       var { data } = await axios.put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting/${isEditId}`,
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/fortnightly-meeting`,
         postFortData      
       );
     } else if (
@@ -122,7 +138,6 @@ function FortnightlyMeetings() {
       !fortnightlyMeetingsData?.meetingName2 || 
       !fortnightlyMeetingsData?.meetingName3 || 
       !fortnightlyMeetingsData?.meetingName4 ||
-      !fortnightlyMeetingsData?.location.locationName ||
       !fortnightlyMeetingsData?.financialYear.financialYearName
     ){
       setIsSubmitted(true);
@@ -208,7 +223,8 @@ function FortnightlyMeetings() {
             <ModalHeadingText>New FY Meetings</ModalHeadingText>
             <CloseIcon
               onClick={() => {
-                setIsOpen(false);
+                //setIsOpen(false);
+                handleModalClose();
               }}
               style={{ cursor: "pointer" }}
             />
@@ -220,11 +236,11 @@ function FortnightlyMeetings() {
                 <span style={{color:"red"}}>*</span>
                 <span>Financial Year</span></InputTextLabel>
                 <select
-                  style={{height:"40px", width:"100%", marginBottom:"5px",borderRadius:"5px",boxShadow:"none", 
+                  style={{height:"40px", width:"185px", marginBottom:"5px",borderRadius:"5px",boxShadow:"none", 
                   border:
                       isSubmitted && !fortnightlyMeetingsData?.financialYear?.financialYearName
                         ? "1px solid red"
-                        : "1px solid lightgray",
+                        : "1px solid Darkgray",
                   borderRadius: "5px"
                   }}
                   value={fortnightlyMeetingsData?.financialYear.financialYearName}
@@ -248,14 +264,12 @@ function FortnightlyMeetings() {
                       financialYear: {
                         ...fortnightlyMeetingsData.financialYear,
                         financialYearId:selectedFyId,
-                        financialYearName: e.target.value,
+                        financialYearName: selectedfyDispName,
                       },
                     });
                   }}
                 >
-                  <option value="" disabled selected hidden>
-                    Please choose one option
-                  </option>
+                  <option value="" disabled selected hidden></option>
                   {financialYearData.map((fyData, index) => {
                     const fId = fyData.financialYearId;
                     const fyNameData = fyData.financialYearName;
@@ -263,6 +277,7 @@ function FortnightlyMeetings() {
                       return(
                           <option
                           data-fyId = {fId}
+                          data-fyDispName = {fyNameData}
                           key={index}
                         >
                           {fyNameData}
@@ -275,7 +290,7 @@ function FortnightlyMeetings() {
                 <InputTextLabel>
                 <span style={{color:"red"}}>*</span>
                 <span>First Meeting Date</span></InputTextLabel>
-                <InputField style={{ width: "110%", backgroundColor: "white",
+                <InputField style={{ width: "180px", backgroundColor: "white",
                 border:
                 isSubmitted && !fortnightlyMeetingsData?.meetingDate
                   ? "1px solid red"
@@ -407,14 +422,17 @@ function FortnightlyMeetings() {
                   value="Save"
                   id="create-account"
                   variant="contained"
-                  onClick={postFortnightlyMeetingsData}
+                  onClick={() => {
+                    postFortnightlyMeetingsData();
+                  }}
 
                 >Apply</ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    setIsOpen(false);
+                    //setIsOpen(false);
+                    handleModalClose();
                   }}
                   value="Cancel"
                   id="create-account"
@@ -507,13 +525,15 @@ return (
     <TableCellSection className={!isActive && "disable-table-row"}>
       <span>{getDayName(meetingDate)}</span>
     </TableCellSection>
-    <TableCellSection>
+    <TableCellSection style={{ position: "relative" }}>
       <span style={{ float: "right" }}>
         <AiIcons.AiOutlineMore
           onClick={(e) => closeDropDown(isDropdown)}
         ></AiIcons.AiOutlineMore>
         {isDropdown && (
-          <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+          <div 
+          style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+          class="dropdown-content">
             <a
               className={!isActive && "disable-table-row"}
 

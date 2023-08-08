@@ -81,7 +81,8 @@ function BdmMeetings() {
     setIsOpen(false);
     setIsSubmitted(false);
     setbdmFormData({
-      meetingName: "",
+    bdmMeetingId: 0,
+    meetingName: "",
     meetingDate: "",
     meetingTime: "",
     financialYear: {
@@ -115,7 +116,6 @@ function BdmMeetings() {
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions"
     );
     setRegion(data?.data);
-    console.log("Region", data);
   };
 
   const fetchBdmMeetingsData = async (e) => {
@@ -127,7 +127,6 @@ function BdmMeetings() {
         .then((response) => {
           const actualDataObject = response.data.data;
           setData({ ...data, actualDataObject: actualDataObject });
-          console.log("data  ",data)
       });
     };
 
@@ -278,7 +277,8 @@ function BdmMeetings() {
             <ModalHeadingText>Add Meetings</ModalHeadingText>
             <CloseIcon
               onClick={() => {
-                setIsOpen(false);
+                //setIsOpen(false);
+                handleModalClose();
               }}
               style={{ cursor: "pointer" }}
             />
@@ -294,7 +294,7 @@ function BdmMeetings() {
                   border:
                       isSubmitted && !bdmFormData?.financialYear?.financialYearName
                         ? "1px solid red"
-                        : "1px solid lightgray",
+                        : "1px solid Darkgray",
                       borderRadius: "5px"
                   }}
                   value={bdmFormData?.financialYear.financialYearName}
@@ -313,9 +313,7 @@ function BdmMeetings() {
                     });
                   }}
                 >
-                  <option value="" disabled selected hidden>
-                    Please choose one option
-                  </option>
+                  <option value="" disabled selected hidden></option>
                   {financialYearData.map((fyData, index) => {
                     const fyNameData = fyData.financialYearName;
                     const fId = fyData.financialYearId;
@@ -343,7 +341,7 @@ function BdmMeetings() {
                   border:
                   isSubmitted && !bdmFormData?.businessDevelopmentManager.bdmDisplayName
                     ? "1px solid red"
-                    : "1px solid lightgray",
+                    : "1px solid Darkgray",
                 }}
                 value={bdmFormData?.businessDevelopmentManager.bdmDisplayName}
                  onChange={(e) => {
@@ -390,7 +388,7 @@ function BdmMeetings() {
                   border:
                   isSubmitted && !bdmFormData?.region.regionName
                     ? "1px solid red"
-                    : "1px solid lightgray",
+                    : "1px solid Darkgray",
                 }}
                 value={bdmFormData?.region.regionName}
                  onChange={(e) => {
@@ -516,7 +514,8 @@ function BdmMeetings() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    setIsOpen(false);
+                    //setIsOpen(false);
+                    handleModalClose();
                   }}
 
                   value="Cancel"
@@ -609,13 +608,15 @@ function Tr({
         <span>{meetingTime || "Unknown"}</span>
       </TableCellSection>
 
-      <TableCellSection>
+      <TableCellSection style={{ position: "relative" }} >
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div style={{ float: "right", right: "20px", position: "fixed" }} class="dropdown-content">
+            <div 
+            style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+            class="dropdown-content">
               <a
                 className={!isActive && "disable-table-row"}
 

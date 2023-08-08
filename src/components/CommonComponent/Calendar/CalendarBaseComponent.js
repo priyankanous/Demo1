@@ -8,7 +8,9 @@ import {
 } from "../../../utils/Value";
 import { Button, Typography, styled } from "@mui/material";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 
 const TableButtons = styled(Button)({
   background: "#1E4482",
@@ -24,7 +26,7 @@ const TableButtons = styled(Button)({
 });
 
 
-export function CalendarBaseComponent(props) {
+export function CalendarBaseComponent(props,{ locationData, activeTab, handleTabChange }) {
   const [copyData, setCopyData] = useState({
     copyFromFy: "",
     copyToFy: {
@@ -35,6 +37,13 @@ export function CalendarBaseComponent(props) {
       endingOn: "",
     },
   });
+
+  const [value, setValue] = useState('one');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div className="table_container">
       <TableHeadingSection>
@@ -60,12 +69,9 @@ export function CalendarBaseComponent(props) {
                   } else {
                   props.fetchFornightlyMeetingsData(e.target.value);
                   }}}
-              // style={{height:"35px", borderRadius:"7px"}}
-                  style={{height:"30px", width:"25%", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                  style={{height:"30px", width:"180px", marginBottom:"10px",borderRadius:"5px",boxShadow:"none", border:"1px solid gray"}}
                   >
-                  <option value="" disabled selected hidden>
-                  Please choose one
-                  </option>
+                  <option value="" disabled selected hidden></option>
                   {props.data.financialYearData.map((fyData, index) => {
                   const fyNameData = fyData.financialYearName;
                   return <option key={index}>{fyNameData}</option>;
@@ -73,23 +79,20 @@ export function CalendarBaseComponent(props) {
                 </select>
             </div>
             {props.holiday && <div>
-            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
-              <TableButtons
-                id="filterButton"
-                onClick={(e) => props.copyFromFyToNewFy(copyData)}
+            <Box sx={{ width: '100%' }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                textColor="black"
+                indicatorColor="secndary"
+                aria-label="secondary tabs example"
               >
-                OFFSHORE
-              </TableButtons>
-            </span>
-            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
-              <TableButtons
-                id="filterButton"
-                onClick={(e) => props.copyFromFyToNewFy(copyData)}
-              >
-                ONSITE
-              </TableButtons>
-            </span>
-            </div>}
+                <Tab value="one" label="OFFSHORE" />
+                <Tab value="two" label="ONSITE" />
+              </Tabs>
+            </Box>
+            </div>
+            }
           </div>
           <TableContainer style={{overflow:"hidden"}}>
           <Table style={{overflow:"hidden"}}>
@@ -110,7 +113,6 @@ export function CalendarBaseComponent(props) {
       ) : (
         <React.Fragment>
           <TableContainer style={{overflow:"hidden", width:"97%",marginTop:"25px"}}>
-
           <Table  >
             <TableHead>
               <TableRow >

@@ -14,7 +14,6 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 
-
 function HolidayCalendar() {
   const [data, setData] = useState({ 
     actualDataObject: [],
@@ -79,6 +78,7 @@ function HolidayCalendar() {
     setIsOpen(false);
     setIsSubmitted(false);
     setHolidayCalendarData({
+    holidayId: 0,
     holidayName: "",
     holidayDate: "",
     financialYear: {
@@ -240,7 +240,8 @@ function HolidayCalendar() {
             <ModalHeadingText>Setup Holiday Calendar</ModalHeadingText>
             <CloseIcon
               onClick={() => {
-                setIsOpen(false);
+                //setIsOpen(false);
+                handleModalClose();
               }}
               style={{ cursor: "pointer" }}
             />
@@ -251,7 +252,7 @@ function HolidayCalendar() {
                 <InputTextLabel>Financial Year</InputTextLabel>
                 <select
                   style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
-                  border: isSubmitted && !holidayCalendarData?.financialYear.financialYearName ? "1px solid red" : "1px solid lightgray",
+                  border: isSubmitted && !holidayCalendarData?.financialYear.financialYearName ? "1px solid red" : "1px solid Darkgray",
                   borderRadius: "4px"}}
                   value={holidayCalendarData?.financialYear.financialYearName}
                   onChange={(e) => {
@@ -271,9 +272,7 @@ function HolidayCalendar() {
                     });
                   }}
                 >
-                  <option value="" disabled selected hidden>
-                    Please choose one option
-                  </option>
+                  <option value="" disabled selected hidden></option>
                   {financialYearData.map((fyData, index) => {
                     const fyNameData = fyData.financialYearName;
                     const fId = fyData.financialYearId;
@@ -290,7 +289,7 @@ function HolidayCalendar() {
                 <span>Location</span></InputTextLabel>
                 <select
                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
-                 border:  isSubmitted && !holidayCalendarData?.location.locationName ? '1px solid red' : '1px solid lightgray',
+                 border:  isSubmitted && !holidayCalendarData?.location.locationName ? '1px solid red' : '1px solid Darkgray',
                  borderRadius: "5px"
                 }}
                  value={holidayCalendarData?.location.locationName}
@@ -380,7 +379,8 @@ function HolidayCalendar() {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    setIsOpen(false);
+                    //setIsOpen(false);
+                    handleModalClose();
                   }}
                   value="Cancel"
                   id="create-account"
@@ -516,7 +516,7 @@ function Tr({
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{getDayName(holidayDate)}</span>
         </TableCellSection> 
-        <TableCellSection>
+        <TableCellSection style={{ position: "relative" }} >
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -524,7 +524,9 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right: "20px", position: "fixed" }} className="dropdown-content">
+              <div 
+              style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+              className="dropdown-content">
                 <a
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
