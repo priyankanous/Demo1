@@ -16,8 +16,9 @@ import {
   Select,
   MenuItem,
   Checkbox,
+  Radio,
 } from "@mui/material";
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box, Typography, IconButton, Button } from "@mui/material";
 import {
   TableRowSection,
   TableCellSection,
@@ -45,19 +46,7 @@ function AnnualTargetEntry() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [regionName, setRegionName] = useState(null);
-  const [availableUsers, setavailUsers] = useState([
-    "Hulk",
-    "Iron man",
-    "Captain America",
-    "Spider man",
-    "Thor",
-  ]);
-  const [selectedusers, setSelectedusers] = useState([
-    "Batman",
-    "Super man",
-    "Wonder woman",
-    "Flash",
-  ]);
+
   const [regionDisplayName, setRegionDisplayName] = useState(null);
   const [regionData, setRegionData] = useState({
     regionName: "",
@@ -65,6 +54,9 @@ function AnnualTargetEntry() {
   });
   const [activeClass, setActiveClass] = useState(true);
   const [setUser, setActiveUser] = useState("");
+  const [isAnnualEntrySelected, setIsAnnualEntrySelected] = useState(true);
+  const [isUploadEntrySelected, setIsUploadEntrySelected] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     getAllRegionData();
@@ -92,6 +84,7 @@ function AnnualTargetEntry() {
   };
   const handleModalClose = () => {
     setIsOpen(false);
+    setSelectedFile(null);
   };
 
   const childAccount = ["nous", "nous", "nous"];
@@ -122,11 +115,52 @@ function AnnualTargetEntry() {
     setActiveUser(key);
   };
 
+  const handleAnnualEntryChange = (e) => {
+    setIsAnnualEntrySelected(e.target.checked);
+    setIsUploadEntrySelected(false);
+  };
+
+  const handleUploadEntryChange = (e) => {
+    setIsUploadEntrySelected(e.target.checked);
+    setIsAnnualEntrySelected(false);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent opening the file in a new tab
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleFileUpload = () => {
+    console.log("");
+  };
+
+  const handleFileInputChange = (e) => {
+    const files = e.target.files;
+    console.log("Selected files:", files);
+    setSelectedFile(files[0]);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent opening the file in a new tab
+    const files = e.dataTransfer.files;
+    handleFileUpload(files);
+  };
+  const DragAndDropContainer = styled("div")({
+    display: "flex",
+    alignItems: "center",
+    border: "1px solid #FFFFFF",
+    borderRadius: "5px",
+    padding: "20px",
+    textAlign: "center",
+    cursor: "pointer",
+    height: "150px",
+  });
   return (
     <div>
       <MemoizedBaseComponent
         field="Region"
-        columns={["No", "Roles", "Users"]}
+        columns={["Financial Year", "Date of Upload", "Uploaded By"]}
         data={data}
         buttonText="Add New"
         Tr={(obj) => {
@@ -141,9 +175,12 @@ function AnnualTargetEntry() {
         setIsOpen={setIsOpen}
       />
       <Modal open={isOpen} onClose={handleModalClose}>
-        <Box sx={MoadalStyle} style={{ width: "950px", height: "600px", overflow:"auto" }}>
+        <Box
+          sx={MoadalStyle}
+          style={{ width: "950px", height: "600px", overflow: "auto" }}
+        >
           <ModalHeadingSection>
-            <ModalHeadingText>Setup Annual Target Entry</ModalHeadingText>
+            <ModalHeadingText>Setup Add Annual Target Entry</ModalHeadingText>
             <CloseIcon
               onClick={() => {
                 setIsOpen(false);
@@ -151,7 +188,7 @@ function AnnualTargetEntry() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ height: "650px" }}>
+          <ModalDetailSection style={{ width: "1000px" }}>
             <form
               id="reg-form"
               style={{
@@ -159,436 +196,798 @@ function AnnualTargetEntry() {
                 display: "flex",
                 justifyC: "space-between",
                 flexWrap: "wrap",
-                flexBasis: "100%", 
-                gap: "90px",
-                columnGapGap:"130px"
+                flexBasis: "100%",
+                gap: "30px",
               }}
             >
-              <div style={{ flexWrap: "wrap", rowGap: "30px" }}>
-                <div style={{ flexBasis: "100%", gap: "5px", marginBottom:"10px" }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>BU</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%",gap: "5px",  marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Location</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Business Type</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q1 FY23 B</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q2 FY23 B</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", marginBottom:"10px" }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q3 FY23 B</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q4 FY23 B</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px" }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>FY23</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-              </div>
-              <div style={{ flexWrap: "wrap", rowGap: "30px" }}>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>SBU</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Region</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>COC Pratice</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q1 FY23 S</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q2 FY23 S</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-               
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}
+              >
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flexBasis: "100%",
-                    gap: "5px",
-                    marginBottom:"10px" 
-                  }}
+                  style={{ display: "flex", flexBasis: "100%", gap: "75px" }}
                 >
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q3 FY23 S</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px" }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q4 FY23 S</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
+                  <div style={{ display: "flex" }}>
+                    <div style={{ marginTop: "7px" }}>
+                      <span style={{ color: "red" }}>*</span>
+                      <span>Financial Year :</span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", marginLeft: "-75px" }}>
+                    <FormControl>
+                      <Select
+                        size="small"
+                        style={{
+                          background: "white",
+                          width: "160px",
+                          marginLeft: "8px",
+                        }}
+                        // onChange={(e) => {
+                        //   setAccountName(e.target.value);
+                        // }}
+                        // value={accountName}
+                      >
+                        {childAccount?.map((accountName, index) => {
+                          return (
+                            <MenuItem
+                              value={JSON.stringify(accountName)}
+                              selected={childAccount === childAccount}
+                              key={index}
+                            >
+                              {accountName}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <div style={{ width: "100%" }}>
+                      <Radio
+                        checked={isAnnualEntrySelected}
+                        onChange={handleAnnualEntryChange}
+                      />
+                      <span>Enter Annual data</span>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <div style={{ width: "100%" }}>
+                      <Radio
+                        checked={isUploadEntrySelected}
+                        onChange={handleUploadEntryChange}
+                      />
+                      <span>Upload Annual data</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div style={{ flexWrap: "wrap", rowGap: "30px" }}>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>SBU Head</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Account</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>BDM</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q1 FY23 T</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q2 FY23 T</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div style={{ flexBasis: "100%", gap: "5px",marginBottom:"10px"  }}>
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q3 FY23 T</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    flexBasis: "100%",
-                    gap: "5px",
-                  }}
-                >
-                  <InputTextLabel>
-                    <span style={{ color: "red" }}>*</span>
-                    <span>Q4 FY23 T</span>
-                  </InputTextLabel>
-                  <InputField
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    //   onChange={(e) => {
-                    //     setAccountName(e.target.value);
-                    //   }}
-                    //   value={accountName}
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginLeft: "-25px" }}>
-                <ButtonSection>
-                  <ModalControlButton
-                    sx={{ marginLeft: "400px" }}
-                    type="button"
-                    value="Save"
-                    id="create-account"
-                    variant="contained"
-                    // onClick={() => {
-                    //   setSbuHeadData();
-                    // }}
-                  >
-                    Save
-                  </ModalControlButton>
-                  <ModalControlButton
-                    sx={{  }}
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      resetData();
+              {isAnnualEntrySelected && (
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
                     }}
-                    value="Cancel"
-                    id="create-account"
                   >
-                    Cancel
-                  </ModalControlButton>
-                </ButtonSection>
-              </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          flexBasis: "25%",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>BU</span>
+                        </div>
+                        <div>
+                          <div>
+                            <InputField
+                              size="small"
+                              type="text"
+                              id="name"
+                              variant="outlined"
+                              spellcheck="false"
+                              // onChange={(e) => {
+                              //   setAccountData({
+                              //     ...accountData,
+                              //     accountName: e.target.value,
+                              //   });
+                              // }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>SBU</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>SBU Head</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Location</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Region</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Account</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Business Type</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>COC Pratice</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>BDM</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q1 FY23 B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q1 FY23 S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q1 FY23 T</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q2 FY23 B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q2 FY23 S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q2 FY23 T</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY23 B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY23 S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY23 T</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY23 B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY23 S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY23 T</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>FY 23</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{ padding: "10px 0 0 10px", marginLeft: "-25px" }}
+                  >
+                    <ButtonSection>
+                      <ModalControlButton
+                        sx={{ marginLeft: "400px", marginRight: "75px" }}
+                        type="button"
+                        value="Save"
+                        id="create-account"
+                        variant="contained"
+                        // onClick={() => {
+                        //   setSbuHeadData();
+                        // }}
+                      >
+                        Save
+                      </ModalControlButton>
+                      <ModalControlButton
+                        sx={{ marginRight: "380px" }}
+                        type="button"
+                        variant="contained"
+                        onClick={() => {
+                          resetData();
+                        }}
+                        value="Cancel"
+                        id="create-account"
+                      >
+                        Cancel
+                      </ModalControlButton>
+                    </ButtonSection>
+                  </div>
+                </div>
+              )}
+              {isUploadEntrySelected && (
+                <div>
+                  <ModalDetailSection
+                    style={{
+                      backgroundColor: "#F2FBFF",
+                      width: "800px",
+                      height: "350px",
+                    }}
+                  >
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ color: "red" }}>*</span>
+                      <span>File :</span>
+                    </div>
+                    <Box style={{ backgroundColor: "#FFFFFF", margin: "20px" }}>
+                      <DragAndDropContainer
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                      >
+                        <Typography variant="body1">
+                          Drag and drop your files here or{" "}
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            const fileInput = document.createElement("input");
+                            fileInput.type = "file";
+                            fileInput.accept =
+                              "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; // Accept only Excel files
+                            fileInput.addEventListener(
+                              "change",
+                              handleFileInputChange
+                            );
+                            fileInput.click();
+                          }}
+                          style={{
+                            marginLeft: "10px",
+                            backgroundColor: "#1E4482",
+                            color: "#FFFFFF",
+                          }}
+                        >
+                          Browse
+                        </Button>
+                      </DragAndDropContainer>
+                    </Box>
+                  </ModalDetailSection>
+                  <Box
+                    style={{
+                      textAlign: "center",
+                      paddingBottom: "15px",
+                      backgroundColor: "#F2FBFF",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={handleFileUpload}
+                      style={{
+                        backgroundColor: "#1E4482",
+                        color: "#FFFFFF",
+                        marginRight: "30px",
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        handleModalClose();
+                      }}
+                      style={{
+                        marginLeft: "10px",
+                        backgroundColor: "#1E4482",
+                        color: "#FFFFFF",
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
+                </div>
+              )}
             </form>
           </ModalDetailSection>
         </Box>

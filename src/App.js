@@ -108,7 +108,10 @@ function App() {
         <Route
           path="/settings/annual-target-entry"
           component={Settings.AnnualTargetEntry}
-        />
+        /><Route
+        path="/settings/roles"
+        component={Settings.Roles}
+      />
       </Switch>
     </Router>
   );
