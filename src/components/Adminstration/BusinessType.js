@@ -1,9 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -22,7 +18,7 @@ import {
   ModalControlButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
@@ -106,7 +102,6 @@ function BusinessType() {
   };
 
   const openTheModalWithValues = async (e, id) => {
-    console.log(id, "HERE");
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/${id}`
     );
@@ -120,6 +115,7 @@ function BusinessType() {
     }
   };
 
+  //delete record
   const deleteRecord = async (id) => {
     axios
     .delete(
@@ -142,20 +138,31 @@ function BusinessType() {
     })
   };
 
+  //activate/deactive record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setbusinessTypeFormData({
-        businessTypeName: "",
-        businessTypeDisplayName: "",
-      });
-      setIsOpen(false);
-      setIsEditId(null);
-      fetchBusinessTypeData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-type/activate-or-deactivate/${id}`
+      );
+  
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setbusinessTypeFormData({
+          businessTypeName: "",
+          businessTypeDisplayName: "",
+        });
+        setIsEditId(null);
+        fetchBusinessTypeData();
+      } else {
+        setShowSnackbar(true);
+        setSnackMessage("An error occurred while processing the request");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
+  
 
   return (
     <div>

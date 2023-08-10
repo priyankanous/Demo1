@@ -1,9 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { bdmStyleObject, modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -22,9 +18,9 @@ import {
 } from "../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
+import SnackBar from "../CommonComponent/SnackBar";
 
 function GlobalLeaveLossFactor() {
   const [data, setData] = useState({
@@ -69,7 +65,6 @@ function GlobalLeaveLossFactor() {
   ];
 
   const getAllGlobalLLF = async (e) => {
-    console.log("in the getALLGlobalLLF", e);
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${e}`
@@ -80,27 +75,30 @@ function GlobalLeaveLossFactor() {
       });
   };
   const AddDataToGlobalLLF = async (e) => {
-    if (!globalLeaveLossFactorData?.month || !globalLeaveLossFactorData?.onSite || !globalLeaveLossFactorData?.offShore || !globalLeaveLossFactorData?.financialYear?.financialYearName) {
+    if (
+      !globalLeaveLossFactorData?.month ||
+      !globalLeaveLossFactorData?.onSite ||
+      !globalLeaveLossFactorData?.offShore ||
+      !globalLeaveLossFactorData?.financialYear?.financialYearName
+    ) {
       setIsSubmitted(true);
-    } else{
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
-        globalLeaveLossFactorData
-      );
-      setIsOpen(false);
-    } catch {}
-  }
+    } else {
+      try {
+        const response = await axios.post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor",
+          globalLeaveLossFactorData
+        );
+        setIsOpen(false);
+      } catch {}
+    }
   };
 
   const getFinancialYearNameData = async () => {
-    console.log("in financial year data");
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
       )
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setData({ ...data, financialYearData: actualDataObject });
         setFinancialYearData(actualDataObject);
@@ -108,15 +106,12 @@ function GlobalLeaveLossFactor() {
   };
 
   const openTheModalWithValues = async (e, id) => {
-    console.log(id, "HERE");
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${id}`
       )
       .then((response) => {
-        console.log("In the open modal", response);
         response.data.data.map((editData, index) => {
-          console.log("this is month", editData.month);
           setGlobalLeaveLoseFactorData({
             ...globalLeaveLossFactorData,
             month: editData.month,
@@ -138,8 +133,6 @@ function GlobalLeaveLossFactor() {
   };
 
   const copyFromFyToNewFy = async (copyData) => {
-    console.log("in copy functionn first", copyData);
-
     const response = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/financial-year/${copyData.copyFromFy}`
     );
@@ -182,7 +175,7 @@ function GlobalLeaveLossFactor() {
         startingFrom: "",
         endingOn: "",
       },
-    })
+    });
   };
 
   return (
@@ -234,9 +227,12 @@ function GlobalLeaveLossFactor() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
-                    // border: "1px solid lightgray",
-                    border: isSubmitted && !globalLeaveLossFactorData?.financialYear.financialYearName ? '1px solid red' : '1px solid lightgray',
-
+                    border:
+                      isSubmitted &&
+                      !globalLeaveLossFactorData?.financialYear
+                        .financialYearName
+                        ? "1px solid red"
+                        : "1px solid lightgray",
                   }}
                   value={
                     globalLeaveLossFactorData.financialYear.financialYearName
@@ -322,8 +318,10 @@ function GlobalLeaveLossFactor() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
-                    // border: "1px solid lightgray",
-                    border: isSubmitted && !globalLeaveLossFactorData?.month ? '1px solid red' : '1px solid lightgray',
+                    border:
+                      isSubmitted && !globalLeaveLossFactorData?.month
+                        ? "1px solid red"
+                        : "1px solid lightgray",
                   }}
                   value={globalLeaveLossFactorData.month}
                   onChange={(e) => {
@@ -377,8 +375,13 @@ function GlobalLeaveLossFactor() {
                       onSite: e.target.value,
                     });
                   }}
-                  style={{ border: isSubmitted && !globalLeaveLossFactorData?.onSite ? '1px solid red' : '1px solid lightgray',
-                  borderRadius:"4px"}}
+                  style={{
+                    border:
+                      isSubmitted && !globalLeaveLossFactorData?.onSite
+                        ? "1px solid red"
+                        : "1px solid lightgray",
+                    borderRadius: "4px",
+                  }}
                 />
               </div>
 
@@ -400,9 +403,13 @@ function GlobalLeaveLossFactor() {
                       offShore: e.target.value,
                     });
                   }}
-                  style={{ border: isSubmitted && !globalLeaveLossFactorData?.offShore ? '1px solid red' : '1px solid lightgray',
-                  borderRadius:"4px"}}
-                  
+                  style={{
+                    border:
+                      isSubmitted && !globalLeaveLossFactorData?.offShore
+                        ? "1px solid red"
+                        : "1px solid lightgray",
+                    borderRadius: "4px",
+                  }}
                 />
               </div>
 
@@ -453,6 +460,9 @@ function Tr({
     financialYear: financialYear,
   });
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
   const months = [
     "January",
     "February",
@@ -497,23 +507,38 @@ function Tr({
   };
 
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setGlobalLeaveLoseFactorData({
-        month: "",
-        onSite: "",
-        offShore: "",
-        financialYear: {
-          financialYearId: "",
-          financialYearName: "",
-          financialYearCustomName: "",
-          startingFrom: "",
-          endingOn: "",
-        },
-      });
-      setIsOpen(false);
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/leave-loss-factor/activate-or-deactivate/${id}`
+      );
+
+      if (
+        response.data?.message === "Success" &&
+        response.data?.responseCode === 200
+      ) {
+        setShowSnackbar(true); // Show the success Snackbar
+        setSnackMessage("Record activated/deactivated successfully.");
+        setIsOpen(false);
+        setGlobalLeaveLoseFactorData({
+          month: "",
+          onSite: "",
+          offShore: "",
+          financialYear: {
+            financialYearId: "",
+            financialYearName: "",
+            financialYearCustomName: "",
+            startingFrom: "",
+            endingOn: "",
+          },
+        });
+      } else {
+        setShowSnackbar(true);
+        setSnackMessage("Error activating/deactivating the record.");
+      }
+    } catch (error) {
+      // Handle error if the API call fails
+      setShowSnackbar(true); // Show the Snackbar with error message
+      setSnackMessage(error.response.data.details);
     }
   };
 
@@ -581,7 +606,6 @@ function Tr({
                   // }}
                   onClick={() => {
                     setIsOpen(true);
-                    console.log("clicked");
                   }}
                 >
                   <BorderColorOutlinedIcon
@@ -779,6 +803,12 @@ function Tr({
           </Box>
         </Modal>
       </TableRowSection>
+      <SnackBar
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+      />
     </React.Fragment>
   );
 }

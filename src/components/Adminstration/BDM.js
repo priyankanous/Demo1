@@ -1,15 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-import { defaultStyles } from "react-modal";
-import { bdmStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value.js";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-// import Modal from "react-modal";
 import {
-
   Modal
 } from "@mui/material";
 import {
@@ -79,23 +73,25 @@ function Bdm() {
     "Dec",
   ];
 
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState("");
+
   const getBuNameData = async () => {
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
       )
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setBuNameData(actualDataObject);
       });
   };
 
+  //get Region data
   const getAllRegionData = async () => {
     await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setRegionData(actualDataObject);
       });
@@ -117,22 +113,12 @@ function Bdm() {
     setRegion(data?.data);
   };
 
-  // const fetchBdmData = async () => {
-  //   fetchBusinessUnitData();
-  //   fetchRegionData();
-  //   const { data } = await axios.get(
-  //     "http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm"
-  //   );
-  //   setData(data?.data);
-  // };
-
   const fetchBdmData = async () => {
     fetchBusinessUnitData();
     fetchRegionData();
     await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm`)
       .then((response) => {
-        console.log("This is axios resp", response);
         const actualDataObject = response.data.data;
         setData(actualDataObject);
       });
@@ -162,6 +148,7 @@ function Bdm() {
     })
   };
 
+  //save API
   const postBdmData = async () => {
     const { bdmDisplayName, bdmName, activeFrom, activeUntil,businessUnits, regions } = bdmFormData;
     let activeFromDt = "",
@@ -265,7 +252,6 @@ function Bdm() {
   };
 
   const selectMarkDropdown = (value, type) => {
-    console.log(value);
     if (type === "bu") {
       const indexOfSelectedValue = selectedBusinessUnit.findIndex(
         (valueObj) => {
@@ -325,20 +311,29 @@ function Bdm() {
   };
 
   const activateDeactivate = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setIsOpen(false);
-      setBusinessUnitLinked(false);
-      setRegionLinked(false);
-      setselectedBusinessUnit([]);
-      setSelectedRegion([]);
-      setdropdownOpenBU(false);
-      setdropdownOpenReg(false);
-      fetchBdmData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/bdm/activate-or-deactivate/${id}`
+      ); 
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setBusinessUnitLinked(false);
+        setRegionLinked(false);
+        setselectedBusinessUnit([]);
+        setSelectedRegion([]);
+        setdropdownOpenBU(false);
+        setdropdownOpenReg(false);
+        fetchBdmData();
+      } else {
+        setShowSnackbar(true);
+        setSnackMessage("An error occurred while processing the request.");
+      }
+    } catch (error) {
+      setShowSnackbar(true); 
+      setSnackMessage(error.response.data.details);
     }
   };
+  
 
   return (
     <div>
@@ -793,6 +788,12 @@ function Bdm() {
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+      />
     </div>
   );
 }
@@ -860,6 +861,8 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
+        setShowSnackbar(false);
+
         fetchBdmData();
         setIsOpen(false);
       })

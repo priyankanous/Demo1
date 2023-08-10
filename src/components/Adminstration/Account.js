@@ -357,24 +357,53 @@ function Tr({
       });
   };
 
+  // const activeDeactivateTableData = async (id) => {
+  //   const { data } = await axios.put(
+  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
+  //   );
+  //   if (data?.message === "Success" && data?.responseCode === 200) {
+  //     setAccountData({
+  //       accountName: "",
+  //       accountId: "",
+  //       accountOrClientCode: "string",
+  //       regions: {
+  //         regionName: "",
+  //         regionDisplayName: "",
+  //       },
+  //     });
+  //     setIsOpen(false);
+  //     getAllAccountsData();
+  //   }
+  // };
+
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setAccountData({
-        accountName: "",
-        accountId: "",
-        accountOrClientCode: "string",
-        regions: {
-          regionName: "",
-          regionDisplayName: "",
-        },
-      });
-      setIsOpen(false);
-      getAllAccountsData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
+      );
+  
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setAccountData({
+          accountName: "",
+          accountId: "",
+          accountOrClientCode: "string",
+          regions: {
+            regionName: "",
+            regionDisplayName: "",
+          },
+        });
+        getAllAccountsData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage(response.data?.details);
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage("An error occurred while processing the request.");
     }
   };
+  
 
   const deleteRecord = (accountId) => {
     axios

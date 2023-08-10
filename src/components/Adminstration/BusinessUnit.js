@@ -1,14 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-// import { AiOutlineClose } from "react-icons/ai";
-// import { modalStyleObject } from "../../utils/constantsValue";
-// import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import {
-  Modal,
-} from "@mui/material";
+import { Modal } from "@mui/material";
 import {
   TableRowSection,
   TableCellSection,
@@ -29,22 +24,16 @@ import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import SnackBar from "../CommonComponent/SnackBar";
 
-
 function BuisnessUnit() {
   const [data, setData] = useState(null);
-  // const [orgNameData, setOrgNameData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [businessUnitData, setBusinessUnitData] = useState({
     businessUnitName: "",
     businessUnitDisplayName: "",
-    // organization: { id: "", orgName: "", orgDisplayName: "" },
   });
 
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
-  
-  const [showSnackbar, setShowSnackbar] = useState(true);
-	const [snackMessage, setSnackMessage] = useState("");
 
   useEffect(() => {
     getAllBuData();
@@ -64,9 +53,8 @@ function BuisnessUnit() {
     });
   };
 
-
+  //get table data
   const getAllBuData = () => {
-    // getOrgNameData();
     axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit`
@@ -76,37 +64,31 @@ function BuisnessUnit() {
         setData(actualDataObject);
       });
   };
-  // const getOrgNameData = () => {
-  //   axios
-  //     .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/organization`)
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       setOrgNameData(actualDataObject);
-  //     });
-  // };
+
+  //save data
   const AddDataToBu = async (e) => {
-    if (businessUnitData.businessUnitName.trim() === '') {
+    if (businessUnitData.businessUnitName.trim() === "") {
       setIsNameEmpty(true);
     } else {
       setIsNameEmpty(false);
     }
 
-    if (businessUnitData.businessUnitDisplayName.trim() === '') {
+    if (businessUnitData.businessUnitDisplayName.trim() === "") {
       setIsDisplayNameEmpty(true);
     } else {
       setIsDisplayNameEmpty(false);
     }
     if (!isNameEmpty && !isDisplayNameEmpty) {
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit",
-        businessUnitData
-      );
-      // setIsOpen(false);
-      getAllBuData();
-      setIsNameEmpty(false);
-      handleModalClose();
-    } catch {}
+      try {
+        const response = await axios.post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit",
+          businessUnitData
+        );
+        // setIsOpen(false);
+        getAllBuData();
+        setIsNameEmpty(false);
+        handleModalClose();
+      } catch {}
     }
   };
 
@@ -122,7 +104,6 @@ function BuisnessUnit() {
             <Tr
               data={obj}
               getAllBuData={getAllBuData}
-              // orgNameData={orgNameData}
               setBusinessUnitData={setBusinessUnitData}
             />
           );
@@ -158,8 +139,12 @@ function BuisnessUnit() {
                       businessUnitName: e.target.value,
                     });
                   }}
-                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
-                  borderRadius: '5px',}}
+                  style={{
+                    border: isNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
+                  }}
                 />
               </div>
 
@@ -180,59 +165,13 @@ function BuisnessUnit() {
                     });
                   }}
                   style={{
-                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
-                    borderRadius: '5px',
+                    border: isDisplayNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
                   }}
                 />
               </div>
-              {/* <div style={{ padding: "10px 0px" }}>
-                  <InputTextLabel>Parent Org</InputTextLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      label="Candidate Type"
-                      size="small"
-                      style={{ background: "white" }}
-                      onChange={(e) => {
-                        const selectedId =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgId"
-                          );
-                        const selectedOrgDispName =
-                          e.target.selectedOptions[0].getAttribute(
-                            "data-orgDispName"
-                          );
-
-                        setBusinessUnitData({
-                          ...businessUnitData,
-                          organization: {
-                            ...businessUnitData.organization,
-                            id: selectedId,
-                            orgName: e.target.value,
-                            orgDisplayName: selectedOrgDispName,
-                          },
-                        });
-                      }}
-                    >
-                      {orgNameData.map((orgDataName, index) => {
-                        const orgName = orgDataName.orgName;
-                        const orgId = orgDataName.id;
-                        const orgDisplayName = orgDataName.orgDisplayName;
-                        if (orgDataName.isActive) {
-                          return (
-                            <MenuItem
-                              data-orgId={orgId}
-                              data-orgDispName={orgDisplayName}
-                              key={index}
-                              value={orgName}
-                            >
-                              {orgName}
-                            </MenuItem>
-                          );
-                        }
-                      })}
-                    </Select>
-                  </FormControl>
-                </div> */}
               <ButtonSection>
                 <ModalControlButton
                   type="button"
@@ -259,7 +198,6 @@ function BuisnessUnit() {
           </ModalDetailSection>
         </Box>
       </Modal>
-
     </div>
   );
 }
@@ -267,14 +205,7 @@ function BuisnessUnit() {
 function Tr({
   getAllBuData,
   setBusinessUnitData,
-  // orgNameData,
-  data: {
-    businessUnitId,
-    businessUnitName,
-    businessUnitDisplayName,
-    isActive,
-    // organization,
-  },
+  data: { businessUnitId, businessUnitName, businessUnitDisplayName, isActive },
 }) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -282,15 +213,10 @@ function Tr({
     businessUnitId: businessUnitId,
     businessUnitName: businessUnitName,
     businessUnitDisplayName: businessUnitDisplayName,
-    // organization: {
-    //   id: organization.id,
-    //   orgName: organization.orgName,
-    //   orgDisplayName: organization.orgDisplayName,
-    // },
   });
 
   const [showSnackbar, setShowSnackbar] = useState(false);
-	const [snackMessage, setSnackMessage] = useState("");
+  const [snackMessage, setSnackMessage] = useState("");
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -322,21 +248,8 @@ function Tr({
         getAllBuData();
       });
   };
-  // API calls to delete Record
 
-  // const DeleteRecord = () => {
-  //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/${businessUnitId}`,
-  //       responseData
-  //     )
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       getAllBuData();
-  //       setIsOpen(false);
-  //     });
-  // };
-
+  //delete record
   const DeleteRecord = () => {
     axios
       .delete(
@@ -344,40 +257,43 @@ function Tr({
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        // setShowSnackbar(true); 
+        // setShowSnackbar(true);
         // setSnackMessage("Deleted");
         getAllBuData();
         setIsOpen(false);
       })
       .catch((error) => {
         // Handle error if delete operation fails
-        setShowSnackbar(true); // Show the Snackbar with error message
-        setSnackMessage(error.response.data.details); // Set the error message for the Snackbar
-        // setSnackMessage("Error deleting the record"); 
-
+        setShowSnackbar(true);
+        setSnackMessage(error.response.data.details);
       });
-    };
+  };
 
-
+  //activate/deactivate record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setBusinessUnitData({
-        businessUnitName: "",
-        businessUnitDisplayName: "",
-        // organization: { id: "", orgName: "", orgDisplayName: "" },
-      });
-      setIsOpen(false);
-      getAllBuData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/business-unit/activate-or-deactivate/${id}`
+      );
+      if (
+        response.data?.message === "Success" &&
+        response.data?.responseCode === 200
+      ) {
+        setIsOpen(false);
+        getAllBuData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage("An error occurred while processing the request.");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
 
   return (
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
-        
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{businessUnitName || "Unknown"}</span>
         </TableCellSection>
@@ -386,7 +302,7 @@ function Tr({
           <span>{businessUnitDisplayName || "Unknown"}</span>
         </TableCellSection>
 
-        <TableCellSection style={{position:"relative"}}>
+        <TableCellSection style={{ position: "relative" }}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -395,7 +311,14 @@ function Tr({
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
               <div
-                style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
+                style={{
+                  float: "right",
+                  right: "20px",
+                  position: "absolute",
+                  overflow: "hidden",
+                  width: "100px",
+                  boxShadow: "none",
+                }}
                 class="dropdown-content"
               >
                 <a
@@ -469,7 +392,7 @@ function Tr({
           <ModalDetailSection>
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>
+                <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
                   <span>Name</span>
                 </InputTextLabel>
@@ -489,7 +412,7 @@ function Tr({
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-              <InputTextLabel>
+                <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
                   <span>Display Name</span>
                 </InputTextLabel>
@@ -535,11 +458,11 @@ function Tr({
         </Box>
       </Modal>
       <SnackBar
-				open={showSnackbar}
-				message={snackMessage}
-				onClose={() => setShowSnackbar(false)}
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
         autoHideDuration={10000}
-			/>
+      />
     </React.Fragment>
   );
 }

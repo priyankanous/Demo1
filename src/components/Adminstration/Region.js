@@ -1,21 +1,30 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import axios from "axios";
-import { Table, Modal, Box, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, Typography } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import {
+  Modal,
+  Box
+} from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import SnackBar from "../CommonComponent/SnackBar";
-
 
 function Region() {
   const [data, setData] = useState(null);
@@ -31,11 +40,11 @@ function Region() {
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
-
   useEffect(() => {
     getAllRegionData();
   }, []);
 
+  //get all data
   const getAllRegionData = async () => {
     await axios
       .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
@@ -46,57 +55,42 @@ function Region() {
       });
   };
 
-    const handleModalClose = () => {
+  const handleModalClose = () => {
     setIsOpen(false);
     setIsNameEmpty(false);
     setIsDisplayNameEmpty(false);
-    setRegionData({ 
-      regionName: "", 
-      regionDisplayName: ""
-     });
+    setRegionData({
+      regionName: "",
+      regionDisplayName: "",
+    });
   };
 
+  //save API
   const AddDataToRegion = async (e) => {
-    if (regionData.regionName.trim() === '') {
+    if (regionData.regionName.trim() === "") {
       setIsNameEmpty(true);
     } else {
       setIsNameEmpty(false);
     }
 
-    if (regionData.regionDisplayName.trim() === '') {
+    if (regionData.regionDisplayName.trim() === "") {
       setIsDisplayNameEmpty(true);
     } else {
       setIsDisplayNameEmpty(false);
     }
     if (!isNameEmpty && !isDisplayNameEmpty) {
-
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
-        regionData
-      );
-      console.log("this is the response", response.data);
-      getAllRegionData();
-      // setIsOpen(false);
-      handleModalClose();
-    } catch { }
-  }
+      try {
+        const response = await axios.post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
+          regionData
+        );
+        console.log("this is the response", response.data);
+        getAllRegionData();
+        // setIsOpen(false);
+        handleModalClose();
+      } catch {}
+    }
   };
-
-
-  // const openTheModalWithValues = async (e, id) => {
-  //   const { data } = await axios.get(
-  //     `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${id}`
-  //   );
-  //   if (data?.message === "Success" && data?.responseCode === 200) {
-  //     setRegionData({
-  //       regionName: data?.data?.regionName,
-  //       regionDisplayName: data?.data?.regionDisplayName,
-  //     });
-  //     setIsOpen(true);
-  //     // setIsEditId(id);
-  //   }
-  // };
 
   return (
     <div>
@@ -116,10 +110,7 @@ function Region() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
             <ModalHeadingText>Setup Region</ModalHeadingText>
@@ -134,10 +125,11 @@ function Region() {
             <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ color: "red" }}>*</span>
                   <span>Name</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField
+                  size="small"
                   type="text"
                   id="name"
                   spellcheck="false"
@@ -148,13 +140,17 @@ function Region() {
                       regionName: e.target.value,
                     });
                   }}
-                                    style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
-                  borderRadius: '5px',}}
+                  style={{
+                    border: isNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
+                  }}
                 />
               </div>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ color: "red" }}>*</span>
                   <span>Display Name</span>
                 </InputTextLabel>
                 <InputField
@@ -169,9 +165,11 @@ function Region() {
                       regionDisplayName: e.target.value,
                     });
                   }}
-                                    style={{
-                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
-                    borderRadius: '5px',
+                  style={{
+                    border: isDisplayNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
                   }}
                 />
               </div>
@@ -181,9 +179,10 @@ function Region() {
                   value="Save"
                   id="create-account"
                   onClick={AddDataToRegion}
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
-
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -191,13 +190,13 @@ function Region() {
                   }}
                   value="Cancel"
                   id="create-account"
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
-
             </form>
           </ModalDetailSection>
         </Box>
-
       </Modal>
     </div>
   );
@@ -217,7 +216,6 @@ function Tr({
 
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackMessage, setSnackMessage] = useState("");
-
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -250,18 +248,30 @@ function Tr({
       });
   };
 
+  //activate/deactivate Arecord
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setRegionData({ regionName: "", regionDisplayName: "" });
-      setIsOpen(false);
-      getAllRegionData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
+      );
+
+      if (
+        response.data?.message === "Success" &&
+        response.data?.responseCode === 200
+      ) {
+        setIsOpen(false);
+        getAllRegionData();
+      } else {
+        setShowSnackbar(true);
+        setSnackMessage("An error occurred while processing the request.");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
-  // API calls to delete Record
 
+//Delete Record
   const DeleteRecord = () => {
     axios
       .delete(
@@ -273,19 +283,15 @@ function Tr({
         getAllRegionData();
         setIsOpen(false);
       })
-      .catch((error)=>{
+      .catch((error) => {
         setShowSnackbar(true);
-        setSnackMessage(error.response.data.details); 
-      })
+        setSnackMessage(error.response.data.details);
+      });
   };
-
-
 
   const handleModalClose = () => {
     setIsOpen(false);
   };
-
-  console.log("regionId",regionId)
 
   return (
     <React.Fragment>
@@ -294,11 +300,9 @@ function Tr({
           <span>{regionName || "Unknown"}</span>
         </TableCellSection>
         <TableCellSection className={!isActive && "disable-table-row"}>
-          <span>
-            {regionDisplayName || "Unknown"}
-          </span>
+          <span>{regionDisplayName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection style={{position:"relative"}}>
+        <TableCellSection style={{ position: "relative" }}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -306,9 +310,17 @@ function Tr({
               }}
             ></AiIcons.AiOutlineMore>
             {isDropdown && (
-              <div style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
- 
-              class="dropdown-content">
+              <div
+                style={{
+                  float: "right",
+                  right: "20px",
+                  position: "absolute",
+                  overflow: "hidden",
+                  width: "100px",
+                  boxShadow: "none",
+                }}
+                class="dropdown-content"
+              >
                 <a
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
@@ -316,18 +328,21 @@ function Tr({
                     setIsOpen(true);
                   }}
                 >
-                  <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                  <BorderColorOutlinedIcon
+                    style={{ fontSize: "12px", paddingRight: "5px" }}
+                  />
                   Edit
                 </a>
                 <a
-
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
                     DeleteRecord();
                   }}
                 >
-                  <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                  <DeleteOutlinedIcon
+                    style={{ fontSize: "15px", paddingRight: "5px" }}
+                  />
                   Delete
                 </a>
                 <a
@@ -338,7 +353,9 @@ function Tr({
                   }}
                 >
                   <div style={{ display: "flex" }}>
-                    <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <ToggleOnIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
                     <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                   </div>
                 </a>
@@ -350,7 +367,9 @@ function Tr({
                   style={{ padding: "5px" }}
                 >
                   <div style={{ display: "flex" }}>
-                    <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                    <ToggleOffIcon
+                      style={{ fontSize: "22px", paddingRight: "3px" }}
+                    />
                     <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                   </div>
                 </a>
@@ -359,12 +378,9 @@ function Tr({
           </span>
         </TableCellSection>
       </TableRowSection>
-      <Modal
-                open={isOpen}
-                onClose={handleModalClose}
-      >
-                <Box sx={MoadalStyle}>
-                <ModalHeadingSection>
+      <Modal open={isOpen} onClose={handleModalClose}>
+        <Box sx={MoadalStyle}>
+          <ModalHeadingSection>
             <ModalHeadingText>Edit Region</ModalHeadingText>
             <CloseIcon
               onClick={() => {
@@ -373,15 +389,15 @@ function Tr({
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection>           
-              <form id="reg-form">
-
+          <ModalDetailSection>
+            <form id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ color: "red" }}>*</span>
                   <span>Name</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField
+                  size="small"
                   type="text"
                   id="id"
                   spellcheck="false"
@@ -398,7 +414,7 @@ function Tr({
 
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
-                                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ color: "red" }}>*</span>
                   <span>Display Name</span>
                 </InputTextLabel>
                 <InputField
@@ -423,9 +439,10 @@ function Tr({
                   value="Save"
                   id="create-account"
                   onClick={OnSubmit}
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
-
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -433,19 +450,21 @@ function Tr({
                   }}
                   value="Cancel"
                   id="create-account"
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
-              </form>
-              </ModalDetailSection>
+            </form>
+          </ModalDetailSection>
         </Box>
       </Modal>
 
       <SnackBar
-				open={showSnackbar}
-				message={snackMessage}
-				onClose={() => setShowSnackbar(false)}
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
         autoHideDuration={10000}
-			/>
+      />
     </React.Fragment>
   );
 }

@@ -1,14 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import {
-  
   Modal,
 } from "@mui/material";
 import {
@@ -101,7 +96,6 @@ function Status() {
   };
 
   const openTheModalWithValues = async (e, id) => {
-    console.log(id, "HERE");
     const { data } = await axios.get(
       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/${id}`
     );
@@ -115,6 +109,8 @@ function Status() {
     }
   };
 
+
+  //delete record
   const deleteRecord = async (id) => {
     axios
     .delete(
@@ -134,17 +130,27 @@ function Status() {
     })
   };
 
+  //activate/deactivate record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setstatusTypeFormData({ statusName: "", statusDisplayName: "" });
-      setIsOpen(false);
-      setIsEditId(null);
-      fetchstatusTypeData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/status/activate-or-deactivate/${id}`
+      ); 
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setstatusTypeFormData({ statusName: "", statusDisplayName: "" });
+        setIsEditId(null);
+        fetchstatusTypeData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage("An error occurred while processing the request");
+      }
+    } catch (error) {
+      setShowSnackbar(true); 
+      setSnackMessage(error.response.data.details);
     }
   };
+  
 
   return (
     <div>
@@ -255,6 +261,12 @@ function Status() {
           </ModalDetailSection>
         </Box>
       </Modal>
+      <SnackBar
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
+        autoHideDuration={10000}
+      />
     </div>
   );
 }
