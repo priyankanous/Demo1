@@ -107,6 +107,15 @@ export const ModalHeadingText = styled(Typography)({
   color: "#000000"
 });
 
+export const ModalDetailSection2 = styled('div')({
+  background: "#F5F9FC", 
+  display: "flex", 
+  paddingLeft: "20px",
+  paddingTop: "25px",
+  justifyContent: "Left", 
+  borderRadius: "10px"
+});
+
 export const ModalDetailSection = styled('div')({
   background: "#F5F9FC", 
   padding: "12px 10px",
@@ -153,6 +162,19 @@ export const MoadalStyle = {
   left: '55%',
   transform: 'translate(-50%, -50%)',
   width: '300px',
+  bgcolor: 'background.paper',
+  border: '1px solid transparent',
+  borderRadius: "10px"
+  // boxShadow: 24,
+  // p: 1,
+};
+
+export const MoadalStyle2 = {
+  position: 'absolute',
+  top: '50%',
+  left: '55%',
+  transform: 'translate(-50%, -50%)',
+  width: '400px',
   bgcolor: 'background.paper',
   border: '1px solid transparent',
   borderRadius: "10px"

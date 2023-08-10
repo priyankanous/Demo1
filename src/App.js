@@ -7,6 +7,7 @@ import RollingRevenueAdministration from "./utils/RollingRevenueAdministration";
 import { RevenueEntry } from "./utils/RevenueEntry";
 import { Reports } from "./utils/Reports";
 import { Settings } from "./utils/Settings";
+import Calendar from "./utils/Calendar";
 
 function App() {
   return (
@@ -108,7 +109,20 @@ function App() {
         <Route
           path="/settings/annual-target-entry"
           component={Settings.AnnualTargetEntry}
-        /><Route
+        />
+        <Route
+         path="/calender/holidaycalender"
+         component={Calendar.HolidayCalendar}
+        />
+        <Route
+         path="/calender/fortnightlymeeting"
+         component={Calendar.FortnightlyMeetings}
+        />
+        <Route
+         path="/calender/monthlybdmmeetings"
+         component={Calendar.BdmMeetings}
+        />
+        <Route
         path="/settings/roles"
         component={Settings.Roles}
       />
