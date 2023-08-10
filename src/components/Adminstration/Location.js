@@ -1,20 +1,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
-import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
-import { Box, Typography, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import ToggleOffIcon from '@mui/icons-material/ToggleOff';
+import { Modal } from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+} from "../../utils/constantsValue";
+import { Box } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ToggleOnIcon from "@mui/icons-material/ToggleOn";
+import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import SnackBar from "../CommonComponent/SnackBar";
 
 function Location() {
@@ -25,7 +32,7 @@ function Location() {
     locationDisplayName: "",
   });
   const [isEditId, setIsEditId] = useState(null);
-    
+
   const [isNameEmpty, setIsNameEmpty] = useState(false);
   const [isDisplayNameEmpty, setIsDisplayNameEmpty] = useState(false);
 
@@ -57,14 +64,15 @@ function Location() {
     });
   };
 
+  //save API
   const setlocationDetails = async () => {
-    if (locationFormData.locationName.trim() === '') {
+    if (locationFormData.locationName.trim() === "") {
       setIsNameEmpty(true);
     } else {
       setIsNameEmpty(false);
     }
 
-    if (locationFormData.locationDisplayName.trim() === '') {
+    if (locationFormData.locationDisplayName.trim() === "") {
       setIsDisplayNameEmpty(true);
     } else {
       setIsDisplayNameEmpty(false);
@@ -103,34 +111,47 @@ function Location() {
     }
   };
 
+  //delete record
   const deleteSelectedLocation = async (id) => {
     axios
-    .delete(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`,
-      locationFormData
-    )
-    .then((response) => {
-      const actualDataObject = response.data.data;
-      setLocationFormData({ locationName: "", locationDisplayName: "" });
-      setIsOpen(false);
-      setIsEditId(null);
-      fetchLocationName();
-    })
-    .catch((error)=>{
-      setShowSnackbar(true);
-      setSnackMessage(error.response.data.details); 
-    })
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${id}`,
+        locationFormData
+      )
+      .then((response) => {
+        const actualDataObject = response.data.data;
+        setLocationFormData({ locationName: "", locationDisplayName: "" });
+        setIsOpen(false);
+        setIsEditId(null);
+        fetchLocationName();
+      })
+      .catch((error) => {
+        setShowSnackbar(true);
+        setSnackMessage(error.response.data.details);
+      });
   };
 
+  //active/deactive record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setLocationFormData({ locationName: "", locationDisplayName: "" });
-      setIsOpen(false);
-      setIsEditId(null);
-      fetchLocationName();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/activate-or-deactivate/${id}`
+      );
+
+      if (
+        response.data?.message === "Success" &&
+        response.data?.responseCode === 200
+      ) {
+        setIsOpen(false);
+        setIsEditId(null);
+        fetchLocationName();
+      } else {
+        setShowSnackbar(true);
+        setSnackMessage("An error occurred while processing the request.");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
 
@@ -153,10 +174,7 @@ function Location() {
         }}
         setIsOpen={setIsOpen}
       />
-      <Modal
-        open={isOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={isOpen} onClose={handleModalClose}>
         <Box sx={MoadalStyle}>
           <ModalHeadingSection>
             <ModalHeadingText>Setup Location</ModalHeadingText>
@@ -169,13 +187,13 @@ function Location() {
           </ModalHeadingSection>
           <ModalDetailSection>
             <form id="reg-form">
-
               <div style={{ padding: "10px 0px" }}>
-                                <InputTextLabel>
+                <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
                   <span>Name</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField
+                  size="small"
                   type="text"
                   id="loc-name"
                   variant="outlined"
@@ -186,17 +204,22 @@ function Location() {
                       locationName: e.target.value,
                     });
                   }}
-                  style={{ border: isNameEmpty ? '1px solid red' : '1px solid transparent',
-                  borderRadius: '5px',}}
+                  style={{
+                    border: isNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
+                  }}
                 />
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                                <InputTextLabel>
+                <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
                   <span>Display Name</span>
                 </InputTextLabel>
-                <InputField size="small"
+                <InputField
+                  size="small"
                   type="text"
                   id="loc-disp-name"
                   variant="outlined"
@@ -207,11 +230,12 @@ function Location() {
                       locationDisplayName: e.target.value,
                     });
                   }}
-                                    style={{
-                    border: isDisplayNameEmpty ? '1px solid red' : '1px solid transparent',
-                    borderRadius: '5px',
+                  style={{
+                    border: isDisplayNameEmpty
+                      ? "1px solid red"
+                      : "1px solid transparent",
+                    borderRadius: "5px",
                   }}
-
                 />
               </div>
 
@@ -224,9 +248,9 @@ function Location() {
                   onClick={() => {
                     setlocationDetails();
                   }}
-
-
-                >Save</ModalControlButton>
+                >
+                  Save
+                </ModalControlButton>
                 <ModalControlButton
                   type="button"
                   variant="contained"
@@ -235,19 +259,20 @@ function Location() {
                   }}
                   value="Cancel"
                   id="create-account"
-
-                >Cancel</ModalControlButton>
+                >
+                  Cancel
+                </ModalControlButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
         </Box>
       </Modal>
       <SnackBar
-				open={showSnackbar}
-				message={snackMessage}
-				onClose={() => setShowSnackbar(false)}
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
         autoHideDuration={10000}
-			/>
+      />
     </div>
   );
 }
@@ -285,34 +310,46 @@ function Tr({
       <TableCellSection className={!isActive && "disable-table-row"}>
         <span>{locationDisplayName || "Unknown"}</span>
       </TableCellSection>
-      <TableCellSection data-id={locationId} style={{position:"relative"}}>
+      <TableCellSection data-id={locationId} style={{ position: "relative" }}>
         <span style={{ float: "right" }}>
           <AiIcons.AiOutlineMore
             onClick={(e) => closeDropDown(isDropdown)}
           ></AiIcons.AiOutlineMore>
           {isDropdown && (
-            <div  
-            style={{ float: "right", right: "20px", position: "absolute", overflow: "hidden", width: "100px", boxShadow: "none"  }}
-            class="dropdown-content">
+            <div
+              style={{
+                float: "right",
+                right: "20px",
+                position: "absolute",
+                overflow: "hidden",
+                width: "100px",
+                boxShadow: "none",
+              }}
+              class="dropdown-content"
+            >
               <a
-              className={!isActive && "disable-table-row"}
+                className={!isActive && "disable-table-row"}
                 onClick={(e) => {
                   openTheModalWithValues(e, locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <BorderColorOutlinedIcon style={{ fontSize: "12px", paddingRight: "5px" }} />
+                <BorderColorOutlinedIcon
+                  style={{ fontSize: "12px", paddingRight: "5px" }}
+                />
                 Edit
               </a>
               <a
-              className={!isActive && "disable-table-row"}
+                className={!isActive && "disable-table-row"}
                 onClick={() => {
                   console.log("onclick", locationId);
                   deleteSelectedLocation(locationId);
                 }}
                 style={{ padding: "5px" }}
               >
-                <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
+                <DeleteOutlinedIcon
+                  style={{ fontSize: "15px", paddingRight: "5px" }}
+                />
                 Delete
               </a>
               <a
@@ -323,12 +360,12 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-
-                  <ToggleOnIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOnIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
                   <p style={{ margin: "3px 0px 0px 0px" }}>Activate</p>
                 </div>
               </a>
-
 
               <a
                 className={!isActive && "disable-table-row"}
@@ -338,10 +375,11 @@ function Tr({
                 style={{ padding: "5px" }}
               >
                 <div style={{ display: "flex" }}>
-                  <ToggleOffIcon style={{ fontSize: "22px", paddingRight: "3px" }} />
+                  <ToggleOffIcon
+                    style={{ fontSize: "22px", paddingRight: "3px" }}
+                  />
                   <p style={{ margin: "3px 0px 0px 0px" }}>Deactivate</p>
                 </div>
-
               </a>
             </div>
           )}{" "}
