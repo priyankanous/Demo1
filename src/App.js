@@ -122,6 +122,10 @@ function App() {
          path="/calender/monthlybdmmeetings"
          component={Calendar.BdmMeetings}
         />
+        <Route
+        path="/settings/roles"
+        component={Settings.Roles}
+      />
       </Switch>
     </Router>
   );

@@ -126,7 +126,7 @@ function ExplicitPermission() {
     <div>
       <MemoizedBaseComponent
         field="Region"
-        columns={["No", "Roles", "Users"]}
+        columns={["Role", "User", "Module","Menu", "BU", "SBU", "Account", "Project Code"]}
         data={data}
         buttonText="Add New"
         Tr={(obj) => {

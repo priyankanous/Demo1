@@ -1,9 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiFillPlusSquare, AiOutlineClose } from "react-icons/ai";
-// import Modal from "react-modal";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -41,11 +37,6 @@ function Sbu() {
       businessUnitId: "",
       businessUnitName: "",
       businessUnitDisplayName: "",
-      // organization: {
-      //   id: 0,
-      //   orgName: "",
-      //   orgDisplayName: "",
-      // },
     },
   });
 
@@ -74,15 +65,11 @@ function Sbu() {
         businessUnitId: "",
         businessUnitName: "",
         businessUnitDisplayName: "",
-        // organization: {
-        //   id: 0,
-        //   orgName: "",
-        //   orgDisplayName: "",
-        // },
       },
     });
   };
 
+  //get all BU data
   const getBuNameData = async () => {
     await axios
       .get(
@@ -95,6 +82,7 @@ function Sbu() {
       });
   };
 
+  //get all SBU data
   const getAllSbuData = async () => {
     getBuNameData();
     await axios
@@ -105,6 +93,7 @@ function Sbu() {
       });
   };
 
+  //save API
   const AddDataToSbu = async (e) => {
     if (sbuData.sbuName.trim() === '') {
       setIsNameEmpty(true);
@@ -137,6 +126,7 @@ function Sbu() {
     } catch {}
   }
   };
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -213,79 +203,6 @@ function Sbu() {
                   }}
                 />
               </div>
-              {/* <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Parent of BU</InputTextLabel>
-                <FormControl fullWidth>
-                  <Select
-                    // labelId="demo-simple-select-label"
-                    // id="demo-simple-select"
-                    size="small"
-                    style={{ background: "white" }}
-                    onChange={(e) => {
-                      const selectedBuId =
-                        e.target.selectedOptions[0].getAttribute("data-buId");
-                      const selectedBuDispName =
-                        e.target.selectedOptions[0].getAttribute(
-                          "data-buDisplayName"
-                        );
-                      // const selectedOrgId =
-                      //   e.target.selectedOptions[0].getAttribute("data-orgId");
-                      // const selectedOrgDispName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgDisplayName"
-                      //   );
-                      // const selectedOrgName =
-                      //   e.target.selectedOptions[0].getAttribute(
-                      //     "data-orgName"
-                      //   );
-
-                      setSbuData({
-                        ...sbuData,
-                        businessUnit: {
-                          ...sbuData.businessUnit,
-                          businessUnitId: selectedBuId,
-                          businessUnitName: e.target.value,
-                          businessUnitDisplayName: selectedBuDispName,
-                          // organization: {
-                          //   ...sbuData.businessUnit.organization,
-                          //   id: selectedOrgId,
-                          //   orgName: selectedOrgName,
-                          //   orgDisplayName: selectedOrgDispName,
-                          // },
-                        },
-                      });
-                    }}
-
-                  >
-                    {buNameData.map((buData, index) => {
-                      const buNameData = buData.businessUnitName;
-                      const buId = buData.businessUnitId;
-                      const buDisplayName = buData.businessUnitDisplayName;
-                      // const orgId = buData.organization.id;
-                      // const orgName = buData.organization.orgName;
-                      // const orgDisplayName = buData.organization.orgDisplayName;
-                      if (buData.isActive) {
-                        return (
-                          <MenuItem
-                            data-buId={buId}
-                            data-buDisplayName={buDisplayName}
-                            // data-orgId={orgId}
-                            // data-orgName={orgName}
-                            // data-orgDisplayName={orgDisplayName}
-                            key={index}
-                            value={JSON.stringify(sbuData)}
-                          >
-
-                            {buNameData}
-
-                          </MenuItem>
-                        );
-                      }
-                    })}
-                  </Select>
-                </FormControl>
-              </div> */}
-
               <div>
                 <label
                   for="email"
@@ -310,16 +227,6 @@ function Sbu() {
                       e.target.selectedOptions[0].getAttribute(
                         "data-buDisplayName"
                       );
-                    // const selectedOrgId =
-                    //   e.target.selectedOptions[0].getAttribute("data-orgId");
-                    // const selectedOrgDispName =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-orgDisplayName"
-                    //   );
-                    // const selectedOrgName =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-orgName"
-                    //   );
 
                     setSbuData({
                       ...sbuData,
@@ -328,12 +235,7 @@ function Sbu() {
                         businessUnitId: selectedBuId,
                         businessUnitName: e.target.value,
                         businessUnitDisplayName: selectedBuDispName,
-                        // organization: {
-                        //   ...sbuData.businessUnit.organization,
-                        //   id: selectedOrgId,
-                        //   orgName: selectedOrgName,
-                        //   orgDisplayName: selectedOrgDispName,
-                        // },
+
                       },
                     });
                   }}
@@ -342,23 +244,14 @@ function Sbu() {
                     Please choose one option
                   </option>
                   {buNameData.map((buData, index) => {
-                    {
-                      console.log("name", buData.businessUnitName);
-                    }
                     const buNameData = buData.businessUnitName;
                     const buId = buData.businessUnitId;
                     const buDisplayName = buData.businessUnitDisplayName;
-                    // const orgId = buData.organization.id;
-                    // const orgName = buData.organization.orgName;
-                    // const orgDisplayName = buData.organization.orgDisplayName;
                     if (buData.isActive) {
                       return (
                         <option
                           data-buId={buId}
                           data-buDisplayName={buDisplayName}
-                          // data-orgId={orgId}
-                          // data-orgName={orgName}
-                          // data-orgDisplayName={orgDisplayName}
                           key={index}
                         >
                           {buNameData}
@@ -414,11 +307,6 @@ function Tr({
       businessUnitId: businessUnit.businessUnitId,
       businessUnitName: businessUnit.businessUnitName,
       businessUnitDisplayName: businessUnit.businessUnitDisplayName,
-      // organization: {
-      //   id: businessUnit.organization.id,
-      //   orgName: businessUnit.organization.orgName,
-      //   orgDisplayName: businessUnit.organization.orgDisplayName,
-      // },
     },
   });
 
@@ -456,44 +344,27 @@ function Tr({
       });
   };
 
+  //active/deactive record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setSbuData({
-        sbuName: "",
-        sbuDisplayName: "",
-        businessUnit: {
-          businessUnitId: "",
-          businessUnitName: "",
-          businessUnitDisplayName: "",
-          // organization: {
-          //   id: 0,
-          //   orgName: "",
-          //   orgDisplayName: "",
-          // },
-        },
-      });
-      setIsOpen(false);
-      getAllSbuData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/activate-or-deactivate/${id}`
+      );
+  
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        getAllSbuData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage("An error occurred while processing the request.");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
-  // API calls to delete record
 
-  // const DeleteRecord = () => {
-  //   axios
-  //     .delete(
-  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbu/${sbuId}`,
-  //       responseData
-  //     )
-  //     .then((response) => {
-  //       const actualDataObject = response.data.data;
-  //       getAllSbuData();
-  //       setIsOpen(false);
-  //     });
-  // };
-
+  //delete record
   const DeleteRecord = () => {
     axios
       .delete(
@@ -675,16 +546,6 @@ function Tr({
                       e.target.selectedOptions[0].getAttribute(
                         "data-buDisplayName"
                       );
-                    // const selectedOrgId =
-                    //   e.target.selectedOptions[0].getAttribute("data-orgId");
-                    // const selectedOrgDispName =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-orgDisplayName"
-                    //   );
-                    // const selectedOrgName =
-                    //   e.target.selectedOptions[0].getAttribute(
-                    //     "data-orgName"
-                    //   );
 
                     setResponseData({
                       ...responseData,
@@ -693,12 +554,6 @@ function Tr({
                         businessUnitId: selectedBuId,
                         businessUnitName: e.target.value,
                         businessUnitDisplayName: selectedBuDispName,
-                        // organization: {
-                        //   ...responseData.businessUnit.organization,
-                        //   id: selectedOrgId,
-                        //   orgName: selectedOrgName,
-                        //   orgDisplayName: selectedOrgDispName,
-                        // },
                       },
                     });
                   }}
@@ -710,17 +565,11 @@ function Tr({
                     const buNameData = buData.businessUnitName;
                     const buId = buData.businessUnitId;
                     const buDisplayName = buData.businessUnitDisplayName;
-                    // const orgId = buData.organization.id;
-                    // const orgName = buData.organization.orgName;
-                    // const orgDisplayName = buData.organization.orgDisplayName;
                     if (buData.isActive) {
                       return (
                         <option
                           data-buId={buId}
                           data-buDisplayName={buDisplayName}
-                          // data-orgId={orgId}
-                          // data-orgName={orgName}
-                          // data-orgDisplayName={orgDisplayName}
                           key={index}
                         >
                           {buNameData}

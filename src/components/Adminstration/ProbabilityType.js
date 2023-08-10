@@ -1,8 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineClose } from "react-icons/ai";
-import { modalStyleObject } from "../../utils/constantsValue";
-import { ModalHeading, ModalIcon } from "../../utils/Value";
 import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -115,6 +112,7 @@ function Probability() {
     }
   };
 
+  //delete record
   const deleteRecord = async (id) => {
     axios
     .delete(
@@ -134,15 +132,25 @@ function Probability() {
     })
   };
 
+//active/deactive record
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setProbabilityFormData({ probabilityTypeName: "", percentage: "" });
-      setIsOpen(false);
-      setIsEditId(null);
-      fetchPercentageType();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/probability-type/activate-or-deactivate/${id}`
+      );
+  
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setProbabilityFormData({ probabilityTypeName: "", percentage: "" });
+        setIsEditId(null);
+        fetchPercentageType();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage("An error occurred while processing the request");
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage(error.response.data.details);
     }
   };
 
@@ -222,20 +230,6 @@ function Probability() {
                   style={{ border: isPercentageEmpty ? '1px solid red' : '1px solid transparent',
                   borderRadius: '5px',}}
                 />
-                {/* <InputField size="small"
-                  type="text"
-                  id="probability-percentage"
-                  variant="outlined"
-                  spellcheck="false"
-                  value={probabilityFormData?.percentage}
-                  onChange={(e) => {
-                    setProbabilityFormData({
-                      ...probabilityFormData,
-                      percentage: parseInt(e.target.value),
-                    });
-                  }}
-
-                /> */}
               </div>
 
               <ButtonSection>
