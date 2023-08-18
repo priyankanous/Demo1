@@ -310,7 +310,7 @@ function Tr({
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
-	const [snackMessage, setSnackMessage] = useState("");
+  const [snackMessage, setSnackMessage] = useState("");
   const [responseData, setResponseData] = useState({
     accountName: "",
     accountId: "",
@@ -358,33 +358,40 @@ function Tr({
   };
 
   const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setAccountData({
-        accountName: "",
-        accountId: "",
-        accountOrClientCode: "string",
-        regions: {
-          regionName: "",
-          regionDisplayName: "",
-        },
-      });
-      setIsOpen(false);
-      getAllAccountsData();
+    try {
+      const response = await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/activate-or-deactivate/${id}`
+      );
+  
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setIsOpen(false);
+        setAccountData({
+          accountName: "",
+          accountId: "",
+          accountOrClientCode: "string",
+          regions: {
+            regionName: "",
+            regionDisplayName: "",
+          },
+        });
+        getAllAccountsData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage(response.data?.details);
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage("An error occurred while processing the request.");
     }
   };
-
   const deleteRecord = (accountId) => {
     axios
       .delete(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/accounts/${accountId}`
-        
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        // setShowSnackbar(true); 
+        // setShowSnackbar(true);
         // setSnackMessage("Deleted");
 
         getAllAccountsData();
@@ -394,10 +401,8 @@ function Tr({
         // Handle error if delete operation fails
         setShowSnackbar(true); // Show the Snackbar with error message
         setSnackMessage(error.response.data.details); // Set the error message for the Snackbar
-        // setSnackMessage("Error deleting the record"); 
-
+        // setSnackMessage("Error deleting the record");
       });
-
   };
 
   return (
@@ -412,7 +417,7 @@ function Tr({
         <TableCellSection className={!isActive && "disable-table-row"}>
           <span>{regions?.regionDisplayName || "Unknown"}</span>
         </TableCellSection>
-        <TableCellSection style={{position:"relative"}}>
+        <TableCellSection style={{ position: "relative" }}>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -618,12 +623,11 @@ function Tr({
         </Box>
       </Modal>
       <SnackBar
-				open={showSnackbar}
-				message={snackMessage}
-				onClose={() => setShowSnackbar(false)}
+        open={showSnackbar}
+        message={snackMessage}
+        onClose={() => setShowSnackbar(false)}
         autoHideDuration={10000}
-			/>
-
+      />
     </React.Fragment>
   );
 }

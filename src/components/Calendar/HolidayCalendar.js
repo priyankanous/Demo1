@@ -460,7 +460,7 @@ function Tr({
       });
   };
 
-  const DeleteRecord = async (id) => {
+  const deleteRecord = async (id) => {
     axios
       .delete(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/holiday-calendar/${id}`,
@@ -541,7 +541,7 @@ function Tr({
                   className={!isActive && "disable-table-row"}
                   style={{ padding: "5px" }}
                   onClick={() => {
-                    DeleteRecord(holidayId);
+                    deleteRecord(holidayId);
                   }}
                 >
                   <DeleteOutlinedIcon style={{ fontSize: "15px", paddingRight: "5px" }} />
