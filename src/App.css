@@ -139,7 +139,7 @@ h3 {
   border-radius: 20px; */
 }
 
-.table_main_container {
+/* .table_main_container {
   overflow: auto;
   background-color: rgb(244, 243, 243);
   position: absolute;
@@ -147,8 +147,17 @@ h3 {
   height: 64%;
   left: 17.5%;
   top: 15%;
+} */
+
+.table_main_container {
+  overflow: auto;
+  position: absolute;
+  width: 79%;
+  height: 64%;
+  left: 20%;
+  top: 12%;
 }
-.revenue_table_container {
+/* .revenue_table_container {
   overflow: auto;
   background-color: rgb(244, 243, 243);
   position: absolute;
@@ -156,6 +165,16 @@ h3 {
   left: -2%;
   height: 70%;
   top: 28%;
+} */
+
+.revenue_table_container {
+  overflow: auto;
+  background-color: rgb(244, 243, 243);
+  position: absolute;
+  width: 99%;
+  /* left: -2%; */
+  height: 70%;
+  top: 27%;
 }
 .revenue_table_container::-webkit-scrollbar {
   width: 10px;
@@ -164,15 +183,15 @@ h3 {
   background-color: rgb(193, 191, 191);
 }
 .revenue_table_container::-webkit-scrollbar-thumb {
-  background: #007a7e;
-  
+  /* background: #007a7e; */
+  background: rgba(30, 68, 130, 1);
   border-radius: 25px;
 }
 
 table {
   overflow: visible !important;
   border-collapse: collapse;
-  /* width: 90%; */
+  width: 99%;
   /* margin-left: 3%; */
 }
 #revenuetable {
@@ -198,9 +217,14 @@ table {
   background-color: white;
   box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
 }
-.rowtable {
+/* .rowtable {
   margin: 3%;
   border: 1px solid black;
+  border-collapse: collapse;
+} */
+.rowtable {
+  margin: 3%;
+  border-right: 1px solid #0000004d;
   border-collapse: collapse;
 }
 .iconsColumn {
@@ -210,8 +234,9 @@ table {
   gap: 4px;
 }
 .nestedtablebgrevenue {
-  margin-top: 2%;
+  /* margin-top: 2%; */
   background-color: white;
+  width: 100%;
 }
 .tdrevenue {
   text-align: right;
@@ -226,7 +251,10 @@ table {
   top: 0;
   color: black;
   padding: 8px;
-  background-color: #23c5c7;
+  /* background-color: #23c5c7; */
+  background-color: rgba(72, 130, 225, 0.3);
+  ;
+
 }
 .threvenueposition {
   font-family: Sans-serif;
@@ -235,7 +263,7 @@ table {
   top: 0;
   color: black;
   padding: 9px;
-  background-color: #23c5c7;
+  /* background-color: #23c5c7; */
 }
 .revenueinput {
   margin-top: 11px;

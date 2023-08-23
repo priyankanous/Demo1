@@ -14,6 +14,24 @@ import { connect } from "react-redux";
 import { getFinancialYearData } from "../../../actions/financial-year";
 import { saveResourceData } from "../../../actions/resource";
 import { saveMileStones, saveMilestoneData } from "../../../actions/milestone";
+import AddIcon from "@mui/icons-material/Add";
+import { Checkbox } from "@mui/material";
+import { Button, Typography, styled } from "@mui/material";
+
+const TableButtons = styled(Button)({
+  background: "#1E4482",
+  marginRight: "5px",
+  marginLeft: "10px",
+  color: "#FFFFFF",
+  fontSize: "12px",
+  padding: "0px 10px",
+  height: "34px",
+  marginTop: "6px",
+  "&:hover": {
+    backgroundColor: "#1E4482",
+  },
+});
+
 function RevenueEntryScreens(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [inputNumber, setInputNumber] = useState("");
@@ -97,18 +115,31 @@ function RevenueEntryScreens(props) {
       {console.log("milestones--->", milestones)}
       <div>
         <table>
-          <tr className="trrevenue">
-            <td style={{ paddingLeft: "10px" }}>
+          <tr
+            className="trrevenue"
+            style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
+          >
+            <td style={{ textAlign: "left", width: "10px" }}>
+              <Checkbox />
+            </td>
+            <td style={{ textAlign: "left" }}>
               <a
                 onClick={() => {
                   setIsOpen(true);
                 }}
               >
-                <FaIcons.FaPlus />
+                {/* <FaIcons.FaPlus /> */}
+                <AddIcon />
               </a>
             </td>
             <td style={{ paddingLeft: "200px" }}>
               <select
+                style={{
+                  height: "32px",
+                  width: "90%",
+                  borderRadius: "7px",
+                  boxShadow: "none",
+                }}
                 id="revenue-select"
                 onChange={(e) => {
                   props.getAllRevenueEntriesForFy(e.target.value);
@@ -125,9 +156,10 @@ function RevenueEntryScreens(props) {
               </select>
             </td>
             <td className="tdrevenue">
-              <input type="checkbox" className="revenueinput" />
+              <Checkbox />
+              {/* <input type="checkbox" className="revenueinput" /> */}
               <label>Include Additional Quater Display</label>
-              <button className="button">Submit</button>
+              <TableButtons>Submit</TableButtons>
             </td>
           </tr>
         </table>
@@ -138,6 +170,7 @@ function RevenueEntryScreens(props) {
           className={"modal-container"}
         >
           <div>
+          {console.log("fffna", props.financialYear.financialYear)}
             <div class="main" className="ModalContainer">
               <div class="register">
                 <ModalHeading>Setup Entry</ModalHeading>

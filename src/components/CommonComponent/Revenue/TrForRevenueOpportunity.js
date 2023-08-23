@@ -3,6 +3,11 @@ import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import * as FaIcons from "react-icons/fa";
 import { apiV1 } from "../../../utils/constantsValue";
+import AddIcon from '@mui/icons-material/Add';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 
 function TrForRevenue(props) {
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
@@ -60,10 +65,12 @@ function TrForRevenue(props) {
     } catch {}
   };
 
+  console.log("resourcesData-------->", resourceData)
+
   return (
     <React.Fragment>
       <tr>
-        {console.log("this is propsss data", props.opportunityEntryData)}
+        {console.log("this is propsss data", props.data)}
         <td
           className="rowtable"
           onClick={(e) => {
@@ -107,20 +114,28 @@ function TrForRevenue(props) {
           style={{ backgroundColor: "white" }}
         >
           <td colSpan={10}>
-            <table>
-              <tr className="trrevenue">
+            <table  style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
+              <tr className="trrevenue" style={{backgroundColor:"rgba(225, 222, 222, 0)"}}>
                 <td className="iconsColumn" style={{ paddingLeft: "10px" }}>
                   <a>
-                    <FaIcons.FaPlus />
+                    {/* <FaIcons.FaPlus /> */}
+                    <AddIcon />
+
                   </a>
                   <a>
-                    <AiIcons.AiFillCopy />
+                    {/* <AiIcons.AiFillCopy /> */}
+                    <FileCopyOutlinedIcon />
+
                   </a>
                   <a>
-                    <AiIcons.AiOutlineEdit />
+                    {/* <AiIcons.AiOutlineEdit /> */}
+                    <EditOutlinedIcon />
+
                   </a>
                   <a>
-                    <AiIcons.AiOutlineDelete />
+                    {/* <AiIcons.AiOutlineDelete /> */}
+                    <DeleteOutlineIcon />
+
                   </a>
                 </td>
               </tr>

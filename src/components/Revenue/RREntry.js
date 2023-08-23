@@ -5,6 +5,13 @@ import * as FaIcons from "react-icons/fa";
 import axios from "axios";
 import { apiV1 } from "../../utils/constantsValue";
 import { MemoizedTrForRevenueOpportunity } from "../CommonComponent/Revenue/TrForRevenueOpportunity";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Checkbox, TableCell, TableRow } from "@mui/material";
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import AddIcon from '@mui/icons-material/Add';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 function RREntry() {
   const columns = [
@@ -63,7 +70,7 @@ function Tr({
   },
   columns2,
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [revenueEntriesData, setRevenueEntriesData] = useState({
     financialYearName: financialYearName,
     businessUnit: businessUnit,
@@ -115,12 +122,26 @@ function Tr({
     }
   };
 
+  //   const handleRowExpansion = (cell) => {
+  //   console.log("cell value", cell);
+  //   if (cell.innerHTML == <ArrowDropDownIcon />) {
+  //     cell.innerHTML = <ArrowDropUpIcon />;
+  //     setIsExpanded(true);
+  //   } else {
+  //     cell.innerHTML = <ArrowDropDownIcon />;
+  //     setIsExpanded(false);
+  //   }
+  // };
+
+
+
   return (
     <React.Fragment>
-      <tr className="nestedtablebgrevenue">
-        <td className="rowtable">
-          <input type="checkbox"></input>
-        </td>
+      <TableRow className="nestedtablebgrevenue">
+        <TableCell className="rowtable" style={{padding:"4px", borderBottom:"none"}}>
+          {/* <input type="checkbox"></input> */}
+          <Checkbox size="small" />
+        </TableCell>
         <td
           className="rowtable"
           onClick={(e) => {
@@ -130,6 +151,7 @@ function Tr({
         >
           +
           {/* <FaIcons.FaArrowDown /> */}
+          {/* <ArrowDropDownIcon /> */}
         </td>
 
         <td className="rowtable">
@@ -162,33 +184,37 @@ function Tr({
         <td className="rowtable">
           <span style={{fontSize:"14px"}}>{cocPractice || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{border:"none"}}>
           <span style={{fontSize:"14px"}}>{status || "Unknown"}</span>
         </td>
-      </tr>
+      </TableRow>
       {isExpanded && (
         <tr style={{ backgroundColor: "white" }}>
-          <td colSpan={13}>
-            <table>
-              <tr className="trrevenue">
+          <td colSpan={13} style={{paddingTop:"0px"}}>
+            <table style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
+              <tr className="trrevenue" style={{backgroundColor:"rgba(225, 222, 222, 0)"}} >
                 <td className="iconsColumn" style={{ paddingLeft: "10px" }}>
                   <a>
-                    <FaIcons.FaPlus />
+                    {/* <FaIcons.FaPlus /> */}
+                    <AddIcon />
                   </a>
                   <a>
-                    <AiIcons.AiFillCopy />
+                    {/* <AiIcons.AiFillCopy /> */}
+                    <FileCopyOutlinedIcon />
                   </a>
                   <a>
-                    <AiIcons.AiOutlineEdit />
+                    {/* <AiIcons.AiOutlineEdit /> */}
+                    <EditOutlinedIcon />
                   </a>
                   <a>
-                    <AiIcons.AiOutlineDelete />
+                    {/* <AiIcons.AiOutlineDelete /> */}
+                    <DeleteOutlineIcon />
                   </a>
                 </td>
               </tr>
               <tr className="nestedtablebgrevenue">
                 {columns2.map((header) => {
-                  return <th className="threvenue">{header}</th>;
+                  return <th className="threvenue" style={{backgroundColor:"rgba(72, 130, 225, 0.2)"}}>{header}</th>;
                 })}
               </tr>
               <tbody>
@@ -199,6 +225,12 @@ function Tr({
                       opportunityEntryData={opportunityEntryData}
                     />
                   ))}
+                                 
+                    {/* <MemoizedTrForRevenueOpportunity
+                      data={obj}
+                      opportunityEntryData={opportunityEntryData}
+                    /> */}
+               
               </tbody>
             </table>
           </td>
