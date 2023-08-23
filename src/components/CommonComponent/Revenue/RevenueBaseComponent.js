@@ -2,14 +2,31 @@ import React, { useEffect, useState } from "react";
 import {
   TableHeadingSection,
   TableHeading,
-  TableButtons,
+  // TableButtons,
 } from "../../../utils/Value";
 import { apiV1 } from "../../../utils/constantsValue";
 import axios from "axios";
 import RevenueEntryScreens from "./RevenueEntryScreens";
 import TableScroll from "./ScrollingTable";
+import { Button, Table, TableBody, TableHead, TableRow, Typography, styled } from "@mui/material";
+
+
+
+const TableButtons = styled(Button)({
+  background: "#1E4482",
+  marginRight: "4px",
+  color: "#FFFFFF",
+  fontSize: "12px",
+  padding: "0px 10px",
+  height:"34px",
+  marginTop:"6px",
+  '&:hover': {
+    backgroundColor: '#1E4482',
+  },
+});
 
 export function RevenueBaseComponent(props) {
+
   const [data, setData] = useState({});
   const getAllRevenueEntriesForFy = async (e) => {
     console.log("in the getRevenueEntriesForFy", e);
@@ -23,8 +40,12 @@ export function RevenueBaseComponent(props) {
     });
   };
 
+  console.log("props----->", data);
+
+
   return (
     <React.Fragment>
+
       <div>
       <div className="table_main_container">
         <TableHeadingSection>
@@ -36,13 +57,13 @@ export function RevenueBaseComponent(props) {
             getAllRevenueEntriesForFy={getAllRevenueEntriesForFy}
           />
           <div className="revenue_table_container">
-            <table className="nestedtablebgrevenue">
-              <tr className="nestedtablebgrevenue">
+            <Table className="nestedtablebgrevenue">
+              <TableRow className="nestedtablebgrevenue">
                 {props.columns.map((header) => {
-                  return <th className="threvenueposition">{header}</th>;
+                  return <th className="threvenueposition" style={{backgroundColor:"rgba(72, 130, 225, 0.3)"}}>{header}</th>;
                 })}
-              </tr>
-              <tbody className="nestedtablebgrevenue">
+              </TableRow>
+              <TableBody className="nestedtablebgrevenue">
                 {data.revenueEntries &&
                   data.revenueEntries.map((obj, id) => {
                     obj.financialYearName = data.financialYearName;
@@ -50,8 +71,8 @@ export function RevenueBaseComponent(props) {
                       ...obj,
                     });
                   })}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         </React.Fragment>
       </div>
