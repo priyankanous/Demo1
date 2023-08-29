@@ -14,11 +14,11 @@ import { Button, Table, TableBody, TableHead, TableRow, Typography, styled } fro
 
 const TableButtons = styled(Button)({
   background: "#1E4482",
-  marginRight: "4px",
+  marginRight: "10px",
   color: "#FFFFFF",
   fontSize: "12px",
   padding: "0px 10px",
-  height:"34px",
+  height:"30px",
   marginTop:"6px",
   '&:hover': {
     backgroundColor: '#1E4482',
@@ -29,25 +29,25 @@ export function RevenueBaseComponent(props) {
 
   const [data, setData] = useState({});
   const getAllRevenueEntriesForFy = async (e) => {
-    console.log("in the getRevenueEntriesForFy", e);
+    // console.log("in the getRevenueEntriesForFy", e);
     await axios.get(`${apiV1}/revenue-entry/${e}`).then((response) => {
       const actualDataObject = response.data.data;
-      console.log(
-        "#######################the revenue data actual dta",
-        actualDataObject
-      );
+      // console.log(
+      //   "#######################the revenue data actual dta",
+      //   actualDataObject
+      // );
       setData(actualDataObject);
     });
   };
 
-  console.log("props----->", data);
+  // console.log("props----->", data);
 
 
   return (
     <React.Fragment>
 
       <div>
-      <div className="table_main_container">
+      <div className="table_main_container" style={{overflowY:"hidden"}}>
         <TableHeadingSection>
           <TableHeading>Rolling Revenue Entry</TableHeading>
           <TableButtons>Export</TableButtons>
@@ -60,7 +60,7 @@ export function RevenueBaseComponent(props) {
             <Table className="nestedtablebgrevenue">
               <TableRow className="nestedtablebgrevenue">
                 {props.columns.map((header) => {
-                  return <th className="threvenueposition" style={{backgroundColor:"rgba(72, 130, 225, 0.3)"}}>{header}</th>;
+                  return <th className="threvenueposition" style={{backgroundColor:"rgba(72, 130, 225, 0.3)", padding:"2px 3px", height:"30px"}}>{header}</th>;
                 })}
               </TableRow>
               <TableBody className="nestedtablebgrevenue">

@@ -112,7 +112,7 @@ const TableScroll = (props) => {
       className="table_main_container"
       style={{ position: "relative", overflow: "hidden", paddingBottom: "8px" }}
     >
-      {console.log("this is table data")}
+      {/* {console.log("this is table data")} */}
 
       <div
         style={{
@@ -154,7 +154,7 @@ const TableScroll = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow
+              {/* <TableRow
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell
@@ -325,7 +325,7 @@ const TableScroll = (props) => {
                 >
                   {columnData12}
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
             </TableBody>
           </Table>
         </TableContainer>

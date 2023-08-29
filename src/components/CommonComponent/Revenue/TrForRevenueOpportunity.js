@@ -37,74 +37,93 @@ function TrForRevenue(props) {
   });
 
   const handleInnerRowExpansion = (cell) => {
-    console.log("cell value", cell);
-    if (cell.innerHTML == "+") {
-      cell.innerHTML = "-";
+    // console.log("cell value", cell);
+    if (cell.innerHTML == "↓") {
+      cell.innerHTML = "↑";
       setIsExpandedInnerRow(true);
     } else {
-      cell.innerHTML = "+";
+      cell.innerHTML = "↓";
       setIsExpandedInnerRow(false);
     }
   };
+
+
   const revenueResource = async (e) => {
     try {
-      console.log("this is rersource in Posttttttt");
       const response = await axios.post(`${apiV1}/revenue-entry/resources`, e);
       // response.data.data.opportunities.map((obj, id) => {
       //   return setOpportunityData(obj);
       // });
-      if (e.pricingType == "T & M") {
+
+      if (e.pricingType == "T&M") {
         setResourceData(response.data.data.tmResourceEntries);
+
       } else {
         setResourceData(response.data.data.fpResourceEntries);
       }
-      console.log(
-        "this is the response for resourceeeeeeeeeeeeeeeeeeeeeeeeeee ",
-        response.data.data.tmResourceEntries
-      );
+      // console.log(
+      //   "this is the response for resourceeeeeeeeeeeeeeeeeeeeeeeeeee ",
+      //   response.data.data.tmResourceEntries
+      // );
     } catch {}
   };
 
-  console.log("resourcesData-------->", resourceData)
+  const handleDeleteRow = () =>{
+    console.log("delete the data", resourseEntryData.opportunityId);
+  }
+
+  const [selectedRow, setSelectedRow] = useState(-1);
+
+  const toggleRowSelection = (rowIndex) => {
+    if (selectedRow === rowIndex) {
+      setSelectedRow(-1); // Deselect the row if it's already selected
+    } else {
+      setSelectedRow(rowIndex); // Select the clicked row
+    }
+  };
+
 
   return (
     <React.Fragment>
       <tr>
-        {console.log("this is propsss data", props.data)}
+        {/* {console.log("this is propsss data", props.data)} */}
         <td
+        style={{padding:"1px", color:"#000", fontWeight:700}}
           className="rowtable"
           onClick={(e) => {
             revenueResource(resourseEntryData);
             handleInnerRowExpansion(e.target);
           }}
         >
-          +
+          {/* + */}
+          ↓
         </td>
-        <td className="rowtable">
+        <td className="rowtable"  style={{padding:"1px"}}
+>
           <span style={{fontSize:"14px"}}>{props.data.opportunityId || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.projectCode || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.opportunityName || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.pricingType || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.projectStartDate || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.projectEndDate || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.cocPractice || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{props.data.noOfResources || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px", border:"none"}}>
           <span style={{fontSize:"14px"}}>{props.data.leaveLossFactor || "Unknown"}</span>
         </td>
       </tr>
@@ -113,42 +132,47 @@ function TrForRevenue(props) {
           className="nestedtablebgrevenue"
           style={{ backgroundColor: "white" }}
         >
-          <td colSpan={10}>
+          <td colSpan={10} style={{paddingTop:"0px"}}>
             <table  style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
               <tr className="trrevenue" style={{backgroundColor:"rgba(225, 222, 222, 0)"}}>
-                <td className="iconsColumn" style={{ paddingLeft: "10px" }}>
+                <td className="iconsColumn" style={{ padding:"2px 0px 0px 3px"}}>
                   <a>
                     {/* <FaIcons.FaPlus /> */}
-                    <AddIcon />
+                    {/* <AddIcon fontSize="small"/> */}
 
                   </a>
                   <a>
                     {/* <AiIcons.AiFillCopy /> */}
-                    <FileCopyOutlinedIcon />
+                    <FileCopyOutlinedIcon fontSize="small"/>
 
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineEdit /> */}
-                    <EditOutlinedIcon />
+                    <EditOutlinedIcon fontSize="small"/>
 
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineDelete /> */}
-                    <DeleteOutlineIcon />
+                    <DeleteOutlineIcon fontSize="small" onClick={handleDeleteRow} />
 
                   </a>
                 </td>
               </tr>
               <tr className="nestedtablebgrevenue">
                 {column3.map((header) => {
-                  return <th className="threvenue">{header}</th>;
+                  return <th className="threvenue" style={{padding:"4px"}}>{header}</th>;
                 })}
               </tr>
               <tbody>
                 {console.log("IMPPP RESOURCE DATA", resourceData)}
                 {resourceData.length > 0 &&
                   resourceData.map((obj, id) => (
-                    <tr>
+                    <tr style={{
+                      backgroundColor: selectedRow === id ? 'rgba(192, 228, 234, 0.43)' : 'white',
+                    }}
+                    onClick={() => toggleRowSelection(id)}
+
+                    >
                       <td className="rowtable">
                         <span style={{fontSize:"14px"}}>{obj.resourceStartDate || "Unknown"}</span>
                       </td>
@@ -170,7 +194,7 @@ function TrForRevenue(props) {
                       <td className="rowtable">
                         <span>{obj.allocation || "Unknown"}</span>
                       </td>
-                      <td className="rowtable">
+                      <td className="rowtable" style={{border:"none"}}>
                         <span style={{fontSize:"14px"}}>{obj.leaveLossFactor || "Unknown"}</span>
                       </td>
                     </tr>

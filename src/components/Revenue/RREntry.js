@@ -100,6 +100,7 @@ function Tr({
     probabilityType: probabilityType,
     status: status,
   });
+  
   const revenueOpportunity = async (e) => {
     try {
       const response = await axios.post(
@@ -111,13 +112,15 @@ function Tr({
     } catch {}
   };
 
+  console.log("opportunity-------->", opportunityData)
+
   const handleRowExpansion = (cell) => {
-    console.log("cell value", cell);
-    if (cell.innerHTML == "+") {
-      cell.innerHTML = "-";
+    // console.log("cell value", cell);
+    if (cell.innerHTML == "↓") {
+      cell.innerHTML = "↑";
       setIsExpanded(true);
     } else {
-      cell.innerHTML = "+";
+      cell.innerHTML = "↓";
       setIsExpanded(false);
     }
   };
@@ -138,9 +141,9 @@ function Tr({
   return (
     <React.Fragment>
       <TableRow className="nestedtablebgrevenue">
-        <TableCell className="rowtable" style={{padding:"4px", borderBottom:"none"}}>
+        <TableCell className="rowtable" style={{padding:"1px", borderBottom:"none"}}>
           {/* <input type="checkbox"></input> */}
-          <Checkbox size="small" />
+          <Checkbox size="small" style={{padding:"1px"}} />
         </TableCell>
         <td
           className="rowtable"
@@ -148,43 +151,44 @@ function Tr({
             revenueOpportunity();
             handleRowExpansion(e.target);
           }}
+          style={{padding:"1px 6px"}}
         >
-          +
+          ↓
           {/* <FaIcons.FaArrowDown /> */}
           {/* <ArrowDropDownIcon /> */}
         </td>
 
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{businessUnit || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}} >
           <span style={{fontSize:"14px"}}>{strategicBusinessUnit || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px", whiteSpace:"nowrap"}}>
           <span style={{fontSize:"14px"}}>{strategicBusinessUnitHead || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{businessDevelopmentManager || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{businessType || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{account || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{region || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{location || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{probabilityType || "Unknown"}</span>
         </td>
-        <td className="rowtable">
+        <td className="rowtable" style={{padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{cocPractice || "Unknown"}</span>
         </td>
-        <td className="rowtable" style={{border:"none"}}>
+        <td className="rowtable" style={{border:"none", padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{status || "Unknown"}</span>
         </td>
       </TableRow>
@@ -193,28 +197,28 @@ function Tr({
           <td colSpan={13} style={{paddingTop:"0px"}}>
             <table style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
               <tr className="trrevenue" style={{backgroundColor:"rgba(225, 222, 222, 0)"}} >
-                <td className="iconsColumn" style={{ paddingLeft: "10px" }}>
+                <td className="iconsColumn" style={{ padding: "2px 0px 0px 3px" }}>
                   <a>
                     {/* <FaIcons.FaPlus /> */}
-                    <AddIcon />
+                    {/* <AddIcon fontSize="small"/> */}
                   </a>
                   <a>
                     {/* <AiIcons.AiFillCopy /> */}
-                    <FileCopyOutlinedIcon />
+                    <FileCopyOutlinedIcon fontSize="small" />
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineEdit /> */}
-                    <EditOutlinedIcon />
+                    <EditOutlinedIcon fontSize="small" />
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineDelete /> */}
-                    <DeleteOutlineIcon />
+                    <DeleteOutlineIcon fontSize="small"/>
                   </a>
                 </td>
               </tr>
               <tr className="nestedtablebgrevenue">
                 {columns2.map((header) => {
-                  return <th className="threvenue" style={{backgroundColor:"rgba(72, 130, 225, 0.2)"}}>{header}</th>;
+                  return <th className="threvenue" style={{backgroundColor:"rgba(72, 130, 225, 0.2)", padding:"4px"}}>{header}</th>;
                 })}
               </tr>
               <tbody>

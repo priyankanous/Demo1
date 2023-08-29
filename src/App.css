@@ -155,7 +155,8 @@ h3 {
   width: 79%;
   height: 64%;
   left: 20%;
-  top: 12%;
+  top: 10%;
+  
 }
 /* .revenue_table_container {
   overflow: auto;
@@ -169,12 +170,14 @@ h3 {
 
 .revenue_table_container {
   overflow: auto;
-  background-color: rgb(244, 243, 243);
+  /* background-color: rgb(244, 243, 243); */
+  background-color: #FFFF;
+
   position: absolute;
   width: 99%;
   /* left: -2%; */
-  height: 70%;
-  top: 27%;
+  height: 80%;
+  top: 21%;
 }
 .revenue_table_container::-webkit-scrollbar {
   width: 10px;
