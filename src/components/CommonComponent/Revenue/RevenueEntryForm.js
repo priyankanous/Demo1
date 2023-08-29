@@ -1,33 +1,88 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+  revenueModalStyleObject,
+} from "../../../utils/constantsValue";
+import CloseIcon from "@mui/icons-material/Close";
+
 import { connect } from "react-redux";
 import { getProbabilityData } from "../../../actions/probability";
 import { getRegionData } from "../../../actions/region";
 import { getWorkOrderYearData } from "../../../actions/workOrder";
 import { getBdmData } from "../../../actions/bdm";
+import { getAccountData } from "../../../actions/account";
+import { getOpportunityData } from "../../../actions/opportunity";
+import { getCurrencyData } from "../../../actions/currency";
+
+import {
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  Checkbox,
+  Radio,
+  Modal,
+} from "@mui/material";
+import RevenueResourceAccordian from "./RevenueResourceAccordian";
+import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
+import { Accordion } from "react-accessible-accordion";
+
 const ResourceEntryForm = (props) => {
   useEffect(() => {
     props.getProbabilityData();
     props.getRegionData();
     props.getWorkOrderYearData();
     props.getBdmData();
+    props.getAccountData();
+    props.getOpportunityData();
+    props.getCurrencyData();
   }, []);
   const [currencyData, setCurrencyData] = useState();
   const array = [];
+  const [inputNumber, setInputNumber] = useState("");
+  const [gridItems, setGridItems] = useState([]);
+  const [resourceData, setResourceData] = useState([]);
+  const [pricingType, setPricingType] = useState("T & M");
+
   const [formData, setFormData] = useState({
     account: { accountID: "", accountName: "" },
-    opportunity: { opportunityID: "", opportunityName: "" },
+    opportunity: {
+      opportunityID: "",
+      opportunityName: "",
+      projectCode: "",
+      projectStartDate: "",
+      projectEndDate: "",
+    },
     bdm: { bdmID: "", bdmName: "" },
-    projectCode: "",
-    projectStartDate: "",
-    projectEndDate: "",
     currency: { currencyID: "", currencyName: "" },
     probability: { probabilityTypeID: "", probabilityTypeName: "" },
     region: { regionID: "", regionName: "" },
     workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
-    financialYear: { financialYearID: "", financialYearName: "" },
-    pricingType: props.pricingType,
+    financialYear: {
+      financialYearID: "",
+      financialYearName: new Date().getFullYear(),
+    },
+    pricingType: pricingType,
   });
+
+  console.log("neheue", formData.financialYear.financialYearName);
+  const onOptionChange = (e) => {
+    setPricingType(e.target.value);
+  };
+
   const getAllCurrencyForFy = async (e) => {
     console.log("in the getALLGlobalLLF", e);
     await axios
@@ -41,415 +96,1128 @@ const ResourceEntryForm = (props) => {
         setCurrencyData(actualDataObject);
       });
   };
-  return (
-    <React.Fragment>
-      {console.log("The currency data required", currencyData)}
-      <div
-        className="grid-container"
-        style={{ marginLeft: "-242px", width: "500px" }}
-      >
-        <div>
-          <label for="username">ID:</label>
-        </div>
-        <div></div>
-        <div>
-          <label for="username">Financial Year</label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              getAllCurrencyForFy(e.target.value);
-              const selectedFyId =
-                e.target.selectedOptions[0].getAttribute("data-fyId");
-              setFormData({
-                ...formData,
-                financialYear: {
-                  ...formData.financialYear,
-                  financialYearID: selectedFyId,
-                  financialYearName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Account
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedFyId =
-                e.target.selectedOptions[0].getAttribute("data-fyId");
-              setFormData({
-                ...formData,
-                account: {
-                  ...formData.account,
-                  accountID: selectedFyId,
-                  accountName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Opportunity Name
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedFyId =
-                e.target.selectedOptions[0].getAttribute("data-fyId");
-              setFormData({
-                ...formData,
-                opportunity: {
-                  ...formData.opportunity,
-                  opportunityID: selectedFyId,
-                  opportunityName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            BDM
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedbdmId =
-                e.target.selectedOptions[0].getAttribute("data-bdmId");
-              setFormData({
-                ...formData,
-                bdm: {
-                  ...formData.bdm,
-                  bdmID: selectedbdmId,
-                  bdmName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.bdmData.bdmData &&
-              props.bdmData.bdmData.map((obj, id) => (
-                <option data-bdmId={obj.bdmId}>{obj.bdmName}</option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Project Code
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              setFormData({ ...formData, projectCode: e.target.value });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Project Start Date
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              setFormData({ ...formData, projectStartDate: e.target.value });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Project End Date
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              setFormData({ ...formData, projectEndDate: e.target.value });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.financialYear.financialYear.map((fyData, index) => {
-              const fyNameData = fyData.financialYearName;
-              return (
-                <option data-fyId={fyData.financialYearId} key={index}>
-                  {fyNameData}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Currency (As per WO)
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedcurrencyId =
-                e.target.selectedOptions[0].getAttribute("data-currencyId");
-              setFormData({
-                ...formData,
-                currency: {
-                  ...formData.currency,
-                  currencyID: selectedcurrencyId,
-                  currencyName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {currencyData &&
-              currencyData.map((obj, id) => (
-                <option data-currencyID={obj.currencyId}>
-                  {obj.currencyName}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Probability
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedprobabilityId =
-                e.target.selectedOptions[0].getAttribute("data-probabilityId");
-              setFormData({
-                ...formData,
-                probability: {
-                  ...formData.probability,
-                  probabilityTypeID: selectedprobabilityId,
-                  probabilityTypeName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.probabilityData.probabilityData &&
-              props.probabilityData.probabilityData.map((obj, id) => (
-                <option data-probabilityId={obj.probabilityTypeId}>
-                  {obj.probabilityTypeName}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label className="required-field" for="username">
-            Region
-          </label>
-          <select
-            id="revenue-select"
-            required
-            onChange={(e) => {
-              const selectedregionId =
-                e.target.selectedOptions[0].getAttribute("data-regionId");
-              setFormData({
-                ...formData,
-                region: {
-                  ...formData.region,
-                  regionID: selectedregionId,
-                  regionName: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.regionData.regionData &&
-              props.regionData.regionData.map((obj, id) => (
-                <option data-regionId={obj.regionId}>{obj.regionName}</option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label for="username">Work Order </label>
-          <select
-            id="revenue-select"
-            onChange={(e) => {
-              const selectedworkOrderId =
-                e.target.selectedOptions[0].getAttribute("data-workOrderId");
-              setFormData({
-                ...formData,
-                workOrder: {
-                  ...formData.workOrder,
-                  workOrderID: selectedworkOrderId,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.workOrderData.workOrderData &&
-              props.workOrderData.workOrderData.map((obj, id) => (
-                <option data-workOrderId={obj.woStatusId}>
-                  {obj.woStatusName}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label for="username">Work Order End Date</label>
-          <select
-            id="revenue-select"
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                workOrder: {
-                  ...formData.workOrder,
-                  workOrderEndDate: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.workOrderData.workOrderData &&
-              props.workOrderData.workOrderData.map((obj, id) => (
-                <option>{obj.woStatusName}</option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label for="username">Work Order Status</label>
-          <select
-            id="revenue-select"
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                workOrder: {
-                  ...formData.workOrder,
-                  workOrderStatus: e.target.value,
-                },
-              });
-            }}
-          >
-            <option value="" disabled selected hidden>
-              Select
-            </option>
-            {props.workOrderData.workOrderData &&
-              props.workOrderData.workOrderData.map((obj, id) => (
-                <option>{obj.woStatusName}</option>
-              ))}
-          </select>
-        </div>
-        <div></div>
-      </div>
-      <br></br>
-      <br></br>
-      <div>
-        <input
-          type="button"
-          value="Continue"
-          id="create-account"
-          class="button"
-          style={{width:"70px"}}
-          onClick={() => {
-            props.setTabIndex({
-              ...props.tabIndex,
-              index: 1,
-              formData: formData,
-            });
-          }}
-        />
-      </div>
-      <div>
-        <input
-          type="button"
-          onClick={() => {
-            props.setIsOpen(false);
-            props.setGridItems([]);
-          }}
-          value="Cancel"
-          id="create-account"
-          class="button"
-          style={{width:"60px"}}
 
-        />
-      </div>
-    </React.Fragment>
+  const resetData = () => {
+    // setIsOpen(false);
+    // getAllRegionData();
+    // setOpportunityId(null);
+    // setOpportunityName(null);
+    // setProjectCode(null);
+    // setAccountName(null);
+    // setProjectStartDate(null);
+    // setProjectEndDate(null)
+  };
+
+  const handleInputChange = (event) => {
+    setInputNumber(event.target.value);
+    generateGrid(event.target.value);
+  };
+
+  const updateResourceData = (data) => {
+    setResourceData(data);
+  };
+
+  const [milestones, setMilestones] = useState([]);
+
+  const updateMilestoneData = (data) => {
+    // props.saveMileStones(props.milestoneDataNew);
+  };
+
+  const generateGrid = (value) => {
+    const items = [];
+    const iterator = value ? value : inputNumber
+    if (pricingType == "T & M") {
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueResourceAccordian
+            id={i}
+            formData={props.tabIndex.formData}
+            updateResourceData={updateResourceData}
+            pricingType={pricingType}
+          />
+        );
+      }
+    } else {
+      for (let i = 0; i < inputNumber; i++) {
+        items.push(
+          <RevenueMilestoneAccordian
+            id={i}
+            formData={props.tabIndex.formData}
+            pricingType={pricingType}
+            updateMilestoneData={updateMilestoneData}
+          />
+        );
+      }
+    }
+
+    setGridItems(items);
+  };
+
+  const saveResourceDetails = () => {
+    props.saveResourceData({
+      resourceData: props.resourceData,
+      formData: props.tabIndex.formData,
+    });
+  };
+
+  const saveEntireMilestoneDetails = () => {
+    props.saveMileStones(props.milestoneDataNew);
+    props.saveMilestoneData({
+      allMilestones: props.milestoneDataNew,
+      formData: props.tabIndex.formData,
+    });
+  };
+
+  const saveData = () => {
+    if (pricingType == "T & M") {
+      saveResourceDetails();
+      props.setIsOpen(false);
+    } else {
+      saveEntireMilestoneDetails();
+      props.setIsOpen(false);
+    }
+  };
+
+  return (
+    <ModalDetailSection style={{ borderRadius: "0px" }}>
+      <form
+        id="reg-form"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          rowGap: "30px",
+          width: "100%",
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexBasis: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <div>
+                <label for="username">Pricing Type</label>
+                <input
+                  type="radio"
+                  value="T & M"
+                  name="Pricing Type"
+                  checked={pricingType === "T & M"}
+                  onChange={onOptionChange}
+                  style={{ boxShadow: "none" }}
+                />
+                T & M
+                <input
+                  type="radio"
+                  value="FP"
+                  name="Pricing Type"
+                  checked={pricingType === "FP"}
+                  onChange={onOptionChange}
+                  style={{ boxShadow: "none" }}
+                />
+                FP
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "25px",
+              }}
+            >
+              <div
+                style={{
+                  width: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: "10px",
+                }}
+              >
+                <span>FY :</span>
+                <div>
+                  <FormControl>
+                    <select
+                      style={{
+                        background: "white",
+                        width: "150px",
+                        marginLeft: "8px",
+                        variant: "outlined",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        getAllCurrencyForFy(e.target.value);
+                        const selectedFyId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                        setFormData({
+                          ...formData,
+                          financialYear: {
+                            ...formData.financialYear,
+                            financialYearID: selectedFyId,
+                            financialYearName: e.target.value,
+                          },
+                        });
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Select
+                      </option>
+                      <option
+                        value="2023-2024" // Set the default value
+                        data-fyId="default" // You can use a unique ID for the default option
+                        selected // Set the selected attribute
+                      >
+                        2023-2024
+                      </option>
+                      {props?.financialYear?.financialYear.map(
+                        (fyData, index) => {
+                          const fyNameData = fyData?.financialYearName;
+                          return (
+                            <option
+                              data-fyId={fyData?.financialYearId}
+                              key={index}
+                            >
+                              {fyNameData}
+                            </option>
+                          );
+                        }
+                      )}
+                    </select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {props?.tabIndex?.index === 0 ? (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                }}
+              >
+                <div
+                  style={{
+                    flexBasis: "25%",
+                    flexDirection: "row",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Account</span>
+                  </div>
+                  <div>
+                    <FormControl>
+                      <select
+                        size="small"
+                        style={{
+                          background: "white",
+                          width: "187Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px",
+                          height: "35px",
+                        }}
+                        onChange={(e) => {
+                          const selectedFyId =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-fyId"
+                            );
+                          setFormData({
+                            ...formData,
+                            account: {
+                              ...formData.account,
+                              accountID: selectedFyId,
+                              accountName: e.target.value,
+                            },
+                          });
+                        }}
+                        value={formData.account.accountName}
+                      >
+                        <option value="" disabled selected hidden>
+                          Select
+                        </option>
+                        {props.accountData.accountData &&
+                          props.accountData.accountData.map(
+                            (accountData, index) => {
+                              const accountNamedata = accountData.accountName;
+                              return (
+                                <option
+                                  data-fyId={accountNamedata?.accountID}
+                                  key={index}
+                                >
+                                  {accountNamedata}
+                                </option>
+                              );
+                            }
+                          )}
+                      </select>
+                    </FormControl>
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Opportunity Name</span>
+                  <div>
+                    <FormControl>
+                      <select
+                        size="small"
+                        style={{
+                          background: "white",
+                          width: "187Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px",
+                          height: "35px",
+                        }}
+                        onChange={(e) => {
+                          const selectedOpportunityId =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-fyId"
+                            );
+                          const found =
+                            props?.opportunityData?.opportunityData?.filter(
+                              (each) => {
+                                return (
+                                  each?.opportunityId ===
+                                  Number(selectedOpportunityId)
+                                );
+                              }
+                            );
+                          setFormData({
+                            ...formData,
+                            opportunity: {
+                              ...formData.opportunity,
+                              opportunityID: selectedOpportunityId,
+                              opportunityName: e.target.value,
+                              projectCode: found?.length
+                                ? found[0]?.projectCode
+                                : "",
+                              projectStartDate: found?.length
+                                ? found[0]?.projectStartDate
+                                : "",
+                              projectEndDate: found?.length
+                                ? found[0]?.projectEndDate
+                                : "",
+                            },
+                          });
+                        }}
+                      >
+                        <option value="" disabled selected hidden>
+                          Select
+                        </option>
+                        {props?.opportunityData?.opportunityData &&
+                          props?.opportunityData?.opportunityData.map(
+                            (opportunityData, index) => {
+                              const opportunityNamedata =
+                                opportunityData.opportunityName;
+                              return (
+                                <option
+                                  data-fyId={String(
+                                    opportunityData.opportunityId
+                                  )}
+                                  key={index}
+                                >
+                                  {opportunityNamedata}
+                                </option>
+                              );
+                            }
+                          )}
+                      </select>
+                    </FormControl>
+                    <div>
+                      <a
+                        href="/administration/opportunity"
+                        style={{
+                          display: "inline-block",
+                          textDecoration: "none",
+                          color: "#1E4482",
+                          fontWeight: "500",
+                          fontSize: "16px",
+                          padding: "5px 10px",
+                        }}
+                      >
+                        Add Opportunity
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>BDM</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                    <FormControl>
+                      <select
+                        size="small"
+                        style={{
+                          background: "white",
+                          width: "187Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px",
+                          height: "35px",
+                        }}
+                        onChange={(e) => {
+                          const selectedbdmId =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-bdmId"
+                            );
+                          setFormData({
+                            ...formData,
+                            bdm: {
+                              ...formData.bdm,
+                              bdmID: selectedbdmId,
+                              bdmName: e.target.value,
+                            },
+                          });
+                        }}
+                      >
+                        <option value="" disabled selected hidden>
+                          Select
+                        </option>
+                        {props?.bdmData?.bdmData &&
+                          props?.bdmData?.bdmData.map((obj, id) => (
+                            <option data-bdmId={obj.bdmId}>
+                              {obj.bdmName}
+                            </option>
+                          ))}
+                      </select>
+                    </FormControl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project Code</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          opportunity: {
+                            ...formData.opportunity,
+                            projectCode: e.target.value,
+                          },
+                        });
+                      }}
+                      value={formData?.opportunity?.projectCode}
+                    />
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project Start Date</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          opportunity: {
+                            ...formData.opportunity,
+                            projectStartDate: e.target.value,
+                          },
+                        });
+                      }}
+                      value={formData?.opportunity?.projectStartDate}
+                    />
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project End date</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          opportunity: {
+                            ...formData.opportunity,
+                            projectEndDate: e.target.value,
+                          },
+                        });
+                      }}
+                      value={formData?.opportunity?.projectEndDate}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Currency(As per WO)</span>
+                  </div>
+                  <FormControl>
+                    <select
+                      size="small"
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        const selectedFyId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                        setFormData({
+                          ...formData,
+                          currency: {
+                            ...formData.currency,
+                            currencyID: selectedFyId,
+                            currencyName: e.target.value,
+                          },
+                        });
+                      }}
+                    >
+                      <option value="" disabled selected hidden>
+                        Select
+                      </option>
+                      {props?.currencyData.currencyData &&
+                        props?.currencyData?.currencyData.map(
+                          (currencyData, index) => {
+                            const currencyNamedata = currencyData?.currencyName;
+                            return (
+                              <option
+                                data-fyId={currencyData.currencyId}
+                                key={index}
+                              >
+                                {currencyNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                    </select>
+                  </FormControl>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Probablity</span>
+                  </div>
+
+                  <FormControl>
+                    <select
+                      size="small"
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        const selectedFyId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                        setFormData({
+                          ...formData,
+                          probability: {
+                            ...formData.probability,
+                            probabilityID: selectedFyId,
+                            probabilityName: e.target.value,
+                          },
+                        });
+                      }}
+                    >
+                      <option value="" disabled selected hidden>
+                        Select
+                      </option>
+                      {props?.probabilityData?.probabilityData &&
+                        props?.probabilityData?.probabilityData.map(
+                          (probabilityData, index) => {
+                            const probabilityNamedata =
+                              probabilityData?.probabilityTypeName;
+                            return (
+                              <option
+                                data-fyId={probabilityData.probabilityTypeId}
+                                key={index}
+                              >
+                                {probabilityNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                    </select>
+                  </FormControl>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Region</span>
+                  </div>
+
+                  <FormControl>
+                    <select
+                      size="small"
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        const selectedFyId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                        setFormData({
+                          ...formData,
+                          region: {
+                            ...formData.region,
+                            regionID: selectedFyId,
+                            regionName: e.target.value,
+                          },
+                        });
+                      }}
+                    >
+                      <option value="" disabled selected hidden>
+                        Select
+                      </option>
+                      {props?.regionData?.regionData &&
+                        props?.regionData?.regionData.map(
+                          (regionData, index) => {
+                            const regionNamedata = regionData?.regionName;
+                            return (
+                              <option
+                                data-fyId={regionData.regionId}
+                                key={index}
+                              >
+                                {regionNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                    </select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order</span>
+                  </div>
+                  <FormControl>
+                    <select
+                      size="small"
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        const selectedWorkOrderId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                        const found =
+                          props?.workOrderData?.workOrderData?.filter(
+                            (each) => {
+                              return (
+                                each?.workOrderId ===
+                                Number(selectedWorkOrderId)
+                              );
+                            }
+                          );
+                        console.log("found", found);
+
+                        setFormData({
+                          ...formData,
+                          workOrder: {
+                            ...formData.workOrder,
+                            workOrderID: selectedWorkOrderId,
+                            workOrderStatus: e.target.value,
+                            workOrderEndDate: found?.length
+                              ? found[0]?.workOrderEndDate
+                              : "",
+                            workOrderStatus: found?.length
+                              ? found[0]?.workOrderStatus
+                              : "",
+                          },
+                        });
+                      }}
+                    >
+                      <option value="" disabled selected hidden>
+                        Select
+                      </option>
+                      {props?.workOrderData?.workOrderData &&
+                        props?.workOrderData?.workOrderData.map(
+                          (workOrderData, index) => {
+                            const workOrderNamedata =
+                              workOrderData?.workOrderNumber;
+                            return (
+                              <option
+                                data-fyId={String(workOrderData.workOrderId)}
+                                key={index}
+                              >
+                                {workOrderNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                    </select>
+                  </FormControl>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order End Date</span>
+                  </div>
+
+                  <div style={{ width: "195px" }}>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          workOrder: {
+                            ...formData.workOrder,
+                            workOrderEndDate: e.target.value,
+                          },
+                        });
+                      }}
+                      value={formData.workOrder.workOrderEndDate}
+                    />
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order Status</span>
+                  </div>
+
+                  <div style={{ width: "187px" }}>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "187Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          workOrder: {
+                            ...formData.workOrder,
+                            workOrderStatus: e.target.value,
+                          },
+                        });
+                      }}
+                      value={formData.workOrder.workOrderStatus}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                paddingTop: "10px",
+                // marginLeft: "-78px",
+                display: "flex",
+                alignItems: "center",
+                width: "80%",
+              }}
+            >
+              <ButtonSection>
+                <ModalControlButton
+                  sx={{ marginLeft: "400px", marginRight: "75px" }}
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={() => {
+                    setPricingType(pricingType);
+                    props.setTabIndex({
+                      ...props.tabIndex,
+                      index: 1,
+                      y: formData,
+                    });
+                  }}
+                >
+                  Next
+                </ModalControlButton>
+                <ModalControlButton
+                  sx={{ marginRight: "380px" }}
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    props.setGridItems([]);
+                    props.setIsOpen(false);
+                    props.setTabIndex({
+                      index: 0,
+                      formData: "",
+                    });
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
+              </ButtonSection>
+            </div>
+          </div>
+        ) : (
+          <>
+            {pricingType == "T & M" && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: "25px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: "10px",
+                  }}
+                >
+                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ marginLeft: "-9px" }}>Resource count:</span>
+                  {/* <div>
+                    <label
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <input
+                        type="number"
+                        value={inputNumber}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        style={{
+                          margin: "0px 0px 0px 8px",
+                        }}
+                        type="button"
+                        value="Add"
+                        id="create-account"
+                        class="button"
+                        onClick={generateGrid}
+                      />
+                    </label>
+                  </div> */}
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "75Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                    }}
+                    size="small"
+                    type="number"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    onChange={handleInputChange}
+                    value={inputNumber}
+                  />
+                </div>
+              </div>
+            )}
+            {pricingType == "FP" && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: "25px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: "10px",
+                  }}
+                >
+                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ marginLeft: "-9px" }}>Milestone count:</span>
+                  {/* <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={inputNumber}
+                      onChange={handleInputChange}
+                    />
+                    <input
+                      style={{
+                        margin: "0px 0px 0px 8px",
+                      }}
+                      type="button"
+                      value="Add"
+                      id="create-account"
+                      class="button"
+                      onClick={generateGrid}
+                    />
+                  </label>
+                </div> */}
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "75Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                    }}
+                    size="small"
+                    type="text"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    // onChange={(e) => {
+                    //   setFormData({
+                    //     ...formData,
+                    //     opportunity: {
+                    //       ...formData.opportunity,
+                    //       projectCode: e.target.value,
+                    //     },
+                    //   });
+                    // }}
+                    // value={formData?.opportunity?.projectCode}
+                  />
+                </div>
+              </div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginLeft: "0px",
+              }}
+            >
+              <Accordion id="accordian">{gridItems}</Accordion>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
+              <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                <div style={{ display: "flex", flexBasis: "25%" }}>
+                  <div style={{ width: "75px" }}>
+                    <span>Remarks :</span>
+                  </div>
+                  <input style={{ width: "730px", borderRadius: "0px" }} />
+                </div>
+              </div>
+            </div>
+            {/* <label
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
+            >
+              <button
+                className="button"
+                onClick={() => {
+                  saveData();
+                }}
+              >
+                Save
+              </button>
+              <button
+                className="button"
+                onClick={() => {
+                  setGridItems([]);
+                  props.setIsOpen(false);
+                  props.setTabIndex({ index: 0, formData: "" });
+                  console.log("clicked");
+                }}
+              >
+                Cancel
+              </button>
+            </label> */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "20px",
+              }}
+            >
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={() => {
+                  setPricingType(pricingType);
+                  props.setTabIndex({
+                    ...props.tabIndex,
+                    index: 1,
+                    y: formData,
+                  });
+                }}
+              >
+                Back
+              </ModalControlButton>
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={() => {
+                  setPricingType(pricingType);
+                  props.setTabIndex({
+                    ...props.tabIndex,
+                    index: 1,
+                    y: formData,
+                  });
+                }}
+              >
+                Save
+              </ModalControlButton>
+              <ModalControlButton
+                type="button"
+                variant="contained"
+                onClick={() => {
+                  props.setGridItems([]);
+                  props.setIsOpen(false);
+                  props.setTabIndex({
+                    index: 0,
+                    formData: "",
+                  });
+                }}
+                value="Cancel"
+                id="create-account"
+              >
+                Cancel
+              </ModalControlButton>
+            </div>
+          </>
+        )}
+      </form>
+    </ModalDetailSection>
   );
 };
 const mapStateToProps = (state) => {
@@ -460,7 +1228,10 @@ const mapStateToProps = (state) => {
     regionData: state.regionData,
     workOrderData: state.workOrderData,
     bdmData: state.bdmData,
+    accountData: state.accountData,
+    opportunityData: state.opportunityData,
     financialYear: state.financialYear,
+    currencyData: state.currencyData,
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -469,6 +1240,9 @@ const mapDispatchToProps = (dispatch) => {
     getRegionData: () => dispatch(getRegionData()),
     getWorkOrderYearData: () => dispatch(getWorkOrderYearData()),
     getBdmData: () => dispatch(getBdmData()),
+    getAccountData: () => dispatch(getAccountData()),
+    getOpportunityData: () => dispatch(getOpportunityData()),
+    getCurrencyData: () => dispatch(getCurrencyData()),
   };
 };
 

@@ -436,7 +436,7 @@ input {
   border: blue;
 }
 #accordian {
-  margin-left: -343px;
+  /* margin-left: -343px; */
 }
 #accordianItem {
   width: 1px;
@@ -444,9 +444,9 @@ input {
 #accordianItemHeading {
   padding-top: 0.5px;
   width: 948px;
-  height: 30px;
+  height: 38px;
   text-align: center;
-  background-color: #23c5c7;
+  background-color:rgba(225, 222, 222, 0.5);
 }
 
 .App-link {

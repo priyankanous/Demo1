@@ -7,7 +7,6 @@ const getFinancialYear = createAction(GET_FINANCIAL_YEAR_DATA);
 
 export const getFinancialYearData = () => async (dispatch) => {
   const data = await getFinancialYearDataAPI();
-  console.log("This is arrayyyy onlyyyyyy", data);
   dispatch(getFinancialYear(data));
 };
 

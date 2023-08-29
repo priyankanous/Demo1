@@ -7,7 +7,6 @@ const getLocation = createAction(GET_LOCATION_DATA);
 
 export const getLocationData = () => async (dispatch) => {
   const data = await getLocationAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getLocation(data));
 };
 

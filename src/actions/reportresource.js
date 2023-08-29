@@ -7,7 +7,6 @@ const getReport = createAction(SET_REPORT_RESOURCE_DATA);
 
 export const getReportData = (payload) => async (dispatch) => {
   const data = await getReportAPI(payload);
-  console.log("This is report request ", data);
   dispatch(getReport(data));
 };
 

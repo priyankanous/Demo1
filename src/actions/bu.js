@@ -7,7 +7,6 @@ const getBu = createAction(GET_BU_DATA);
 
 export const getBuData = () => async (dispatch) => {
   const data = await getBuAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getBu(data));
 };
 

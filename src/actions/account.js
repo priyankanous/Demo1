@@ -7,7 +7,6 @@ const getAccount = createAction(GET_ACCOUNT_DATA);
 
 export const getAccountData = () => async (dispatch) => {
   const data = await getAccountAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getAccount(data));
 };
 

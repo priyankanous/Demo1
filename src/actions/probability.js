@@ -7,7 +7,6 @@ const getProbability = createAction(GET_PROBABILITY_DATA);
 
 export const getProbabilityData = () => async (dispatch) => {
   const data = await getProbabilityAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getProbability(data));
 };
 

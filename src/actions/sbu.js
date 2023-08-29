@@ -7,7 +7,6 @@ const getSbu = createAction(GET_SBU_DATA);
 
 export const getSbuData = () => async (dispatch) => {
   const data = await getSbuAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getSbu(data));
 };
 
