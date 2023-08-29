@@ -138,7 +138,7 @@ export const TableHeadingSection = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
-  padding-top: 5px;
+  // padding-top: 5px;
 `;
 export const TableRevenue = styled.div`
   width: 50%;

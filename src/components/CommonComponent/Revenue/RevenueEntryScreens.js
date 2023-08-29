@@ -25,8 +25,8 @@ const TableButtons = styled(Button)({
   color: "#FFFFFF",
   fontSize: "12px",
   padding: "0px 10px",
-  height: "34px",
-  marginTop: "6px",
+  height: "24px",
+  // marginTop: "6px",
   "&:hover": {
     backgroundColor: "#1E4482",
   },
@@ -111,18 +111,18 @@ function RevenueEntryScreens(props) {
   };
   return (
     <React.Fragment>
-      {console.log("This is formData", tabIndex.formData)}
-      {console.log("milestones--->", milestones)}
+      {/* {console.log("This is formData", tabIndex.formData)}
+      {console.log("milestones--->", milestones)} */}
       <div>
         <table>
           <tr
             className="trrevenue"
             style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
           >
-            <td style={{ textAlign: "left", width: "10px" }}>
-              <Checkbox />
+            <td style={{ textAlign: "left", width: "10px", padding:"0px" }}>
+              <Checkbox size="small" />
             </td>
-            <td style={{ textAlign: "left" }}>
+            <td style={{ textAlign: "left", padding:"0px" }}>
               <a
                 onClick={() => {
                   setIsOpen(true);
@@ -132,10 +132,10 @@ function RevenueEntryScreens(props) {
                 <AddIcon />
               </a>
             </td>
-            <td style={{ paddingLeft: "200px" }}>
+            <td style={{  padding:"0px 0px 0px 200px" }}>
               <select
                 style={{
-                  height: "32px",
+                  height: "24px",
                   width: "90%",
                   borderRadius: "7px",
                   boxShadow: "none",
@@ -146,7 +146,7 @@ function RevenueEntryScreens(props) {
                 }}
               >
                 <option value="" disabled selected hidden>
-                  Please Choose One
+                  Select Financial Year
                 </option>
                 {props.financialYear.financialYear &&
                   props.financialYear.financialYear.map((fyData, index) => {
@@ -155,8 +155,8 @@ function RevenueEntryScreens(props) {
                   })}
               </select>
             </td>
-            <td className="tdrevenue">
-              <Checkbox />
+            <td className="tdrevenue" style={{padding:"0px"}}>
+              <Checkbox size="small"/>
               {/* <input type="checkbox" className="revenueinput" /> */}
               <label>Include Additional Quater Display</label>
               <TableButtons>Submit</TableButtons>
@@ -170,7 +170,7 @@ function RevenueEntryScreens(props) {
           className={"modal-container"}
         >
           <div>
-          {console.log("fffna", props.financialYear.financialYear)}
+          {/* {console.log("fffna", props.financialYear.financialYear)} */}
             <div class="main" className="ModalContainer">
               <div class="register">
                 <ModalHeading>Setup Entry</ModalHeading>
@@ -302,7 +302,7 @@ function RevenueEntryScreens(props) {
                           setGridItems([]);
                           // props.setIsOpen(false);
 
-                          console.log("clicked");
+                          // console.log("clicked");
                         }}
                       >
                         Cancel
