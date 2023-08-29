@@ -7,7 +7,6 @@ const getBdm = createAction(GET_BDM_DATA);
 
 export const getBdmData = () => async (dispatch) => {
   const data = await getBdmAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getBdm(data));
 };
 

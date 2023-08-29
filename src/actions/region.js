@@ -7,7 +7,6 @@ const getRegion = createAction(GET_REGION_DATA);
 
 export const getRegionData = () => async (dispatch) => {
   const data = await getRegionAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getRegion(data));
 };
 

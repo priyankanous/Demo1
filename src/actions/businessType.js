@@ -7,7 +7,6 @@ const getBusinessType = createAction(GET_BUSINESS_TYPE_DATA);
 
 export const getBusinessTypeData = () => async (dispatch) => {
   const data = await getBusinessTypeAPI();
-  console.log("This is arrayyyy onlyyyyyy for probabilityyyyyyy", data);
   dispatch(getBusinessType(data));
 };
 

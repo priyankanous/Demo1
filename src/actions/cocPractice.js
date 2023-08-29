@@ -7,7 +7,6 @@ const getCocPractice = createAction(GET_COC_PRACTICE_DATA);
 
 export const getCocPracticeData = () => async (dispatch) => {
   const data = await getCocPracticeDataAPI();
-  console.log("This is arrayyyy onlyyyyyy coccccccc", data);
   dispatch(getCocPractice(data));
 };
 

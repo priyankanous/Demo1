@@ -43,14 +43,10 @@ const getSaveFPAPI = async (payload) => {
     payload
   );
 
-  console.log("data---> for MileStone", data.data);
 };
 
 const milestonePayLoad = (data) => {
-  console.log(
-    "_________________this is main data in the main payload generation",
-    data
-  );
+
   const { allMilestones, formData } = data;
   const allMilestonesArray = allMilestones.map((milestone) => {
     return {
