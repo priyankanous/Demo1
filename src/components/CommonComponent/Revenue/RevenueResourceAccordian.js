@@ -16,6 +16,11 @@ import { getCocPracticeData } from "../../../actions/cocPractice";
 import { setResourceData } from "../../../actions/resource";
 import axios from "axios";
 import { apiV1 } from "../../../utils/constantsValue";
+import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
+
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const RevenueResourceAccordian = (props) => {
   useEffect(() => {
@@ -26,9 +31,8 @@ const RevenueResourceAccordian = (props) => {
     props.getLocationData();
     props.getCocPracticeData();
   }, []);
-  const [resourseDetails, setResourseDetails] = useState({
-    index: props.id,
-  });
+  const { resourceData, updateResourceData, id } = props;
+
   const month = [
     "Jan",
     "Feb",
@@ -43,65 +47,96 @@ const RevenueResourceAccordian = (props) => {
     "Nov",
     "Dec",
   ];
+
   const updateResourceDetails = async (params) => {
-    const data = { ...resourseDetails };
-    data[params.resourseDetailsColumn] = params.event.target.value;
+    const dataArr = [...resourceData];
+    const data = dataArr[id];
+    console.log("update Data Obj at", id, data, dataArr);
+    data[params?.resourseDetailsColumn] = params?.event?.target?.value;
     if (params.attrKey) {
-      data[params.selectedID] =
-        params.event.target.selectedOptions[0].getAttribute(params.attrKey);
+      data[params?.selectedID] =
+        params?.event?.target?.selectedOptions[0]?.getAttribute(
+          params?.attrKey
+        );
     }
-    if (params.attrKey == "data-locationId") {
+    if (params?.attrKey == "data-locationId") {
       const response = await axios.get(
-        `${apiV1}/location/${props.formData.financialYear.financialYearName}/${params.event.target.value}`
+        `${apiV1}/location/${props?.formData?.financialYear?.financialYearName}/${params?.event?.target?.value}`
       );
-      console.log("THE MANINNNN GLLF", response.data.data);
-      data["leaveLossFactor"] = response.data.data;
+      console.log("THE MANINNNN GLLF", response?.data?.data);
+      data["leaveLossFactor"] = response?.data?.data;
     }
     if (
-      params.resourseDetailsColumn == "startDate" ||
-      params.resourseDetailsColumn == "endDate"
+      params?.resourseDetailsColumn == "startDate" ||
+      params?.resourseDetailsColumn == "endDate"
     ) {
-      data[params.resourseDetailsColumn] = createDate(
-        params.event.target.value
+      data[params?.resourseDetailsColumn] = createDate(
+        params?.event?.target?.value
       );
     }
-    setResourseDetails({
-      ...data,
-    });
+    dataArr[id] = data;
+    console.log(dataArr, "After update", updateResourceData);
+    updateResourceData(dataArr);
   };
+
   const createDate = (date) => {
     let t = new Date(date);
     let splitDate = date.split("-");
     return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
   };
-  const addResource = () => {
-    console.log("resource Details for set resource Data", resourseDetails);
-    props.setResourceData(resourseDetails);
-  };
+
+  // const addResource = () => {
+  //   console.log("resource Details for set resource Data", resourseDetails);
+  //   props.updateResourceData(resourseDetails, id);
+  // };
+
   return (
     <React.Fragment>
-      {console.log("this is form data in resouce accordian", resourseDetails)}
-      {console.log("resoufrce--->", props.resource)}
       <br></br>
       <AccordionItem id="accordianItem">
         <AccordionItemHeading id="accordianItemHeading">
           <AccordionItemButton
             style={{
               marginTop: "6px",
-              width: "216px",
-              marginLeft: "-47px",
-              cursor: "pointer",
             }}
           >
-            <RiIcons.RiArrowDownSFill />
-            Resources {props.id + 1}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                }}
+              >
+                <div
+                  style={{
+                    flexBasis: "25%",
+                    flexDirection: "row",
+                  }}
+                >
+                  <RiIcons.RiArrowDownSFill />
+                  <span>Resources {id + 1} Details </span>
+                  <FileCopyOutlinedIcon
+                    style={{ marginRight: "5px", alignfontSize: "large" }}
+                  />
+                  <EditOutlinedIcon style={{ alignfontSize: "large" }} />
+                  <DeleteOutlineIcon style={{ alignfontSize: "large" }} />
+                </div>
+              </div>
+            </div>
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
           <br></br>
           <table>
             <tr className="trmilestone">
-              <td style={{ borderRight: "solid", borderLeft: "solid" }}>
+              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -123,7 +158,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -147,7 +182,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -171,7 +206,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -195,7 +230,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   id="milestoneinput"
                   type="text"
@@ -208,7 +243,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   id="milestoneinput"
                   type="number"
@@ -221,7 +256,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   id="milestoneselect"
                   type="date"
@@ -234,7 +269,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 />
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   id="milestoneselect"
                   type="date"
@@ -252,7 +287,7 @@ const RevenueResourceAccordian = (props) => {
           </table>
           <table style={{ marginLeft: "110px" }}>
             <tr className="trmilestone">
-              <td style={{ borderRight: "solid", borderLeft: "solid" }}>
+              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -277,7 +312,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid", borderLeft: "solid" }}>
+              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -302,7 +337,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
@@ -323,7 +358,7 @@ const RevenueResourceAccordian = (props) => {
                   <option>Half Annually</option>
                 </select>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   type="text"
                   id="resourceinput"
@@ -338,14 +373,14 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td
                 style={{
-                  borderRight: "solid",
+                  borderRight: "solid 1px",
                 }}
               >
                 <input
                   id="resourceinput"
                   type="number"
                   placeholder="Leave Loss Factor"
-                  value={resourseDetails.leaveLossFactor}
+                  value={resourceData[id]?.leaveLossFactor}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -354,7 +389,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid" }}>
+              <td style={{ borderRight: "solid 1px" }}>
                 <input
                   type="text"
                   id="resourceinput"
@@ -367,7 +402,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td>
+              {/* <td>
                 <button
                   onClick={() => {
                     addResource();
@@ -375,7 +410,7 @@ const RevenueResourceAccordian = (props) => {
                 >
                   Add Resource
                 </button>
-              </td>
+              </td> */}
             </tr>
           </table>
         </AccordionItemPanel>
