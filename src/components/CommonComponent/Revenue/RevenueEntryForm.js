@@ -55,10 +55,11 @@ const ResourceEntryForm = (props) => {
   const [inputNumber, setInputNumber] = useState("");
   const [gridItems, setGridItems] = useState([]);
   const [resourceData, setResourceData] = useState([]);
-  const [pricingType, setPricingType] = useState("T & M");
+  const [pricingType, setPricingType] = useState("T&M");
+
 
   const [formData, setFormData] = useState({
-    account: { accountID: "", accountName: "" },
+    account: { accountId: "", accountName: "" },
     opportunity: {
       opportunityID: "",
       opportunityName: "",
@@ -68,32 +69,112 @@ const ResourceEntryForm = (props) => {
     },
     bdm: { bdmID: "", bdmName: "" },
     currency: { currencyID: "", currencyName: "" },
-    probability: { probabilityTypeID: "", probabilityTypeName: "" },
+    probability: { probabilityID: "", probabilityTypeName: "" },
     region: { regionID: "", regionName: "" },
     workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
     financialYear: {
-      financialYearID: "",
-      financialYearName: new Date().getFullYear(),
+      financialYearId: "",
+      financialYearName: "",
     },
     pricingType: pricingType,
   });
 
-  console.log("neheue", formData.financialYear.financialYearName);
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
 
   const getAllCurrencyForFy = async (e) => {
-    console.log("in the getALLGlobalLLF", e);
     await axios
       .get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financialyear/${e}`
       )
       .then((response) => {
         const actualDataObject = response.data.data;
-        console.log("the currency", actualDataObject);
         array.push(actualDataObject);
         setCurrencyData(actualDataObject);
+      });
+  };
+
+  const payload = {
+    account: {
+      accountId: formData.account.accountId,
+    },
+    opportunity: {
+      opportunityId: formData.opportunity.opportunityID,
+      opportunityName: formData.opportunity.opportunityName,
+    },
+    projectCode: formData.opportunity.projectCode,
+    projectStartDate: formData.opportunity.projectStartDate,
+    projectEndDate: formData.opportunity.projectEndDate,
+
+    businessDevelopmentManager: {
+      bdmId: formData.bdm.bdmID,
+    },
+    currency: {
+      currencyId: formData.currency.currencyID,
+    },
+    probabilityType: {
+      probabilityTypeId: formData.probability.probabilityID,
+    },
+    region: {
+      regionId: formData.region.regionID,
+    },
+    workOrder: {
+      workOrderId: formData.workOrder.workOrderID,
+    },
+    workOrderEndDate: formData.workOrder.workOrderEndDate,
+    workOrderStatus: formData.workOrder.workOrderStatus,
+
+    financialYear: {
+      financialYearId: formData.financialYear.financialYearId,
+    },
+    resourceCount: resourceData.length,
+    pricingType: pricingType,
+    remarks: "TM Details adding",
+    status: "Submitted",
+    revenueResourceEntries: resourceData.map((ele) => ({
+      strategicBusinessUnit: {
+        sbuId: ele.sbuId,
+      },
+      strategicBusinessUnitHead: {
+        sbuHeadId: ele.sbuHeadId,
+      },
+      businessUnit: {
+        businessUnitId: ele.buisnessUnitId,
+      },
+      businessType: {
+        businessTypeId: ele.businessTypeId,
+      },
+      location: {
+        locationId: ele.locationId,
+      },
+      resourceName: ele.resouceName,
+      employeeId: ele.employeeId,
+      resourceStartDate: ele.startDate,
+      resourceEndDate: ele.endDate,
+      cocPractice: {
+        cocPracticeId: ele.cocPracticeId,
+      },
+      leaveLossFactor: ele.leaveLossFactor,
+      billingRateType: ele.billingRateType,
+      billingRate: ele.billingRate,
+      allocation: ele.allocation,
+    })),
+  };
+
+  const saveTandMentry = () => {
+    axios
+      .post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+        payload
+      )
+      .then((res) => {
+        props.setIsOpen(false);
+        console.log("res", res);
+      })
+      .catch((err) => {
+        props.setIsOpen(false);
+        console.log("err", err);
       });
   };
 
@@ -113,7 +194,7 @@ const ResourceEntryForm = (props) => {
     generateGrid(event.target.value);
   };
 
-  const updateResourceData = (data) => {
+  const updateResourceData = (data, index) => {
     setResourceData(data);
   };
 
@@ -125,15 +206,25 @@ const ResourceEntryForm = (props) => {
 
   const generateGrid = (value) => {
     const items = [];
-    const iterator = value ? value : inputNumber
-    if (pricingType == "T & M") {
+    const iterator = value ? value : inputNumber;
+    if (pricingType == "T&M") {
+      const tempResourceDetails = [];
+      for (let i = 0; i < iterator; i++) {
+        const resourceDataRow = {
+          index: i,
+        };
+        tempResourceDetails.push(resourceDataRow);
+      }
+      setResourceData(tempResourceDetails);
       for (let i = 0; i < iterator; i++) {
         items.push(
           <RevenueResourceAccordian
             id={i}
             formData={props.tabIndex.formData}
-            updateResourceData={updateResourceData}
+            // updateResourceData={updateResourceData}
             pricingType={pricingType}
+            resourceData={tempResourceDetails}
+            updateResourceData={setResourceData}
           />
         );
       }
@@ -149,7 +240,6 @@ const ResourceEntryForm = (props) => {
         );
       }
     }
-
     setGridItems(items);
   };
 
@@ -169,7 +259,7 @@ const ResourceEntryForm = (props) => {
   };
 
   const saveData = () => {
-    if (pricingType == "T & M") {
+    if (pricingType == "T&M") {
       saveResourceDetails();
       props.setIsOpen(false);
     } else {
@@ -177,6 +267,7 @@ const ResourceEntryForm = (props) => {
       props.setIsOpen(false);
     }
   };
+
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
@@ -202,9 +293,9 @@ const ResourceEntryForm = (props) => {
                 <label for="username">Pricing Type</label>
                 <input
                   type="radio"
-                  value="T & M"
+                  value="T&M"
                   name="Pricing Type"
-                  checked={pricingType === "T & M"}
+                  checked={pricingType === "T&M"}
                   onChange={onOptionChange}
                   style={{ boxShadow: "none" }}
                 />
@@ -255,7 +346,7 @@ const ResourceEntryForm = (props) => {
                           ...formData,
                           financialYear: {
                             ...formData.financialYear,
-                            financialYearID: selectedFyId,
+                            financialYearId: selectedFyId,
                             financialYearName: e.target.value,
                           },
                         });
@@ -264,13 +355,7 @@ const ResourceEntryForm = (props) => {
                       <option value="" disabled hidden>
                         Select
                       </option>
-                      <option
-                        value="2023-2024" // Set the default value
-                        data-fyId="default" // You can use a unique ID for the default option
-                        selected // Set the selected attribute
-                      >
-                        2023-2024
-                      </option>
+
                       {props?.financialYear?.financialYear.map(
                         (fyData, index) => {
                           const fyNameData = fyData?.financialYearName;
@@ -278,6 +363,7 @@ const ResourceEntryForm = (props) => {
                             <option
                               data-fyId={fyData?.financialYearId}
                               key={index}
+                              selected={fyNameData === "2023-2024"}
                             >
                               {fyNameData}
                             </option>
@@ -334,11 +420,12 @@ const ResourceEntryForm = (props) => {
                             e.target.selectedOptions[0].getAttribute(
                               "data-fyId"
                             );
+                          
                           setFormData({
                             ...formData,
                             account: {
                               ...formData.account,
-                              accountID: selectedFyId,
+                              accountId: selectedFyId,
                               accountName: e.target.value,
                             },
                           });
@@ -352,9 +439,10 @@ const ResourceEntryForm = (props) => {
                           props.accountData.accountData.map(
                             (accountData, index) => {
                               const accountNamedata = accountData.accountName;
+                              
                               return (
                                 <option
-                                  data-fyId={accountNamedata?.accountID}
+                                  data-fyId={accountData?.accountId}
                                   key={index}
                                 >
                                   {accountNamedata}
@@ -473,6 +561,12 @@ const ResourceEntryForm = (props) => {
                             e.target.selectedOptions[0].getAttribute(
                               "data-bdmId"
                             );
+                          const foundBdm = props?.bdmData?.bdmData.find(
+                            (ele) => {
+                              return ele.bdmId === selectedbdmId;
+                            }
+                          );
+
                           setFormData({
                             ...formData,
                             bdm: {
@@ -820,7 +914,6 @@ const ResourceEntryForm = (props) => {
                               );
                             }
                           );
-                        console.log("found", found);
 
                         setFormData({
                           ...formData,
@@ -960,12 +1053,7 @@ const ResourceEntryForm = (props) => {
                   type="button"
                   variant="contained"
                   onClick={() => {
-                    props.setGridItems([]);
                     props.setIsOpen(false);
-                    props.setTabIndex({
-                      index: 0,
-                      formData: "",
-                    });
                   }}
                   value="Cancel"
                   id="create-account"
@@ -977,7 +1065,7 @@ const ResourceEntryForm = (props) => {
           </div>
         ) : (
           <>
-            {pricingType == "T & M" && (
+            {pricingType == "T&M" && (
               <div
                 style={{
                   display: "flex",
@@ -1130,33 +1218,7 @@ const ResourceEntryForm = (props) => {
                 </div>
               </div>
             </div>
-            {/* <label
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-            >
-              <button
-                className="button"
-                onClick={() => {
-                  saveData();
-                }}
-              >
-                Save
-              </button>
-              <button
-                className="button"
-                onClick={() => {
-                  setGridItems([]);
-                  props.setIsOpen(false);
-                  props.setTabIndex({ index: 0, formData: "" });
-                  console.log("clicked");
-                }}
-              >
-                Cancel
-              </button>
-            </label> */}
+
             <div
               style={{
                 display: "flex",
@@ -1174,7 +1236,7 @@ const ResourceEntryForm = (props) => {
                   setPricingType(pricingType);
                   props.setTabIndex({
                     ...props.tabIndex,
-                    index: 1,
+                    index: 0,
                     y: formData,
                   });
                 }}
@@ -1186,14 +1248,7 @@ const ResourceEntryForm = (props) => {
                 value="Continue"
                 id="create-account"
                 variant="contained"
-                onClick={() => {
-                  setPricingType(pricingType);
-                  props.setTabIndex({
-                    ...props.tabIndex,
-                    index: 1,
-                    y: formData,
-                  });
-                }}
+                onClick={saveTandMentry}
               >
                 Save
               </ModalControlButton>
@@ -1201,12 +1256,12 @@ const ResourceEntryForm = (props) => {
                 type="button"
                 variant="contained"
                 onClick={() => {
-                  props.setGridItems([]);
+                  // props.setGridItems([]);
                   props.setIsOpen(false);
-                  props.setTabIndex({
-                    index: 0,
-                    formData: "",
-                  });
+                  // props.setTabIndex({
+                  //   index: 0,
+                  //   formData: "",
+                  // });
                 }}
                 value="Cancel"
                 id="create-account"
@@ -1221,8 +1276,6 @@ const ResourceEntryForm = (props) => {
   );
 };
 const mapStateToProps = (state) => {
-  console.log("this is the state", state);
-
   return {
     probabilityData: state.probabilityData,
     regionData: state.regionData,
