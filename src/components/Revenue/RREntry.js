@@ -40,6 +40,7 @@ function RREntry() {
     "COC Practice",
     "No Of Resources",
     "Leave Ls Ftr",
+    "",
   ];
 
   return (
@@ -70,7 +71,7 @@ function Tr({
   },
   columns2,
 }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [revenueEntriesData, setRevenueEntriesData] = useState({
     financialYearName: financialYearName,
     businessUnit: businessUnit,
@@ -140,11 +141,11 @@ function Tr({
 
   return (
     <React.Fragment>
-      <TableRow className="nestedtablebgrevenue">
-        <TableCell className="rowtable" style={{padding:"1px", borderBottom:"none"}}>
+      <tr className="nestedtablebgrevenue" style={{backgroundColor:"white"}}>
+        <td className="rowtable" style={{padding:"1px", borderBottom:"none"}}>
           {/* <input type="checkbox"></input> */}
           <Checkbox size="small" style={{padding:"1px"}} />
-        </TableCell>
+        </td>
         <td
           className="rowtable"
           onClick={(e) => {
@@ -191,7 +192,7 @@ function Tr({
         <td className="rowtable" style={{border:"none", padding:"1px"}}>
           <span style={{fontSize:"14px"}}>{status || "Unknown"}</span>
         </td>
-      </TableRow>
+      </tr>
       {isExpanded && (
         <tr style={{ backgroundColor: "white" }}>
           <td colSpan={13} style={{paddingTop:"0px"}}>
@@ -200,19 +201,19 @@ function Tr({
                 <td className="iconsColumn" style={{ padding: "2px 0px 0px 3px" }}>
                   <a>
                     {/* <FaIcons.FaPlus /> */}
-                    {/* <AddIcon fontSize="small"/> */}
+                    <AddIcon fontSize="small"/>
                   </a>
                   <a>
                     {/* <AiIcons.AiFillCopy /> */}
-                    <FileCopyOutlinedIcon fontSize="small" />
+                    {/* <FileCopyOutlinedIcon fontSize="small" /> */}
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineEdit /> */}
-                    <EditOutlinedIcon fontSize="small" />
+                    {/* <EditOutlinedIcon fontSize="small" /> */}
                   </a>
                   <a>
                     {/* <AiIcons.AiOutlineDelete /> */}
-                    <DeleteOutlineIcon fontSize="small"/>
+                    {/* <DeleteOutlineIcon fontSize="small"/> */}
                   </a>
                 </td>
               </tr>
