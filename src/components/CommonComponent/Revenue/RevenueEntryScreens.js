@@ -37,7 +37,7 @@ const TableButtons = styled(Button)({
   color: "#FFFFFF",
   fontSize: "12px",
   padding: "0px 10px",
-  height: "24px",
+  height: "26px",
   // marginTop: "6px",
   "&:hover": {
     backgroundColor: "#1E4482",
@@ -51,6 +51,29 @@ function RevenueEntryScreens(props) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+
+  const getCurrentFinancialYear = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+  
+    if (month >= 4) {
+      return `${year}-${year + 1}`;
+    } else {
+      return `${year - 1}-${year}`;
+    }
+  };
+
+  const [selectedFinancialYear, setSelectedFinancialYear] = useState(getCurrentFinancialYear());
+
+  const currentFinancialYear = getCurrentFinancialYear();
+  const handleFinancialYearChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedFinancialYear(selectedValue);
+    props.getAllRevenueEntriesForFy(selectedValue);
+  };
+
+  console.log("year-->", currentFinancialYear)
 
   const handleModalClose = () => {
     setIsOpen(false);
@@ -88,9 +111,12 @@ function RevenueEntryScreens(props) {
                   boxShadow: "none",
                 }}
                 id="revenue-select"
-                onChange={(e) => {
-                  props.getAllRevenueEntriesForFy(e.target.value);
-                }}
+                // onChange={(e) => {
+                //   props.getAllRevenueEntriesForFy(e.target.value);
+                // }}
+                onChange={handleFinancialYearChange}
+                // value="2023-2024"
+                value={selectedFinancialYear}
               >
                 <option value="" disabled selected hidden>
                   Select Financial Year

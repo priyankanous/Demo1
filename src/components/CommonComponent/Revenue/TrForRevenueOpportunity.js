@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
 import * as FaIcons from "react-icons/fa";
@@ -13,7 +13,6 @@ function TrForRevenue(props) {
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
   const [resourceData, setResourceData] = useState([]);
   const column3 = [
-    "",
     "Start Date",
     "End Date",
     "WO No",
@@ -180,6 +179,18 @@ function TrForRevenue(props) {
   });
   }
 
+  const [resourceDropdownStates, setResourceDropdownStates] = useState([]);
+
+  useEffect(() => {
+    setResourceDropdownStates(Array(resourceData.length).fill(false));
+  }, [resourceData]);
+
+  const toggleResourceDropdown = (id) => {
+    const newStates = [...resourceDropdownStates];
+    newStates[id] = !newStates[id];
+    setResourceDropdownStates(newStates);
+  };
+
   return (
     <React.Fragment>
       <tr
@@ -312,7 +323,7 @@ function TrForRevenue(props) {
               >
                 <td
                   className="iconsColumn"
-                  style={{ padding: "2px 0px 0px 3px" }}
+                  style={{ padding: "2px 0px 0px 0px" }}
                 >
                   <a>
                     {/* <FaIcons.FaPlus /> */}
@@ -361,7 +372,7 @@ function TrForRevenue(props) {
                         // setSelectedOpportunityId(obj.opportunityId);
                       }}
                     >
-                      <td>
+                      {/* <td>
                       <a
                                 style={{ display: "block", margin: "3px 0px" }}
                                 // onClick={() => DeleteRecord()}
@@ -374,7 +385,7 @@ function TrForRevenue(props) {
                                   style={{ fontSize: "15px" }}
                                 />
                               </a>
-                      </td>
+                      </td> */}
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
                           {obj.resourceStartDate || "Unknown"}
@@ -417,16 +428,20 @@ function TrForRevenue(props) {
                         <span style={{ float: "right", cursor: "pointer" }}>
                           <AiIcons.AiOutlineMore
                             onClick={(e) => {
-                              console.log(
+
+                              // setSelectedResourceId(obj.resourceId);
+                              // setIsResourceDropdown(true);
+                              // closeResourceDropDown();
+                              toggleResourceDropdown(id);
+                                                      handleResourceEmployeeID(obj.employeeId);
+                        handleResourceStartDate(obj.resourceStartDate);
+                                                      console.log(
                                 "wwwww--->",
                                 obj.employeeId
                               );
-                              // setSelectedResourceId(obj.resourceId);
-                              // setIsResourceDropdown(true);
-                              closeResourceDropDown();
                             }}
                           ></AiIcons.AiOutlineMore>
-                          {isResourceDropdown &&  (
+                           {resourceDropdownStates[id] && (
                             <div
                               style={{
                                 // float: "left",
@@ -463,7 +478,11 @@ function TrForRevenue(props) {
                               </a>
                               <a
                                 style={{ display: "block", margin: "3px 0px" }}
-                                // onClick={() => DeleteRecord()}
+                                onClick={()=>{
+                                  
+                                  deleteResourceRecord();
+                              
+                              }}
                               >
                                 <DeleteOutlineIcon
                                   style={{ fontSize: "15px" }}
