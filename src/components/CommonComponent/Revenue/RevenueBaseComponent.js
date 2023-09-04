@@ -50,7 +50,7 @@ export function RevenueBaseComponent(props) {
       <div className="table_main_container" style={{overflowY:"hidden"}}>
         <TableHeadingSection>
           <TableHeading>Rolling Revenue Entry</TableHeading>
-          <TableButtons>Export</TableButtons>
+          {/* <TableButtons>Export</TableButtons> */}
         </TableHeadingSection>
         <React.Fragment>
           <RevenueEntryScreens
