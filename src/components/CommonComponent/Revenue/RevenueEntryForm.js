@@ -56,8 +56,7 @@ const ResourceEntryForm = (props) => {
   const [gridItems, setGridItems] = useState([]);
   const [resourceData, setResourceData] = useState([]);
   const [pricingType, setPricingType] = useState("T&M");
-
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     account: { accountId: "", accountName: "" },
     opportunity: {
@@ -189,6 +188,28 @@ const ResourceEntryForm = (props) => {
     // setProjectEndDate(null)
   };
 
+  const handleNextClick = () => {
+    if (
+      !formData.account.accountName ||
+      !formData?.opportunity?.opportunityName ||
+      !formData?.bdm?.bdmName ||
+      !formData?.currency?.currencyName ||
+      !formData?.probability?.probabilityTypeName ||
+      !formData?.region?.regionName
+    ) {
+      setIsSubmitted(true);
+    } else {
+      console.log("here", isSubmitted);
+      setIsSubmitted(false);
+      setPricingType(pricingType);
+      props.setTabIndex({
+        ...props.tabIndex,
+        index: 1,
+        y: formData,
+      });
+    }
+  };
+
   const handleInputChange = (event) => {
     setInputNumber(event.target.value);
     generateGrid(event.target.value);
@@ -267,7 +288,6 @@ const ResourceEntryForm = (props) => {
       props.setIsOpen(false);
     }
   };
-
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
@@ -414,13 +434,17 @@ const ResourceEntryForm = (props) => {
                           marginLeft: "8px",
                           borderRadius: "0px",
                           height: "35px",
+                          border:
+                            isSubmitted && !formData?.account?.accountName
+                              ? "1px solid red"
+                              : "",
                         }}
                         onChange={(e) => {
                           const selectedFyId =
                             e.target.selectedOptions[0].getAttribute(
                               "data-fyId"
                             );
-                          
+
                           setFormData({
                             ...formData,
                             account: {
@@ -439,7 +463,7 @@ const ResourceEntryForm = (props) => {
                           props.accountData.accountData.map(
                             (accountData, index) => {
                               const accountNamedata = accountData.accountName;
-                              
+
                               return (
                                 <option
                                   data-fyId={accountData?.accountId}
@@ -467,6 +491,11 @@ const ResourceEntryForm = (props) => {
                           marginLeft: "8px",
                           borderRadius: "0px",
                           height: "35px",
+                          border:
+                            isSubmitted &&
+                            !formData?.opportunity?.opportunityName
+                              ? "1px solid red"
+                              : "",
                         }}
                         onChange={(e) => {
                           const selectedOpportunityId =
@@ -555,6 +584,10 @@ const ResourceEntryForm = (props) => {
                           marginLeft: "8px",
                           borderRadius: "0px",
                           height: "35px",
+                          border:
+                            isSubmitted && !formData?.bdm?.bdmName
+                              ? "1px solid red"
+                              : "",
                         }}
                         onChange={(e) => {
                           const selectedbdmId =
@@ -736,6 +769,10 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
+                        border:
+                          isSubmitted && !formData?.currency?.currencyName
+                            ? "1px solid red"
+                            : "",
                       }}
                       onChange={(e) => {
                         const selectedFyId =
@@ -785,6 +822,11 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
+                        border:
+                          isSubmitted &&
+                          !formData?.probability?.probabilityTypeName
+                            ? "1px solid red"
+                            : "",
                       }}
                       onChange={(e) => {
                         const selectedFyId =
@@ -794,7 +836,7 @@ const ResourceEntryForm = (props) => {
                           probability: {
                             ...formData.probability,
                             probabilityID: selectedFyId,
-                            probabilityName: e.target.value,
+                            probabilityTypeName: e.target.value,
                           },
                         });
                       }}
@@ -835,6 +877,10 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
+                        border:
+                          isSubmitted && !formData?.region?.regionName
+                            ? "1px solid red"
+                            : "",
                       }}
                       onChange={(e) => {
                         const selectedFyId =
@@ -901,6 +947,10 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
+                        border:
+                          isSubmitted && !formData?.workOrder?.workOrderID
+                            ? "1px solid red"
+                            : "",
                       }}
                       onChange={(e) => {
                         const selectedWorkOrderId =
@@ -1037,14 +1087,7 @@ const ResourceEntryForm = (props) => {
                   value="Continue"
                   id="create-account"
                   variant="contained"
-                  onClick={() => {
-                    setPricingType(pricingType);
-                    props.setTabIndex({
-                      ...props.tabIndex,
-                      index: 1,
-                      y: formData,
-                    });
-                  }}
+                  onClick={handleNextClick}
                 >
                   Next
                 </ModalControlButton>

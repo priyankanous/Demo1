@@ -16,11 +16,7 @@ import { getCocPracticeData } from "../../../actions/cocPractice";
 import { setResourceData } from "../../../actions/resource";
 import axios from "axios";
 import { apiV1 } from "../../../utils/constantsValue";
-import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const RevenueResourceAccordian = (props) => {
   useEffect(() => {
@@ -98,38 +94,13 @@ const RevenueResourceAccordian = (props) => {
           <AccordionItemButton
             style={{
               marginTop: "6px",
+              width: "216px",
+              marginLeft: "-30px",
+              cursor: "pointer",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                rowGap: "30px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexBasis: "100%",
-                  gap: "100px",
-                }}
-              >
-                <div
-                  style={{
-                    flexBasis: "25%",
-                    flexDirection: "row",
-                  }}
-                >
-                  <RiIcons.RiArrowDownSFill />
-                  <span>Resources {id + 1} Details </span>
-                  <FileCopyOutlinedIcon
-                    style={{ marginRight: "5px", alignfontSize: "large" }}
-                  />
-                  <EditOutlinedIcon style={{ alignfontSize: "large" }} />
-                  <DeleteOutlineIcon style={{ alignfontSize: "large" }} />
-                </div>
-              </div>
-            </div>
+            <RiIcons.RiArrowDownSFill />
+            <span>Resources {id + 1} Details </span>
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
