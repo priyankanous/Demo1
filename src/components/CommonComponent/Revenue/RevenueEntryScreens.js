@@ -102,12 +102,16 @@ function RevenueEntryScreens(props) {
                 <AddIcon />
               </a>
             </td>
-            <td style={{  padding:"0px 0px 0px 200px" }}>
+            <td style={{  padding:"0px 0px 0px 220px" }}>
+              <td >
+                <Typography style={{fontWeight:"13px"}}>FY :</Typography>
+              </td>
+              <td>
               <select
                 style={{
                   height: "24px",
-                  width: "90%",
-                  borderRadius: "7px",
+                  width: "100%",
+                  borderRadius: "5px",
                   boxShadow: "none",
                 }}
                 id="revenue-select"
@@ -127,6 +131,7 @@ function RevenueEntryScreens(props) {
                     return <option key={index}>{fyNameData}</option>;
                   })}
               </select>
+              </td>
             </td>
             <td className="tdrevenue" style={{padding:"0px"}}>
               <Checkbox size="small"/>

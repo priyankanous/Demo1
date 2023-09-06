@@ -225,6 +225,7 @@ const ResourceEntryForm = (props) => {
     // props.saveMileStones(props.milestoneDataNew);
   };
 
+
   const generateGrid = (value) => {
     const items = [];
     const iterator = value ? value : inputNumber;

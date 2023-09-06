@@ -8,10 +8,30 @@ import AddIcon from "@mui/icons-material/Add";
 import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Modal, Box, FormControl, TextField } from "@mui/material";
+import * as moment from "moment";
+
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+  revenueModalStyleObject,
+} from "../../../utils/constantsValue";
+import CloseIcon from "@mui/icons-material/Close";
+import RevenueResourceAccordian from './RevenueResourceAccordian';
+import { Accordion } from "react-accessible-accordion";
+
 
 function TrForRevenue(props) {
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
-  const [resourceData, setResourceData] = useState([]);
+  const [resourceTableData, setResourceTableData] = useState([]);
   const column3 = [
     "Start Date",
     "End Date",
@@ -19,8 +39,8 @@ function TrForRevenue(props) {
     "Employee ID",
     "Resource Name",
     "Rate",
-    "% Allocation",
-    "Leave Ls Ftr",
+    "Allocation %",
+    "Leave loss %",
     "",
   ];
 
@@ -56,9 +76,9 @@ function TrForRevenue(props) {
       // });
 
       if (e.pricingType == "T&M") {
-        setResourceData(response.data.data.tmResourceEntries);
+        setResourceTableData(response.data.data.tmResourceEntries);
       } else {
-        setResourceData(response.data.data.fpResourceEntries);
+        setResourceTableData(response.data.data.fpResourceEntries);
       }
       // console.log(
       //   "this is the response for resourceeeeeeeeeeeeeeeeeeeeeeeeeee ",
@@ -88,7 +108,7 @@ function TrForRevenue(props) {
       prevSelectedOpportunityId === opportunityId ? null : opportunityId
     );
     console.log(
-      "Component re-rendered with opportunityId:",
+      "selectedOpportunityId:",
       selectedOpportunityId
     );
   };
@@ -128,67 +148,143 @@ function TrForRevenue(props) {
 
   const handleResourceEmployeeID = (employeeId) => {
     setSelectedEmployeeID((prevSelectedEmployeeID) =>
-    prevSelectedEmployeeID === employeeId ? null : employeeId
+      prevSelectedEmployeeID === employeeId ? null : employeeId
     );
     console.log(
-      "Component re-rendered with opportunityId:",
+      "selectedEmployeeID:",
       selectedEmployeeID
     );
   };
 
   const handleResourceStartDate = (startDate) => {
     setSelectedStartDate((prevSelectedStartDate) =>
-    prevSelectedStartDate === startDate ? null : startDate
-    );
-    console.log(
-      "Component re-rendered with startDate:",
-      selectedStartDate
+      prevSelectedStartDate === startDate ? null : startDate
     );
   };
 
-  const deleteResourceRecord = () =>{
-    console.log("deleted");
-    console.log("employeeID->", selectedEmployeeID);
-    console.log("resourceDate->",selectedStartDate );
-    console.log("OpportunityId->", props.data.opportunityId);
+  const deleteResourceRecord = () => {
+    // console.log("deleted");
+    // console.log("employeeID->", selectedEmployeeID);
+    // console.log("resourceDate->", selectedStartDate);
+    // console.log("OpportunityId->", props.data.opportunityId);
 
     const parsedStartDate = new Date(selectedStartDate);
     const months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
 
-    const formattedStartDate = `${parsedStartDate.getDate()}/${months[parsedStartDate.getMonth()]}/${parsedStartDate.getFullYear()}`;
+    const formattedDay = String(parsedStartDate.getDate()).padStart(2, "0"); // Add leading zero if needed
+    const formattedMonth = months[parsedStartDate.getMonth()];
+    const formattedYear = parsedStartDate.getFullYear();
+    
+    const formattedStartDate = `${formattedDay}/${formattedMonth}/${formattedYear}`;
 
-    const apiUrl = 'http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/delete/resources';
+    const apiUrl =
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/delete/resources";
     const requestBody = {
       opportunityId: props.data.opportunityId,
       employeeId: selectedEmployeeID,
-      resourceStartDate: formattedStartDate
+      resourceStartDate: formattedStartDate,
     };
-    
+
     axios
-  .delete(apiUrl, { data: requestBody })
-  .then((res) => {
-    // Handle the success response
-    console.log('DELETE request successful:', res);
-  })
-  .catch((error) => {
-    // Handle errors
-    console.error('Error making DELETE request:', error);
-  });
-  }
+      .delete(apiUrl, { data: requestBody })
+      .then((res) => {
+        // Handle the success response
+        console.log("DELETE request successful:", res);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error making DELETE request:", error);
+      });
+  };
 
   const [resourceDropdownStates, setResourceDropdownStates] = useState([]);
 
   useEffect(() => {
-    setResourceDropdownStates(Array(resourceData.length).fill(false));
-  }, [resourceData]);
+    setResourceDropdownStates(Array(resourceTableData.length).fill(false));
+  }, [resourceTableData]);
 
   const toggleResourceDropdown = (id) => {
     const newStates = [...resourceDropdownStates];
     newStates[id] = !newStates[id];
     setResourceDropdownStates(newStates);
+  };
+
+  //edit modal code
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [pricingType, setPricingType] = useState("T&M");
+  const [inputNumber, setInputNumber] = useState("");
+  const [resourceData, setResourceData] = useState([]);
+  const [gridItems, setGridItems] = useState([]);
+
+
+
+  const onOptionChange = (e) => {
+    setPricingType(e.target.value);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+    // setSelectedFile(null);
+  };
+
+  const handleInputChange = (event) => {
+    setInputNumber(event.target.value);
+    generateGrid(event.target.value);
+  };
+  
+  const generateGrid = (value) => {
+    const items = [];
+    const iterator = value ? value : inputNumber;
+    if (pricingType == "T&M") {
+      const tempResourceDetails = [];
+      for (let i = 0; i < iterator; i++) {
+        const resourceDataRow = {
+          index: i,
+        };
+        tempResourceDetails.push(resourceDataRow);
+      }
+      setResourceData(tempResourceDetails);
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueResourceAccordian
+            id={i}
+            // formData={props.tabIndex.formData}
+            // updateResourceData={updateResourceData}
+            pricingType={pricingType}
+            resourceData={tempResourceDetails}
+            updateResourceData={setResourceData}
+          />
+          // <TextField />
+          
+        );
+      }
+    } else {
+      for (let i = 0; i < inputNumber; i++) {
+        items.push(
+          // <RevenueMilestoneAccordian
+          //   id={i}
+          //   formData={props.tabIndex.formData}
+          //   pricingType={pricingType}
+          //   updateMilestoneData={updateMilestoneData}
+          // />
+        );
+      }
+    }
+    setGridItems(items);
   };
 
   return (
@@ -202,7 +298,7 @@ function TrForRevenue(props) {
               : "white",
           // Other styling properties
         }}
-        onClick={() => handleRowClick(props.data.opportunityId)}
+        // onClick={() => handleRowClick(props.data.opportunityId)}
       >
         <td
           style={{
@@ -239,14 +335,15 @@ function TrForRevenue(props) {
             {props.data.pricingType || "Unknown"}
           </span>
         </td>
+
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-            {props.data.projectStartDate || "Unknown"}
+          {moment(props.data.projectStartDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
           </span>
         </td>
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-            {props.data.projectEndDate || "Unknown"}
+          {moment(props.data.projectEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
           </span>
         </td>
         <td className="rowtable" style={{ padding: "1px" }}>
@@ -259,16 +356,17 @@ function TrForRevenue(props) {
             {props.data.noOfResources || "Unknown"}
           </span>
         </td>
-        <td className="rowtable" style={{ padding: "1px"}}>
+        <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
             {props.data.leaveLossFactor || "Unknown"}
           </span>
         </td>
-        <td className="rowtable" style={{border: "none" }}>
+        <td className="rowtable" style={{ border: "none" }}>
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
                 console.log("wwwww--->", props.data.opportunityId);
+                handleRowClick(props.data.opportunityId);
                 closeDropDown();
               }}
             ></AiIcons.AiOutlineMore>
@@ -327,7 +425,7 @@ function TrForRevenue(props) {
                 >
                   <a>
                     {/* <FaIcons.FaPlus /> */}
-                    <AddIcon fontSize="small"/>
+                    <AddIcon fontSize="small" />
                   </a>
                   <a>
                     {/* <AiIcons.AiFillCopy /> */}
@@ -355,8 +453,8 @@ function TrForRevenue(props) {
                 })}
               </tr>
               <tbody>
-                {resourceData.length > 0 &&
-                  resourceData.map((obj, id) => (
+                {resourceTableData.length > 0 &&
+                  resourceTableData.map((obj, id) => (
                     <tr
                       key={obj.employeeId}
                       style={{
@@ -386,14 +484,18 @@ function TrForRevenue(props) {
                                 />
                               </a>
                       </td> */}
-                      <td className="rowtable">
+
+                                            <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.resourceStartDate || "Unknown"}
+                          {moment(obj.resourceStartDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
+
                         </span>
                       </td>
-                      <td className="rowtable">
+
+                                            <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.resourceEndDate || "Unknown"}
+                        {moment(obj.resourceEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
+
                         </span>
                       </td>
                       <td className="rowtable">
@@ -424,24 +526,19 @@ function TrForRevenue(props) {
                           {obj.leaveLossFactor || "Unknown"}
                         </span>
                       </td>
-                      <td className="rowtable" style={{border:"none"}}>
+                      <td className="rowtable" style={{ border: "none" }}>
                         <span style={{ float: "right", cursor: "pointer" }}>
                           <AiIcons.AiOutlineMore
                             onClick={(e) => {
-
                               // setSelectedResourceId(obj.resourceId);
                               // setIsResourceDropdown(true);
                               // closeResourceDropDown();
                               toggleResourceDropdown(id);
-                                                      handleResourceEmployeeID(obj.employeeId);
-                        handleResourceStartDate(obj.resourceStartDate);
-                                                      console.log(
-                                "wwwww--->",
-                                obj.employeeId
-                              );
+                              handleResourceEmployeeID(obj.employeeId);
+                              handleResourceStartDate(obj.resourceStartDate);
                             }}
                           ></AiIcons.AiOutlineMore>
-                           {resourceDropdownStates[id] && (
+                          {resourceDropdownStates[id] && (
                             <div
                               style={{
                                 // float: "left",
@@ -471,6 +568,9 @@ function TrForRevenue(props) {
                               </a>
                               <a
                                 style={{ display: "block", margin: "3px 0px" }}
+                                onClick={() => {
+                                  setIsOpen(true);
+                                }}
                               >
                                 <EditOutlinedIcon
                                   style={{ fontSize: "15px" }}
@@ -478,11 +578,9 @@ function TrForRevenue(props) {
                               </a>
                               <a
                                 style={{ display: "block", margin: "3px 0px" }}
-                                onClick={()=>{
-                                  
+                                onClick={() => {
                                   deleteResourceRecord();
-                              
-                              }}
+                                }}
                               >
                                 <DeleteOutlineIcon
                                   style={{ fontSize: "15px" }}
@@ -499,6 +597,300 @@ function TrForRevenue(props) {
           </td>
         </tr>
       )}
+
+      <Modal open={isOpen} onClose={handleModalClose}>
+        <Box
+          sx={MoadalStyle}
+          style={{
+            width: "80%",
+            height: "max-content",
+            borderRadius: "0px",
+          }}
+        >
+          <ModalHeadingSection
+            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+          >
+            <ModalHeadingText
+              style={{ fontStyle: "normal", fontWeight: "200" }}
+            >
+              Edit Resource
+            </ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection style={{ borderRadius: "0px" }}>
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "30px",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexBasis: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <div>
+                      <label for="username">Pricing Type</label>
+                      <input
+                        type="radio"
+                        value="T&M"
+                        name="Pricing Type"
+                        checked={pricingType === "T&M"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      T & M
+                      <input
+                        type="radio"
+                        value="FP"
+                        name="Pricing Type"
+                        checked={pricingType === "FP"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      FP
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span>FY :</span>
+                      <div>
+                        <FormControl>
+                          <select
+                            style={{
+                              background: "white",
+                              width: "150px",
+                              marginLeft: "8px",
+                              variant: "outlined",
+                              borderRadius: "0px",
+                              height: "35px",
+                            }}
+                            // onChange={(e) => {
+                            //   getAllCurrencyForFy(e.target.value);
+                            //   const selectedFyId =
+                            //     e.target.selectedOptions[0].getAttribute("data-fyId");
+                            //   setFormData({
+                            //     ...formData,
+                            //     financialYear: {
+                            //       ...formData.financialYear,
+                            //       financialYearId: selectedFyId,
+                            //       financialYearName: e.target.value,
+                            //     },
+                            //   });
+                            // }}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+
+                            {props?.financialYear?.financialYear.map(
+                              (fyData, index) => {
+                                const fyNameData = fyData?.financialYearName;
+                                return (
+                                  <option
+                                    data-fyId={fyData?.financialYearId}
+                                    key={index}
+                                    selected={fyNameData === "2023-2024"}
+                                  >
+                                    {fyNameData}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </select>
+                        </FormControl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                {pricingType == "T&M" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Resource count:
+                      </span>
+                      {/* <div>
+                    <label
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <input
+                        type="number"
+                        value={inputNumber}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        style={{
+                          margin: "0px 0px 0px 8px",
+                        }}
+                        type="button"
+                        value="Add"
+                        id="create-account"
+                        class="button"
+                        onClick={generateGrid}
+                      />
+                    </label>
+                  </div> */}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="number"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        onChange={handleInputChange}
+                        value={inputNumber}
+                      />
+                    </div>
+                  </div>
+                )}
+                            {pricingType == "FP" && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: "25px",
+                }}
+              >
+                <div
+                  style={{
+                    width: "auto",
+                    display: "flex",
+                    alignItems: "center",
+                    columnGap: "10px",
+                  }}
+                >
+                  <span style={{ color: "red" }}>*</span>
+                  <span style={{ marginLeft: "-9px" }}>Milestone count:</span>
+                  {/* <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={inputNumber}
+                      onChange={handleInputChange}
+                    />
+                    <input
+                      style={{
+                        margin: "0px 0px 0px 8px",
+                      }}
+                      type="button"
+                      value="Add"
+                      id="create-account"
+                      class="button"
+                      onClick={generateGrid}
+                    />
+                  </label>
+                </div> */}
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "75Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                    }}
+                    size="small"
+                    type="text"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    // onChange={(e) => {
+                    //   setFormData({
+                    //     ...formData,
+                    //     opportunity: {
+                    //       ...formData.opportunity,
+                    //       projectCode: e.target.value,
+                    //     },
+                    //   });
+                    // }}
+                    // value={formData?.opportunity?.projectCode}
+                  />
+                </div>
+              </div>
+            )}
+              </div>
+              <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                marginLeft: "0px",
+              }}
+            >
+              <Accordion id="accordian">{gridItems}</Accordion>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
+              <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                <div style={{ display: "flex", flexBasis: "25%" }}>
+                  <div style={{ width: "75px" }}>
+                    <span>Remarks :</span>
+                  </div>
+                  <input style={{ width: "730px", borderRadius: "0px" }} />
+                </div>
+              </div>
+            </div>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
     </React.Fragment>
   );
 }
