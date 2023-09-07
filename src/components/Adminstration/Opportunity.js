@@ -49,10 +49,10 @@ function Opportunity() {
   const [isEditId, setIsEditId] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [opportunityData, setOpportunityData] = useState({
-    opportunityId: 1,
+    opportunityId: "",
     opportunityName: "",
     account: {
-      accountId: "10",
+      accountId: "",
       // accountName: "",
       // accountOrClientCode: "string",
     },
@@ -191,22 +191,30 @@ function Opportunity() {
   };
 
   const activeDeactivateTableData = async (opportunityId) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/activate-or-deactivate/${opportunityId}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setOpportunityData({
-        opportunityId: "",
-        opportunityName: "",
-        projectCode: "",
-        projectStartDate: "",
-        projectEndDate: "",
-        account: {
-          accountId: "",
-        },
-      });
-      setIsOpen(false);
-      getAllOpportunityData();
+    try {
+      const response= await axios.put(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/opportunity/activate-or-deactivate/${opportunityId}`
+      );
+      if (response.data?.message === "Success" && response.data?.responseCode === 200) {
+        setOpportunityData({
+          opportunityId: "",
+          opportunityName: "",
+          projectCode: "",
+          projectStartDate: "",
+          projectEndDate: "",
+          account: {
+            accountId: "",
+          },
+        });
+        setIsOpen(false);
+        getAllOpportunityData();
+      } else {
+        setShowSnackbar(true); 
+        setSnackMessage(response.data?.details);
+      }
+    } catch (error) {
+      setShowSnackbar(true);
+      setSnackMessage("An error occurred while processing the request.");
     }
   };
 
@@ -852,3 +860,4 @@ function Tr({
   );
 }
 export default Opportunity;
+
