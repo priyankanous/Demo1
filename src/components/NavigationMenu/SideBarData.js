@@ -100,16 +100,16 @@ export const SidebarData = [
     iconOpened: <ArrowDropUpIcon />,
 
     subNav: [
-      {
-        title: "Account",
-        path: "/settings/account",
-        cName: "sub-nav",
-      },
-      {
-        title: "Opportunity",
-        path: "/settings/opportunity",
-        cName: "sub-nav",
-      },
+      // {
+      //   title: "Account",
+      //   path: "/settings/account",
+      //   cName: "sub-nav",
+      // },
+      // {
+      //   title: "Opportunity",
+      //   path: "/settings/opportunity",
+      //   cName: "sub-nav",
+      // },
       {
         title: "Roles",
         path: "/settings/roles",
