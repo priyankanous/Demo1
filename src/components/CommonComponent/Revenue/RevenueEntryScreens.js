@@ -45,9 +45,11 @@ const TableButtons = styled(Button)({
 });
 
 function RevenueEntryScreens(props) {
-  useEffect(() => {
-    props.getFinacialYearData();
-  }, []);
+  // useEffect(() => {
+  //   props.getFinacialYearData();
+  // }, []);
+
+  
 
   const [isOpen, setIsOpen] = useState(false);
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
@@ -80,6 +82,18 @@ function RevenueEntryScreens(props) {
     setTabIndex({ index: 0, formData: "" });
     // setSelectedFile(null);
   };
+
+  // useEffect(() => {
+  //   // Code to fetch data for the selected financial year
+  //   props.getAllRevenueEntriesForFy(selectedFinancialYear);
+  // }, [selectedFinancialYear]);
+
+  useEffect(() => {
+    props.getFinacialYearData();
+
+    // Code to fetch data for the selected financial year
+    props.getAllRevenueEntriesForFy(selectedFinancialYear);
+}, [selectedFinancialYear]);
 
   return (
     <React.Fragment>

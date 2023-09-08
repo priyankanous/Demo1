@@ -161,6 +161,7 @@ const ResourceEntryForm = (props) => {
     })),
   };
 
+
   const saveTandMentry = () => {
     axios
       .post(
@@ -373,18 +374,20 @@ const ResourceEntryForm = (props) => {
                         });
                       }}
                     >
-                      <option value="" disabled hidden>
+                      <option value="" disabled selected hidden>
                         Select
                       </option>
-
                       {props?.financialYear?.financialYear.map(
                         (fyData, index) => {
+
                           const fyNameData = fyData?.financialYearName;
+                          const fyId = fyData.financialYearId;
+                          {console.log("check financial year", fyNameData)}
                           return (
                             <option
-                              data-fyId={fyData?.financialYearId}
+                              data-fyId={fyId}
                               key={index}
-                              selected={fyNameData === "2023-2024"}
+                              // selected={fyNameData}
                             >
                               {fyNameData}
                             </option>

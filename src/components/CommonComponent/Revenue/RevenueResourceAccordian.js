@@ -217,7 +217,7 @@ const RevenueResourceAccordian = (props) => {
               <td style={{ borderRight: "solid 1px" }}>
                 <input
                   id="milestoneinput"
-                  type="number"
+                  type="string"
                   placeholder="Employee ID"
                   onChange={(e) => {
                     updateResourceDetails({
