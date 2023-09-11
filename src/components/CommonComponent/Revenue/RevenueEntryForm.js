@@ -329,6 +329,7 @@ const ResourceEntryForm = (props) => {
                   checked={pricingType === "FP"}
                   onChange={onOptionChange}
                   style={{ boxShadow: "none" }}
+                  disabled
                 />
                 FP
               </div>
