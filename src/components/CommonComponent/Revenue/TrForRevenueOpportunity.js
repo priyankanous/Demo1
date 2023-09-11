@@ -411,10 +411,10 @@ function TrForRevenue(props) {
       {isExpandedInnerRow && (
         <tr
           className="nestedtablebgrevenue"
-          style={{ backgroundColor: "white"  }}
+          style={{ backgroundColor: "white" }}
         >
           <td colSpan={10} style={{ padding: "0px 0px 0px 40px" }}>
-            <table style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}>
+            <table style={{ backgroundColor: "rgba(225, 222, 222, 0.5)", borderBottom:"1px solid #0000004d",}}>
               <tr
                 className="trrevenue"
                 style={{ backgroundColor: "rgba(225, 222, 222, 0)" }}
@@ -458,6 +458,7 @@ function TrForRevenue(props) {
                     <tr
                       key={obj.employeeId}
                       style={{
+                        
                         backgroundColor:
                           selectedRow === id
                             ? "rgba(192, 228, 234, 0.43)"
