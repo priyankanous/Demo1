@@ -100,14 +100,42 @@ const RevenueResourceAccordian = (props) => {
             }}
           >
             <RiIcons.RiArrowDownSFill />
-            <span>Resources {id + 1} Details </span>
+            <span>Resource {id + 1} Details </span>
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
           <br></br>
           <table>
-            <tr className="trmilestone">
+            <tr>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                SBU
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                SBU Head
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                BU
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                Location
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                Resource Name
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                Employee ID
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                Start Date
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+                End Date
+              </td>
+            </tr>
+            
+            <tr className="trmilestone" style={{background:"white"}}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+
                 <select
                   id="milestoneselect"
                   required
@@ -121,7 +149,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    SBU
+                    Select SBU
                   </option>
                   {props.sbuData.sbuData &&
                     props.sbuData.sbuData.map((obj, id) => (
@@ -143,7 +171,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    SBU Head
+                    Select SBU Head
                   </option>
                   {props.sbuHeadData.sbuHeadData &&
                     props.sbuHeadData.sbuHeadData.map((obj, id) => (
@@ -167,7 +195,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    BU
+                    Select BU
                   </option>
                   {props.buData.buData &&
                     props.buData.buData.map((obj, id) => (
@@ -191,7 +219,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    Location
+                   Select Location
                   </option>
                   {props.locationData.locationData &&
                     props.locationData.locationData.map((obj, id) => (
@@ -257,7 +285,33 @@ const RevenueResourceAccordian = (props) => {
             <br></br>
           </table>
           <table style={{ marginLeft: "110px" }}>
-            <tr className="trmilestone">
+            <tr>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              Business Type
+
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              CoC Practice
+
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              Billing Rate Type
+
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              Billing Rate
+
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              Leave Loss Factor
+
+              </td>
+              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px"}}>
+              Allocation %
+
+              </td>
+            </tr>
+            <tr className="trmilestone" style={{background:"white"}}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
@@ -273,12 +327,12 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    BusinessType
+                    Select BusinessType
                   </option>
                   {props.businessTypeData.businessTypeData &&
                     props.businessTypeData.businessTypeData.map((obj, id) => (
                       <option data-businessTypeId={obj.businessTypeId}>
-                        {obj.businessTypeName}
+                        {obj.businessTypeDisplayName}
                       </option>
                     ))}
                 </select>
@@ -298,7 +352,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    CoC Practice
+                    Select CoC Practice
                   </option>
                   {props.cocPracticeData.cocPracticeData &&
                     props.cocPracticeData.cocPracticeData.map((obj, id) => (
@@ -320,7 +374,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    Billing Rate Type
+                    Select Billing Rate Type
                   </option>
                   <option>Hourly</option>
                   <option>Daily</option>
@@ -333,7 +387,7 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  placeholder="Billing Rate"
+                  // placeholder="Billing Rate"
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -350,7 +404,7 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="resourceinput"
                   type="number"
-                  placeholder="Leave Loss Factor"
+                  // placeholder="Leave Loss Factor"
                   value={resourceData[id]?.leaveLossFactor}
                   onChange={(e) => {
                     updateResourceDetails({
@@ -364,7 +418,7 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  placeholder="Allocation %"
+                  // placeholder="Allocation %"
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,

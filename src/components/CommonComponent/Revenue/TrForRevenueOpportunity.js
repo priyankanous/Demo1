@@ -411,7 +411,7 @@ function TrForRevenue(props) {
       {isExpandedInnerRow && (
         <tr
           className="nestedtablebgrevenue"
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: "white"  }}
         >
           <td colSpan={10} style={{ padding: "0px 0px 0px 40px" }}>
             <table style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}>
