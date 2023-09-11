@@ -150,7 +150,7 @@ h3 {
 } */
 
 .table_main_container {
-  overflow: auto;
+  /* overflow: auto; */
   position: absolute;
   width: 79%;
   height: 64%;
@@ -248,7 +248,7 @@ table {
 .threvenue {
   font-family: Sans-serif;
   border-collapse: collapse;
-  position: sticky;
+  /* position: sticky; */
   font-size: smaller;
   text-align: center;
   top: 0;

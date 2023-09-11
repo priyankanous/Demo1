@@ -47,7 +47,7 @@ export function RevenueBaseComponent(props) {
     <React.Fragment>
 
       <div>
-      <div className="table_main_container" style={{overflowY:"hidden"}}>
+      <div className="table_main_container" style={{overflow:"hidden"}}>
         <TableHeadingSection>
           <TableHeading>Rolling Revenue Entry</TableHeading>
           {/* <TableButtons>Export</TableButtons> */}
@@ -63,7 +63,16 @@ export function RevenueBaseComponent(props) {
                   return <th className="threvenueposition" style={{backgroundColor:"rgba(72, 130, 225, 0.3)", padding:"2px 3px", height:"30px"}}>{header}</th>;
                 })}
               </TableRow>
-              <TableBody className="nestedtablebgrevenue">
+              <TableBody className="nestedtablebgrevenue"
+              style={{
+                overflowY: "scroll",
+                height: "220px",
+                display: "block",
+                overflowX: "inherit",
+                width: "100%",
+                position: "absolute"
+              }}
+              >
                 {data.revenueEntries &&
                   data.revenueEntries.map((obj, id) => {
                     obj.financialYearName = data.financialYearName;
