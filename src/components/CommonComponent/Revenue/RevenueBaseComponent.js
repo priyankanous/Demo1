@@ -68,7 +68,7 @@ export function RevenueBaseComponent(props) {
                 overflowY: "scroll",
                 height: "220px",
                 display: "block",
-                overflowX: "inherit",
+                overflowX: "hidden",
                 width: "100%",
                 position: "absolute"
               }}
