@@ -105,7 +105,7 @@ const RevenueResourceAccordian = (props) => {
         </AccordionItemHeading>
         <AccordionItemPanel>
           <br></br>
-          <table>
+          <table style={{backgroundColor:"white"}}>
             <tr>
               <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
                 SBU
@@ -284,7 +284,7 @@ const RevenueResourceAccordian = (props) => {
             </tr>
             <br></br>
           </table>
-          <table style={{ marginLeft: "110px" }}>
+          <table style={{ marginLeft: "110px", backgroundColor:"white" }}>
             <tr>
               <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
               Business Type
