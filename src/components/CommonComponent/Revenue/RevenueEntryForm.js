@@ -118,7 +118,7 @@ const ResourceEntryForm = (props) => {
       regionId: formData.region.regionID,
     },
     workOrder: {
-      workOrderId: formData.workOrder.workOrderID  ,
+      workOrderId: formData.workOrder.workOrderID,
     },
     workOrderEndDate: formData.workOrder.workOrderEndDate,
     workOrderStatus: formData.workOrder.workOrderStatus,
@@ -550,7 +550,7 @@ const ResourceEntryForm = (props) => {
                           borderRadius: "0px",
                           height: "35px",
                           border:
-                            isSubmitted && !formData?.account?.accountName
+                            isSubmitted && !formData?.opportunity?.opportunityName
                               ? "1px solid red"
                               : "",
                         }),
@@ -1001,7 +1001,7 @@ const ResourceEntryForm = (props) => {
                         )}
                     </select>
                   </FormControl> */}
-                  <Select
+                   <Select
                     styles={{
                       control: (provided) => ({
                         ...provided,
@@ -1016,16 +1016,14 @@ const ResourceEntryForm = (props) => {
                             : "",
                       }),
                     }}
-                    placeholder=""
                     options={props?.workOrderData?.workOrderData?.map(
                       (workOrderData, index) => ({
                         value: workOrderData.workOrderId,
-                        label: workOrderData.workOrderNumber || "TBD",
+                        label: workOrderData.workOrderNumber,
                         workOrderEndDate: workOrderData.workOrderEndDate,
                         workOrderStatus: workOrderData.workOrderStatus,
                       })
                     )}
-                  
                     onChange={(selectedOption) => {
                       const selectedWorkOrderId = selectedOption.value;
                       const foundOption =
@@ -1046,13 +1044,13 @@ const ResourceEntryForm = (props) => {
                             workOrderEndDate: workOrderEndDate,
                           },
                         }));
-                       
                       }
                     }}
-                    value={formData.workOrder.workOrderID}
-
+                    value={{
+                      value: formData.workOrder.workOrderNumber,
+                      label: formData.workOrder.workOrderNumber,
+                    }}
                   />
-
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <div>

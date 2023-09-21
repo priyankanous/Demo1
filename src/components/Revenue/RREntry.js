@@ -182,7 +182,7 @@ function Tr({
       <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white" }}>
         <td
           className="rowtable"
-          style={{ padding: "1px", borderBottom: "none" }}
+          style={{ padding: "1px", borderBottom: "none", width: "15px" }}
         >
           {/* <input type="checkbox"></input> */}
           <Checkbox size="small" style={{ padding: "1px" }} />
@@ -193,55 +193,191 @@ function Tr({
             revenueOpportunity();
             handleRowExpansion(e.target);
           }}
-          style={{ padding: "1px 6px" }}
+          style={{ padding: "1px 6px", width: "10px" }}
         >
           ↓{/* <FaIcons.FaArrowDown /> */}
           {/* <ArrowDropDownIcon /> */}
         </td>
 
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{businessUnit || "Unknown"}</span>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{businessUnit || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "60px" }}>
+          <div
+            style={{
+              width: "60px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {businessUnit || "Unknown"}
+            </span>
+          </div>
         </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
-            {strategicBusinessUnit || "Unknown"}
-          </span>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}} >
+        <span style={{fontSize:"14px"}}>{strategicBusinessUnit || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+          <div
+            style={{
+              width: "80px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {strategicBusinessUnit || "Unknown"}
+            </span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{strategicBusinessUnitHead || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+          <div
+            style={{
+              width: "80px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {strategicBusinessUnitHead || "Unknown"}
+            </span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{businessDevelopmentManager || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+          <div
+            style={{
+              width: "80px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {businessDevelopmentManager || "Unknown"}
+            </span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"150px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{businessType || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "150px" }}>
+          <div
+            style={{
+              width: "150px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {businessType || "Unknown"}
+            </span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{account || "Unknown"}</span>
+      </td> */}
+
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+          <div
+            style={{
+              width: "80px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>{account || "Unknown"}</span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{region || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+          <div
+            style={{
+              width: "80px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>{region || "Unknown"}</span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{location || "Unknown"}</span>
+      </td> */}
+        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
+          <div
+            style={{
+              width: "70px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>{location || "Unknown"}</span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{probabilityType || "Unknown"}</span>
+      </td> */}
+
+        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
+          <div
+            style={{
+              width: "70px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>
+              {probabilityType || "Unknown"}
+            </span>
+          </div>
+        </td>
+        {/* <td className="rowtable" style={{padding:"1px", width:"150px", whiteSpace:"nowrap"}}>
+        <span style={{fontSize:"14px"}}>{cocPractice || "Unknown"}</span>
+      </td> */}
+
+        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+          <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>{cocPractice || "Unknown"}</span>
+          </div>
         </td>
         <td
           className="rowtable"
-          style={{ padding: "1px", whiteSpace: "nowrap" }}
+          style={{ border: "none", padding: "1px", width: "70px" }}
         >
-          <span style={{ fontSize: "14px" }}>
-            {strategicBusinessUnitHead || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
-            {businessDevelopmentManager || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{businessType || "Unknown"}</span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{account || "Unknown"}</span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{region || "Unknown"}</span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{location || "Unknown"}</span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
-            {probabilityType || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{cocPractice || "Unknown"}</span>
-        </td>
-        <td className="rowtable" style={{ border: "none", padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>{status || "Unknown"}</span>
+          <div
+            style={{
+              width: "70px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <span style={{ fontSize: "14px" }}>{status || "Unknown"}</span>
+          </div>
         </td>
       </tr>
       {isExpanded && (
@@ -261,6 +397,7 @@ function Tr({
                       setIsOpen(true);
                     }}
                   >
+                    {/* <FaIcons.FaPlus /> */}
                     <AddIcon fontSize="small" />
                   </a>
                   <a>
@@ -302,14 +439,15 @@ function Tr({
                   ))}
 
                 {/* <MemoizedTrForRevenueOpportunity
-                      data={obj}
-                      opportunityEntryData={opportunityEntryData}
-                    /> */}
+                    data={obj}
+                    opportunityEntryData={opportunityEntryData}
+                  /> */}
               </tbody>
             </table>
           </td>
         </tr>
       )}
+
       <Modal open={isOpen} onClose={handleModalClose}>
         <Box
           sx={MoadalStyle}
@@ -344,7 +482,6 @@ function Tr({
           />
         </Box>
       </Modal>
-    
     </React.Fragment>
   );
 }
