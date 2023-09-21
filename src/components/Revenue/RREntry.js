@@ -1,19 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RevenueMemoizedBaseComponent } from "../CommonComponent/Revenue/RevenueBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import * as FaIcons from "react-icons/fa";
 import axios from "axios";
 import { apiV1 } from "../../utils/constantsValue";
 import { MemoizedTrForRevenueOpportunity } from "../CommonComponent/Revenue/TrForRevenueOpportunity";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Checkbox, TableCell, TableRow } from "@mui/material";
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import AddIcon from '@mui/icons-material/Add';
-import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import AddIcon from "@mui/icons-material/Add";
+import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { Modal, Box } from "@mui/material";
+import {
+  TableRowSection,
+  TableCellSection,
+  ModalHeadingSection,
+  ModalHeadingText,
+  ModalDetailSection,
+  InputTextLabel,
+  InputField,
+  ButtonSection,
+  ModalControlButton,
+  MoadalStyle,
+  revenueModalStyleObject,
+} from "../../utils/constantsValue";
+import CloseIcon from "@mui/icons-material/Close";
+import RevenueEntryForm from "../CommonComponent/Revenue/RevenueEntryForm";
 
-function RREntry() {
+function RREntry(props) {
   const columns = [
     "",
     "",
@@ -69,9 +85,11 @@ function Tr({
     status,
     financialYearName,
   },
+  props,
   columns2,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [revenueEntriesData, setRevenueEntriesData] = useState({
     financialYearName: financialYearName,
     businessUnit: businessUnit,
@@ -87,6 +105,7 @@ function Tr({
     status: status,
   });
   const [opportunityData, setOpportunityData] = useState([]);
+  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
 
   const [opportunityEntryData, setOpportunityEntryData] = useState({
     financialYearName: financialYearName,
@@ -101,7 +120,17 @@ function Tr({
     probabilityType: probabilityType,
     status: status,
   });
-  
+  console.log("oppdata", opportunityEntryData.financialYearName);
+
+  useEffect(() => {
+    getAllRevenueEntries();
+  }, []);
+  const handleModalClose = () => {
+    setIsOpen(false);
+    setTabIndex({ index: 0, formData: "" });
+    // setSelectedFile(null);
+  };
+
   const revenueOpportunity = async (e) => {
     try {
       const response = await axios.post(
@@ -112,8 +141,6 @@ function Tr({
       setOpportunityData(response.data.data.opportunities);
     } catch {}
   };
-
-  console.log("opportunity-------->", opportunityData)
 
   const handleRowExpansion = (cell) => {
     // console.log("cell value", cell);
@@ -137,14 +164,28 @@ function Tr({
   //   }
   // };
 
-
+  const getAllRevenueEntries = () => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/${opportunityEntryData.financialYearName}`
+      )
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
 
   return (
     <React.Fragment>
-      <tr className="nestedtablebgrevenue" style={{backgroundColor:"white"}}>
-        <td className="rowtable" style={{padding:"1px", borderBottom:"none", width:"15px"}}>
+      <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white" }}>
+        <td
+          className="rowtable"
+          style={{ padding: "1px", borderBottom: "none" }}
+        >
           {/* <input type="checkbox"></input> */}
-          <Checkbox size="small" style={{padding:"1px"}} />
+          <Checkbox size="small" style={{ padding: "1px" }} />
         </td>
         <td
           className="rowtable"
@@ -152,111 +193,75 @@ function Tr({
             revenueOpportunity();
             handleRowExpansion(e.target);
           }}
-          style={{padding:"1px 6px", width:"10px"}}
+          style={{ padding: "1px 6px" }}
         >
-          ↓
-          {/* <FaIcons.FaArrowDown /> */}
+          ↓{/* <FaIcons.FaArrowDown /> */}
           {/* <ArrowDropDownIcon /> */}
         </td>
 
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{businessUnit || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "60px" }}>
-  <div style={{ width: "60px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{businessUnit || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}} >
-          <span style={{fontSize:"14px"}}>{strategicBusinessUnit || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
-  <div style={{ width: "80px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{strategicBusinessUnit || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{strategicBusinessUnitHead || "Unknown"}</span>
-        </td> */}
-                <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
-  <div style={{ width: "80px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{strategicBusinessUnitHead || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{businessDevelopmentManager || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
-  <div style={{ width: "80px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{businessDevelopmentManager || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"150px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{businessType || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "150px" }}>
-  <div style={{ width: "150px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{businessType || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{account || "Unknown"}</span>
-        </td> */}
-
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
-  <div style={{ width: "80px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{account || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{region || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
-  <div style={{ width: "80px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{region || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{location || "Unknown"}</span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
-  <div style={{ width: "70px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{location || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{probabilityType || "Unknown"}</span>
-        </td> */}
-
-        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
-  <div style={{ width: "70px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{probabilityType || "Unknown"}</span>
-  </div>
-</td>
-        {/* <td className="rowtable" style={{padding:"1px", width:"150px", whiteSpace:"nowrap"}}>
-          <span style={{fontSize:"14px"}}>{cocPractice || "Unknown"}</span>
-        </td> */}
-
-        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-  <div style={{ width: "90px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-    <span style={{ fontSize: "14px" }}>{cocPractice || "Unknown"}</span>
-  </div>
-</td>
-        <td className="rowtable" style={{border:"none", padding:"1px", width:"70px"}}>
-        <div style={{ width: "70px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-          <span style={{fontSize:"14px"}}>{status || "Unknown"}</span>
-          </div>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{businessUnit || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>
+            {strategicBusinessUnit || "Unknown"}
+          </span>
+        </td>
+        <td
+          className="rowtable"
+          style={{ padding: "1px", whiteSpace: "nowrap" }}
+        >
+          <span style={{ fontSize: "14px" }}>
+            {strategicBusinessUnitHead || "Unknown"}
+          </span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>
+            {businessDevelopmentManager || "Unknown"}
+          </span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{businessType || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{account || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{region || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{location || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>
+            {probabilityType || "Unknown"}
+          </span>
+        </td>
+        <td className="rowtable" style={{ padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{cocPractice || "Unknown"}</span>
+        </td>
+        <td className="rowtable" style={{ border: "none", padding: "1px" }}>
+          <span style={{ fontSize: "14px" }}>{status || "Unknown"}</span>
         </td>
       </tr>
       {isExpanded && (
         <tr style={{ backgroundColor: "white" }}>
-          <td colSpan={13} style={{paddingTop:"0px"}}>
-            <table style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
-              <tr className="trrevenue" style={{backgroundColor:"rgba(225, 222, 222, 0)"}} >
-                <td className="iconsColumn" style={{ padding: "2px 0px 0px 3px" }}>
-                  <a>
-                    {/* <FaIcons.FaPlus /> */}
-                    <AddIcon fontSize="small"/>
+          <td colSpan={13} style={{ paddingTop: "0px" }}>
+            <table style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}>
+              <tr
+                className="trrevenue"
+                style={{ backgroundColor: "rgba(225, 222, 222, 0)" }}
+              >
+                <td
+                  className="iconsColumn"
+                  style={{ padding: "2px 0px 0px 3px" }}
+                >
+                  <a
+                    onClick={() => {
+                      setIsOpen(true);
+                    }}
+                  >
+                    <AddIcon fontSize="small" />
                   </a>
                   <a>
                     {/* <AiIcons.AiFillCopy /> */}
@@ -274,7 +279,17 @@ function Tr({
               </tr>
               <tr className="nestedtablebgrevenue">
                 {columns2.map((header) => {
-                  return <th className="threvenue" style={{backgroundColor:"rgba(72, 130, 225, 0.2)", padding:"4px"}}>{header}</th>;
+                  return (
+                    <th
+                      className="threvenue"
+                      style={{
+                        backgroundColor: "rgba(72, 130, 225, 0.2)",
+                        padding: "4px",
+                      }}
+                    >
+                      {header}
+                    </th>
+                  );
                 })}
               </tr>
               <tbody>
@@ -285,17 +300,51 @@ function Tr({
                       opportunityEntryData={opportunityEntryData}
                     />
                   ))}
-                                 
-                    {/* <MemoizedTrForRevenueOpportunity
+
+                {/* <MemoizedTrForRevenueOpportunity
                       data={obj}
                       opportunityEntryData={opportunityEntryData}
                     /> */}
-               
               </tbody>
             </table>
           </td>
         </tr>
       )}
+      <Modal open={isOpen} onClose={handleModalClose}>
+        <Box
+          sx={MoadalStyle}
+          style={{
+            width: "80%",
+            height: "max-content",
+            borderRadius: "0px",
+          }}
+        >
+          <ModalHeadingSection
+            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+          >
+            <ModalHeadingText
+              style={{ fontStyle: "normal", fontWeight: "200" }}
+            >
+              New Entry
+            </ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <RevenueEntryForm
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            tabIndex={tabIndex}
+            setTabIndex={setTabIndex}
+            // formData={}
+            {...props}
+          />
+        </Box>
+      </Modal>
+    
     </React.Fragment>
   );
 }

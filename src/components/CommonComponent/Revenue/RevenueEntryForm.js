@@ -23,14 +23,13 @@ import { getBdmData } from "../../../actions/bdm";
 import { getAccountData } from "../../../actions/account";
 import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
-
+import Select from "react-select";
 import {
   Box,
   Typography,
   IconButton,
   Button,
   FormControl,
-  Select,
   MenuItem,
   Checkbox,
   Radio,
@@ -119,7 +118,7 @@ const ResourceEntryForm = (props) => {
       regionId: formData.region.regionID,
     },
     workOrder: {
-      workOrderId: formData.workOrder.workOrderID,
+      workOrderId: formData.workOrder.workOrderID  ,
     },
     workOrderEndDate: formData.workOrder.workOrderEndDate,
     workOrderStatus: formData.workOrder.workOrderStatus,
@@ -160,7 +159,6 @@ const ResourceEntryForm = (props) => {
       allocation: ele.allocation,
     })),
   };
-
 
   const saveTandMentry = () => {
     axios
@@ -225,7 +223,6 @@ const ResourceEntryForm = (props) => {
   const updateMilestoneData = (data) => {
     // props.saveMileStones(props.milestoneDataNew);
   };
-
 
   const generateGrid = (value) => {
     const items = [];
@@ -380,10 +377,11 @@ const ResourceEntryForm = (props) => {
                       </option>
                       {props?.financialYear?.financialYear.map(
                         (fyData, index) => {
-
                           const fyNameData = fyData?.financialYearName;
                           const fyId = fyData.financialYearId;
-                          {console.log("check financial year", fyNameData)}
+                          {
+                            console.log("check financial year", fyNameData);
+                          }
                           return (
                             <option
                               data-fyId={fyId}
@@ -430,12 +428,12 @@ const ResourceEntryForm = (props) => {
                     <span>Account</span>
                   </div>
                   <div>
-                    <FormControl>
-                      <select
-                        size="small"
-                        style={{
+                    <Select
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
                           background: "white",
-                          width: "187Px",
+                          width: "187px",
                           marginLeft: "8px",
                           borderRadius: "0px",
                           height: "35px",
@@ -443,51 +441,36 @@ const ResourceEntryForm = (props) => {
                             isSubmitted && !formData?.account?.accountName
                               ? "1px solid red"
                               : "",
-                        }}
-                        onChange={(e) => {
-                          const selectedFyId =
-                            e.target.selectedOptions[0].getAttribute(
-                              "data-fyId"
-                            );
-
-                          setFormData({
-                            ...formData,
-                            account: {
-                              ...formData.account,
-                              accountId: selectedFyId,
-                              accountName: e.target.value,
-                            },
-                          });
-                        }}
-                        value={formData.account.accountName}
-                      >
-                        <option value="" disabled selected hidden>
-                          Select
-                        </option>
-                        {props.accountData.accountData &&
-                          props.accountData.accountData.map(
-                            (accountData, index) => {
-                              const accountNamedata = accountData.accountName;
-
-                              return (
-                                <option
-                                  data-fyId={accountData?.accountId}
-                                  key={index}
-                                >
-                                  {accountNamedata}
-                                </option>
-                              );
-                            }
-                          )}
-                      </select>
-                    </FormControl>
+                        }),
+                      }}
+                      options={props?.accountData?.accountData?.map(
+                        (accountData, index) => ({
+                          value: accountData?.accountId,
+                          label: accountData?.accountName,
+                        })
+                      )}
+                      onChange={(selectedOption) => {
+                        setFormData({
+                          ...formData,
+                          account: {
+                            ...formData.account,
+                            accountId: selectedOption.value,
+                            accountName: selectedOption.label,
+                          },
+                        });
+                      }}
+                      value={{
+                        value: formData.account.accountId,
+                        label: formData.account.accountName,
+                      }}
+                    />
                   </div>
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <span style={{ color: "red" }}>*</span>
                   <span>Opportunity Name</span>
                   <div>
-                    <FormControl>
+                    {/* <FormControl>
                       <select
                         size="small"
                         style={{
@@ -556,7 +539,54 @@ const ResourceEntryForm = (props) => {
                             }
                           )}
                       </select>
-                    </FormControl>
+                    </FormControl> */}
+                    <Select
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          background: "white",
+                          width: "187px",
+                          marginLeft: "8px",
+                          borderRadius: "0px",
+                          height: "35px",
+                          border:
+                            isSubmitted && !formData?.account?.accountName
+                              ? "1px solid red"
+                              : "",
+                        }),
+                      }}
+                      options={props?.opportunityData?.opportunityData?.map(
+                        (opportunityData, index) => ({
+                          value: opportunityData.opportunityId,
+                          label: opportunityData.opportunityName,
+                        })
+                      )}
+                      onChange={(selectedOption) => {
+                        const selectedOpportunityId = selectedOption.value;
+                        const found =
+                          props?.opportunityData?.opportunityData?.find(
+                            (each) =>
+                              each?.opportunityId === selectedOpportunityId
+                          );
+
+                        setFormData({
+                          ...formData,
+                          opportunity: {
+                            ...formData.opportunity,
+                            opportunityID: selectedOption.value,
+                            opportunityName: selectedOption.label,
+                            projectCode: found?.projectCode || "", // Set the auto-populated value or an empty string if not found
+                            projectStartDate: found?.projectStartDate || "", // Set the auto-populated value or an empty string if not found
+                            projectEndDate: found?.projectEndDate || "", // Set the auto-populated value or an empty string if not found
+                          },
+                        });
+                      }}
+                      value={{
+                        value: formData.opportunity.opportunityID,
+                        label: formData.opportunity.opportunityName,
+                      }}
+                    />
+
                     <div>
                       <a
                         href="/administration/opportunity"
@@ -580,12 +610,12 @@ const ResourceEntryForm = (props) => {
                     <span>BDM</span>
                   </div>
                   <div style={{ width: "187px" }}>
-                    <FormControl>
-                      <select
-                        size="small"
-                        style={{
+                    <Select
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
                           background: "white",
-                          width: "187Px",
+                          width: "187px",
                           marginLeft: "8px",
                           borderRadius: "0px",
                           height: "35px",
@@ -593,39 +623,29 @@ const ResourceEntryForm = (props) => {
                             isSubmitted && !formData?.bdm?.bdmName
                               ? "1px solid red"
                               : "",
-                        }}
-                        onChange={(e) => {
-                          const selectedbdmId =
-                            e.target.selectedOptions[0].getAttribute(
-                              "data-bdmId"
-                            );
-                          const foundBdm = props?.bdmData?.bdmData.find(
-                            (ele) => {
-                              return ele.bdmId === selectedbdmId;
-                            }
-                          );
-
-                          setFormData({
-                            ...formData,
-                            bdm: {
-                              ...formData.bdm,
-                              bdmID: selectedbdmId,
-                              bdmName: e.target.value,
-                            },
-                          });
-                        }}
-                      >
-                        <option value="" disabled selected hidden>
-                          Select
-                        </option>
-                        {props?.bdmData?.bdmData &&
-                          props?.bdmData?.bdmData.map((obj, id) => (
-                            <option data-bdmId={obj.bdmId}>
-                              {obj.bdmName}
-                            </option>
-                          ))}
-                      </select>
-                    </FormControl>
+                        }),
+                      }}
+                      options={props?.bdmData?.bdmData?.map(
+                        (bdmData, index) => ({
+                          value: bdmData?.bdmId,
+                          label: bdmData?.bdmName,
+                        })
+                      )}
+                      onChange={(selectedOption) => {
+                        setFormData({
+                          ...formData,
+                          bdm: {
+                            ...formData.bdm,
+                            bdmID: selectedOption.value,
+                            bdmName: selectedOption.label,
+                          },
+                        });
+                      }}
+                      value={{
+                        value: formData.bdm.bdmID,
+                        label: formData.bdm.bdmName,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -765,12 +785,12 @@ const ResourceEntryForm = (props) => {
                     <span style={{ color: "red" }}>*</span>
                     <span>Currency(As per WO)</span>
                   </div>
-                  <FormControl>
-                    <select
-                      size="small"
-                      style={{
+                  <Select
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
                         background: "white",
-                        width: "187Px",
+                        width: "187px",
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
@@ -778,39 +798,29 @@ const ResourceEntryForm = (props) => {
                           isSubmitted && !formData?.currency?.currencyName
                             ? "1px solid red"
                             : "",
-                      }}
-                      onChange={(e) => {
-                        const selectedFyId =
-                          e.target.selectedOptions[0].getAttribute("data-fyId");
-                        setFormData({
-                          ...formData,
-                          currency: {
-                            ...formData.currency,
-                            currencyID: selectedFyId,
-                            currencyName: e.target.value,
-                          },
-                        });
-                      }}
-                    >
-                      <option value="" disabled selected hidden>
-                        Select
-                      </option>
-                      {props?.currencyData.currencyData &&
-                        props?.currencyData?.currencyData.map(
-                          (currencyData, index) => {
-                            const currencyNamedata = currencyData?.currencyName;
-                            return (
-                              <option
-                                data-fyId={currencyData.currencyId}
-                                key={index}
-                              >
-                                {currencyNamedata}
-                              </option>
-                            );
-                          }
-                        )}
-                    </select>
-                  </FormControl>
+                      }),
+                    }}
+                    options={props?.currencyData?.currencyData?.map(
+                      (currencyData, index) => ({
+                        value: currencyData?.currencyId,
+                        label: currencyData?.currencyName,
+                      })
+                    )}
+                    onChange={(selectedOption) => {
+                      setFormData({
+                        ...formData,
+                        currency: {
+                          ...formData.currency,
+                          currencyID: selectedOption.value,
+                          currencyName: selectedOption.label,
+                        },
+                      });
+                    }}
+                    value={{
+                      value: formData.currency.currencyID,
+                      label: formData.currency.currencyName,
+                    }}
+                  />
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <div>
@@ -818,12 +828,13 @@ const ResourceEntryForm = (props) => {
                     <span>Probablity</span>
                   </div>
 
-                  <FormControl>
-                    <select
-                      size="small"
-                      style={{
+                  <Select
+                    isSearchable
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
                         background: "white",
-                        width: "187Px",
+                        width: "187px",
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
@@ -832,40 +843,29 @@ const ResourceEntryForm = (props) => {
                           !formData?.probability?.probabilityTypeName
                             ? "1px solid red"
                             : "",
-                      }}
-                      onChange={(e) => {
-                        const selectedFyId =
-                          e.target.selectedOptions[0].getAttribute("data-fyId");
-                        setFormData({
-                          ...formData,
-                          probability: {
-                            ...formData.probability,
-                            probabilityID: selectedFyId,
-                            probabilityTypeName: e.target.value,
-                          },
-                        });
-                      }}
-                    >
-                      <option value="" disabled selected hidden>
-                        Select
-                      </option>
-                      {props?.probabilityData?.probabilityData &&
-                        props?.probabilityData?.probabilityData.map(
-                          (probabilityData, index) => {
-                            const probabilityNamedata =
-                              probabilityData?.probabilityTypeName;
-                            return (
-                              <option
-                                data-fyId={probabilityData.probabilityTypeId}
-                                key={index}
-                              >
-                                {probabilityNamedata}
-                              </option>
-                            );
-                          }
-                        )}
-                    </select>
-                  </FormControl>
+                      }),
+                    }}
+                    options={props?.probabilityData?.probabilityData?.map(
+                      (probabilityData, index) => ({
+                        value: probabilityData?.probabilityTypeId,
+                        label: probabilityData?.probabilityTypeName,
+                      })
+                    )}
+                    onChange={(selectedOption) => {
+                      setFormData({
+                        ...formData,
+                        probability: {
+                          ...formData.probability,
+                          probabilityID: selectedOption.value,
+                          probabilityTypeName: selectedOption.label,
+                        },
+                      });
+                    }}
+                    value={{
+                      value: formData.probability.probabilityID,
+                      label: formData.probability.probabilityTypeName,
+                    }}
+                  />
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <div>
@@ -873,12 +873,12 @@ const ResourceEntryForm = (props) => {
                     <span>Region</span>
                   </div>
 
-                  <FormControl>
-                    <select
-                      size="small"
-                      style={{
+                  <Select
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
                         background: "white",
-                        width: "187Px",
+                        width: "187px",
                         marginLeft: "8px",
                         borderRadius: "0px",
                         height: "35px",
@@ -886,39 +886,34 @@ const ResourceEntryForm = (props) => {
                           isSubmitted && !formData?.region?.regionName
                             ? "1px solid red"
                             : "",
-                      }}
-                      onChange={(e) => {
-                        const selectedFyId =
-                          e.target.selectedOptions[0].getAttribute("data-fyId");
-                        setFormData({
-                          ...formData,
-                          region: {
-                            ...formData.region,
-                            regionID: selectedFyId,
-                            regionName: e.target.value,
-                          },
-                        });
-                      }}
-                    >
-                      <option value="" disabled selected hidden>
-                        Select
-                      </option>
-                      {props?.regionData?.regionData &&
-                        props?.regionData?.regionData.map(
-                          (regionData, index) => {
-                            const regionNamedata = regionData?.regionName;
-                            return (
-                              <option
-                                data-fyId={regionData.regionId}
-                                key={index}
-                              >
-                                {regionNamedata}
-                              </option>
-                            );
-                          }
-                        )}
-                    </select>
-                  </FormControl>
+                      }),
+                    }}
+                    options={props?.regionData?.regionData?.map(
+                      (regionData, index) => ({
+                        value: regionData?.regionId,
+                        label: regionData?.regionName,
+                      })
+                    )}
+                    onChange={(selectedOption) => {
+                      setFormData({
+                        ...formData,
+                        region: {
+                          ...formData.region,
+                          regionID: selectedOption.value,
+                          regionName: selectedOption.label,
+                        },
+                      });
+                    }}
+                    value={props?.regionData?.regionData
+                      ?.map((regionData, index) => ({
+                        value: regionData?.regionId,
+                        label: regionData?.regionName,
+                      }))
+                      ?.filter(
+                        ({ label, value }) => value === formData.region.regionID
+                      )}
+                    placeholder=""
+                  />
                 </div>
               </div>
             </div>
@@ -943,7 +938,7 @@ const ResourceEntryForm = (props) => {
                     <span style={{ color: "red" }}>*</span>
                     <span>Work Order</span>
                   </div>
-                  <FormControl>
+                  {/* <FormControl>
                     <select
                       size="small"
                       style={{
@@ -1005,7 +1000,59 @@ const ResourceEntryForm = (props) => {
                           }
                         )}
                     </select>
-                  </FormControl>
+                  </FormControl> */}
+                  <Select
+                    styles={{
+                      control: (provided) => ({
+                        ...provided,
+                        background: "white",
+                        width: "187px",
+                        marginLeft: "8px",
+                        borderRadius: "0px",
+                        height: "35px",
+                        border:
+                          isSubmitted && !formData?.workOrder?.workOrderID
+                            ? "1px solid red"
+                            : "",
+                      }),
+                    }}
+                    placeholder=""
+                    options={props?.workOrderData?.workOrderData?.map(
+                      (workOrderData, index) => ({
+                        value: workOrderData.workOrderId,
+                        label: workOrderData.workOrderNumber || "TBD",
+                        workOrderEndDate: workOrderData.workOrderEndDate,
+                        workOrderStatus: workOrderData.workOrderStatus,
+                      })
+                    )}
+                  
+                    onChange={(selectedOption) => {
+                      const selectedWorkOrderId = selectedOption.value;
+                      const foundOption =
+                        props?.workOrderData?.workOrderData?.find(
+                          (each) =>
+                            each?.workOrderId === Number(selectedWorkOrderId)
+                        );
+
+                      if (foundOption) {
+                        const { workOrderEndDate, workOrderStatus } =
+                          foundOption;
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          workOrder: {
+                            ...prevData.workOrder,
+                            workOrderID: selectedWorkOrderId,
+                            workOrderStatus: workOrderStatus,
+                            workOrderEndDate: workOrderEndDate,
+                          },
+                        }));
+                       
+                      }
+                    }}
+                    value={formData.workOrder.workOrderID}
+
+                  />
+
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <div>
@@ -1131,31 +1178,7 @@ const ResourceEntryForm = (props) => {
                 >
                   <span style={{ color: "red" }}>*</span>
                   <span style={{ marginLeft: "-9px" }}>Resource count:</span>
-                  {/* <div>
-                    <label
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <input
-                        type="number"
-                        value={inputNumber}
-                        onChange={handleInputChange}
-                      />
-                      <input
-                        style={{
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        type="button"
-                        value="Add"
-                        id="create-account"
-                        class="button"
-                        onClick={generateGrid}
-                      />
-                    </label>
-                  </div> */}
+
                   <InputField
                     style={{
                       background: "white",
@@ -1193,31 +1216,7 @@ const ResourceEntryForm = (props) => {
                 >
                   <span style={{ color: "red" }}>*</span>
                   <span style={{ marginLeft: "-9px" }}>Milestone count:</span>
-                  {/* <div>
-                  <label
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      value={inputNumber}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      style={{
-                        margin: "0px 0px 0px 8px",
-                      }}
-                      type="button"
-                      value="Add"
-                      id="create-account"
-                      class="button"
-                      onClick={generateGrid}
-                    />
-                  </label>
-                </div> */}
+
                   <InputField
                     style={{
                       background: "white",
