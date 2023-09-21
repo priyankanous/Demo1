@@ -25,9 +25,8 @@ import {
   revenueModalStyleObject,
 } from "../../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
-import RevenueResourceAccordian from './RevenueResourceAccordian';
+import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import { Accordion } from "react-accessible-accordion";
-
 
 function TrForRevenue(props) {
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
@@ -107,10 +106,7 @@ function TrForRevenue(props) {
     setSelectedOpportunityId((prevSelectedOpportunityId) =>
       prevSelectedOpportunityId === opportunityId ? null : opportunityId
     );
-    console.log(
-      "selectedOpportunityId:",
-      selectedOpportunityId
-    );
+    console.log("selectedOpportunityId:", selectedOpportunityId);
   };
 
   const [isDropdown, setDropdown] = useState(false);
@@ -150,10 +146,7 @@ function TrForRevenue(props) {
     setSelectedEmployeeID((prevSelectedEmployeeID) =>
       prevSelectedEmployeeID === employeeId ? null : employeeId
     );
-    console.log(
-      "selectedEmployeeID:",
-      selectedEmployeeID
-    );
+    console.log("selectedEmployeeID:", selectedEmployeeID);
   };
 
   const handleResourceStartDate = (startDate) => {
@@ -187,7 +180,7 @@ function TrForRevenue(props) {
     const formattedDay = String(parsedStartDate.getDate()).padStart(2, "0"); // Add leading zero if needed
     const formattedMonth = months[parsedStartDate.getMonth()];
     const formattedYear = parsedStartDate.getFullYear();
-    
+
     const formattedStartDate = `${formattedDay}/${formattedMonth}/${formattedYear}`;
 
     const apiUrl =
@@ -222,6 +215,8 @@ function TrForRevenue(props) {
     setResourceDropdownStates(newStates);
   };
 
+  const [isClicked, setIsClicked] = useState(false);
+
   //edit modal code
 
   const [isOpen, setIsOpen] = useState(false);
@@ -229,8 +224,7 @@ function TrForRevenue(props) {
   const [inputNumber, setInputNumber] = useState("");
   const [resourceData, setResourceData] = useState([]);
   const [gridItems, setGridItems] = useState([]);
-
-
+  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -238,6 +232,8 @@ function TrForRevenue(props) {
 
   const handleModalClose = () => {
     setIsOpen(false);
+    setTabIndex({ index: 0, formData: "" });
+
     // setSelectedFile(null);
   };
 
@@ -245,7 +241,7 @@ function TrForRevenue(props) {
     setInputNumber(event.target.value);
     generateGrid(event.target.value);
   };
-  
+
   const generateGrid = (value) => {
     const items = [];
     const iterator = value ? value : inputNumber;
@@ -269,19 +265,19 @@ function TrForRevenue(props) {
             updateResourceData={setResourceData}
           />
           // <TextField />
-          
         );
       }
     } else {
       for (let i = 0; i < inputNumber; i++) {
-        items.push(
+        items
+          .push
           // <RevenueMilestoneAccordian
           //   id={i}
           //   formData={props.tabIndex.formData}
           //   pricingType={pricingType}
           //   updateMilestoneData={updateMilestoneData}
           // />
-        );
+          ();
       }
     }
     setGridItems(items);
@@ -338,12 +334,16 @@ function TrForRevenue(props) {
 
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-          {moment(props.data.projectStartDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
+            {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
+              "DD/MMM/YYYY"
+            )}
           </span>
         </td>
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-          {moment(props.data.projectEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
+            {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
+              "DD/MMM/YYYY"
+            )}
           </span>
         </td>
         <td className="rowtable" style={{ padding: "1px" }}>
@@ -414,7 +414,12 @@ function TrForRevenue(props) {
           style={{ backgroundColor: "white" }}
         >
           <td colSpan={10} style={{ padding: "0px 0px 0px 40px" }}>
-            <table style={{ backgroundColor: "rgba(225, 222, 222, 0.5)", borderBottom:"1px solid #0000004d",}}>
+            <table
+              style={{
+                backgroundColor: "rgba(225, 222, 222, 0.5)",
+                borderBottom: "1px solid #0000004d",
+              }}
+            >
               <tr
                 className="trrevenue"
                 style={{ backgroundColor: "rgba(225, 222, 222, 0)" }}
@@ -423,8 +428,11 @@ function TrForRevenue(props) {
                   className="iconsColumn"
                   style={{ padding: "2px 0px 0px 0px" }}
                 >
-                  <a>
-                    {/* <FaIcons.FaPlus /> */}
+                  <a
+                    onClick={() => {
+                      setIsClicked(true);
+                    }}
+                  >
                     <AddIcon fontSize="small" />
                   </a>
                   <a>
@@ -458,7 +466,6 @@ function TrForRevenue(props) {
                     <tr
                       key={obj.employeeId}
                       style={{
-                        
                         backgroundColor:
                           selectedRow === id
                             ? "rgba(192, 228, 234, 0.43)"
@@ -486,17 +493,19 @@ function TrForRevenue(props) {
                               </a>
                       </td> */}
 
-                                            <td className="rowtable">
+                      <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {moment(obj.resourceStartDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
-
+                          {moment(obj.resourceStartDate, "YYYY-MM-DD").format(
+                            "DD/MMM/YYYY"
+                          )}
                         </span>
                       </td>
 
-                                            <td className="rowtable">
+                      <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                        {moment(obj.resourceEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")}
-
+                          {moment(obj.resourceEndDate, "YYYY-MM-DD").format(
+                            "DD/MMM/YYYY"
+                          )}
                         </span>
                       </td>
                       <td className="rowtable">
@@ -598,6 +607,303 @@ function TrForRevenue(props) {
           </td>
         </tr>
       )}
+      <Modal open={isClicked} onClose={handleModalClose}>
+        <Box
+          sx={MoadalStyle}
+          style={{
+            width: "80%",
+            height: "max-content",
+            borderRadius: "0px",
+          }}
+        >
+          <ModalHeadingSection
+            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+          >
+            <ModalHeadingText
+              style={{ fontStyle: "normal", fontWeight: "200" }}
+            >
+              Add Resource
+            </ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsClicked(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection style={{ borderRadius: "0px" }}>
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "30px",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexBasis: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <div>
+                      <label for="username">Pricing Type</label>
+                      <input
+                        type="radio"
+                        value="T&M"
+                        name="Pricing Type"
+                        checked={pricingType === "T&M"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      T & M
+                      <input
+                        type="radio"
+                        value="FP"
+                        name="Pricing Type"
+                        checked={pricingType === "FP"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      FP
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span>FY :</span>
+                      <div>
+                        <FormControl>
+                          <select
+                            style={{
+                              background: "white",
+                              width: "150px",
+                              marginLeft: "8px",
+                              variant: "outlined",
+                              borderRadius: "0px",
+                              height: "35px",
+                            }}
+                            // onChange={(e) => {
+                            //   getAllCurrencyForFy(e.target.value);
+                            //   const selectedFyId =
+                            //     e.target.selectedOptions[0].getAttribute("data-fyId");
+                            //   setFormData({
+                            //     ...formData,
+                            //     financialYear: {
+                            //       ...formData.financialYear,
+                            //       financialYearId: selectedFyId,
+                            //       financialYearName: e.target.value,
+                            //     },
+                            //   });
+                            // }}
+                          >
+                            <option value="" disabled hidden>
+                              Select
+                            </option>
+
+                            {props?.financialYear?.financialYear.map(
+                              (fyData, index) => {
+                                const fyNameData = fyData?.financialYearName;
+                                return (
+                                  <option
+                                    data-fyId={fyData?.financialYearId}
+                                    key={index}
+                                    selected={fyNameData === "2023-2024"}
+                                  >
+                                    {fyNameData}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </select>
+                        </FormControl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                {pricingType == "T&M" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Resource count:
+                      </span>
+                      {/* <div>
+                    <label
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <input
+                        type="number"
+                        value={inputNumber}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        style={{
+                          margin: "0px 0px 0px 8px",
+                        }}
+                        type="button"
+                        value="Add"
+                        id="create-account"
+                        class="button"
+                        onClick={generateGrid}
+                      />
+                    </label>
+                  </div> */}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="number"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        onChange={handleInputChange}
+                        value={inputNumber}
+                      />
+                    </div>
+                  </div>
+                )}
+                {pricingType == "FP" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Milestone count:
+                      </span>
+                      {/* <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={inputNumber}
+                      onChange={handleInputChange}
+                    />
+                    <input
+                      style={{
+                        margin: "0px 0px 0px 8px",
+                      }}
+                      type="button"
+                      value="Add"
+                      id="create-account"
+                      class="button"
+                      onClick={generateGrid}
+                    />
+                  </label>
+                </div> */}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="text"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     opportunity: {
+                        //       ...formData.opportunity,
+                        //       projectCode: e.target.value,
+                        //     },
+                        //   });
+                        // }}
+                        // value={formData?.opportunity?.projectCode}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  marginLeft: "0px",
+                }}
+              >
+                <Accordion id="accordian">{gridItems}</Accordion>
+              </div>
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
+              >
+                <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                    <div style={{ width: "75px" }}>
+                      <span>Remarks :</span>
+                    </div>
+                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
 
       <Modal open={isOpen} onClose={handleModalClose}>
         <Box
@@ -796,25 +1102,27 @@ function TrForRevenue(props) {
                     </div>
                   </div>
                 )}
-                            {pricingType == "FP" && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginRight: "25px",
-                }}
-              >
-                <div
-                  style={{
-                    width: "auto",
-                    display: "flex",
-                    alignItems: "center",
-                    columnGap: "10px",
-                  }}
-                >
-                  <span style={{ color: "red" }}>*</span>
-                  <span style={{ marginLeft: "-9px" }}>Milestone count:</span>
-                  {/* <div>
+                {pricingType == "FP" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Milestone count:
+                      </span>
+                      {/* <div>
                   <label
                     style={{
                       display: "flex",
@@ -839,55 +1147,57 @@ function TrForRevenue(props) {
                     />
                   </label>
                 </div> */}
-                  <InputField
-                    style={{
-                      background: "white",
-                      width: "75Px",
-                      marginLeft: "8px",
-                      borderRadius: "0px !important",
-                      height: "35px",
-                    }}
-                    size="small"
-                    type="text"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    // onChange={(e) => {
-                    //   setFormData({
-                    //     ...formData,
-                    //     opportunity: {
-                    //       ...formData.opportunity,
-                    //       projectCode: e.target.value,
-                    //     },
-                    //   });
-                    // }}
-                    // value={formData?.opportunity?.projectCode}
-                  />
-                </div>
-              </div>
-            )}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="text"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     opportunity: {
+                        //       ...formData.opportunity,
+                        //       projectCode: e.target.value,
+                        //     },
+                        //   });
+                        // }}
+                        // value={formData?.opportunity?.projectCode}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
               <div
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginLeft: "0px",
-              }}
-            >
-              <Accordion id="accordian">{gridItems}</Accordion>
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
-              <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                <div style={{ display: "flex", flexBasis: "25%" }}>
-                  <div style={{ width: "75px" }}>
-                    <span>Remarks :</span>
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  marginLeft: "0px",
+                }}
+              >
+                <Accordion id="accordian">{gridItems}</Accordion>
+              </div>
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
+              >
+                <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                    <div style={{ width: "75px" }}>
+                      <span>Remarks :</span>
+                    </div>
+                    <input style={{ width: "730px", borderRadius: "0px" }} />
                   </div>
-                  <input style={{ width: "730px", borderRadius: "0px" }} />
                 </div>
               </div>
-            </div>
             </form>
           </ModalDetailSection>
         </Box>

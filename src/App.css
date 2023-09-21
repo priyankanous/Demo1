@@ -14,11 +14,10 @@
   /* zoom: 90%; */
   /* background-color: #0a8b9c; */
 }
-.body{
+.body {
   overflow: hidden !important;
 }
-.MuiTableContainer-root
-{
+.MuiTableContainer-root {
   height: 50%;
   overflow-y: auto !important;
 }
@@ -156,7 +155,6 @@ h3 {
   height: 64%;
   left: 20%;
   top: 10%;
-  
 }
 /* .revenue_table_container {
   overflow: auto;
@@ -171,7 +169,7 @@ h3 {
 .revenue_table_container {
   overflow: auto;
   /* background-color: rgb(244, 243, 243); */
-  background-color: #FFFF;
+  background-color: #ffff;
 
   position: absolute;
   width: 99%;
@@ -256,8 +254,6 @@ table {
   padding: 8px;
   /* background-color: #23c5c7; */
   background-color: rgba(72, 130, 225, 0.3);
-  ;
-
 }
 .threvenueposition {
   font-family: Sans-serif;
@@ -317,7 +313,7 @@ tr:nth-child(even) {
   background-color: rgba(72, 130, 225, 0.1);
 }
 tr:nth-child(odd) {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 label {
   font-size: small;
@@ -404,7 +400,6 @@ filter .dropdown {
 #filterButton {
   cursor: pointer;
   margin-bottom: 10px;
-
 }
 a:hover {
   cursor: pointer;
@@ -446,7 +441,7 @@ input {
   width: 948px;
   height: 40px;
   text-align: center;
-  background-color:rgba(225, 222, 222, 0.5);
+  background-color: rgba(225, 222, 222, 0.5);
 }
 
 .App-link {
@@ -457,7 +452,7 @@ input {
   margin-right: 10px;
   /* display: block; */
   /* position: absolute; */
-  background-color: #F2FBFF;
+  background-color: #f2fbff;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -475,7 +470,6 @@ input {
 
 .dropdown a:hover {
   background-color: #0a8b9c;
-  
 }
 
 .show {
@@ -487,6 +481,11 @@ input {
   opacity: 95;
   font-size: small;
   text-align: center;
+}
+
+.css-yjx3o9-control,
+.css-b62m3t-container input {
+  box-shadow: none;
 }
 
 @keyframes App-logo-spin {
