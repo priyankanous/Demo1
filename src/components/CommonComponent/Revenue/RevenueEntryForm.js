@@ -550,7 +550,8 @@ const ResourceEntryForm = (props) => {
                           borderRadius: "0px",
                           height: "35px",
                           border:
-                            isSubmitted && !formData?.opportunity?.opportunityName
+                            isSubmitted &&
+                            !formData?.opportunity?.opportunityName
                               ? "1px solid red"
                               : "",
                         }),
@@ -1001,7 +1002,7 @@ const ResourceEntryForm = (props) => {
                         )}
                     </select>
                   </FormControl> */}
-                   <Select
+                  <Select
                     styles={{
                       control: (provided) => ({
                         ...provided,
@@ -1016,14 +1017,20 @@ const ResourceEntryForm = (props) => {
                             : "",
                       }),
                     }}
-                    options={props?.workOrderData?.workOrderData?.map(
-                      (workOrderData, index) => ({
-                        value: workOrderData.workOrderId,
-                        label: workOrderData.workOrderNumber,
-                        workOrderEndDate: workOrderData.workOrderEndDate,
-                        workOrderStatus: workOrderData.workOrderStatus,
-                      })
-                    )}
+                    placeholder=""
+                    options={
+                      Array.isArray(props?.workOrderData?.workOrderData) &&
+                      props?.workOrderData?.workOrderData?.length
+                        ? props?.workOrderData?.workOrderData?.map(
+                            (workOrderData, index) => ({
+                              value: workOrderData.workOrderId,
+                              label: workOrderData.workOrderNumber,
+                              workOrderEndDate: workOrderData.workOrderEndDate,
+                              workOrderStatus: workOrderData.workOrderStatus,
+                            })
+                          )
+                        : [{ label: "TBD", value: 0 }]
+                    }
                     onChange={(selectedOption) => {
                       const selectedWorkOrderId = selectedOption.value;
                       const foundOption =
@@ -1044,12 +1051,34 @@ const ResourceEntryForm = (props) => {
                             workOrderEndDate: workOrderEndDate,
                           },
                         }));
+                      } else {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          workOrder: {
+                            ...prevData.workOrder,
+                            workOrderID: 0,
+                            workOrderStatus: "TBD",
+                            workOrderEndDate: "31/Dec/2023",
+                          },
+                        }));
                       }
                     }}
-                    value={{
-                      value: formData.workOrder.workOrderNumber,
-                      label: formData.workOrder.workOrderNumber,
-                    }}
+                    value={
+                      Array.isArray(props?.workOrderData?.workOrderData) &&
+                      props?.workOrderData?.workOrderData?.length
+                        ? props?.workOrderData?.workOrderData?.map(
+                            (workOrderData, index) => ({
+                              value: workOrderData.workOrderId,
+                              label: workOrderData.workOrderNumber,
+                              workOrderEndDate: workOrderData.workOrderEndDate,
+                              workOrderStatus: workOrderData.workOrderStatus,
+                            })
+                          )
+                        : [{ label: "TBD", value: 0 }]?.filter(
+                            ({ label, value }) =>
+                              value === formData.workOrder.workOrderID
+                          )
+                    }
                   />
                 </div>
                 <div style={{ flexBasis: "25%" }}>
