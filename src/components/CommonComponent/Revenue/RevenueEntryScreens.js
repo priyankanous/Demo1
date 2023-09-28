@@ -49,16 +49,14 @@ function RevenueEntryScreens(props) {
   //   props.getFinacialYearData();
   // }, []);
 
-  
-
   const [isOpen, setIsOpen] = useState(false);
-  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+  const [tabIndex, setTabIndex] = useState({ index: 0, formData: {} });
 
   const getCurrentFinancialYear = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth() + 1;
-  
+
     if (month >= 4) {
       return `${year}-${year + 1}`;
     } else {
@@ -66,7 +64,9 @@ function RevenueEntryScreens(props) {
     }
   };
 
-  const [selectedFinancialYear, setSelectedFinancialYear] = useState(getCurrentFinancialYear());
+  const [selectedFinancialYear, setSelectedFinancialYear] = useState(
+    getCurrentFinancialYear()
+  );
 
   const currentFinancialYear = getCurrentFinancialYear();
   const handleFinancialYearChange = (e) => {
@@ -75,7 +75,7 @@ function RevenueEntryScreens(props) {
     props.getAllRevenueEntriesForFy(selectedValue);
   };
 
-  console.log("year-->", currentFinancialYear)
+  console.log("year-->", currentFinancialYear);
 
   const handleModalClose = () => {
     setIsOpen(false);
@@ -93,7 +93,7 @@ function RevenueEntryScreens(props) {
 
     // Code to fetch data for the selected financial year
     props.getAllRevenueEntriesForFy(selectedFinancialYear);
-}, [selectedFinancialYear]);
+  }, [selectedFinancialYear]);
 
   return (
     <React.Fragment>
@@ -103,10 +103,10 @@ function RevenueEntryScreens(props) {
             className="trrevenue"
             style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
           >
-            <td style={{ textAlign: "left", width: "10px", padding:"0px" }}>
+            <td style={{ textAlign: "left", width: "10px", padding: "0px" }}>
               <Checkbox size="small" />
             </td>
-            <td style={{ textAlign: "left", padding:"0px" }}>
+            <td style={{ textAlign: "left", padding: "0px" }}>
               <a
                 onClick={() => {
                   setIsOpen(true);
@@ -116,39 +116,39 @@ function RevenueEntryScreens(props) {
                 <AddIcon />
               </a>
             </td>
-            <td style={{  padding:"0px 0px 0px 220px" }}>
-              <td >
-                <Typography style={{fontWeight:"13px"}}>FY :</Typography>
+            <td style={{ padding: "0px 0px 0px 220px" }}>
+              <td>
+                <Typography style={{ fontWeight: "13px" }}>FY :</Typography>
               </td>
               <td>
-              <select
-                style={{
-                  height: "24px",
-                  width: "100%",
-                  borderRadius: "5px",
-                  boxShadow: "none",
-                }}
-                id="revenue-select"
-                // onChange={(e) => {
-                //   props.getAllRevenueEntriesForFy(e.target.value);
-                // }}
-                onChange={handleFinancialYearChange}
-                // value="2023-2024"
-                value={selectedFinancialYear}
-              >
-                <option value="" disabled selected hidden>
-                  Select Financial Year
-                </option>
-                {props.financialYear.financialYear &&
-                  props.financialYear.financialYear.map((fyData, index) => {
-                    const fyNameData = fyData.financialYearName;
-                    return <option key={index}>{fyNameData}</option>;
-                  })}
-              </select>
+                <select
+                  style={{
+                    height: "24px",
+                    width: "100%",
+                    borderRadius: "5px",
+                    boxShadow: "none",
+                  }}
+                  id="revenue-select"
+                  // onChange={(e) => {
+                  //   props.getAllRevenueEntriesForFy(e.target.value);
+                  // }}
+                  onChange={handleFinancialYearChange}
+                  // value="2023-2024"
+                  value={selectedFinancialYear}
+                >
+                  <option value="" disabled selected hidden>
+                    Select Financial Year
+                  </option>
+                  {props.financialYear.financialYear &&
+                    props.financialYear.financialYear.map((fyData, index) => {
+                      const fyNameData = fyData.financialYearName;
+                      return <option key={index}>{fyNameData}</option>;
+                    })}
+                </select>
               </td>
             </td>
-            <td className="tdrevenue" style={{padding:"0px"}}>
-              <Checkbox size="small"/>
+            <td className="tdrevenue" style={{ padding: "0px" }}>
+              <Checkbox size="small" />
               {/* <input type="checkbox" className="revenueinput" /> */}
               <label>Include Additional Quater Display</label>
               <TableButtons>Submit</TableButtons>

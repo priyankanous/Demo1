@@ -105,7 +105,7 @@ function Tr({
     status: status,
   });
   const [opportunityData, setOpportunityData] = useState([]);
-  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+  const [tabIndex, setTabIndex] = useState({ index: 0, formData: {} });
 
   const [opportunityEntryData, setOpportunityEntryData] = useState({
     financialYearName: financialYearName,
@@ -120,7 +120,8 @@ function Tr({
     probabilityType: probabilityType,
     status: status,
   });
-  console.log("oppdata", opportunityEntryData.financialYearName);
+  const [selectedRowData, setSelectedRowData] = useState({});
+  console.log("oppdata -->", opportunityEntryData);
 
   useEffect(() => {
     getAllRevenueEntries();
@@ -128,6 +129,7 @@ function Tr({
   const handleModalClose = () => {
     setIsOpen(false);
     setTabIndex({ index: 0, formData: "" });
+    setSelectedRowData({});
     // setSelectedFile(null);
   };
 
@@ -395,8 +397,46 @@ function Tr({
                 >
                   <a
                     onClick={() => {
+                      const tempObj = {};
+                      tempObj["account"] = {
+                        accountId: "",
+                        accountName: account,
+                      };
+                      tempObj["opportunity"] = {
+                        opportunityID: "",
+                        opportunityName: "",
+                        projectCode: "",
+                        projectStartDate: "",
+                        projectEndDate: "",
+                      };
+                      tempObj["bdm"] = {
+                        bdmID: "",
+                        bdmName: businessDevelopmentManager,
+                      };
+                      tempObj["currency"] = {
+                        currencyID: "",
+                        currencyName: "",
+                      };
+                      tempObj["probability"] = {
+                        probabilityID: "",
+                        probabilityTypeName: probabilityType,
+                      };
+                      tempObj["region"] = { regionID: "", regionName: region };
+                      tempObj["workOrder"] = {
+                        workOrderID: "",
+                        workOrderEndDate: "",
+                        workOrderStatus: "",
+                      };
+                      tempObj["financialYear"] = {
+                        financialYearId: "",
+                        financialYearName: financialYearName,
+                      };
+                      
+                      tempObj["pricingType"] = "T&M"
+                      setSelectedRowData({ ...tempObj });
                       setIsOpen(true);
                     }}
+
                   >
                     {/* <FaIcons.FaPlus /> */}
                     <AddIcon fontSize="small" />
@@ -479,7 +519,7 @@ function Tr({
             setIsOpen={setIsOpen}
             tabIndex={tabIndex}
             setTabIndex={setTabIndex}
-            // formData={}
+            dataObj={selectedRowData}
             {...props}
           />
         </Box>
