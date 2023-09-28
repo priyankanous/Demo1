@@ -8,7 +8,7 @@ import { apiV1 } from "../../../utils/constantsValue";
 import axios from "axios";
 import RevenueEntryScreens from "./RevenueEntryScreens";
 import TableScroll from "./ScrollingTable";
-import { Button, Table, TableBody, TableHead, TableRow, Typography, styled } from "@mui/material";
+import { Button, Table, TableBody, TableHead, TableRow, TableCell, styled } from "@mui/material";
 
 
 
@@ -58,10 +58,30 @@ export function RevenueBaseComponent(props) {
           />
           <div className="revenue_table_container">
             <Table className="nestedtablebgrevenue">
-              <TableRow className="nestedtablebgrevenue">
-                {props.columns.map((header) => {
+              <TableRow className="nestedtablebgrevenue" >
+                {/* {props.columns.map((header) => {
                   return <th className="threvenueposition" style={{backgroundColor:"rgba(72, 130, 225, 0.3)", padding:"2px 3px", height:"30px"}}>{header}</th>;
-                })}
+                })} */}
+                        <TableHead>
+          <TableRow  style={{backgroundColor:"rgba(72, 130, 225, 0.3)", padding:"2px 3px", height:"30px"}}>
+            <TableCell style={{padding: "1px", textAlign:"center", width:"22px"}}></TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width:"20px"}}></TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "60px"}}>BU</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px"}} >SBU</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px"}} >SBU Head</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "83px"}} >BDM</TableCell>
+
+            <TableCell style={{padding: "1px", textAlign:"center", width: "150px",}} >Business Type</TableCell>
+
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px"}} >Account</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "82px"}} >Region</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "70px"}} >Location</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "72px"}} >Probability</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "90px"}} >COC-Practice</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "70px"}} >Status</TableCell>
+
+          </TableRow>
+        </TableHead>
               </TableRow>
               <TableBody className="nestedtablebgrevenue"
               style={{
@@ -70,7 +90,8 @@ export function RevenueBaseComponent(props) {
                 display: "block",
                 overflowX: "hidden",
                 width: "100%",
-                position: "absolute"
+                position: "absolute",
+                
               }}
               >
                 {data.revenueEntries &&

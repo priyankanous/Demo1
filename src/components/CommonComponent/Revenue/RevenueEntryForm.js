@@ -40,6 +40,8 @@ import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { Accordion } from "react-accessible-accordion";
 
 const ResourceEntryForm = (props) => {
+
+  console.log("propsIn Revenuform", props)
   useEffect(() => {
     props.getProbabilityData();
     props.getRegionData();
@@ -118,7 +120,7 @@ const ResourceEntryForm = (props) => {
       regionId: formData.region.regionID,
     },
     workOrder: {
-      workOrderId: formData.workOrder.workOrderID,
+      workOrderId: formData.workOrder.workOrderID 
     },
     workOrderEndDate: formData.workOrder.workOrderEndDate,
     workOrderStatus: formData.workOrder.workOrderStatus,
@@ -242,9 +244,11 @@ const ResourceEntryForm = (props) => {
             id={i}
             formData={props.tabIndex.formData}
             // updateResourceData={updateResourceData}
+            myFormData={formData} 
             pricingType={pricingType}
             resourceData={tempResourceDetails}
             updateResourceData={setResourceData}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
           />
         );
       }
@@ -287,6 +291,8 @@ const ResourceEntryForm = (props) => {
       props.setIsOpen(false);
     }
   };
+
+  const selectedFyIdToGetLocation = formData.financialYear.financialYearName
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
