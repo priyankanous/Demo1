@@ -53,7 +53,7 @@ function RREntry(props) {
     "Pricing Type",
     "Start Date",
     "End Date",
-    "COC Practice",
+    // "COC Practice",
     "No. Of Resources",
     "Leave loss %",
     "",
@@ -193,7 +193,8 @@ function Tr({
             revenueOpportunity();
             handleRowExpansion(e.target);
           }}
-          style={{ padding: "1px 6px", width: "10px" }}
+
+          style={{padding:"1px 6px", width:"10px", cursor:"pointer"}}
         >
           ↓{/* <FaIcons.FaArrowDown /> */}
           {/* <ArrowDropDownIcon /> */}
@@ -429,6 +430,7 @@ function Tr({
                   );
                 })}
               </tr>
+              
               <tbody>
                 {opportunityData.length > 0 &&
                   opportunityData.map((obj, id) => (
