@@ -17,8 +17,11 @@ import { setResourceData } from "../../../actions/resource";
 import axios from "axios";
 import { apiV1 } from "../../../utils/constantsValue";
 
-
 const RevenueResourceAccordian = (props) => {
+  const { selectedFyIdToGetLocation, formData, pricingType } = props;
+  console.log("selectedFyId changed added in acc->", props.oppDataByOppId );
+
+
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -44,11 +47,25 @@ const RevenueResourceAccordian = (props) => {
     "Dec",
   ];
 
+  console.log("Props in accordion new------>", props);
+  const [selectedSbuId, setSelectedSbuId] = useState("");
+  const [sbuHeadData, setSbuHeadData] = useState(null);
+  const [buDataBySbuId, setBuDataBySbuId] = useState(null);
+
   const updateResourceDetails = async (params) => {
     const dataArr = [...resourceData];
     const data = dataArr[id];
-    console.log("update Data Obj at", id, data, dataArr);
+    // console.log("update Data Obj at", id, data, dataArr);
     data[params?.resourseDetailsColumn] = params?.event?.target?.value;
+
+    // Store sbuId based on the selected option
+    const selectedOption = params?.event?.target?.selectedOptions[0];
+    if (selectedOption) {
+      const sbuId = selectedOption.getAttribute(params?.attrKeySbu);
+      data[params?.selectedID] = sbuId;
+      setSelectedSbuId(sbuId);
+    }
+
     if (params.attrKey) {
       data[params?.selectedID] =
         params?.event?.target?.selectedOptions[0]?.getAttribute(
@@ -59,7 +76,7 @@ const RevenueResourceAccordian = (props) => {
       const response = await axios.get(
         `${apiV1}/location/${props?.formData?.financialYear?.financialYearName}/${params?.event?.target?.value}`
       );
-      console.log("THE MANINNNN GLLF", response?.data?.data);
+      // console.log("THE MANINNNN GLLF", response?.data?.data);
       data["leaveLossFactor"] = response?.data?.data;
     }
     if (
@@ -71,9 +88,28 @@ const RevenueResourceAccordian = (props) => {
       );
     }
     dataArr[id] = data;
-    console.log(dataArr, "After update", updateResourceData);
+    // console.log(dataArr, "After update", updateResourceData);
     updateResourceData(dataArr);
   };
+  // setSelectedSbuId(resourceData[0].sbuId);
+
+  console.log("Selected sbuId state-->:", selectedSbuId);
+
+  const getSbuHeadBySbuId = async (selectedSbuId) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/sbu/${selectedSbuId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching SBU Head data:", error);
+      throw error;
+    }
+  };
+
+
+  // console.log("sbuHeadData", sbuHeadData.data[0].sbuHeadName)
+  // console.log("sbuHeadDataBU", sbuHeadData.data[0].strategicBusinessUnit.businessUnit.businessUnitName)
 
   const createDate = (date) => {
     let t = new Date(date);
@@ -85,6 +121,75 @@ const RevenueResourceAccordian = (props) => {
   //   console.log("resource Details for set resource Data", resourseDetails);
   //   props.updateResourceData(resourseDetails, id);
   // };
+
+  const [selectedLocationToGetLs, setSelectedLocationToGetLs] = useState('');
+  const [leaveLossData, setLeaveLossData] = useState(null);
+
+
+  // const getLeaveLossByLocation = async (selectedLocationToGetLs) => {
+  //   console.log("selectedLocation  value---->",selectedLocationToGetLs);
+
+  //   try {
+  //     const response = await axios.get(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/2023-2024/${selectedLocationToGetLs}`
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching SBU Head data:", error);
+  //     throw error;
+  //   }
+  // };
+
+  const getLeaveLossByLocation = async (selectedFyIdToGetLocation, selectedLocationToGetLs) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${selectedFyIdToGetLocation}/${selectedLocationToGetLs}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Leave Loss data:", error);
+      throw error;
+    }
+  };
+  
+  useEffect(() => {
+    if (selectedLocationToGetLs) {
+      getLeaveLossByLocation(selectedFyIdToGetLocation, selectedLocationToGetLs)
+        .then(data => {
+          console.log("Data:", data.data);
+          setLeaveLossData(data.data);
+        })
+        .catch(error => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [selectedLocationToGetLs, selectedFyIdToGetLocation]);
+  
+
+  useEffect(() => {
+    if (selectedSbuId) {
+      getSbuHeadBySbuId(selectedSbuId)
+        .then((data) => {
+          setSbuHeadData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching SBU Head data:", error);
+        });
+    }
+  }, [selectedSbuId]);
+
+
+  // useEffect(() => {
+  //   if (selectedLocationToGetLs) {
+  //     getLeaveLossByLocation()
+  //       .then((data) => {
+  //         setLeaveLossData(data);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching Leave Loss data:", error);
+  //       });
+  //   }
+  // }, []);
 
   return (
     <React.Fragment>
@@ -107,49 +212,106 @@ const RevenueResourceAccordian = (props) => {
           <br></br>
           <table style={{backgroundColor:"white"}}>
             <tr>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 SBU
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 SBU Head
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 BU
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 Location
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 Resource Name
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 Employee ID
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 Start Date
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
                 End Date
               </td>
             </tr>
-            
-            <tr className="trmilestone" style={{background:"white"}}>
-              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
 
+            <tr className="trmilestone" style={{ background: "white" }}>
+              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
+                  // value={props.oppDataByOppId.tmRevenueEntryVO.revenueResourceEntries[0].strategicBusinessUnit.sbuName}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "sbuName",
                       selectedID: "sbuId",
-                      attrKey: "data-sbuId",
+                      attrKeySbu: "data-sbuId",
                     });
                   }}
                 >
                   <option value="" disabled selected hidden>
                     {/* Select SBU */}
+                    {/* {props.oppDataByOppId.tmRevenueEntryVO.revenueResourceEntries[0].strategicBusinessUnit.sbuName} */}
                   </option>
                   {props.sbuData.sbuData &&
                     props.sbuData.sbuData.map((obj, id) => (
@@ -158,7 +320,7 @@ const RevenueResourceAccordian = (props) => {
                 </select>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                <select
+                {/* <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -169,20 +331,35 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-sbuHeadId",
                     });
                   }}
+                  value={"abc"}
+                  // value={sbuHeadData.data[0].sbuHeadName}
                 >
-                  <option value="" disabled selected hidden>
-                    {/* Select SBU Head */}
-                  </option>
-                  {props.sbuHeadData.sbuHeadData &&
-                    props.sbuHeadData.sbuHeadData.map((obj, id) => (
-                      <option data-sbuHeadId={obj.sbuHeadId}>
-                        {obj.sbuHeadName}
-                      </option>
-                    ))}
-                </select>
+
+                </select> */}
+                <input
+                  id="milestoneselect"
+                  required
+                  onChange={(e) => {
+                    updateResourceDetails({
+                      event: e.target.value,
+                      resourseDetailsColumn: "sbuHeadName",
+                      selectedID: "sbuHeadId",
+                      attrKey: "data-sbuHeadId",
+                    });
+                  }}
+                  type="text"
+                  data-sbuHeadId={1}
+                  value={
+                    sbuHeadData &&
+                    sbuHeadData.data &&
+                    sbuHeadData.data[0].sbuHeadName
+                  }
+                  // placeholder="Resource Name"
+                ></input>
+
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                <select
+                {/* <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -195,7 +372,6 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {/* Select BU */}
                   </option>
                   {props.buData.buData &&
                     props.buData.buData.map((obj, id) => (
@@ -203,13 +379,37 @@ const RevenueResourceAccordian = (props) => {
                         {obj.businessUnitName}
                       </option>
                     ))}
-                </select>
+                </select> */}
+                <input
+                  id="milestoneselect"
+                  required
+                  onChange={(e) => {
+                    updateResourceDetails({
+                      event: e,
+                      resourseDetailsColumn: "buisnessUnitName",
+                      selectedID: "buisnessUnitId",
+                      attrKey: "data-buisnessUnitId",
+                    });
+                  }}
+                  type="text"
+                  data-sbuHeadId={1}
+                  value={
+                    sbuHeadData &&
+                    sbuHeadData.data &&
+                    sbuHeadData.data[0].strategicBusinessUnit.businessUnit
+                      .businessUnitName
+                  }
+                ></input>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
+                    const newLocationId = e.target.value
+
+                    // const newLocationId = e.target.options[e.target.selectedIndex].getAttribute('data-locationId');
+                    setSelectedLocationToGetLs(newLocationId);
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "locationName",
@@ -219,7 +419,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                   {/* Select Location */}
+                    {/* Select Location */}
                   </option>
                   {props.locationData.locationData &&
                     props.locationData.locationData.map((obj, id) => (
@@ -286,31 +486,68 @@ const RevenueResourceAccordian = (props) => {
           </table>
           <table style={{ marginLeft: "110px", backgroundColor:"white" }}>
             <tr>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              Business Type
-
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                Business Type
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              CoC Practice
-
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                CoC Practice
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              Billing Rate Type
-
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                Billing Rate Type
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              Billing Rate
-
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                Billing Rate
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              Leave Loss Factor
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                Leave Loss Factor
               </td>
-              <td style={{textAlign:"left", fontWeight:"400", fontSize:"14px", color:"#525252"}}>
-              Allocation %
-
+              <td
+                style={{
+                  textAlign: "left",
+                  fontWeight: "400",
+                  fontSize: "14px",
+                  color: "#525252",
+                }}
+              >
+                Allocation %
               </td>
             </tr>
-            <tr className="trmilestone" style={{background:"white"}}>
+            <tr className="trmilestone" style={{ background: "white" }}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
@@ -404,13 +641,13 @@ const RevenueResourceAccordian = (props) => {
                   id="resourceinput"
                   type="number"
                   // placeholder="Leave Loss Factor"
-                  value={resourceData[id]?.leaveLossFactor}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "leaveLossFactor",
                     });
                   }}
+                  value={leaveLossData}
                 ></input>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
