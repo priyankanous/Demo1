@@ -78,10 +78,53 @@ const ResourceEntryForm = (props) => {
     },
     pricingType: pricingType,
   });
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
+
+  useEffect(() => {
+    if (props?.dataObj && Object.keys(props?.dataObj)?.length) {
+      const accountObj = props?.accountData?.accountData?.filter(
+        (each) => each?.accountName === props?.dataObj?.account?.accountName
+      );
+      const bdmObj = props?.bdmData?.bdmData?.filter(
+        (each) => each?.bdmName === props?.dataObj?.bdm?.bdmName
+      );
+      const regionObj = props?.regionData?.regionData?.filter(
+        (each) => each?.regionDisplayName === props?.dataObj?.region?.regionName
+      );
+      const probabilityObj = props?.probabilityData?.probabilityData?.filter(
+        (each) =>
+          each?.probabilityTypeName ===
+          props?.dataObj?.probability?.probabilityTypeName
+      );
+      const modifiedObj = {
+        ...formData,
+      };
+      if (accountObj?.length) {
+        modifiedObj["account"]["accountId"] = accountObj[0]?.accountId;
+        modifiedObj["account"]["accountName"] = accountObj[0]?.accountName;
+      }
+      if (bdmObj?.length) {
+        modifiedObj["bdm"]["bdmID"] = bdmObj[0]?.bdmId;
+        modifiedObj["bdm"]["bdmName"] = bdmObj[0]?.bdmName;
+      }
+      if (regionObj?.length) {
+        modifiedObj["region"]["regionID"] = regionObj[0]?.regionId;
+        modifiedObj["region"]["regionName"] = regionObj[0]?.regionDisplayName;
+      }
+      if (probabilityObj?.length) {
+        modifiedObj["probability"]["probabilityID"] =
+          probabilityObj[0]?.probabilityTypeId;
+        modifiedObj["probability"]["probabilityTypeName"] =
+          probabilityObj[0]?.probabilityTypeName;
+      }
+      setFormData(modifiedObj);
+      setIsDisabled(true);
+    }
+  }, [props]);
 
   const getAllCurrencyForFy = async (e) => {
     await axios
@@ -163,6 +206,74 @@ const ResourceEntryForm = (props) => {
   };
 
   const saveTandMentry = () => {
+    console.log("Before -->", formData);
+    const payload = {
+      account: {
+        accountId: formData.account.accountId,
+      },
+      opportunity: {
+        opportunityId: formData.opportunity.opportunityID,
+        opportunityName: formData.opportunity.opportunityName,
+      },
+      projectCode: formData.opportunity.projectCode,
+      projectStartDate: formData.opportunity.projectStartDate,
+      projectEndDate: formData.opportunity.projectEndDate,
+
+      businessDevelopmentManager: {
+        bdmId: formData.bdm.bdmID,
+      },
+      currency: {
+        currencyId: formData.currency.currencyID,
+      },
+      probabilityType: {
+        probabilityTypeId: formData.probability.probabilityID,
+      },
+      region: {
+        regionId: formData.region.regionID,
+      },
+      workOrder: {
+        workOrderId: formData.workOrder.workOrderID,
+      },
+      workOrderEndDate: formData.workOrder.workOrderEndDate,
+      workOrderStatus: formData.workOrder.workOrderStatus,
+
+      financialYear: {
+        financialYearId: formData.financialYear.financialYearId,
+      },
+      resourceCount: resourceData.length,
+      pricingType: pricingType,
+      remarks: "TM Details adding",
+      status: "Submitted",
+      revenueResourceEntries: resourceData.map((ele) => ({
+        strategicBusinessUnit: {
+          sbuId: ele.sbuId,
+        },
+        strategicBusinessUnitHead: {
+          sbuHeadId: ele.sbuHeadId,
+        },
+        businessUnit: {
+          businessUnitId: ele.buisnessUnitId,
+        },
+        businessType: {
+          businessTypeId: ele.businessTypeId,
+        },
+        location: {
+          locationId: ele.locationId,
+        },
+        resourceName: ele.resouceName,
+        employeeId: ele.employeeId,
+        resourceStartDate: ele.startDate,
+        resourceEndDate: ele.endDate,
+        cocPractice: {
+          cocPracticeId: ele.cocPracticeId,
+        },
+        leaveLossFactor: ele.leaveLossFactor,
+        billingRateType: ele.billingRateType,
+        billingRate: ele.billingRate,
+        allocation: ele.allocation,
+      })),
+    };
+    console.log("After -->", payload);
     axios
       .post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
@@ -204,9 +315,9 @@ const ResourceEntryForm = (props) => {
       setIsSubmitted(false);
       setPricingType(pricingType);
       props.setTabIndex({
-        ...props.tabIndex,
+        // ...props.tabIndex,
         index: 1,
-        y: formData,
+        formData: formData,
       });
     }
   };
@@ -293,6 +404,25 @@ const ResourceEntryForm = (props) => {
   };
 
   const selectedFyIdToGetLocation = formData.financialYear.financialYearName
+
+  const getWorkOrderValue = () => {
+    const iterable =
+      Array.isArray(props?.workOrderData?.workOrderData) &&
+      props?.workOrderData?.workOrderData?.length
+        ? props?.workOrderData?.workOrderData?.map((workOrderData, index) => ({
+            value: workOrderData?.workOrderId,
+            label: workOrderData?.workOrderNumber,
+            workOrderEndDate: workOrderData?.workOrderEndDate,
+            workOrderStatus: workOrderData?.workOrderStatus,
+          }))
+        : [{ label: "TBD", value: 0 }];
+
+    return iterable?.filter(
+      ({ label, value }) => value === formData?.workOrder?.workOrderID
+    );
+  };
+
+  console.log(formData, "<------- Data");
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
@@ -469,6 +599,7 @@ const ResourceEntryForm = (props) => {
                         value: formData.account.accountId,
                         label: formData.account.accountName,
                       }}
+                      isDisabled={isDisabled ? true : false}
                     />
                   </div>
                 </div>
@@ -556,7 +687,8 @@ const ResourceEntryForm = (props) => {
                           borderRadius: "0px",
                           height: "35px",
                           border:
-                            isSubmitted && !formData?.opportunity?.opportunityName
+                            isSubmitted &&
+                            !formData?.opportunity?.opportunityName
                               ? "1px solid red"
                               : "",
                         }),
@@ -651,6 +783,7 @@ const ResourceEntryForm = (props) => {
                         value: formData.bdm.bdmID,
                         label: formData.bdm.bdmName,
                       }}
+                      isDisabled={isDisabled ? true : false}
                     />
                   </div>
                 </div>
@@ -871,6 +1004,7 @@ const ResourceEntryForm = (props) => {
                       value: formData.probability.probabilityID,
                       label: formData.probability.probabilityTypeName,
                     }}
+                    isDisabled={isDisabled ? true : false}
                   />
                 </div>
                 <div style={{ flexBasis: "25%" }}>
@@ -897,7 +1031,7 @@ const ResourceEntryForm = (props) => {
                     options={props?.regionData?.regionData?.map(
                       (regionData, index) => ({
                         value: regionData?.regionId,
-                        label: regionData?.regionName,
+                        label: regionData?.regionDisplayName,
                       })
                     )}
                     onChange={(selectedOption) => {
@@ -910,13 +1044,15 @@ const ResourceEntryForm = (props) => {
                         },
                       });
                     }}
+                    isDisabled={isDisabled ? true : false}
                     value={props?.regionData?.regionData
                       ?.map((regionData, index) => ({
                         value: regionData?.regionId,
-                        label: regionData?.regionName,
+                        label: regionData?.regionDisplayName,
                       }))
                       ?.filter(
-                        ({ label, value }) => value === formData.region.regionID
+                        ({ label, value }) =>
+                          label === formData.region.regionName
                       )}
                     placeholder=""
                   />
@@ -1007,7 +1143,7 @@ const ResourceEntryForm = (props) => {
                         )}
                     </select>
                   </FormControl> */}
-                   <Select
+                  <Select
                     styles={{
                       control: (provided) => ({
                         ...provided,
@@ -1022,14 +1158,20 @@ const ResourceEntryForm = (props) => {
                             : "",
                       }),
                     }}
-                    options={props?.workOrderData?.workOrderData?.map(
-                      (workOrderData, index) => ({
-                        value: workOrderData.workOrderId,
-                        label: workOrderData.workOrderNumber,
-                        workOrderEndDate: workOrderData.workOrderEndDate,
-                        workOrderStatus: workOrderData.workOrderStatus,
-                      })
-                    )}
+                    placeholder=""
+                    options={
+                      Array.isArray(props?.workOrderData?.workOrderData) &&
+                      props?.workOrderData?.workOrderData?.length
+                        ? props?.workOrderData?.workOrderData?.map(
+                            (workOrderData, index) => ({
+                              value: workOrderData.workOrderId,
+                              label: workOrderData.workOrderNumber,
+                              workOrderEndDate: workOrderData.workOrderEndDate,
+                              workOrderStatus: workOrderData.workOrderStatus,
+                            })
+                          )
+                        : [{ label: "TBD", value: 0 }]
+                    }
                     onChange={(selectedOption) => {
                       const selectedWorkOrderId = selectedOption.value;
                       const foundOption =
@@ -1044,18 +1186,25 @@ const ResourceEntryForm = (props) => {
                         setFormData((prevData) => ({
                           ...prevData,
                           workOrder: {
-                            ...prevData.workOrder,
+                            ...prevData?.workOrder,
                             workOrderID: selectedWorkOrderId,
                             workOrderStatus: workOrderStatus,
                             workOrderEndDate: workOrderEndDate,
                           },
                         }));
+                      } else {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          workOrder: {
+                            ...prevData.workOrder,
+                            workOrderID: 0,
+                            workOrderStatus: "TBD",
+                            workOrderEndDate: "31/Dec/2023",
+                          },
+                        }));
                       }
                     }}
-                    value={{
-                      value: formData.workOrder.workOrderNumber,
-                      label: formData.workOrder.workOrderNumber,
-                    }}
+                    value={getWorkOrderValue()}
                   />
                 </div>
                 <div style={{ flexBasis: "25%" }}>
@@ -1286,9 +1435,9 @@ const ResourceEntryForm = (props) => {
                 onClick={() => {
                   setPricingType(pricingType);
                   props.setTabIndex({
-                    ...props.tabIndex,
+                    // ...props.tabIndex,
                     index: 0,
-                    y: formData,
+                    formData: formData,
                   });
                 }}
               >

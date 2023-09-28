@@ -32,6 +32,8 @@ const RevenueResourceAccordian = (props) => {
   }, []);
   const { resourceData, updateResourceData, id } = props;
 
+  console.log("resourceData",resourceData)
+
   const month = [
     "Jan",
     "Feb",
