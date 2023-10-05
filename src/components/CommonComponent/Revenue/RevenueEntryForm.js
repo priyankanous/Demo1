@@ -41,7 +41,7 @@ import { Accordion } from "react-accessible-accordion";
 
 const ResourceEntryForm = (props) => {
 
-  console.log("propsIn Revenuform", props)
+  
   useEffect(() => {
     props.getProbabilityData();
     props.getRegionData();
