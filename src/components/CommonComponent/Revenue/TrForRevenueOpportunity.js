@@ -43,6 +43,7 @@ function TrForRevenue(props) {
   }, []);
 
   console.log("propsIn TrRevenue", props);
+  // console.log("propsIn TrRevenue", props)
 
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
   const [resourceTableData, setResourceTableData] = useState([]);
@@ -132,7 +133,7 @@ function TrForRevenue(props) {
   };
 
   const DeleteRecord = () => {
-    console.log("delete", selectedOpportunityId);
+    // console.log("delete", selectedOpportunityId);
     axios
       .delete(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/${selectedOpportunityId}`
@@ -219,7 +220,7 @@ function TrForRevenue(props) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [pricingType, setPricingType] = useState("T&M");
-  const [inputNumber, setInputNumber] = useState("");
+  // const [inputNumber, setInputNumber] = useState("");
   const [resourceData, setResourceData] = useState([]);
   const [gridItems, setGridItems] = useState([]);
 
@@ -234,12 +235,76 @@ function TrForRevenue(props) {
     // setSelectedFile(null);
   };
 
+  // const handleInputChange = (event) => {
+  //   setInputNumber(event.target.value);
+  //   generateGrid(event.target.value);
+  // };
+
+  // const generateGrid = (value) => {
+  //   const items = [];
+  //   const iterator = value ? value : inputNumber;
+  //   if (pricingType == "T&M") {
+  //     const tempResourceDetails = [];
+  //     for (let i = 0; i < iterator; i++) {
+  //       const resourceDataRow = {
+  //         index: i,
+  //       };
+  //       tempResourceDetails.push(resourceDataRow);
+  //     }
+  //     setResourceData(tempResourceDetails);
+  //     for (let i = 0; i < iterator; i++) {
+  //       items.push(
+  //         <RevenueResourceAccordian
+  //           id={i}
+  //           // formData={props.tabIndex.formData}
+  //           // updateResourceData={updateResourceData}
+  //           pricingType={pricingType}
+  //           resourceData={tempResourceDetails}
+  //           updateResourceData={setResourceData}
+  //           oppId={oppId}
+  //           oppDataByOppId={oppDataByOppId}
+  //         />
+  //       );
+  //     }
+  //   } else {
+  //     for (let i = 0; i < inputNumber; i++) {
+  //       items
+  //         .push
+  //         // <RevenueMilestoneAccordian
+  //         //   id={i}
+  //         //   formData={props.tabIndex.formData}
+  //         //   pricingType={pricingType}
+  //         //   updateMilestoneData={updateMilestoneData}
+  //         // />
+  //         ();
+  //     }
+  //   }
+  //   setGridItems(items);
+  // };
+
+
+
+  //2nd level edit 
+  const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
+  const [inputNumber, setInputNumber] = useState("");
+
+
+
   const handleInputChange = (event) => {
     setInputNumber(event.target.value);
     generateGrid(event.target.value);
   };
 
+  // const handleInputChange = (event) => {
+  //   setInputNumber(prevValue => {
+  //     const newValue = event.target.value;
+  //     generateGrid(newValue);
+  //     return newValue;
+  //   });
+  // };
+
   const generateGrid = (value) => {
+    console.log("inputNumber", inputNumber)
     const items = [];
     const iterator = value ? value : inputNumber;
     if (pricingType == "T&M") {
@@ -262,6 +327,7 @@ function TrForRevenue(props) {
             updateResourceData={setResourceData}
             oppId={oppId}
             oppDataByOppId={oppDataByOppId}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
           />
           // <TextField />
         );
@@ -282,13 +348,8 @@ function TrForRevenue(props) {
     setGridItems(items);
   };
 
-  //2nd level edit
-  const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
-  const editChek = () => {
-    console.log("Edit clicked");
-  };
 
-  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+    const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
 
   const handleNextClick = () => {
     setPricingType(pricingType);
@@ -316,56 +377,61 @@ function TrForRevenue(props) {
       });
   };
 
-  // useEffect(()=>{
-  //   getDataByOppId();
-  // },[]);
 
-  useEffect(() => {
-    if (oppId) {
-      getDataByOppId(oppId);
-    }
-  }, [oppId]);
+    // useEffect(()=>{
+    //   getDataByOppId();
+    // },[]);
 
-  const array = [];
-  const [currencyData, setCurrencyData] = useState();
-  const getAllCurrencyForFy = async (e) => {
-    await axios
-      .get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financialyear/${e}`
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        array.push(actualDataObject);
-        setCurrencyData(actualDataObject);
-      });
-  };
-  const opportunityNameByOppId =
-    oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || "";
-  console.log("oppId2--->", opportunityNameByOppId);
+    useEffect(() => {
+      if (oppId) {
+        getDataByOppId(oppId);
+      }
+    }, [oppId]);
 
-  // const initialAccountIdPassingToForm= oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName
-  const initialAccountIdPassingToForm = "checknext";
 
-  const [formUpdateData, setFormUpdateData] = useState({
-    account: { accountId: initialAccountIdPassingToForm, accountName: "" },
-    opportunity: {
-      opportunityID: "",
-      opportunityName: oppDataByOppId,
-      projectCode: "",
-      projectStartDate: "07/Sep/2023",
-      projectEndDate: "07/Sep/2023",
+    const array = [];
+    const [currencyData, setCurrencyData] = useState();
+    const getAllCurrencyForFy = async (e) => {
+      await axios
+        .get(
+          `http://192.168.16.55:8080/rollingrevenuereport/api/v1/currency/financialyear/${e}`
+        )
+        .then((response) => {
+          const actualDataObject = response.data.data;
+          array.push(actualDataObject);
+          setCurrencyData(actualDataObject);
+        });
+    };
+    const opportunityNameByOppId = oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || "";
+    // console.log("oppId2--->", oppDataByOppId.tmRevenueEntryVO);
+
+    // const initialAccountIdPassingToForm= oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName
+
+
+    const [formUpdateData, setFormUpdateData] = useState({
+      account: { accountId: null
+        , accountName:""
     },
-    bdm: { bdmID: "", bdmName: "" },
-    currency: { currencyID: "", currencyName: "" },
-    probability: { probabilityID: "", probabilityTypeName: "" },
-    region: { regionID: "", regionName: "" },
-    workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
-    financialYear: {
-      financialYearId: "",
-      financialYearName: "",
-    },
-    pricingType: pricingType,
-  });
+      opportunity: {
+        opportunityID: "",
+        opportunityName:"" ,
+        projectCode: "",
+        projectStartDate: "",
+        projectEndDate: "",
+      },
+      bdm: { bdmID: null, bdmName: "" },
+      currency: { currencyID: null, currencyName: "" },
+      probability: { probabilityID: "", probabilityTypeName: "" },
+      region: { regionID: "", regionName: "" },
+      workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
+      financialYear: {
+        financialYearId: "",
+        financialYearName: "",
+      },
+      pricingType: pricingType,
+    });
+
+    // console.log("oppId3--->", formUpdateData)
 
   console.log("oppId3--->", formUpdateData);
 
@@ -410,7 +476,8 @@ function TrForRevenue(props) {
     financialYear: {
       financialYearId: formUpdateData.financialYear.financialYearId,
     },
-    resourceCount: resourceData.length,
+    // resourceCount: resourceData.length,
+    resourceCount: inputNumber,
     pricingType: pricingType,
     remarks: "TM Details adding",
     status: "Submitted",
@@ -457,6 +524,131 @@ function TrForRevenue(props) {
       });
   };
 
+  const initialOpportunityId = oppDataByOppId.tmRevenueEntryVO;
+  const selectedFyIdToGetLocation = formUpdateData.financialYear.financialYearName;
+
+  useEffect(() => {
+    const initialAccountID = oppDataByOppId?.tmRevenueEntryVO?.account?.accountId;
+    const initialOpportunityId = oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityId;
+    const initialOpportunityName = oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName;
+    const initialProjectCode = oppDataByOppId.tmRevenueEntryVO?.projectCode;
+    const initialProjectStartDate = oppDataByOppId.tmRevenueEntryVO?.projectStartDate;
+    const initialProjectEndDate = oppDataByOppId.tmRevenueEntryVO?.projectEndDate;
+    const initialCurrencyId = oppDataByOppId?.tmRevenueEntryVO?.currency?.currencyId;
+    const initialBdm = oppDataByOppId?.tmRevenueEntryVO?.businessDevelopmentManager?.bdmId;
+    const initialProbability = oppDataByOppId?.tmRevenueEntryVO?.probabilityType?.probabilityTypeId;
+    const initialRegion = oppDataByOppId?.tmRevenueEntryVO?.region?.regionId;
+    const initialFinancialYearId = oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearId;
+    const initialFinancialYearName = oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearName;
+    const initialWorkOrderId = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderId;
+    const initialWorkOrderEndDate = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderEndDate;
+    const initialWorkOrderStatus = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus;
+
+
+
+
+
+    console.log("initialBdm",initialBdm);
+
+
+
+    if (initialAccountID !== undefined && initialAccountID !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        account: {
+          ...prevState.account,
+          accountId: initialAccountID,
+        },
+      }));
+    }
+
+    if (initialOpportunityId !== undefined && initialOpportunityId !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        opportunity: {
+          ...prevState.opportunity,
+          opportunityID: initialOpportunityId,
+          opportunityName: initialOpportunityName,
+          projectCode: initialProjectCode,
+          projectStartDate: initialProjectStartDate,
+          projectEndDate: initialProjectEndDate,
+        },
+      }));
+    }
+
+    if (initialCurrencyId !== undefined && initialCurrencyId !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        currency: {
+          ...prevState.currency,
+          currencyID: initialCurrencyId,
+        },
+      }));
+    }
+
+    if (initialBdm !== undefined && initialBdm !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        bdm: {
+          ...prevState.bdm,
+          bdmID: initialBdm,
+        },
+      }));
+    }
+
+    if (initialProbability !== undefined && initialProbability !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        probability: {
+          ...prevState.probability,
+          probabilityID: initialProbability,
+        },
+      }));
+    }
+
+    if (initialRegion !== undefined && initialRegion !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        region: {
+          ...prevState.region,
+          regionID: initialRegion,
+        },
+      }));
+    }
+
+    if (initialFinancialYearId !== undefined && initialFinancialYearId !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        financialYear: {
+          ...prevState.financialYear,
+          financialYearId: initialFinancialYearId,
+          financialYearName: initialFinancialYearName,
+        },
+      }));
+    }
+
+    if (initialWorkOrderId !== undefined && initialWorkOrderId !== null) {
+      setFormUpdateData(prevState => ({
+        ...prevState,
+        workOrder: {
+          ...prevState.workOrder,
+          workOrderID: initialWorkOrderId,
+          workOrderEndDate: initialWorkOrderEndDate,
+          workOrderStatus: initialWorkOrderStatus,
+
+        },
+      }));
+    }
+
+    const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
+    if (initialResourceCount !== undefined && initialResourceCount !== null) {
+      setInputNumber(initialResourceCount);
+      generateGrid(initialResourceCount);
+    }
+
+
+
+  }, [oppDataByOppId]);
   return (
     <React.Fragment>
       <tr
@@ -538,7 +730,7 @@ function TrForRevenue(props) {
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
-                console.log("wwwww--->", props.data.opportunityId);
+                // console.log("wwwww--->", props.data.opportunityId);
                 handleRowClick(props.data.opportunityId);
                 setOppId(props.data.opportunityId);
                 closeDropDown();
@@ -728,56 +920,72 @@ function TrForRevenue(props) {
                               handleResourceStartDate(obj.resourceStartDate);
                             }}
                           ></AiIcons.AiOutlineMore>
-                          {resourceDropdownStates[id] && (
-                            <div
-                              style={{
-                                // float: "left",
-                                right: "20px",
-                                position: "absolute",
-                                overflow: "hidden",
-                                // width: "100px",
-                                boxShadow: "none",
-                                backgroundColor: "#c6dcdc",
-                                marginRight: "10px",
-                                // overflow: "auto",
-                                // box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                                zIndex: 1,
-                                width: "8%",
-                                fontSize: "small",
-                                cursor: "pointer",
-                                border: "1px solid transparent",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              <a
-                                style={{ display: "block", margin: "3px 0px" }}
-                              >
-                                <FileCopyOutlinedIcon
-                                  style={{ fontSize: "15px" }}
-                                />
-                              </a>
-                              <a
-                                style={{ display: "block", margin: "3px 0px" }}
-                                onClick={() => {
-                                  setIsOpen(true);
+                                                      {resourceDropdownStates[id] && (
+                              <div
+                                style={{
+                                  // float: "left",
+                                  right: "20px",
+                                  position: "absolute",
+                                  overflow: "hidden",
+                                  // width: "100px",
+                                  boxShadow: "5px 5px 10px rgb(0 0 0 / 45%)",
+                                  backgroundColor: "#F2FBFF",
+                                  marginRight: "10px",
+                                  // overflow: "auto",
+                                  // box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+                                  zIndex: 1,
+                                  width: "8%",
+                                  fontSize: "small",
+                                  cursor: "pointer",
+                                  border: "1px solid transparent",
+                                  borderRadius: "5px",
                                 }}
+                                class="dropdown-content"
                               >
-                                <EditOutlinedIcon
-                                  style={{ fontSize: "15px" }}
-                                />
-                              </a>
-                              <a
-                                style={{ display: "block", margin: "3px 0px" }}
-                                onClick={() => {
-                                  deleteResourceRecord();
-                                }}
-                              >
-                                <DeleteOutlineIcon
-                                  style={{ fontSize: "15px" }}
-                                />
-                              </a>
-                            </div>
-                          )}
+                                <a
+                                  style={{ padding: "5px", margin: "3px 0px" }}
+                                >
+                                  <FileCopyOutlinedIcon
+                                    style={{
+                                      fontSize: "15px",
+                                      paddingRight: "5px",
+                                    }}
+                                  />
+                                  copy
+                                </a>
+                                <a
+                                  style={{ padding: "5px", margin: "3px 0px" }}
+                                  onClick={() => {
+                                    setIsOpen(true);
+                                  }}
+                                >
+                                  <EditOutlinedIcon
+                                    style={{
+                                      fontSize: "15px",
+                                      paddingRight: "5px",
+                                    }}
+                                  />
+                                  Edit
+                                </a>
+                                <a
+                                  style={{
+                                    padding: "5px 0px 5px 10px",
+                                    margin: "3px 0px",
+                                  }}
+                                  onClick={() => {
+                                    deleteResourceRecord();
+                                  }}
+                                >
+                                  <DeleteOutlineIcon
+                                    style={{
+                                      fontSize: "15px",
+                                      paddingRight: "5px",
+                                    }}
+                                  />
+                                  Delete
+                                </a>
+                              </div>
+                            )}
                         </span>
                       </td>
                     </tr>
@@ -1110,67 +1318,65 @@ function TrForRevenue(props) {
             />
           </ModalHeadingSection>
           <ModalDetailSection style={{ borderRadius: "0px" }}>
-            <form
-              id="reg-form"
+          <form
+        id="reg-form"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          rowGap: "30px",
+          width: "100%",
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexBasis: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <div>
+                <label for="username">Pricing Type</label>
+                <input
+                  type="radio"
+                  value="T&M"
+                  name="Pricing Type"
+                  checked={pricingType === "T&M"}
+                  // onChange={onOptionChange}
+                  style={{ boxShadow: "none" }}
+                />
+                T & M
+                <input
+                  type="radio"
+                  value="FP"
+                  name="Pricing Type"
+                  checked={pricingType === "FP"}
+                  // onChange={onOptionChange}
+                  style={{ boxShadow: "none" }}
+                  disabled
+                />
+                FP
+              </div>
+            </div>
+            <div
               style={{
                 display: "flex",
-                flexDirection: "column",
-                rowGap: "30px",
-                width: "100%",
+                alignItems: "center",
+                marginRight: "25px",
               }}
             >
               <div
-                style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}
+                style={{
+                  width: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  columnGap: "10px",
+                }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexBasis: "100%",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div style={{ display: "flex" }}>
-                    <div>
-                      <label for="username">Pricing Type</label>
-                      <input
-                        type="radio"
-                        value="T&M"
-                        name="Pricing Type"
-                        checked={pricingType === "T&M"}
-                        // onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
-                      />
-                      T & M
-                      <input
-                        type="radio"
-                        value="FP"
-                        name="Pricing Type"
-                        checked={pricingType === "FP"}
-                        // onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
-                        disabled
-                      />
-                      FP
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginRight: "25px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "auto",
-                        display: "flex",
-                        alignItems: "center",
-                        columnGap: "10px",
-                      }}
-                    >
-                      <span>FY :</span>
-                      <div>
-                        {/* <FormControl>
+                <span>FY :</span>
+                <div>
+                  {/* <FormControl>
                     <select
                       style={{
                         background: "white",
@@ -1216,86 +1422,85 @@ function TrForRevenue(props) {
                       )}
                     </select>
                   </FormControl> */}
-                        <FormControl>
-                          <select
-                            style={{
-                              background: "white",
-                              width: "150px",
-                              marginLeft: "8px",
-                              variant: "outlined",
-                              borderRadius: "0px",
-                              height: "35px",
-                            }}
-                            onChange={(e) => {
-                              getAllCurrencyForFy(e.target.value);
-                              const selectedFyId =
-                                e.target.selectedOptions[0].getAttribute(
-                                  "data-fyId"
-                                );
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                financialYear: {
-                                  ...formUpdateData.financialYear,
-                                  financialYearId: selectedFyId,
-                                  financialYearName: e.target.value,
-                                },
-                              });
-                            }}
-                          >
-                            <option value="" disabled selected hidden>
-                              Select
-                            </option>
-                            {props?.financialYear?.financialYear.map(
-                              (fyData, index) => {
-                                const fyNameData = fyData?.financialYearName;
-                                const fyId = fyData.financialYearId;
-                                return (
-                                  <option
-                                    data-fyId={fyId}
-                                    key={index}
-                                    // selected={fyNameData}
-                                  >
-                                    {fyNameData}
-                                    {console.log("fyNameData", fyNameData)}
-                                  </option>
-                                );
-                              }
-                            )}
-                          </select>
-                        </FormControl>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {tabIndex?.index === 0 ? (
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
+                                    <FormControl>
+                    <select
                       style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
+                        background: "white",
+                        width: "150px",
+                        marginLeft: "8px",
+                        variant: "outlined",
+                        borderRadius: "0px",
+                        height: "35px",
+                      }}
+                      onChange={(e) => {
+                        getAllCurrencyForFy(e.target.value);
+                        const selectedFyId =
+                          e.target.selectedOptions[0].getAttribute("data-fyId");
+                          setFormUpdateData({
+                          ...formUpdateData,
+                          financialYear: {
+                            ...formUpdateData.financialYear,
+                            financialYearId: selectedFyId,
+                            financialYearName: e.target.value,
+                          },
+                        });
                       }}
                     >
-                      <div
-                        style={{
-                          flexBasis: "25%",
-                          flexDirection: "row",
-                        }}
-                      >
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Account</span>
-                        </div>
-                        <div>
-                          {/* <FormControl>
+                      <option value="" disabled selected hidden>
+                      {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.financialYear.financialYearName}
+                      </option>
+                      {props?.financialYear?.financialYear.map(
+                        (fyData, index) => {
+
+                          const fyNameData = fyData?.financialYearName;
+                          const fyId = fyData.financialYearId;
+                          return (
+                            <option
+                              data-fyId={fyId}
+                              key={index}
+                              // selected={fyNameData}
+                            >
+                              {fyNameData}
+                              {/* {console.log("fyNameData", fyNameData)} */}
+                            </option>
+                          );
+                        }
+                      )}
+                    </select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {tabIndex?.index === 0 ? (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                }}
+              >
+                <div
+                  style={{
+                    flexBasis: "25%",
+                    flexDirection: "row",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Account</span>
+                  </div>
+                  <div>
+                    {/* <FormControl>
                       <select
                         size="small"
                         value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName}
@@ -1313,64 +1518,68 @@ function TrForRevenue(props) {
                         </option>
                       </select>
                     </FormControl> */}
-                          <select
-                            style={{
-                              height: "35px",
-                              width: "80%",
-                              marginBottom: "10px",
-                              borderRadius: "1px",
-                              boxShadow: "none",
-                              border: "1px solid lightgray",
-                              color: "black",
-                            }}
-                            // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName}
-                            onChange={(e) => {
-                              const selectedFyId =
-                                e.target.selectedOptions[0].getAttribute(
-                                  "data-fyId"
-                                );
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                account: {
-                                  ...formUpdateData.account,
-                                  accountId: selectedFyId,
-                                  accountName: e.target.value,
-                                },
-                              });
-                            }}
-                          >
-                            <option value="" disabled selected hidden>
-                              {oppDataByOppId.tmRevenueEntryVO &&
-                                oppDataByOppId.tmRevenueEntryVO.account
-                                  .accountName}
-                            </option>
-                            {console.log("datacheckprop", formUpdateData)}
-                            {props.accountData &&
-                              props.accountData.accountData &&
-                              props.accountData.accountData.map(
-                                (accountData, index) => {
-                                  const accountNamedata =
-                                    accountData.accountName;
+                                   <select
+                  style={{
+                    height: "35px",
+                    width: "80%",
+                    marginBottom: "10px",
+                    borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black"
+                  }}
+                  // value={ oppDataByOppId.tmRevenueEntryVO?.account?.accountName ||
+                  //   formUpdateData.account.accountName ||
+                  //   ""}
+                  onChange={(e)=>{
+                    const selectedFyId =
+                    e.target.selectedOptions[0].getAttribute(
+                      "data-fyId"
+                    );
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      account: {
+                        ...formUpdateData.account,
+                        accountId: selectedFyId,
+                        accountName: e.target.value,
+                      },
+                    });
+                    
+                  }}
+                  >
+                  <option value="" disabled selected hidden>
+                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName}
 
-                                  return (
-                                    <option
-                                      data-fyId={accountData?.accountId}
-                                      key={index}
-                                    >
-                                      {accountNamedata}
-                                    </option>
-                                  );
-                                }
-                              )}
-                          </select>
-                        </div>
-                      </div>
+                  </option>
+                  {console.log("datacheckprop",formUpdateData )}
+                  {props.accountData && props.accountData.accountData &&
+                          props.accountData.accountData.map(
+                            (accountData, index) => {
+                              const accountNamedata = accountData.accountName;
 
-                      <div style={{ flexBasis: "25%" }}>
-                        <span style={{ color: "red" }}>*</span>
-                        <span>Opportunity Name</span>
-                        <div>
-                          {/* <select
+                              return (
+                                <option
+                                  data-fyId={accountData?.accountId}
+                                  key={index}
+                                >
+                                  {accountNamedata}
+                                </option>
+                              );
+                            }
+                          )}
+                  </select>
+                  
+
+                  </div>
+                </div>
+
+
+                <div style={{ flexBasis: "25%" }}>
+                  <span style={{ color: "red" }}>*</span>
+                  <span>Opportunity Name</span>
+                  <div>
+
+                {/* <select
                   style={{
                     height: "35px",
                     width: "80%",
@@ -1390,8 +1599,8 @@ function TrForRevenue(props) {
                   </option>
 
                   </select> */}
-                          {/* <FormControl> */}
-                          {/* <select
+                                      {/* <FormControl> */}
+                      {/* <select
                         size="small"
                         style={{
                           background: "white",
@@ -1456,63 +1665,139 @@ function TrForRevenue(props) {
                             }
                           )}
                       </select> */}
-                          {/* </FormControl> */}
+                    {/* </FormControl> */}
 
-                          <Select
-                            styles={{
-                              control: (provided) => ({
-                                ...provided,
-                                background: "white",
-                                width: "187px",
-                                marginLeft: "8px",
-                                borderRadius: "0px",
-                                height: "35px",
-                              }),
-                            }}
-                            options={props?.opportunityData?.opportunityData?.map(
-                              (opportunityData, index) => ({
-                                value: opportunityData.opportunityId,
-                                label: opportunityData.opportunityName,
-                              })
-                            )}
-                            onChange={(selectedOption) => {
-                              const selectedOpportunityId =
-                                selectedOption.value;
-                              const found =
-                                props?.opportunityData?.opportunityData?.find(
-                                  (each) =>
-                                    each?.opportunityId ===
-                                    selectedOpportunityId
+                    {/* <Select
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          background: "white",
+                          width: "187px",
+                          marginLeft: "8px",
+                          borderRadius: "0px",
+                          height: "35px",
+                        }),
+                      }}
+                      
+                     // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
+                      options={props?.opportunityData?.opportunityData?.map(
+                        (opportunityData, index) => ({
+                          value: opportunityData.opportunityId,
+                          label: opportunityData.opportunityName,
+                        })
+                      )}
+                      onChange={(selectedOption) => {
+                        const selectedOpportunityId = selectedOption.value;
+                        const found =
+                          props?.opportunityData?.opportunityData?.find(
+                            (each) =>
+                              each?.opportunityId === selectedOpportunityId
+                          );
+
+                        setFormUpdateData({
+                          ...formUpdateData,
+                          opportunity: {
+                            ...formUpdateData.opportunity,
+                            opportunityID: selectedOption.value,
+                            opportunityName: selectedOption.label,
+                            projectCode: found?.projectCode || "", // Set the auto-populated value or an empty string if not found
+                            projectStartDate: found?.projectStartDate || "", // Set the auto-populated value or an empty string if not found
+                            projectEndDate: found?.projectEndDate || "", // Set the auto-populated value or an empty string if not found
+                          },
+                        });
+                      }}
+                      
+                      value={{
+                        value: formUpdateData.opportunity.opportunityID,
+                        label: formUpdateData.opportunity.opportunityName,
+                      }}
+                    /> */}
+
+                                          <select
+                        // size="small"
+                        style={{
+                          height: "35px",
+
+                          background: "white",
+                          borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black",
+                          width: "187Px",
+                          // marginLeft: "8px",
+                        }}
+                        // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
+                        onChange={(e) => {
+                          const selectedOpportunityId =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-fyId"
+                            );
+                          const found =
+                            props?.opportunityData?.opportunityData?.filter(
+                              (each) => {
+                                return (
+                                  each?.opportunityId ===
+                                  Number(selectedOpportunityId)
                                 );
+                              }
+                            );
+                          setFormUpdateData({
+                            ...formUpdateData,
+                            opportunity: {
+                              ...formUpdateData.opportunity,
+                              opportunityID: selectedOpportunityId,
+                              opportunityName: e.target.value,
+                              projectCode: found?.length
+                                ? found[0]?.projectCode
+                                : "",
+                              projectStartDate: found?.length
+                                ? found[0]?.projectStartDate
+                                : "",
+                              projectEndDate: found?.length
+                                ? found[0]?.projectEndDate
+                                : "",
+                            },
+                          });
+                        }}
+                        value={{
+                          value: formUpdateData.opportunity.opportunityID,
+                          label: formUpdateData.opportunity.opportunityName,
+                        }}
+                      >
+                        <option value="" disabled selected hidden>
+                        {oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
+                        </option>
+                        {props?.opportunityData?.opportunityData &&
+                          props?.opportunityData?.opportunityData.map(
+                            (opportunityData, index) => {
+                              const opportunityNamedata =
+                                opportunityData.opportunityName;
+                              return (
+                                <option
+                                  data-fyId={String(
+                                    opportunityData.opportunityId
+                                  )}
+                                  key={index}
+                                >
+                                  {opportunityNamedata}
+                                </option>
+                              );
+                            }
+                          )}
+                      </select>
+                  </div>
+                </div>
 
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                opportunity: {
-                                  ...formUpdateData.opportunity,
-                                  opportunityID: selectedOption.value,
-                                  opportunityName: selectedOption.label,
-                                  projectCode: found?.projectCode || "", // Set the auto-populated value or an empty string if not found
-                                  projectStartDate:
-                                    found?.projectStartDate || "", // Set the auto-populated value or an empty string if not found
-                                  projectEndDate: found?.projectEndDate || "", // Set the auto-populated value or an empty string if not found
-                                },
-                              });
-                            }}
-                            value={{
-                              value: formUpdateData.opportunity.opportunityID,
-                              label: formUpdateData.opportunity.opportunityName,
-                            }}
-                          />
-                        </div>
-                      </div>
 
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>BDM</span>
-                        </div>
-                        <div style={{ width: "187px" }}>
-                          {/* <select
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>BDM</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                   
+
+{/* <select
                   style={{
                     height: "35px",
                     width: "100%",
@@ -1533,558 +1818,530 @@ function TrForRevenue(props) {
                   </option>
 
                   </select> */}
-                          <FormControl>
-                            <select
-                              size="small"
-                              style={{
-                                background: "white",
-                                width: "187Px",
-                                marginLeft: "8px",
-                                borderRadius: "0px",
-                                height: "35px",
-                              }}
-                              // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
-
-                              onChange={(e) => {
-                                const selectedbdmId =
-                                  e.target.selectedOptions[0].getAttribute(
-                                    "data-bdmId"
-                                  );
-                                const foundBdm = props?.bdmData?.bdmData.find(
-                                  (ele) => {
-                                    return ele.bdmId === selectedbdmId;
-                                  }
-                                );
-
-                                setFormUpdateData({
-                                  ...formUpdateData,
-                                  bdm: {
-                                    ...formUpdateData.bdm,
-                                    bdmID: selectedbdmId,
-                                    bdmName: e.target.value,
-                                  },
-                                });
-                              }}
-                            >
-                              <option value="" disabled selected hidden>
-                                {oppDataByOppId.tmRevenueEntryVO &&
-                                  oppDataByOppId.tmRevenueEntryVO
-                                    .businessDevelopmentManager.bdmDisplayName}
-                              </option>
-                              {props?.bdmData?.bdmData &&
-                                props?.bdmData?.bdmData.map((obj, id) => (
-                                  <option data-bdmId={obj.bdmId}>
-                                    {obj.bdmName}
-                                  </option>
-                                ))}
-                            </select>
-                          </FormControl>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Project Code</span>
-                        </div>
-                        <div style={{ width: "187px" }}>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="email"
-                            spellcheck="false"
-                            variant="outlined"
-                            // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.projectCode}
-                            onChange={(e) => {
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                opportunity: {
-                                  ...formUpdateData.opportunity,
-                                  projectCode: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Project Start Date</span>
-                        </div>
-                        <div style={{ width: "187px" }}>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="email"
-                            spellcheck="false"
-                            variant="outlined"
-                            value={
-                              oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.projectStartDate
-                            }
-                            onChange={(e) => {
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                opportunity: {
-                                  ...formUpdateData.opportunity,
-                                  projectStartDate: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Project End date</span>
-                        </div>
-                        <div style={{ width: "187px" }}>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="email"
-                            spellcheck="false"
-                            variant="outlined"
-                            value={
-                              oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.projectEndDate
-                            }
-                            onChange={(e) => {
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                opportunity: {
-                                  ...formUpdateData.opportunity,
-                                  projectEndDate: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Currency(As per WO)</span>
-                        </div>
-                        <select
-                          style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
-                            boxShadow: "none",
-                            border: "1px solid lightgray",
-                            color: "black",
-                          }}
-                          value={
-                            oppDataByOppId.tmRevenueEntryVO &&
-                            oppDataByOppId.tmRevenueEntryVO.currency
-                              .currencyName
-                          }
-                          onChange={(e) => {
-                            const selectedFyId =
-                              e.target.selectedOptions[0].getAttribute(
-                                "data-fyId"
-                              );
-                            setFormUpdateData({
-                              ...formUpdateData,
-                              currency: {
-                                ...formUpdateData.currency,
-                                currencyID: selectedFyId,
-                                currencyName: e.target.value,
-                              },
-                            });
-                          }}
-                        >
-                          <option value="" disabled selected hidden>
-                            select
-                          </option>
-                          {props?.currencyData?.currencyData &&
-                            props?.currencyData?.currencyData.map(
-                              (currencyData, index) => {
-                                const currencyNamedata =
-                                  currencyData?.currencyName;
-                                return (
-                                  <option
-                                    data-fyId={currencyData.currencyId}
-                                    key={index}
-                                  >
-                                    {currencyNamedata}
-                                  </option>
-                                );
-                              }
-                            )}
-                        </select>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Probablity</span>
-                        </div>
-
-                        <select
-                          style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
-                            boxShadow: "none",
-                            border: "1px solid lightgray",
-                            color: "black",
-                          }}
-                          value={
-                            oppDataByOppId.tmRevenueEntryVO &&
-                            oppDataByOppId.tmRevenueEntryVO.probabilityType
-                              .probabilityTypeName
-                          }
-                          onChange={(e) => {
-                            const selectedFyId =
-                              e.target.selectedOptions[0].getAttribute(
-                                "data-fyId"
-                              );
-                            setFormUpdateData({
-                              ...formUpdateData,
-                              probability: {
-                                ...formUpdateData.probability,
-                                probabilityID: selectedFyId,
-                                probabilityTypeName: e.target.value,
-                              },
-                            });
-                          }}
-                        >
-                          <option value="" disabled selected hidden>
-                            {oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.probabilityType
-                                .probabilityTypeName}
-                          </option>
-                          {props?.probabilityData?.probabilityData &&
-                            props?.probabilityData?.probabilityData.map(
-                              (probabilityData, index) => {
-                                const probabilityNamedata =
-                                  probabilityData?.probabilityTypeName;
-                                return (
-                                  <option
-                                    data-fyId={
-                                      probabilityData.probabilityTypeId
-                                    }
-                                    key={index}
-                                  >
-                                    {probabilityNamedata}
-                                  </option>
-                                );
-                              }
-                            )}
-                        </select>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Region</span>
-                        </div>
-                        <select
-                          style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
-                            boxShadow: "none",
-                            border: "1px solid lightgray",
-                            color: "black",
-                          }}
-                          value={
-                            oppDataByOppId.tmRevenueEntryVO &&
-                            oppDataByOppId.tmRevenueEntryVO.region
-                              .regionDisplayName
-                          }
-                          onChange={(e) => {
-                            const selectedFyId =
-                              e.target.selectedOptions[0].getAttribute(
-                                "data-fyId"
-                              );
-                            setFormUpdateData({
-                              ...formUpdateData,
-                              region: {
-                                ...formUpdateData.region,
-                                regionID: selectedFyId,
-                                regionName: e.target.value,
-                              },
-                            });
-                          }}
-                        >
-                          <option value="" disabled selected hidden>
-                            {oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.region
-                                .regionDisplayName}
-                          </option>
-                          {props?.regionData?.regionData &&
-                            props?.regionData?.regionData.map(
-                              (regionData, index) => {
-                                const regionNamedata = regionData?.regionName;
-                                return (
-                                  <option
-                                    data-fyId={regionData.regionId}
-                                    key={index}
-                                  >
-                                    {regionNamedata}
-                                  </option>
-                                );
-                              }
-                            )}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Work Order</span>
-                        </div>
-                        <select
-                          style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
-                            boxShadow: "none",
-                            border: "1px solid lightgray",
-                            color: "black",
-                          }}
-                          value={
-                            oppDataByOppId.tmRevenueEntryVO &&
-                            oppDataByOppId.tmRevenueEntryVO.workOrder
-                              .workOrderNumber
-                          }
-                          onChange={(e) => {
-                            const selectedWorkOrderId =
-                              e.target.selectedOptions[0].getAttribute(
-                                "data-fyId"
-                              );
-                            const found =
-                              props?.workOrderData?.workOrderData?.filter(
-                                (each) => {
-                                  return (
-                                    each?.workOrderId ===
-                                    Number(selectedWorkOrderId)
-                                  );
-                                }
-                              );
-
-                            setFormUpdateData({
-                              ...formUpdateData,
-                              workOrder: {
-                                ...formUpdateData.workOrder,
-                                workOrderID: selectedWorkOrderId,
-                                workOrderStatus: e.target.value,
-                                workOrderEndDate: found?.length
-                                  ? found[0]?.workOrderEndDate
-                                  : "",
-                                workOrderStatus: found?.length
-                                  ? found[0]?.workOrderStatus
-                                  : "",
-                              },
-                            });
-                          }}
-                        >
-                          <option value="" disabled selected hidden>
-                            {oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.workOrder
-                                .workOrderNumber}
-                          </option>
-                          {props?.workOrderData?.workOrderData &&
-                            props?.workOrderData?.workOrderData.map(
-                              (workOrderData, index) => {
-                                const workOrderNamedata =
-                                  workOrderData?.workOrderNumber;
-                                return (
-                                  <option
-                                    data-fyId={String(
-                                      workOrderData.workOrderId
-                                    )}
-                                    key={index}
-                                  >
-                                    {workOrderNamedata}
-                                  </option>
-                                );
-                              }
-                            )}
-                        </select>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Work Order End Date</span>
-                        </div>
-
-                        <div style={{ width: "195px" }}>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="email"
-                            spellcheck="false"
-                            variant="outlined"
-                            value={
-                              oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.workOrder
-                                .workOrderEndDate
-                            }
-                            onChange={(e) => {
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                workOrder: {
-                                  ...formUpdateData.workOrder,
-                                  workOrderEndDate: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Work Order Status</span>
-                        </div>
-
-                        <div style={{ width: "187px" }}>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="email"
-                            spellcheck="false"
-                            variant="outlined"
-                            value={
-                              oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.workOrder
-                                .workOrderStatus
-                            }
-                            onChange={(e) => {
-                              setFormUpdateData({
-                                ...formUpdateData,
-                                workOrder: {
-                                  ...formUpdateData.workOrder,
-                                  workOrderStatus: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      paddingTop: "10px",
-                      // marginLeft: "-78px",
-                      display: "flex",
-                      alignItems: "center",
-                      width: "80%",
-                    }}
-                  >
-                    <ButtonSection>
-                      <ModalControlButton
-                        sx={{ marginLeft: "400px", marginRight: "75px" }}
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={handleNextClick}
-                      >
-                        Next
-                      </ModalControlButton>
-                      <ModalControlButton
-                        sx={{ marginRight: "380px" }}
-                        type="button"
-                        variant="contained"
-                        onClick={() => {
-                          setIsOpenSecondLevelEdit(false);
+                                      <FormControl>
+                      <select
+                        size="small"
+                        style={{
+                          background: "white",
+                          width: "187Px",
+                          borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black",
+                          height: "35px",
                         }}
-                        value="Cancel"
-                        id="create-account"
+                        // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
+
+                        onChange={(e) => {
+                          const selectedbdmId =
+                            e.target.selectedOptions[0].getAttribute(
+                              "data-bdmId"
+                            );
+                          const foundBdm = props?.bdmData?.bdmData.find(
+                            (ele) => {
+                              return ele.bdmId === selectedbdmId;
+                            }
+                          );
+
+                          setFormUpdateData({
+                            ...formUpdateData,
+                            bdm: {
+                              ...formUpdateData.bdm,
+                              bdmID: selectedbdmId,
+                              bdmName: e.target.value,
+                            },
+                          });
+                        }}
                       >
-                        Cancel
-                      </ModalControlButton>
-                    </ButtonSection>
+                        <option value="" disabled selected hidden>
+                      {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
+
+                        </option>
+                        {props?.bdmData?.bdmData &&
+                          props?.bdmData?.bdmData.map((obj, id) => (
+                            <option data-bdmId={obj.bdmId}>
+                              {obj.bdmName}
+                            </option>
+                          ))}
+                      </select>
+                    </FormControl>
+                  
                   </div>
                 </div>
-              ) : (
-                <>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
                   <div>
-                    {pricingType == "T&M" && (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginRight: "25px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "auto",
-                            display: "flex",
-                            alignItems: "center",
-                            columnGap: "10px",
-                          }}
-                        >
-                          <span style={{ color: "red" }}>*</span>
-                          <span style={{ marginLeft: "-9px" }}>
-                            Resource count:
-                          </span>
-                          {/* <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project Code</span>
+                  </div>
+                  <div style={{ width: "200px" }}>
+                  <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.projectCode}
+                  value={formUpdateData?.opportunity?.projectCode}
+
+                  onChange={(e) => {
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      opportunity: {
+                        ...formUpdateData.opportunity,
+                        projectCode: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                  </div>
+                </div>
+
+                
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project Start Date</span>
+                  </div>
+                  <div style={{ width: "188px" }}>
+                  <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.projectStartDate}
+                  value={formUpdateData?.opportunity?.projectStartDate}
+                  onChange={(e) => {
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      opportunity: {
+                        ...formUpdateData.opportunity,
+                        projectStartDate: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Project End date</span>
+                  </div>
+                  <div style={{ width: "187px" }}>
+                  <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.projectEndDate}
+                  onChange={(e) => {
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      opportunity: {
+                        ...formUpdateData.opportunity,
+                        projectEndDate: e.target.value,
+                      },
+                    });
+                  }}
+                  value={formUpdateData?.opportunity?.projectEndDate}
+
+                />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Currency(As per WO)</span>
+                  </div>
+                  <select
+                  style={{
+                    height: "35px",
+                    width: "80%",
+                    marginBottom: "10px",
+                    borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black"
+                  }}
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.currency.currencyName}
+                  onChange={(e) => {
+                    const selectedFyId =
+                      e.target.selectedOptions[0].getAttribute("data-fyId");
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      currency: {
+                        ...formUpdateData.currency,
+                        currencyID: selectedFyId,
+                        currencyName: e.target.value,
+                      },
+                    });
+                  }}
+                  >
+                  <option value="" disabled selected hidden>
+                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.currency.currencyName}
+
+                  </option>
+                  {props?.currencyData?.currencyData &&
+                        props?.currencyData?.currencyData.map(
+                          (currencyData, index) => {
+                            const currencyNamedata = currencyData?.currencyName;
+                            return (
+                              <option
+                                data-fyId={currencyData.currencyId}
+                                key={index}
+                              >
+                                {currencyNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                  </select>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Probablity</span>
+                  </div>
+
+                  <select
+                  style={{
+                    height: "35px",
+                    width: "74%",
+                    marginBottom: "10px",
+                    borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black"
+                  }}
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.probabilityType.probabilityTypeName}
+                  onChange={(e) => {
+                    const selectedFyId =
+                      e.target.selectedOptions[0].getAttribute("data-fyId");
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      probability: {
+                        ...formUpdateData.probability,
+                        probabilityID: selectedFyId,
+                        probabilityTypeName: e.target.value,
+                      },
+                    });
+                  }}
+                  >
+                  <option value="" disabled selected hidden>
+                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.probabilityType.probabilityTypeName}
+
+                  </option>
+                  {props?.probabilityData?.probabilityData &&
+                        props?.probabilityData?.probabilityData.map(
+                          (probabilityData, index) => {
+                            const probabilityNamedata =
+                              probabilityData?.probabilityTypeName;
+                            return (
+                              <option
+                                data-fyId={probabilityData.probabilityTypeId}
+                                key={index}
+                              >
+                                {probabilityNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                  </select>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Region</span>
+                  </div>
+                  <select
+                  style={{
+                    height: "35px",
+                    width: "70%",
+                    marginBottom: "10px",
+                    borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black"
+                  }}
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.region.regionDisplayName}
+                  onChange={(e) => {
+                    const selectedFyId =
+                      e.target.selectedOptions[0].getAttribute("data-fyId");
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      region: {
+                        ...formUpdateData.region,
+                        regionID: selectedFyId,
+                        regionName: e.target.value,
+                      },
+                    });
+                  }}
+                  >
+                  <option value="" disabled selected hidden>
+                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.region.regionDisplayName}
+
+                  </option>
+                  {props?.regionData?.regionData &&
+                        props?.regionData?.regionData.map(
+                          (regionData, index) => {
+                            const regionNamedata = regionData?.regionName;
+                            return (
+                              <option
+                                data-fyId={regionData.regionId}
+                                key={index}
+                              >
+                                {regionNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                rowGap: "30px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexBasis: "100%",
+                  gap: "100px",
+                  marginBottom: "15px",
+                }}
+              >
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order</span>
+                  </div>
+                  <select
+                  style={{
+                    height: "35px",
+                    width: "80%",
+                    marginBottom: "10px",
+                    borderRadius: "1px",
+                    boxShadow: "none",
+                    border: "1px solid lightgray",
+                    color:"black"
+                  }}
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderNumber}
+                  onChange={(e) => {
+                    const selectedWorkOrderId =
+                      e.target.selectedOptions[0].getAttribute("data-fyId");
+                    const found =
+                      props?.workOrderData?.workOrderData?.filter(
+                        (each) => {
+                          return (
+                            each?.workOrderId ===
+                            Number(selectedWorkOrderId)
+                          );
+                        }
+                      );
+
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      workOrder: {
+                        ...formUpdateData.workOrder,
+                        workOrderID: selectedWorkOrderId,
+                        workOrderStatus: e.target.value,
+                        workOrderEndDate: found?.length
+                          ? found[0]?.workOrderEndDate
+                          : "",
+                        workOrderStatus: found?.length
+                          ? found[0]?.workOrderStatus
+                          : "",
+                      },
+                    });
+                  }}
+                  value={{
+                    value: formUpdateData.workOrder.workOrderID,
+                    label: formUpdateData.workOrder.workOrderID,
+                  }}
+                  >
+                  <option value="" disabled selected hidden>
+                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderNumber}
+
+                  </option>
+                  {props?.workOrderData?.workOrderData &&
+                        props?.workOrderData?.workOrderData.map(
+                          (workOrderData, index) => {
+                            const workOrderNamedata =
+                              workOrderData?.workOrderNumber;
+                            return (
+                              <option
+                                data-fyId={String(workOrderData.workOrderId)}
+                                key={index}
+                              >
+                                {workOrderNamedata}
+                              </option>
+                            );
+                          }
+                        )}
+                  </select>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order End Date</span>
+                  </div>
+
+                  <div style={{ width: "188px" }}>
+                  <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderEndDate}
+                  value={formUpdateData?.workOrder?.workOrderEndDate}
+
+                  onChange={(e) => {
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      workOrder: {
+                        ...formUpdateData.workOrder,
+                        workOrderEndDate: e.target.value,
+                      },
+                    });
+                  }}
+                />
+                  </div>
+                </div>
+                <div style={{ flexBasis: "25%" }}>
+                  <div>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Work Order Status</span>
+                  </div>
+
+                  <div style={{ width: "187px" }}>
+                  <InputField
+                  size="small"
+                  type="text"
+                  id="email"
+                  spellcheck="false"
+                  variant="outlined"
+                  // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderStatus}
+                  onChange={(e) => {
+                    setFormUpdateData({
+                      ...formUpdateData,
+                      workOrder: {
+                        ...formUpdateData.workOrder,
+                        workOrderStatus: e.target.value,
+                      },
+                    });
+                  }}
+                  value={formUpdateData?.workOrder?.workOrderStatus}
+
+                />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                paddingTop: "10px",
+                // marginLeft: "-78px",
+                display: "flex",
+                alignItems: "center",
+                width: "80%",
+              }}
+            >
+              <ButtonSection>
+                <ModalControlButton
+                  sx={{ marginLeft: "400px", marginRight: "75px" }}
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={handleNextClick}
+                >
+                  Next
+                </ModalControlButton>
+                <ModalControlButton
+                  sx={{ marginRight: "380px" }}
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpenSecondLevelEdit(false)
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
+              </ButtonSection>
+            </div>
+
+          </div>
+        ):( 
+          <>
+                        <div>
+                {pricingType == "T&M" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Resource count:
+                      </span>
+                      {/* <div>
                     <label
                       style={{
                         display: "flex",
@@ -2109,46 +2366,46 @@ function TrForRevenue(props) {
                       />
                     </label>
                   </div> */}
-                          <InputField
-                            style={{
-                              background: "white",
-                              width: "75Px",
-                              marginLeft: "8px",
-                              borderRadius: "0px !important",
-                              height: "35px",
-                            }}
-                            size="small"
-                            type="number"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            onChange={handleInputChange}
-                            value={inputNumber}
-                          />
-                        </div>
-                      </div>
-                    )}
-                    {pricingType == "FP" && (
-                      <div
+                      <InputField
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          marginRight: "25px",
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
                         }}
-                      >
-                        <div
-                          style={{
-                            width: "auto",
-                            display: "flex",
-                            alignItems: "center",
-                            columnGap: "10px",
-                          }}
-                        >
-                          <span style={{ color: "red" }}>*</span>
-                          <span style={{ marginLeft: "-9px" }}>
-                            Milestone count:
-                          </span>
-                          {/* <div>
+                        size="small"
+                        type="number"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        onChange={handleInputChange}
+                        value={inputNumber}
+                      />
+                    </div>
+                  </div>
+                )}
+                {pricingType == "FP" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Milestone count:
+                      </span>
+                      {/* <div>
                   <label
                     style={{
                       display: "flex",
@@ -2173,120 +2430,117 @@ function TrForRevenue(props) {
                     />
                   </label>
                 </div> */}
-                          <InputField
-                            style={{
-                              background: "white",
-                              width: "75Px",
-                              marginLeft: "8px",
-                              borderRadius: "0px !important",
-                              height: "35px",
-                            }}
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setFormData({
-                            //     ...formData,
-                            //     opportunity: {
-                            //       ...formData.opportunity,
-                            //       projectCode: e.target.value,
-                            //     },
-                            //   });
-                            // }}
-                            // value={formData?.opportunity?.projectCode}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      marginLeft: "0px",
-                    }}
-                  >
-                    <Accordion id="accordian">{gridItems}</Accordion>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", flexBasis: "100%", gap: "5px" }}
-                    >
-                      <div style={{ display: "flex", flexBasis: "25%" }}>
-                        <div style={{ width: "75px" }}>
-                          <span>Remarks :</span>
-                        </div>
-                        <input
-                          style={{ width: "730px", borderRadius: "0px" }}
-                        />
-                      </div>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "20px",
-                        width: "100%",
-                      }}
-                    >
-                      <ModalControlButton
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={() => {
-                          setPricingType(pricingType);
-                          setTabIndex({
-                            index: 0,
-                            formData: "",
-                          });
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
                         }}
-                      >
-                        Back
-                      </ModalControlButton>
-                      <ModalControlButton
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={OnSubmit}
-                      >
-                        Save
-                      </ModalControlButton>
-                      <ModalControlButton
-                        type="button"
-                        variant="contained"
-                        onClick={() => {
-                          // props.setGridItems([]);
-                          setIsOpenSecondLevelEdit(false);
-                          // props.setTabIndex({
-                          //   index: 0,
-                          //   formData: "",
-                          // });
-                        }}
-                        value="Cancel"
-                        id="create-account"
-                      >
-                        Cancel
-                      </ModalControlButton>
+                        size="small"
+                        type="text"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     opportunity: {
+                        //       ...formData.opportunity,
+                        //       projectCode: e.target.value,
+                        //     },
+                        //   });
+                        // }}
+                        // value={formData?.opportunity?.projectCode}
+                      />
                     </div>
                   </div>
-                </>
-              )}
-            </form>
+                )}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  marginLeft: "0px",
+                }}
+              >
+                <Accordion id="accordian">{gridItems}</Accordion>
+              </div>
+
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
+              >
+                <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                    <div style={{ width: "75px" }}>
+                      <span>Remarks :</span>
+                    </div>
+                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                  </div>
+                </div>
+
+                <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "20px",
+                width:"100%",
+              }}
+            >
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={() => {
+                  setPricingType(pricingType);
+                  setTabIndex({
+                    
+                    index: 0,
+                    formData:"",
+                  });
+                }}
+              >
+                Back
+              </ModalControlButton>
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={OnSubmit}
+              >
+                Save
+              </ModalControlButton>
+              <ModalControlButton
+                type="button"
+                variant="contained"
+                onClick={() => {
+                  // props.setGridItems([]);
+                  setIsOpenSecondLevelEdit(false);
+                  // props.setTabIndex({
+                  //   index: 0,
+                  //   formData: "",
+                  // });
+                }}
+                value="Cancel"
+                id="create-account"
+              >
+                Cancel
+              </ModalControlButton>
+            </div>
+
+            
+              </div>
+          </>
+        )}
+
+      </form>
+
           </ModalDetailSection>
         </Box>
       </Modal>

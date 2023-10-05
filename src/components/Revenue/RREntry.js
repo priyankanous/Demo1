@@ -59,6 +59,7 @@ function RREntry(props) {
     "",
   ];
 
+  console.log("fYear", props);
   return (
     <div>
       <RevenueMemoizedBaseComponent
@@ -122,6 +123,7 @@ function Tr({
   });
   const [selectedRowData, setSelectedRowData] = useState({});
   console.log("oppdata -->", opportunityEntryData);
+
 
   useEffect(() => {
     getAllRevenueEntries();

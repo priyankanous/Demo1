@@ -16,10 +16,13 @@ import { getCocPracticeData } from "../../../actions/cocPractice";
 import { setResourceData } from "../../../actions/resource";
 import axios from "axios";
 import { apiV1 } from "../../../utils/constantsValue";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
 
 const RevenueResourceAccordian = (props) => {
   const { selectedFyIdToGetLocation, formData, pricingType } = props;
-  console.log("selectedFyId changed added in acc->", props.oppDataByOppId );
+
+  console.log("selectedFyId changed added in acc->", selectedFyIdToGetLocation );
 
 
   useEffect(() => {
@@ -143,6 +146,7 @@ const RevenueResourceAccordian = (props) => {
   // };
 
   const getLeaveLossByLocation = async (selectedFyIdToGetLocation, selectedLocationToGetLs) => {
+    
     try {
       const response = await axios.get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${selectedFyIdToGetLocation}/${selectedLocationToGetLs}`
@@ -193,6 +197,8 @@ const RevenueResourceAccordian = (props) => {
   //   }
   // }, []);
 
+  console.log("with id", props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName);
+
   return (
     <React.Fragment>
       <br></br>
@@ -201,13 +207,24 @@ const RevenueResourceAccordian = (props) => {
           <AccordionItemButton
             style={{
               marginTop: "6px",
-              width: "216px",
-              marginLeft: "-30px",
+              width: "100%",
               cursor: "pointer",
             }}
           >
+            <div
+            style={{display:"flex", justifyContent:"space-between", marginRight:"10px"}}
+            >
+              <div>
             <RiIcons.RiArrowDownSFill />
             <span>Resource {id + 1} Details </span>
+            </div>
+            <div>
+              <DeleteOutlineIcon
+                 style={{ fontSize: "20px", paddingRight: "5px" }}
+
+              />
+            </div>
+            </div>
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
@@ -301,7 +318,7 @@ const RevenueResourceAccordian = (props) => {
                 <select
                   id="milestoneselect"
                   required
-                  // value={props.oppDataByOppId.tmRevenueEntryVO.revenueResourceEntries[0].strategicBusinessUnit.sbuName}
+                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuName}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -310,6 +327,7 @@ const RevenueResourceAccordian = (props) => {
                       attrKeySbu: "data-sbuId",
                     });
                   }}
+                  
                 >
                   <option value="" disabled selected hidden>
                     {/* Select SBU */}
@@ -317,7 +335,7 @@ const RevenueResourceAccordian = (props) => {
                   </option>
                   {props.sbuData.sbuData &&
                     props.sbuData.sbuData.map((obj, id) => (
-                      <option data-sbuId={obj.sbuId}>{obj.sbuName}</option>
+                      <option  key={id} data-sbuId={obj.sbuId}>{obj.sbuName}</option>
                     ))}
                 </select>
               </td>
@@ -358,6 +376,29 @@ const RevenueResourceAccordian = (props) => {
                   }
                   // placeholder="Resource Name"
                 ></input>
+
+{/* <select
+                  id="milestoneselect"
+                  required
+                  onChange={(e) => {
+                    updateResourceDetails({
+                      event: e,
+                      resourseDetailsColumn: "sbuHeadName",
+                      selectedID: "sbuHeadId",
+                      attrKey: "data-sbuHeadId",
+                    });
+                  }}
+                >
+                  <option value="" disabled selected hidden>
+                    SBU Head
+                  </option>
+                  {props.sbuHeadData.sbuHeadData &&
+                    props.sbuHeadData.sbuHeadData.map((obj, id) => (
+                      <option data-sbuHeadId={obj.sbuHeadId}>
+                        {obj.sbuHeadName}
+                      </option>
+                    ))}
+                </select> */}
 
               </td>
               <td style={{ borderRight: "solid 1px" }}>
@@ -435,6 +476,7 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="milestoneinput"
                   type="text"
+                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
                   // placeholder="Resource Name"
                   onChange={(e) => {
                     updateResourceDetails({
