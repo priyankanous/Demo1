@@ -197,8 +197,7 @@ function Tr({
             revenueOpportunity();
             handleRowExpansion(e.target);
           }}
-
-          style={{padding:"1px 6px", width:"10px", cursor:"pointer"}}
+          style={{ padding: "1px 6px", width: "10px", cursor: "pointer" }}
         >
           ↓{/* <FaIcons.FaArrowDown /> */}
           {/* <ArrowDropDownIcon /> */}
@@ -433,12 +432,11 @@ function Tr({
                         financialYearId: "",
                         financialYearName: financialYearName,
                       };
-                      
-                      tempObj["pricingType"] = "T&M"
+
+                      tempObj["pricingType"] = "T&M";
                       setSelectedRowData({ ...tempObj });
                       setIsOpen(true);
                     }}
-
                   >
                     {/* <FaIcons.FaPlus /> */}
                     <AddIcon fontSize="small" />
@@ -472,7 +470,7 @@ function Tr({
                   );
                 })}
               </tr>
-              
+
               <tbody>
                 {opportunityData.length > 0 &&
                   opportunityData.map((obj, id) => (

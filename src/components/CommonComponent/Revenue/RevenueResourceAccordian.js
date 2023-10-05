@@ -20,10 +20,15 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 
 const RevenueResourceAccordian = (props) => {
-  const { selectedFyIdToGetLocation, formData, pricingType } = props;
-
-  console.log("selectedFyId changed added in acc->", selectedFyIdToGetLocation );
-
+  const {
+    selectedFyIdToGetLocation,
+    formData,
+    pricingType,
+    resourceData,
+    updateMethod,
+    id,
+  } = props;
+  console.log("updateMethod ->", updateMethod);
 
   useEffect(() => {
     props.getSbuData();
@@ -33,9 +38,6 @@ const RevenueResourceAccordian = (props) => {
     props.getLocationData();
     props.getCocPracticeData();
   }, []);
-  const { resourceData, updateResourceData, id } = props;
-
-  console.log("resourceData",resourceData)
 
   const month = [
     "Jan",
@@ -52,7 +54,7 @@ const RevenueResourceAccordian = (props) => {
     "Dec",
   ];
 
-  console.log("Props in accordion new------>", props);
+  // console.log("Props in accordion new------>", props);
   const [selectedSbuId, setSelectedSbuId] = useState("");
   const [sbuHeadData, setSbuHeadData] = useState(null);
   const [buDataBySbuId, setBuDataBySbuId] = useState(null);
@@ -84,6 +86,7 @@ const RevenueResourceAccordian = (props) => {
       // console.log("THE MANINNNN GLLF", response?.data?.data);
       data["leaveLossFactor"] = response?.data?.data;
     }
+
     if (
       params?.resourseDetailsColumn == "startDate" ||
       params?.resourseDetailsColumn == "endDate"
@@ -93,12 +96,9 @@ const RevenueResourceAccordian = (props) => {
       );
     }
     dataArr[id] = data;
-    // console.log(dataArr, "After update", updateResourceData);
-    updateResourceData(dataArr);
+    console.log(dataArr, "After update", data, "Func", updateMethod);
+    updateMethod(dataArr);
   };
-  // setSelectedSbuId(resourceData[0].sbuId);
-
-  console.log("Selected sbuId state-->:", selectedSbuId);
 
   const getSbuHeadBySbuId = async (selectedSbuId) => {
     try {
@@ -112,24 +112,23 @@ const RevenueResourceAccordian = (props) => {
     }
   };
 
-
-  // console.log("sbuHeadData", sbuHeadData.data[0].sbuHeadName)
-  // console.log("sbuHeadDataBU", sbuHeadData.data[0].strategicBusinessUnit.businessUnit.businessUnitName)
-
   const createDate = (date) => {
-    let t = new Date(date);
-    let splitDate = date.split("-");
-    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
+    let splitDate = date.split("/");
+    let monthDate = `${
+      month.indexOf(splitDate[1]) + 1 < 10
+        ? "0" + String(month.indexOf(splitDate[1]) + 1)
+        : month.indexOf(splitDate[1]) + 1
+    }`;
+    return `${splitDate[2]}-${monthDate}-${splitDate[0]}`;
   };
 
   // const addResource = () => {
   //   console.log("resource Details for set resource Data", resourseDetails);
-  //   props.updateResourceData(resourseDetails, id);
+  //   props.updateMethod(resourseDetails, id);
   // };
 
-  const [selectedLocationToGetLs, setSelectedLocationToGetLs] = useState('');
+  const [selectedLocationToGetLs, setSelectedLocationToGetLs] = useState("");
   const [leaveLossData, setLeaveLossData] = useState(null);
-
 
   // const getLeaveLossByLocation = async (selectedLocationToGetLs) => {
   //   console.log("selectedLocation  value---->",selectedLocationToGetLs);
@@ -145,8 +144,10 @@ const RevenueResourceAccordian = (props) => {
   //   }
   // };
 
-  const getLeaveLossByLocation = async (selectedFyIdToGetLocation, selectedLocationToGetLs) => {
-    
+  const getLeaveLossByLocation = async (
+    selectedFyIdToGetLocation,
+    selectedLocationToGetLs
+  ) => {
     try {
       const response = await axios.get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${selectedFyIdToGetLocation}/${selectedLocationToGetLs}`
@@ -157,20 +158,19 @@ const RevenueResourceAccordian = (props) => {
       throw error;
     }
   };
-  
+
   useEffect(() => {
     if (selectedLocationToGetLs) {
       getLeaveLossByLocation(selectedFyIdToGetLocation, selectedLocationToGetLs)
-        .then(data => {
+        .then((data) => {
           console.log("Data:", data.data);
           setLeaveLossData(data.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching data:", error);
         });
     }
   }, [selectedLocationToGetLs, selectedFyIdToGetLocation]);
-  
 
   useEffect(() => {
     if (selectedSbuId) {
@@ -184,6 +184,24 @@ const RevenueResourceAccordian = (props) => {
     }
   }, [selectedSbuId]);
 
+  useEffect(() => {
+    console.log("sbuHeadData ->", sbuHeadData);
+    const dataArr = [...resourceData];
+    const data = dataArr[id];
+    data["sbuHeadId"] =
+      sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadId;
+    data["sbuHeadName"] =
+      sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadName;
+    data["businessUnitId"] =
+      sbuHeadData?.data?.length > 0 &&
+      sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit?.businessUnitId;
+    data["businessUnitName"] =
+      sbuHeadData?.data?.length > 0 &&
+      sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+        ?.businessUnitName;
+    dataArr[id] = data;
+    updateMethod(dataArr);
+  }, [sbuHeadData]);
 
   // useEffect(() => {
   //   if (selectedLocationToGetLs) {
@@ -229,7 +247,7 @@ const RevenueResourceAccordian = (props) => {
         </AccordionItemHeading>
         <AccordionItemPanel>
           <br></br>
-          <table style={{backgroundColor:"white"}}>
+          <table style={{ backgroundColor: "white" }}>
             <tr>
               <td
                 style={{
@@ -376,30 +394,6 @@ const RevenueResourceAccordian = (props) => {
                   }
                   // placeholder="Resource Name"
                 ></input>
-
-{/* <select
-                  id="milestoneselect"
-                  required
-                  onChange={(e) => {
-                    updateResourceDetails({
-                      event: e,
-                      resourseDetailsColumn: "sbuHeadName",
-                      selectedID: "sbuHeadId",
-                      attrKey: "data-sbuHeadId",
-                    });
-                  }}
-                >
-                  <option value="" disabled selected hidden>
-                    SBU Head
-                  </option>
-                  {props.sbuHeadData.sbuHeadData &&
-                    props.sbuHeadData.sbuHeadData.map((obj, id) => (
-                      <option data-sbuHeadId={obj.sbuHeadId}>
-                        {obj.sbuHeadName}
-                      </option>
-                    ))}
-                </select> */}
-
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 {/* <select
@@ -449,7 +443,7 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   onChange={(e) => {
-                    const newLocationId = e.target.value
+                    const newLocationId = e.target.value;
 
                     // const newLocationId = e.target.options[e.target.selectedIndex].getAttribute('data-locationId');
                     setSelectedLocationToGetLs(newLocationId);
@@ -528,7 +522,7 @@ const RevenueResourceAccordian = (props) => {
             </tr>
             <br></br>
           </table>
-          <table style={{ marginLeft: "110px", backgroundColor:"white" }}>
+          <table style={{ marginLeft: "110px", backgroundColor: "white" }}>
             <tr>
               <td
                 style={{
@@ -724,7 +718,7 @@ const RevenueResourceAccordian = (props) => {
   );
 };
 const mapStateToProps = (state) => {
-  console.log("this is the state", state);
+  // console.log("this is the state", state);
 
   return {
     sbuData: state.sbuData,

@@ -40,8 +40,7 @@ import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { Accordion } from "react-accessible-accordion";
 
 const ResourceEntryForm = (props) => {
-
-  
+  console.log("propsIn Revenuform", props);
   useEffect(() => {
     props.getProbabilityData();
     props.getRegionData();
@@ -79,6 +78,8 @@ const ResourceEntryForm = (props) => {
     pricingType: pricingType,
   });
   const [isDisabled, setIsDisabled] = useState(false);
+
+  console.log("resourceData", resourceData);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -138,71 +139,14 @@ const ResourceEntryForm = (props) => {
       });
   };
 
-  const payload = {
-    account: {
-      accountId: formData.account.accountId,
-    },
-    opportunity: {
-      opportunityId: formData.opportunity.opportunityID,
-      opportunityName: formData.opportunity.opportunityName,
-    },
-    projectCode: formData.opportunity.projectCode,
-    projectStartDate: formData.opportunity.projectStartDate,
-    projectEndDate: formData.opportunity.projectEndDate,
+  console.log("resourceData", resourceData);
 
-    businessDevelopmentManager: {
-      bdmId: formData.bdm.bdmID,
-    },
-    currency: {
-      currencyId: formData.currency.currencyID,
-    },
-    probabilityType: {
-      probabilityTypeId: formData.probability.probabilityID,
-    },
-    region: {
-      regionId: formData.region.regionID,
-    },
-    workOrder: {
-      workOrderId: formData.workOrder.workOrderID 
-    },
-    workOrderEndDate: formData.workOrder.workOrderEndDate,
-    workOrderStatus: formData.workOrder.workOrderStatus,
-
-    financialYear: {
-      financialYearId: formData.financialYear.financialYearId,
-    },
-    resourceCount: resourceData.length,
-    pricingType: pricingType,
-    remarks: "TM Details adding",
-    status: "Submitted",
-    revenueResourceEntries: resourceData.map((ele) => ({
-      strategicBusinessUnit: {
-        sbuId: ele.sbuId,
-      },
-      strategicBusinessUnitHead: {
-        sbuHeadId: ele.sbuHeadId,
-      },
-      businessUnit: {
-        businessUnitId: ele.buisnessUnitId,
-      },
-      businessType: {
-        businessTypeId: ele.businessTypeId,
-      },
-      location: {
-        locationId: ele.locationId,
-      },
-      resourceName: ele.resouceName,
-      employeeId: ele.employeeId,
-      resourceStartDate: ele.startDate,
-      resourceEndDate: ele.endDate,
-      cocPractice: {
-        cocPracticeId: ele.cocPracticeId,
-      },
-      leaveLossFactor: ele.leaveLossFactor,
-      billingRateType: ele.billingRateType,
-      billingRate: ele.billingRate,
-      allocation: ele.allocation,
-    })),
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   const saveTandMentry = () => {
@@ -252,7 +196,7 @@ const ResourceEntryForm = (props) => {
           sbuHeadId: ele.sbuHeadId,
         },
         businessUnit: {
-          businessUnitId: ele.buisnessUnitId,
+          businessUnitId: ele.businessUnitId,
         },
         businessType: {
           businessTypeId: ele.businessTypeId,
@@ -262,8 +206,8 @@ const ResourceEntryForm = (props) => {
         },
         resourceName: ele.resouceName,
         employeeId: ele.employeeId,
-        resourceStartDate: ele.startDate,
-        resourceEndDate: ele.endDate,
+        resourceStartDate: formatDate(ele.startDate),
+        resourceEndDate: formatDate(ele.endDate),
         cocPractice: {
           cocPracticeId: ele.cocPracticeId,
         },
@@ -273,7 +217,6 @@ const ResourceEntryForm = (props) => {
         allocation: ele.allocation,
       })),
     };
-    console.log("After -->", payload);
     axios
       .post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
@@ -289,16 +232,7 @@ const ResourceEntryForm = (props) => {
       });
   };
 
-  const resetData = () => {
-    // setIsOpen(false);
-    // getAllRegionData();
-    // setOpportunityId(null);
-    // setOpportunityName(null);
-    // setProjectCode(null);
-    // setAccountName(null);
-    // setProjectStartDate(null);
-    // setProjectEndDate(null)
-  };
+
 
   const handleNextClick = () => {
     if (
@@ -327,7 +261,8 @@ const ResourceEntryForm = (props) => {
     generateGrid(event.target.value);
   };
 
-  const updateResourceData = (data, index) => {
+  const updateCallback = (data, index) => {
+    console.log("Inside Updater Method -->", data);
     setResourceData(data);
   };
 
@@ -354,11 +289,10 @@ const ResourceEntryForm = (props) => {
           <RevenueResourceAccordian
             id={i}
             formData={props.tabIndex.formData}
-            // updateResourceData={updateResourceData}
-            myFormData={formData} 
+            myFormData={formData}
             pricingType={pricingType}
             resourceData={tempResourceDetails}
-            updateResourceData={setResourceData}
+            updateMethod={updateCallback}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
           />
         );
@@ -403,7 +337,7 @@ const ResourceEntryForm = (props) => {
     }
   };
 
-  const selectedFyIdToGetLocation = formData.financialYear.financialYearName
+  const selectedFyIdToGetLocation = formData.financialYear.financialYearName;
 
   const getWorkOrderValue = () => {
     const iterable =
