@@ -302,6 +302,9 @@ function TrForRevenue(props) {
   //     return newValue;
   //   });
   // };
+  const updateResourceData = (data, index) => {
+    setResourceData(data);
+  };
 
   const generateGrid = (value) => {
     console.log("inputNumber", inputNumber)
@@ -403,7 +406,7 @@ function TrForRevenue(props) {
         });
     };
     const opportunityNameByOppId = oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || "";
-    // console.log("oppId2--->", oppDataByOppId.tmRevenueEntryVO);
+    // console.log("oppId2--->", oppDataByOppId);
 
     // const initialAccountIdPassingToForm= oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName
 
@@ -435,7 +438,7 @@ function TrForRevenue(props) {
 
   console.log("oppId3--->", formUpdateData);
 
-  const formatDate = (dateString) => {
+  const formatDateA = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
     const month = date.toLocaleString("default", { month: "short" });
@@ -499,8 +502,8 @@ function TrForRevenue(props) {
       },
       resourceName: ele.resouceName,
       employeeId: ele.employeeId,
-      resourceStartDate: formatDate(ele.startDate),
-      resourceEndDate: formatDate(ele.endDate),
+      resourceStartDate: formatDateA(ele.startDate),
+      resourceEndDate: formatDateA(ele.endDate),
       cocPractice: {
         cocPracticeId: ele.cocPracticeId,
       },
@@ -543,10 +546,6 @@ function TrForRevenue(props) {
     const initialWorkOrderId = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderId;
     const initialWorkOrderEndDate = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderEndDate;
     const initialWorkOrderStatus = oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus;
-
-
-
-
 
     console.log("initialBdm",initialBdm);
 
@@ -711,19 +710,19 @@ function TrForRevenue(props) {
             )}
           </span>
         </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
+        {/* <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
             {props.data.cocPractice || "Unknown"}
           </span>
-        </td>
+        </td> */}
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-            {props.data.noOfResources || "Unknown"}
+            {props.data.noOfResources || "0"}
           </span>
         </td>
         <td className="rowtable" style={{ padding: "1px" }}>
           <span style={{ fontSize: "14px" }}>
-            {props.data.leaveLossFactor || "Unknown"}
+            {props.data.leaveLossFactor || ""}
           </span>
         </td>
         <td className="rowtable" style={{ border: "none" }}>
@@ -867,45 +866,51 @@ function TrForRevenue(props) {
 
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {moment(obj.resourceStartDate, "YYYY-MM-DD").format(
-                            "DD/MMM/YYYY"
-                          )}
+                        {obj.resourceStartDate
+    ? moment(obj.resourceEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
+    : ""}
                         </span>
                       </td>
 
                       <td className="rowtable">
+                        <span>
+                        {obj.resourceEndDate
+    ? moment(obj.resourceEndDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
+    : ""}
+                          </span>
+                        
+                      </td>
+                      <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {moment(obj.resourceEndDate, "YYYY-MM-DD").format(
-                            "DD/MMM/YYYY"
-                          )}
+                          {obj.workOrderNumber || ""}
                         </span>
                       </td>
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.workOrderNumber || "Unknown"}
+                          {obj.employeeId || ""}
                         </span>
                       </td>
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.employeeId || "Unknown"}
+                          {obj.resourceName || ""}
                         </span>
                       </td>
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.resourceName || "Unknown"}
+                          {obj.cocPractice || ""}
                         </span>
                       </td>
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.billingRate || "Unknown"}
+                          {obj.billingRate || ""}
                         </span>
                       </td>
                       <td className="rowtable">
-                        <span>{obj.allocation || "Unknown"}</span>
+                        <span>{obj.allocation || ""}</span>
                       </td>
                       <td className="rowtable">
                         <span style={{ fontSize: "14px" }}>
-                          {obj.leaveLossFactor || "Unknown"}
+                          {obj.leaveLossFactor || ""}
                         </span>
                       </td>
                       <td className="rowtable" style={{ border: "none" }}>
