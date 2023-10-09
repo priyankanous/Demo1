@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
+/* esliresourceDatant-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as AiIcons from "react-icons/ai";
@@ -286,8 +286,37 @@ function TrForRevenue(props) {
 
   //2nd level edit 
   const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
-  const [inputNumber, setInputNumber] = useState("");
+  const [oppId, setOppId] = useState();
+  const [oppDataByOppId, setOppDataByOppId] = useState([]);
+  // console.log(
+  //   "oppDataByOppId",
+  //   oppDataByOppId.tmRevenueEntryVO &&
+  //     oppDataByOppId.tmRevenueEntryVO.revenueResourceEntries[0].revenueResourceEntryId
+  // );
 
+  const getDataByOppId = (oppId) => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/getbyid/${oppId}`
+      )
+      .then((responseData) => {
+        setOppDataByOppId(responseData.data.data);
+      });
+  };
+
+
+    // useEffect(()=>{
+    //   getDataByOppId();
+    // },[]);
+
+    useEffect(() => {
+      if (oppId) {
+        getDataByOppId(oppId);
+      }
+    }, [oppId]);
+  const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
+
+  const [inputNumber, setInputNumber] = useState(initialResourceCount);
 
 
   const handleInputChange = (event) => {
@@ -331,7 +360,12 @@ function TrForRevenue(props) {
             oppId={oppId}
             oppDataByOppId={oppDataByOppId}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            setInputNumber = {setInputNumber}
+            inputNumber = {inputNumber}
+            initialResourceCount = {initialResourceCount}
+            generateGrid = {generateGrid}
           />
+
           // <TextField />
         );
       }
@@ -362,34 +396,7 @@ function TrForRevenue(props) {
     });
   };
 
-  const [oppId, setOppId] = useState();
-  const [oppDataByOppId, setOppDataByOppId] = useState([]);
-  console.log(
-    "oppId",
-    oppDataByOppId.tmRevenueEntryVO &&
-      oppDataByOppId.tmRevenueEntryVO.opportunity.opportunityName
-  );
 
-  const getDataByOppId = (oppId) => {
-    axios
-      .get(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/getbyid/${oppId}`
-      )
-      .then((responseData) => {
-        setOppDataByOppId(responseData.data.data);
-      });
-  };
-
-
-    // useEffect(()=>{
-    //   getDataByOppId();
-    // },[]);
-
-    useEffect(() => {
-      if (oppId) {
-        getDataByOppId(oppId);
-      }
-    }, [oppId]);
 
 
     const array = [];
@@ -639,13 +646,13 @@ function TrForRevenue(props) {
       }));
     }
 
-    const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
+    // const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
     if (initialResourceCount !== undefined && initialResourceCount !== null) {
       setInputNumber(initialResourceCount);
       generateGrid(initialResourceCount);
     }
 
-
+console.log("initialCOunt", initialResourceCount)
 
   }, [oppDataByOppId]);
   return (
