@@ -550,6 +550,7 @@ function TrForRevenue(props) {
       .then((response) => {
         const actualDataObject = response.data.data;
         setIsOpenSecondLevelEdit(false);
+        setIsOpenThirdLevelEdit(false);
         console.log("editSave", actualDataObject);
       });
   };
@@ -2880,6 +2881,40 @@ console.log("initialCOunt", initialResourceCount)
                     <input style={{ width: "730px", borderRadius: "0px" }} />
                   </div>
                 </div>
+                <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "20px",
+                width:"100%",
+              }}
+            >
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={OnSubmit}
+              >
+                Save
+              </ModalControlButton>
+              <ModalControlButton
+                type="button"
+                variant="contained"
+                onClick={() => {
+                  // props.setGridItems([]);
+                  setIsOpenThirdLevelEdit(false);
+                  // props.setTabIndex({
+                  //   index: 0,
+                  //   formData: "",
+                  // });
+                }}
+                value="Cancel"
+                id="create-account"
+              >
+                Cancel
+              </ModalControlButton>
+            </div>
               </div>
             </form>
           </ModalDetailSection>
