@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* esliresourceDatant-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -220,7 +221,6 @@ function TrForRevenue(props) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [pricingType, setPricingType] = useState("T&M");
-  // const [inputNumber, setInputNumber] = useState("");
   const [resourceData, setResourceData] = useState([]);
   const [gridItems, setGridItems] = useState([]);
 
@@ -286,6 +286,8 @@ function TrForRevenue(props) {
 
   //2nd level edit 
   const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
+  const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);
+
   const [oppId, setOppId] = useState();
   const [oppDataByOppId, setOppDataByOppId] = useState([]);
   // console.log(
@@ -336,14 +338,30 @@ function TrForRevenue(props) {
   };
 
   const generateGrid = (value) => {
-    console.log("inputNumber", inputNumber)
+    console.log("inputNumber", inputNumber, value)
     const items = [];
-    const iterator = value ? value : inputNumber;
+    // const iterator = value ? value : inputNumber;
+    const iterator = value;
     if (pricingType == "T&M") {
+      console.log("oppDataByOppId-->", oppDataByOppId);
       const tempResourceDetails = [];
       for (let i = 0; i < iterator; i++) {
         const resourceDataRow = {
           index: i,
+          sbuId: oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.strategicBusinessUnit?.sbuId,
+          sbuHeadId:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.strategicBusinessUnitHead?.sbuHeadId,
+          buisnessUnitId:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.businessUnit?.businessUnitId,
+          locationId:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.location?.locationId,
+          resouceName:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.resourceName,
+          employeeId:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.employeeId,
+          startDate:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.resourceStartDate,
+          endDate:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.resourceStartDate,
+          businessTypeId: oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.businessType.businessTypeId,
+          cocPracticeId:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.cocPractice.cocPracticeId,
+          billingRateType: oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.billingRateType,
+          billingRate: oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.billingRate,
+          leaveLossFactor:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.leaveLossFactor,
+          allocation:oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]?.allocation,
         };
         tempResourceDetails.push(resourceDataRow);
       }
@@ -364,6 +382,7 @@ function TrForRevenue(props) {
             inputNumber = {inputNumber}
             initialResourceCount = {initialResourceCount}
             generateGrid = {generateGrid}
+            getDataByOppId = {getDataByOppId}
           />
 
           // <TextField />
@@ -491,7 +510,8 @@ function TrForRevenue(props) {
     pricingType: pricingType,
     remarks: "TM Details adding",
     status: "Submitted",
-    revenueResourceEntries: resourceData.map((ele) => ({
+    revenueResourceEntries: resourceData.map((ele,index) => ({
+      revenueResourceEntryId : oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]?.revenueResourceEntryId,
       strategicBusinessUnit: {
         sbuId: ele.sbuId,
       },
@@ -649,12 +669,16 @@ function TrForRevenue(props) {
     // const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
     if (initialResourceCount !== undefined && initialResourceCount !== null) {
       setInputNumber(initialResourceCount);
+      console.log("line 654");
       generateGrid(initialResourceCount);
     }
 
 console.log("initialCOunt", initialResourceCount)
 
   }, [oppDataByOppId]);
+
+  //3rd level Edit
+
   return (
     <React.Fragment>
       <tr
@@ -930,6 +954,9 @@ console.log("initialCOunt", initialResourceCount)
                               toggleResourceDropdown(id);
                               handleResourceEmployeeID(obj.employeeId);
                               handleResourceStartDate(obj.resourceStartDate);
+                setOppId(props.data.opportunityId);
+                console.log("oppID when clicked", oppId);
+
                             }}
                           ></AiIcons.AiOutlineMore>
                                                       {resourceDropdownStates[id] && (
@@ -968,7 +995,7 @@ console.log("initialCOunt", initialResourceCount)
                                 <a
                                   style={{ padding: "5px", margin: "3px 0px" }}
                                   onClick={() => {
-                                    setIsOpen(true);
+                                    setIsOpenThirdLevelEdit(true);
                                   }}
                                 >
                                   <EditOutlinedIcon
@@ -1320,7 +1347,7 @@ console.log("initialCOunt", initialResourceCount)
             <ModalHeadingText
               style={{ fontStyle: "normal", fontWeight: "200" }}
             >
-              Edit
+              Edit Entry
             </ModalHeadingText>
             <CloseIcon
               onClick={() => {
@@ -2556,6 +2583,310 @@ console.log("initialCOunt", initialResourceCount)
           </ModalDetailSection>
         </Box>
       </Modal>
+
+
+      <Modal open={isOpenThirdLevelEdit} onClose={handleModalClose}>
+        <Box
+          sx={MoadalStyle}
+          style={{
+            width: "80%",
+            height: "max-content",
+            borderRadius: "0px",
+          }}
+        >
+          <ModalHeadingSection
+            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+          >
+            <ModalHeadingText
+              style={{ fontStyle: "normal", fontWeight: "200" }}
+            >
+              Edit Resource
+            </ModalHeadingText>
+            <CloseIcon
+              onClick={() => {
+                setIsOpenThirdLevelEdit(false);
+              }}
+              style={{ cursor: "pointer" }}
+            />
+          </ModalHeadingSection>
+          <ModalDetailSection style={{ borderRadius: "0px" }}>
+            <form
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "30px",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexBasis: "100%",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div style={{ display: "flex" }}>
+                    <div>
+                      <label for="username">Pricing Type</label>
+                      <input
+                        type="radio"
+                        value="T&M"
+                        name="Pricing Type"
+                        checked={pricingType === "T&M"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      T & M
+                      <input
+                        type="radio"
+                        value="FP"
+                        name="Pricing Type"
+                        checked={pricingType === "FP"}
+                        onChange={onOptionChange}
+                        style={{ boxShadow: "none" }}
+                      />
+                      FP
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span>FY :</span>
+                      <div>
+                        <FormControl>
+                          <select
+                            style={{
+                              background: "white",
+                              width: "150px",
+                              marginLeft: "8px",
+                              variant: "outlined",
+                              borderRadius: "0px",
+                              height: "35px",
+                            }}
+                            onChange={(e) => {
+                              getAllCurrencyForFy(e.target.value);
+                              const selectedFyId =
+                                e.target.selectedOptions[0].getAttribute("data-fyId");
+                                setFormUpdateData({
+                                ...formUpdateData,
+                                financialYear: {
+                                  ...formUpdateData.financialYear,
+                                  financialYearId: selectedFyId,
+                                  financialYearName: e.target.value,
+                                },
+                              });
+                            }}
+                          >
+                            <option value="" disabled hidden>
+                            {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.financialYear.financialYearName}
+                            </option>
+
+                            {props?.financialYear?.financialYear.map(
+                              (fyData, index) => {
+                                const fyNameData = fyData?.financialYearName;
+                          const fyId = fyData.financialYearId;
+                                return (
+                                  <option
+                                    // data-fyId={fyData?.financialYearId}
+                              data-fyId={fyId}
+
+                                    key={index}
+                                    // selected={fyNameData === "2023-2024"}
+                                  >
+                                    {fyNameData}
+                                  </option>
+                                );
+                              }
+                            )}
+                          </select>
+                        </FormControl>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                {pricingType == "T&M" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Resource count:
+                      </span>
+                      {/* <div>
+                    <label
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <input
+                        type="number"
+                        value={inputNumber}
+                        onChange={handleInputChange}
+                      />
+                      <input
+                        style={{
+                          margin: "0px 0px 0px 8px",
+                        }}
+                        type="button"
+                        value="Add"
+                        id="create-account"
+                        class="button"
+                        onClick={generateGrid}
+                      />
+                    </label>
+                  </div> */}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="number"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        onChange={handleInputChange}
+                        value={inputNumber}
+                      />
+                    </div>
+                  </div>
+                )}
+                {pricingType == "FP" && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginRight: "25px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        columnGap: "10px",
+                      }}
+                    >
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ marginLeft: "-9px" }}>
+                        Milestone count:
+                      </span>
+                      {/* <div>
+                  <label
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      value={inputNumber}
+                      onChange={handleInputChange}
+                    />
+                    <input
+                      style={{
+                        margin: "0px 0px 0px 8px",
+                      }}
+                      type="button"
+                      value="Add"
+                      id="create-account"
+                      class="button"
+                      onClick={generateGrid}
+                    />
+                  </label>
+                </div> */}
+                      <InputField
+                        style={{
+                          background: "white",
+                          width: "75Px",
+                          marginLeft: "8px",
+                          borderRadius: "0px !important",
+                          height: "35px",
+                        }}
+                        size="small"
+                        type="text"
+                        id="name"
+                        variant="outlined"
+                        spellcheck="false"
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     opportunity: {
+                        //       ...formData.opportunity,
+                        //       projectCode: e.target.value,
+                        //     },
+                        //   });
+                        // }}
+                        // value={formData?.opportunity?.projectCode}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  marginLeft: "0px",
+                }}
+              >
+                <Accordion id="accordian">{gridItems}</Accordion>
+              </div>
+              <div
+                style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
+              >
+                <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
+                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                    <div style={{ width: "75px" }}>
+                      <span>Remarks :</span>
+                    </div>
+                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </ModalDetailSection>
+        </Box>
+      </Modal>
+
+
     </React.Fragment>
   );
 }
