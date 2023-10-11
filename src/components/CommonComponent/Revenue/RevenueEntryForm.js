@@ -138,6 +138,14 @@ const ResourceEntryForm = (props) => {
       });
   };
 
+  const formatDateFirstEntry = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const payload = {
     account: {
       accountId: formData.account.accountId,
@@ -193,8 +201,8 @@ const ResourceEntryForm = (props) => {
       },
       resourceName: ele.resouceName,
       employeeId: ele.employeeId,
-      resourceStartDate: ele.startDate,
-      resourceEndDate: ele.endDate,
+      resourceStartDate: formatDateFirstEntry(ele.startDate),
+      resourceEndDate: formatDateFirstEntry(ele.endDate),
       cocPractice: {
         cocPracticeId: ele.cocPracticeId,
       },
@@ -262,8 +270,8 @@ const ResourceEntryForm = (props) => {
         },
         resourceName: ele.resouceName,
         employeeId: ele.employeeId,
-        resourceStartDate: ele.startDate,
-        resourceEndDate: ele.endDate,
+        resourceStartDate: formatDateFirstEntry(ele.startDate),
+        resourceEndDate: formatDateFirstEntry(ele.endDate),
         cocPractice: {
           cocPracticeId: ele.cocPracticeId,
         },

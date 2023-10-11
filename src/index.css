@@ -13,3 +13,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+#milestoneinput::placeholder {
+  color: black;
+}
+
+#milestoneselect::placeholder {
+  color: black;
+}
+
+#resourceinput::placeholder {
+  color: black;
+}
