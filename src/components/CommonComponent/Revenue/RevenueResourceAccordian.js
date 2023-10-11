@@ -19,10 +19,8 @@ import { apiV1 } from "../../../utils/constantsValue";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SnackBar from "../../CommonComponent/SnackBar";
 
-
-
 const RevenueResourceAccordian = (props) => {
-  const { selectedFyIdToGetLocation, formData, pricingType, inputNumber, initialResourceCount,setInputNumber, generateGrid } = props;
+  const { selectedFyIdToGetLocation, formData, pricingType, inputNumber, initialResourceCount,setInputNumber, generateGrid , getDataByOppId, oppId} = props;
 
   console.log("selectedFyId changed added in acc->", initialResourceCount );
   console.log("inputNumber->", inputNumber );
@@ -62,6 +60,7 @@ const RevenueResourceAccordian = (props) => {
 
   const updateResourceDetails = async (params) => {
     const dataArr = [...resourceData];
+    console.log("dataArr in updateResourceDetails: ", dataArr);
     const data = dataArr[id];
     // console.log("update Data Obj at", id, data, dataArr);
     data[params?.resourseDetailsColumn] = params?.event?.target?.value;
@@ -95,6 +94,7 @@ const RevenueResourceAccordian = (props) => {
         params?.event?.target?.value
       );
     }
+    console.log("data in component:", data)
     dataArr[id] = data;
     // console.log(dataArr, "After update", updateResourceData);
     updateResourceData(dataArr);
@@ -206,20 +206,20 @@ const RevenueResourceAccordian = (props) => {
   const [snackMessage, setSnackMessage] = useState("");
 
   const handleDeleteRevenueResourceEntries = (revenueResourceEntryId) => {
-    console.log("Deleting entry with ID:", revenueResourceEntryId);
-    setInputNumber(initialResourceCount-1);
-    generateGrid(initialResourceCount-1);
-
+    console.log("Deleting entry with ID:", initialResourceCount);
     axios
     .delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/revenueresource/${revenueResourceEntryId}`)
     .then((response) => {
       console.log("Entry deleted successfully");
       setShowSnackbar(true);
       setSnackMessage("Record has been deleted");
+      getDataByOppId(oppId);
+
     })
     .catch((error) => {
       console.error("Error deleting entry:", error);
     });
+
   };
 
   return (
@@ -339,7 +339,7 @@ const RevenueResourceAccordian = (props) => {
 
             <tr className="trmilestone" style={{ background: "white" }}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
-                <select
+              <select
                   id="milestoneselect"
                   required
                   value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuName}           
@@ -350,8 +350,7 @@ const RevenueResourceAccordian = (props) => {
                       selectedID: "sbuId",
                       attrKeySbu: "data-sbuId",
                     });
-                  }}
-                  
+                  }}   
                 >
                   <option value="" disabled selected hidden>
                     {/* Select SBU */}
@@ -364,7 +363,7 @@ const RevenueResourceAccordian = (props) => {
                 </select>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                <input
+                {/* <input
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -380,12 +379,12 @@ const RevenueResourceAccordian = (props) => {
                   value={
                     sbuHeadData &&
                     sbuHeadData.data &&
-                    sbuHeadData.data[0].sbuHeadName
+                    sbuHeadData.data[id].sbuHeadName
                   }
                   // placeholder="Resource Name"
-                ></input>
+                ></input> */}
 
-{/* <select
+            <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -396,9 +395,10 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-sbuHeadId",
                     });
                   }}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName}
                 >
                   <option value="" disabled selected hidden>
-                    SBU Head
+                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName}
                   </option>
                   {props.sbuHeadData.sbuHeadData &&
                     props.sbuHeadData.sbuHeadData.map((obj, id) => (
@@ -406,11 +406,11 @@ const RevenueResourceAccordian = (props) => {
                         {obj.sbuHeadName}
                       </option>
                     ))}
-                </select> */}
+                </select>
 
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                {/* <select
+                <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -423,6 +423,8 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
+                  {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName}
+
                   </option>
                   {props.buData.buData &&
                     props.buData.buData.map((obj, id) => (
@@ -430,8 +432,8 @@ const RevenueResourceAccordian = (props) => {
                         {obj.businessUnitName}
                       </option>
                     ))}
-                </select> */}
-                <input
+                </select>
+                {/* <input
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -450,19 +452,19 @@ const RevenueResourceAccordian = (props) => {
                     sbuHeadData.data[0].strategicBusinessUnit.businessUnit
                       .businessUnitName
                   }
-                ></input>
+                ></input> */}
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <select
                   id="milestoneselect"
                   required
-                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
 
                   onChange={(e) => {
-                    const newLocationId = e.target.value
+                    // const newLocationId = e.target.value
 
                     // const newLocationId = e.target.options[e.target.selectedIndex].getAttribute('data-locationId');
-                    setSelectedLocationToGetLs(newLocationId);
+                    // setSelectedLocationToGetLs(newLocationId);
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "locationName",
@@ -472,7 +474,8 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {/* Select Location */}
+                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
+
                   </option>
                   {props.locationData.locationData &&
                     props.locationData.locationData.map((obj, id) => (
@@ -486,8 +489,9 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="milestoneinput"
                   type="text"
+                  
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
-                  // placeholder="Resource Name"
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -500,7 +504,7 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="milestoneinput"
                   type="string"
-                  // placeholder="Employee ID"
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.employeeId}
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.employeeId}
 
                   onChange={(e) => {
@@ -516,6 +520,8 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   type="date"
                   required
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
+
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
 
                   onChange={(e) => {
@@ -531,6 +537,8 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   type="date"
                   required
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate}
+
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate}
                   onChange={(e) => {
                     updateResourceDetails({
@@ -612,10 +620,10 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   // placeholder="BusinessType"
-                  value={{
-                    value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeId,
-                    label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeName,
-                  }}
+                  // value={{
+                  //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeId,
+                  //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeName,
+                  // }}
 
                   onChange={(e) => {
                     updateResourceDetails({
@@ -627,7 +635,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {/* Select BusinessType */}
+                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeDisplayName}
                   </option>
                   {props.businessTypeData.businessTypeData &&
                     props.businessTypeData.businessTypeData.map((obj, id) => (
@@ -642,10 +650,10 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   required
                   // placeholder="BusinessType"
-                  value={{
-                    value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeId,
-                    label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeName,
-                  }}
+                  // value={{
+                  //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeId,
+                  //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeName,
+                  // }}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -656,7 +664,7 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {/* Select CoC Practice */}
+                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeDisplayName}
                   </option>
                   {props.cocPracticeData.cocPracticeData &&
                     props.cocPracticeData.cocPracticeData.map((obj, id) => (
@@ -676,13 +684,13 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "billingRateType",
                     });
                   }}
-                  value={{
-                    value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
-                    label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
-                  }}
+                  // value={{
+                  //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
+                  //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
+                  // }}
                 >
                   <option value="" disabled selected hidden>
-                    {/* Select Billing Rate Type */}
+                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType}
                   </option>
                   <option>Hourly</option>
                   <option>Daily</option>
@@ -695,8 +703,8 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  // placeholder="Billing Rate"
-                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRate}
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRate}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRate}
 
                   onChange={(e) => {
                     updateResourceDetails({
@@ -714,10 +722,8 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="resourceinput"
                   type="number"
-                  // placeholder="Leave Loss Factor"
-                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}
-
-                  
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}               
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -731,9 +737,8 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  // placeholder="Allocation %"
-                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.allocation}
-
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.allocation}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.allocation}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -759,7 +764,7 @@ const RevenueResourceAccordian = (props) => {
         open={showSnackbar}
         message={snackMessage}
         onClose={() => setShowSnackbar(false)}
-        autoHideDuration={10000}
+        autoHideDuration={1000}
       />
     </React.Fragment>
   );
