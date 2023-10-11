@@ -148,6 +148,14 @@ const RevenueResourceAccordian = (props) => {
   //   }
   // };
 
+  const formatDateB = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const getLeaveLossByLocation = async (selectedFyIdToGetLocation, selectedLocationToGetLs) => {
     
     try {
@@ -186,6 +194,24 @@ const RevenueResourceAccordian = (props) => {
         });
     }
   }, [selectedSbuId]);
+
+  // useEffect(() => {
+  //   console.log("sbuHeadData ->", sbuHeadData);
+  //   const dataArr = [...resourceData];
+  //   const data = dataArr[id];
+  //   data["sbuHeadId"] =
+  //     sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadId;
+  //   data["sbuHeadName"] =
+  //     sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadName;
+  //   data["businessUnitId"] =
+  //     sbuHeadData?.data?.length > 0 &&
+  //     sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit?.businessUnitId;
+  //   data["businessUnitName"] =
+  //     sbuHeadData?.data?.length > 0 &&
+  //     sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+  //       ?.businessUnitName;
+  //   dataArr[id] = data;
+  // }, [sbuHeadData]);
 
 
   // useEffect(() => {
@@ -366,6 +392,8 @@ const RevenueResourceAccordian = (props) => {
                 {/* <input
                   id="milestoneselect"
                   required
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName}
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadIdsbuHeadIdsbuHeadId}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e.target.value,
@@ -381,7 +409,7 @@ const RevenueResourceAccordian = (props) => {
                     sbuHeadData.data &&
                     sbuHeadData.data[id].sbuHeadName
                   }
-                  // placeholder="Resource Name"
+                  disabled
                 ></input> */}
 
             <select
@@ -436,6 +464,7 @@ const RevenueResourceAccordian = (props) => {
                 {/* <input
                   id="milestoneselect"
                   required
+                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -452,6 +481,7 @@ const RevenueResourceAccordian = (props) => {
                     sbuHeadData.data[0].strategicBusinessUnit.businessUnit
                       .businessUnitName
                   }
+                  disabled
                 ></input> */}
               </td>
               <td style={{ borderRight: "solid 1px" }}>

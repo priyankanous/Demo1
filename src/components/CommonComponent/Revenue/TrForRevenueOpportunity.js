@@ -510,6 +510,7 @@ function TrForRevenue(props) {
     pricingType: pricingType,
     remarks: "TM Details adding",
     status: "Submitted",
+    tmRevenueEntryId: oppDataByOppId?.tmRevenueEntryVO?.tmRevenueEntryId,
     revenueResourceEntries: resourceData.map((ele,index) => ({
       revenueResourceEntryId : oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]?.revenueResourceEntryId,
       strategicBusinessUnit: {
