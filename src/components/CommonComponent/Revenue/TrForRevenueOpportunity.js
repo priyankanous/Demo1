@@ -679,6 +679,135 @@ console.log("initialCOunt", initialResourceCount)
 
   }, [oppDataByOppId]);
 
+  //3rd level add
+
+  const [expandedOppId, setExpandedOppId] = useState("");
+  const [expandedOppData, setExpandedOppData] = useState([]);
+
+  const getDataByExpandedOppId = (expandedOppId) => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/getbyid/${expandedOppId}`
+      )
+      .then((responseData) => {
+        setExpandedOppData(responseData.data.data);
+      });
+  };
+
+  useEffect(() => {
+    if (expandedOppId) {
+      getDataByExpandedOppId(expandedOppId);
+    }
+  }, [expandedOppId]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("default", { month: "short" });
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  console.log("expandedOppData---->", expandedOppData);
+  const resourcePayload = {
+    account: {
+      accountId: expandedOppData?.tmRevenueEntryVO?.account?.accountId,
+    },
+    opportunity: {
+      opportunityId:
+        expandedOppData?.tmRevenueEntryVO?.opportunity?.opportunityId,
+      opportunityName:
+        expandedOppData?.tmRevenueEntryVO?.opportunity?.opportunityName,
+    },
+    projectCode: expandedOppData?.tmRevenueEntryVO?.opportunity?.projectCode,
+    projectStartDate:
+      expandedOppData?.tmRevenueEntryVO?.opportunity?.projectStartDate,
+    projectEndDate:
+      expandedOppData?.tmRevenueEntryVO?.opportunity?.projectEndDate,
+
+    businessDevelopmentManager: {
+      bdmId:
+        expandedOppData?.tmRevenueEntryVO?.businessDevelopmentManager?.bdmId,
+    },
+    currency: {
+      currencyId: expandedOppData?.tmRevenueEntryVO?.currency?.currencyId,
+    },
+    probabilityType: {
+      probabilityTypeId:
+        expandedOppData?.tmRevenueEntryVO?.probabilityType?.probabilityTypeId,
+    },
+    region: {
+      regionId: expandedOppData?.tmRevenueEntryVO?.region?.regionId,
+    },
+    workOrder: {
+      workOrderId: expandedOppData?.tmRevenueEntryVO?.workOrder?.workOrderId,
+    },
+    workOrderEndDate:
+      expandedOppData?.tmRevenueEntryVO?.workOrder?.workOrderEndDate,
+    workOrderStatus:
+      expandedOppData?.tmRevenueEntryVO?.workOrder?.workOrderStatus,
+
+    financialYear: {
+      financialYearId:
+        expandedOppData?.tmRevenueEntryVO?.financialYear?.financialYearId,
+    },
+    // resourceCount: resourceData.length,
+    resourceCount: inputNumber,
+    pricingType: pricingType,
+    remarks: "TM Details adding",
+    status: "Submitted",
+    revenueResourceEntries: resourceData?.map((ele) => ({
+      strategicBusinessUnit: {
+        sbuId: ele.sbuId,
+      },
+      strategicBusinessUnitHead: {
+        sbuHeadId: ele.sbuHeadId,
+      },
+      businessUnit: {
+        businessUnitId: ele.buisnessUnitId,
+      },
+      businessType: {
+        businessTypeId: ele.businessTypeId,
+      },
+      location: {
+        locationId: ele.locationId,
+      },
+      resourceName: ele.resouceName,
+      employeeId: ele.employeeId,
+      resourceStartDate: formatDate(ele.startDate),
+      resourceEndDate: formatDate(ele.endDate),
+      cocPractice: {
+        cocPracticeId: ele.cocPracticeId,
+      },
+      leaveLossFactor: ele.leaveLossFactor,
+      billingRateType: ele.billingRateType,
+      billingRate: ele.billingRate,
+      allocation: ele.allocation,
+    })),
+  };
+
+
+  const saveTandMentry = () => {
+    console.log("After -->", payload);
+    axios
+      .post(
+        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+        resourcePayload
+      )
+      .then((res) => {
+        setIsClicked(false);
+        setIsClicked(false);
+        console.log("res", res);
+      })
+      .catch((err) => {
+        setIsClicked(false);
+        setIsClicked(false);
+        console.log("err", err);
+      });
+  };
+
+
+
   //3rd level Edit
 
   return (
@@ -704,6 +833,7 @@ console.log("initialCOunt", initialResourceCount)
           onClick={(e) => {
             revenueResource(resourseEntryData);
             handleInnerRowExpansion(e.target);
+            setExpandedOppId(props.data.opportunityId);
           }}
         >
           ↓
@@ -1328,6 +1458,41 @@ console.log("initialCOunt", initialResourceCount)
                     <input style={{ width: "730px", borderRadius: "0px" }} />
                   </div>
                 </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                <ModalControlButton
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={saveTandMentry}
+                >
+                  Save
+                </ModalControlButton>
+                <ModalControlButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    // props.setGridItems([]);
+                    setIsClicked(false);
+                    // props.setTabIndex({
+                    //   index: 0,
+                    //   formData: "",
+                    // });
+                  }}
+                  value="Cancel"
+                  id="create-account"
+                >
+                  Cancel
+                </ModalControlButton>
               </div>
             </form>
           </ModalDetailSection>
