@@ -23,6 +23,8 @@ import { getBdmData } from "../../../actions/bdm";
 import { getAccountData } from "../../../actions/account";
 import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
+import { getFinancialYearData } from "../../../actions/financial-year";
+
 import Select from "react-select";
 import {
   Box,
@@ -40,8 +42,6 @@ import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { Accordion } from "react-accessible-accordion";
 
 const ResourceEntryForm = (props) => {
-
-  
   useEffect(() => {
     props.getProbabilityData();
     props.getRegionData();
@@ -56,6 +56,7 @@ const ResourceEntryForm = (props) => {
   const [inputNumber, setInputNumber] = useState("");
   const [gridItems, setGridItems] = useState([]);
   const [resourceData, setResourceData] = useState([]);
+  const [milestoneData, setMilestoneData] = useState([]);
   const [pricingType, setPricingType] = useState("T&M");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -146,72 +147,6 @@ const ResourceEntryForm = (props) => {
     return `${day}/${month}/${year}`;
   };
 
-  const payload = {
-    account: {
-      accountId: formData.account.accountId,
-    },
-    opportunity: {
-      opportunityId: formData.opportunity.opportunityID,
-      opportunityName: formData.opportunity.opportunityName,
-    },
-    projectCode: formData.opportunity.projectCode,
-    projectStartDate: formData.opportunity.projectStartDate,
-    projectEndDate: formData.opportunity.projectEndDate,
-
-    businessDevelopmentManager: {
-      bdmId: formData.bdm.bdmID,
-    },
-    currency: {
-      currencyId: formData.currency.currencyID,
-    },
-    probabilityType: {
-      probabilityTypeId: formData.probability.probabilityID,
-    },
-    region: {
-      regionId: formData.region.regionID,
-    },
-    workOrder: {
-      workOrderId: formData.workOrder.workOrderID 
-    },
-    workOrderEndDate: formData.workOrder.workOrderEndDate,
-    workOrderStatus: formData.workOrder.workOrderStatus,
-
-    financialYear: {
-      financialYearId: formData.financialYear.financialYearId,
-    },
-    resourceCount: resourceData.length,
-    pricingType: pricingType,
-    remarks: "TM Details adding",
-    status: "Submitted",
-    revenueResourceEntries: resourceData.map((ele) => ({
-      strategicBusinessUnit: {
-        sbuId: ele.sbuId,
-      },
-      strategicBusinessUnitHead: {
-        sbuHeadId: ele.sbuHeadId,
-      },
-      businessUnit: {
-        businessUnitId: ele.buisnessUnitId,
-      },
-      businessType: {
-        businessTypeId: ele.businessTypeId,
-      },
-      location: {
-        locationId: ele.locationId,
-      },
-      resourceName: ele.resouceName,
-      employeeId: ele.employeeId,
-      resourceStartDate: formatDateFirstEntry(ele.startDate),
-      resourceEndDate: formatDateFirstEntry(ele.endDate),
-      cocPractice: {
-        cocPracticeId: ele.cocPracticeId,
-      },
-      leaveLossFactor: ele.leaveLossFactor,
-      billingRateType: ele.billingRateType,
-      billingRate: ele.billingRate,
-      allocation: ele.allocation,
-    })),
-  };
 
   const saveTandMentry = () => {
     console.log("Before -->", formData);
@@ -246,7 +181,7 @@ const ResourceEntryForm = (props) => {
       workOrderStatus: formData.workOrder.workOrderStatus,
 
       financialYear: {
-        financialYearId: formData.financialYear.financialYearId,
+        financialYearId: props?.financialYear?.financialYear[0]?.financialYearId,
       },
       resourceCount: resourceData.length,
       pricingType: pricingType,
@@ -281,7 +216,6 @@ const ResourceEntryForm = (props) => {
         allocation: ele.allocation,
       })),
     };
-    console.log("After -->", payload);
     axios
       .post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
@@ -331,13 +265,18 @@ const ResourceEntryForm = (props) => {
   };
 
   const handleInputChange = (event) => {
-    setInputNumber(event.target.value);
-    generateGrid(event.target.value);
+    const inputValue = parseInt(event.target.value); 
+    if (!isNaN(inputValue) && inputValue >= 0) {
+      setInputNumber(inputValue);
+      generateGrid(inputValue);
+    }
   };
+  
 
   const updateResourceData = (data, index) => {
     setResourceData(data);
   };
+
 
   const [milestones, setMilestones] = useState([]);
 
@@ -345,9 +284,10 @@ const ResourceEntryForm = (props) => {
     // props.saveMileStones(props.milestoneDataNew);
   };
 
+
   const generateGrid = (value) => {
     const items = [];
-    const iterator = value ? value : inputNumber;
+    const iterator = value >=0 ? value : inputNumber;
     if (pricingType == "T&M") {
       const tempResourceDetails = [];
       for (let i = 0; i < iterator; i++) {
@@ -363,7 +303,7 @@ const ResourceEntryForm = (props) => {
             id={i}
             formData={props.tabIndex.formData}
             // updateResourceData={updateResourceData}
-            myFormData={formData} 
+            myFormData={formData}
             pricingType={pricingType}
             resourceData={tempResourceDetails}
             updateResourceData={setResourceData}
@@ -372,13 +312,25 @@ const ResourceEntryForm = (props) => {
         );
       }
     } else {
-      for (let i = 0; i < inputNumber; i++) {
+      const tempMilestoneDetails = [];
+      for (let i = 0; i < iterator; i++) {
+        const milestoneDataRow = {
+          index: i,
+        };
+        tempMilestoneDetails.push(milestoneDataRow);
+      }
+      setMilestoneData(tempMilestoneDetails);
+      for (let i = 0; i < iterator; i++) {
         items.push(
           <RevenueMilestoneAccordian
             id={i}
             formData={props.tabIndex.formData}
+            // updateResourceData={updateResourceData}
+            myFormData={formData}
             pricingType={pricingType}
-            updateMilestoneData={updateMilestoneData}
+            milestoneData={tempMilestoneDetails}
+            updateResourceData={setResourceData}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
           />
         );
       }
@@ -411,7 +363,7 @@ const ResourceEntryForm = (props) => {
     }
   };
 
-  const selectedFyIdToGetLocation = formData.financialYear.financialYearName
+  const selectedFyIdToGetLocation = formData.financialYear.financialYearName;
 
   const getWorkOrderValue = () => {
     const iterable =
@@ -430,7 +382,6 @@ const ResourceEntryForm = (props) => {
     );
   };
 
-  console.log(formData, "<------- Data");
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
@@ -470,7 +421,6 @@ const ResourceEntryForm = (props) => {
                   checked={pricingType === "FP"}
                   onChange={onOptionChange}
                   style={{ boxShadow: "none" }}
-                  disabled
                 />
                 FP
               </div>
@@ -490,56 +440,34 @@ const ResourceEntryForm = (props) => {
                   columnGap: "10px",
                 }}
               >
-                <span>FY :</span>
-                <div>
-                  <FormControl>
-                    <select
+                <span style={{ color: "red" }}>*</span>
+                <span style={{ marginLeft:"-9px"}}>FY :</span>
+                <div style={{ width: "180px" }}>
+                    <InputField
                       style={{
                         background: "white",
-                        width: "150px",
-                        marginLeft: "8px",
-                        variant: "outlined",
-                        borderRadius: "0px",
+                        width: "110Px",
+                        marginLeft: "3px",
+                        borderRadius: "0px !important",
                         height: "35px",
                       }}
+                      size="small"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
                       onChange={(e) => {
-                        getAllCurrencyForFy(e.target.value);
-                        const selectedFyId =
-                          e.target.selectedOptions[0].getAttribute("data-fyId");
                         setFormData({
                           ...formData,
                           financialYear: {
                             ...formData.financialYear,
-                            financialYearId: selectedFyId,
                             financialYearName: e.target.value,
                           },
                         });
                       }}
-                    >
-                      <option value="" disabled selected hidden>
-                        Select
-                      </option>
-                      {props?.financialYear?.financialYear.map(
-                        (fyData, index) => {
-                          const fyNameData = fyData?.financialYearName;
-                          const fyId = fyData.financialYearId;
-                          {
-                            console.log("check financial year", fyNameData);
-                          }
-                          return (
-                            <option
-                              data-fyId={fyId}
-                              key={index}
-                              // selected={fyNameData}
-                            >
-                              {fyNameData}
-                            </option>
-                          );
-                        }
-                      )}
-                    </select>
-                  </FormControl>
-                </div>
+                      value={props?.financialYear?.financialYear[0]?.financialYearName}
+                    />
+                  </div>
               </div>
             </div>
           </div>
@@ -1354,7 +1282,7 @@ const ResourceEntryForm = (props) => {
                     variant="outlined"
                     spellcheck="false"
                     onChange={handleInputChange}
-                    value={inputNumber}
+                    value={inputNumber >= 0 ? inputNumber : 0}
                   />
                 </div>
               </div>
@@ -1387,20 +1315,12 @@ const ResourceEntryForm = (props) => {
                       height: "35px",
                     }}
                     size="small"
-                    type="text"
+                    type="number"
                     id="name"
                     variant="outlined"
                     spellcheck="false"
-                    // onChange={(e) => {
-                    //   setFormData({
-                    //     ...formData,
-                    //     opportunity: {
-                    //       ...formData.opportunity,
-                    //       projectCode: e.target.value,
-                    //     },
-                    //   });
-                    // }}
-                    // value={formData?.opportunity?.projectCode}
+                    onChange={handleInputChange}
+                    value={inputNumber}
                   />
                 </div>
               </div>
@@ -1504,6 +1424,7 @@ const mapDispatchToProps = (dispatch) => {
     getAccountData: () => dispatch(getAccountData()),
     getOpportunityData: () => dispatch(getOpportunityData()),
     getCurrencyData: () => dispatch(getCurrencyData()),
+    getFinacialYearData: () => dispatch(getFinancialYearData()),
   };
 };
 

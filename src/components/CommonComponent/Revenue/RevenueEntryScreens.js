@@ -184,6 +184,7 @@ function RevenueEntryScreens(props) {
               setIsOpen={setIsOpen}
               tabIndex={tabIndex}
               setTabIndex={setTabIndex}
+              currentFinancialYear={currentFinancialYear}
               {...props}
             />
           </Box>
