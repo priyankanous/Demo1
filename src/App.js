@@ -92,6 +92,7 @@ function App() {
           component={RollingRevenueAdministration.GlobalLeaveLossFactor}
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
+        <Route path="/revenue/invoicedata" component={RevenueEntry.InvoiceDataUpload} />
         <Route
           path="/reports/businesstypewiseview"
           component={Reports.BusinessType}
