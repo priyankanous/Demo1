@@ -77,10 +77,122 @@ const RevenueMilestoneResourceData = (props) => {
   return (
     <React.Fragment>
       {console.log("milestoneDetails1--->", milestoneDetails)}
-      <br></br>
-      <table>
-        <tr className="trmilestone">
-          <td style={{ borderRight: "solid" }}>
+      <table style={{ backgroundColor: "white" }}>
+        <tr>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            SBU
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            SBU Head
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            BU
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Location
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Resource Name
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Employee ID
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Start Date
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            End Date
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Revenue
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Business Type
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Allocation
+          </td>
+        </tr>
+
+        <tr className="trmilestone" style={{ background: "white" }}>
+          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
             <select
               id="milestoneselect"
               required
@@ -91,11 +203,11 @@ const RevenueMilestoneResourceData = (props) => {
                   milestoneDetailsColumn: "sbuName",
                   selectedID: "sbuId",
                   attrKey: "data-sbuId",
-                });
+                })
               }}
             >
               <option value="" disabled selected hidden>
-                SBU
+                
               </option>
               {props.sbuData.sbuData &&
                 props.sbuData.sbuData.map((obj, id) => (
@@ -103,7 +215,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <select
               id="milestoneselect"
               required
@@ -118,7 +230,6 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             >
               <option value="" disabled selected hidden>
-                SBU Head
               </option>
               {props.sbuHeadData.sbuHeadData &&
                 props.sbuHeadData.sbuHeadData.map((obj, id) => (
@@ -128,7 +239,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <select
               id="milestoneselect"
               required
@@ -143,7 +254,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             >
               <option value="" disabled selected hidden>
-                BU
+                
               </option>
               {props.buData.buData &&
                 props.buData.buData.map((obj, id) => (
@@ -153,7 +264,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <select
               id="milestoneselect"
               required
@@ -168,7 +279,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             >
               <option value="" disabled selected hidden>
-                Location
+                
               </option>
               {props.locationData.locationData &&
                 props.locationData.locationData.map((obj, id) => (
@@ -178,11 +289,10 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <input
               id="milestoneinput"
               type="text"
-              placeholder="Resource Name"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -191,11 +301,10 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <input
               id="milestoneinput"
               type="number"
-              placeholder="Employee ID"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -204,7 +313,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <input
               id="milestoneinput"
               type="date"
@@ -216,7 +325,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             />
           </td>
-          <td style={{ borderRight: "solid", borderLeft: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <input
               id="milestoneinput"
               type="date"
@@ -228,42 +337,11 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             />
           </td>
-        </tr>
-      </table>
-      <br></br>
-      <table style={{ marginLeft: "200px" }}>
-        <tr className="trmilestone">
-          <td style={{ borderRight: "solid" }}>
-            <select
-              id="milestoneselect"
-              required
-              placeholder="CocPractice"
-              onChange={(e) => {
-                updateMilestoneDetails({
-                  event: e,
-                  milestoneDetailsKey: "cocPractice",
-                  milestoneDetailsColumn: "cocPracticeName",
-                  selectedID: "cocPracticeId",
-                  attrKey: "data-cocPracticeId",
-                });
-              }}
-            >
-              <option value="" disabled selected hidden>
-                CocPractice
-              </option>
-              {props.cocPracticeData.cocPracticeData &&
-                props.cocPracticeData.cocPracticeData.map((obj, id) => (
-                  <option data-cocPracticeId={obj.cocPracticeId}>
-                    {obj.cocPracticeName}
-                  </option>
-                ))}
-            </select>
-          </td>
-          <td style={{ borderRight: "solid", borderLeft: "solid" }}>
+
+          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
             <input
               id="milestoneinput"
               type="text"
-              placeholder="Revenue"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -272,11 +350,10 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
             <select
               id="milestoneselect"
               required
-              placeholder="BusinessType"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -288,7 +365,6 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             >
               <option value="" disabled selected hidden>
-                BusinessType
               </option>
               {props.businessTypeData.businessTypeData &&
                 props.businessTypeData.businessTypeData.map((obj, id) => (
@@ -298,11 +374,10 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid" }}>
+          <td style={{ borderRight: "solid 1px" }}>
             <input
               type="text"
               id="milestoneinput"
-              placeholder="Allocation %"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -311,20 +386,12 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td>
-            <button
-              onClick={() => {
-                addMilestone();
-              }}
-            >
-              Add Milestone
-            </button>
-          </td>
         </tr>
       </table>
+      
     </React.Fragment>
-  );
-};
+  )
+}
 const mapStateToProps = (state) => {
   console.log("this is the state", state);
 
