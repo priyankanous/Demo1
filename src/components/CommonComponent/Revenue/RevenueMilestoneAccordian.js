@@ -17,7 +17,7 @@ import {
   saveMileStoneDataNew,
 } from "../../../actions/milestone";
 import axios from "axios";
-import { apiV1 } from "../../../utils/constantsValue";
+import { InputField } from "../../../utils/constantsValue";
 import RevenueMilestoneResourceData from "./RevenueMilestoneResourceData";
 
 const RevenueMilestoneAccordian = (props) => {
@@ -31,10 +31,6 @@ const RevenueMilestoneAccordian = (props) => {
   const [inputNumber, setInputNumber] = useState("");
 
   const [milestoneGridItems, setMilestoneGridItems] = useState([]);
-  const handleInputChange = (event) => {
-    setInputNumber(event.target.value);
-  };
-
   const [milestoneDetails, setMilestoneDetails] = useState({});
   const month = [
     "Jan",
@@ -96,7 +92,7 @@ const RevenueMilestoneAccordian = (props) => {
   const setMilestoneData1 = (data) => {
     setRevenueResourceEntries([...revenueResourceEntries1, data]);
   };
-  const generateMilestoneGrid = () => {
+  const generateMilestoneGrid = (inputNumber) => {
     const items = [];
     for (let i = 0; i < inputNumber; i++) {
       items.push(
@@ -113,6 +109,13 @@ const RevenueMilestoneAccordian = (props) => {
       "in the  generateMilestoneGrid@@@@@@@@@@@@@@@@@@@@",
       milestoneGridItems
     );
+  };
+  const handleInputChange = (event) => {
+    const inputNumber = parseInt(event.target.value);
+    if (!isNaN(inputNumber) && inputNumber >= 0) {
+      setInputNumber(inputNumber);
+      generateMilestoneGrid(inputNumber);
+    }
   };
   return (
     <React.Fragment>
@@ -132,7 +135,7 @@ const RevenueMilestoneAccordian = (props) => {
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
-          <table>
+          {/* <table>
             <tr>
               <td>
                 <label className="required-field">MilestoneNumber</label>
@@ -194,8 +197,140 @@ const RevenueMilestoneAccordian = (props) => {
                 </button>
               </td>
             </tr>
-          </table>
-          <br></br>
+          </table> */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              rowGap: "30px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexBasis: "100%",
+                gap: "35px",
+                marginBottom: "15px",
+              }}
+            >
+              <div style={{ flexBasis: "25%" }}>
+                <div>
+                  <span style={{ color: "red" }}>*</span>
+                </div>
+                <div style={{ width: "187px" }}>
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "187px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                      marginTop: "-15px",
+                    }}
+                    size="small"
+                    type="text"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    placeholder="Milestone Number"
+                    // onChange={(e) => {
+                    //   setFormData({
+                    //     ...formData,
+                    //     opportunity: {
+                    //       ...formData.opportunity,
+                    //       projectCode: e.target.value,
+                    //     },
+                    //   });
+                    // }}
+                    // value={formData?.opportunity?.projectCode}
+                  />
+                </div>
+              </div>
+              <div style={{ flexBasis: "25%" }}>
+                <div>
+                  <span style={{ color: "red" }}>*</span>
+                </div>
+                <div style={{ width: "187px" }}>
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "187Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                      marginTop: "-15px",
+                    }}
+                    placeholder="M1 Billing date"
+                    size="small"
+                    type="date"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    
+                  />
+                </div>
+              </div>
+              <div style={{ flexBasis: "25%" }}>
+                <div>
+                  <span style={{ color: "red" }}>*</span>
+                </div>
+                <div style={{ width: "187px" }}>
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "187Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                      marginTop: "-15px",
+                    }}
+                    placeholder="M1 Revenue"
+                    size="small"
+                    type="text"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    
+                  />
+                </div>
+              </div>
+              <div style={{ flexBasis: "25%" }}>
+                <div>
+                  <span style={{ color: "red" }}>*</span>
+                </div>
+                <div style={{ width: "187px" }}>
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "187Px",
+                      marginLeft: "8px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                      marginTop: "-15px",
+                    }}
+                    placeholder="Resources Count"
+                    size="small"
+                    type="number"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    value={inputNumber}
+                    onChange={handleInputChange}
+                    // onChange={(e) => {
+                    //   setFormData({
+                    //     ...formData,
+                    //     opportunity: {
+                    //       ...formData.opportunity,
+                    //       projectEndDate: e.target.value,
+                    //     },
+                    //   });
+                    // }}
+                    // value={formData?.opportunity?.projectEndDate}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
           {milestoneGridItems}
         </AccordionItemPanel>
       </AccordionItem>
