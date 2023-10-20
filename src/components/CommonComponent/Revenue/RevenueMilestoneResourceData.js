@@ -190,9 +190,9 @@ const RevenueMilestoneResourceData = (props) => {
             Allocation
           </td>
         </tr>
-
-        <tr className="trmilestone" style={{ background: "white" }}>
-          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+        <tr className="trmilestone" style={{ background: "white", border:"1px solid #898282" }}>
+          <div >
+          <td style={{borderRight:"1px solid #898282"}}>
             <select
               id="milestoneselect"
               required
@@ -215,7 +215,8 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          </div>
+          <td style={{borderRight:"1px solid #898282"}}>
             <select
               id="milestoneselect"
               required
@@ -239,7 +240,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <select
               id="milestoneselect"
               required
@@ -264,7 +265,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <select
               id="milestoneselect"
               required
@@ -289,7 +290,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <input
               id="milestoneinput"
               type="text"
@@ -301,7 +302,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <input
               id="milestoneinput"
               type="number"
@@ -313,7 +314,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <input
               id="milestoneinput"
               type="date"
@@ -325,7 +326,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             />
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <input
               id="milestoneinput"
               type="date"
@@ -338,7 +339,7 @@ const RevenueMilestoneResourceData = (props) => {
             />
           </td>
 
-          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <input
               id="milestoneinput"
               type="text"
@@ -350,7 +351,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+          <td style={{borderRight:"1px solid #898282"}}>
             <select
               id="milestoneselect"
               required
@@ -374,7 +375,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "solid 1px" }}>
+          <td >
             <input
               type="text"
               id="milestoneinput"
