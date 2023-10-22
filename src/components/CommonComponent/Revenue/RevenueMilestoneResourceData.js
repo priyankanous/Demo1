@@ -194,7 +194,7 @@ const RevenueMilestoneResourceData = (props) => {
           <div >
           <td style={{borderRight:"1px solid #898282"}}>
             <select
-              id="milestoneselect"
+              // id="milestoneselect"
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -205,6 +205,12 @@ const RevenueMilestoneResourceData = (props) => {
                   attrKey: "data-sbuId",
                 })
               }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
             >
               <option value="" disabled selected hidden>
                 
@@ -218,7 +224,7 @@ const RevenueMilestoneResourceData = (props) => {
           </div>
           <td style={{borderRight:"1px solid #898282"}}>
             <select
-              id="milestoneselect"
+              // id="milestoneselect"
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -229,6 +235,13 @@ const RevenueMilestoneResourceData = (props) => {
                   attrKey: "data-sbuHeadId",
                 });
               }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
+
             >
               <option value="" disabled selected hidden>
               </option>
@@ -242,7 +255,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td style={{borderRight:"1px solid #898282"}}>
             <select
-              id="milestoneselect"
+              // id="milestoneselect"
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -253,6 +266,13 @@ const RevenueMilestoneResourceData = (props) => {
                   attrKey: "data-businessUnitId",
                 });
               }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
+              
             >
               <option value="" disabled selected hidden>
                 
@@ -267,7 +287,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td style={{borderRight:"1px solid #898282"}}>
             <select
-              id="milestoneselect"
+              // id="milestoneselect"
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -278,6 +298,12 @@ const RevenueMilestoneResourceData = (props) => {
                   attrKey: "data-locationId",
                 });
               }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
             >
               <option value="" disabled selected hidden>
                 
@@ -353,7 +379,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td style={{borderRight:"1px solid #898282"}}>
             <select
-              id="milestoneselect"
+              // id="milestoneselect"
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -364,6 +390,12 @@ const RevenueMilestoneResourceData = (props) => {
                   attrKey: "data-businessTypeId",
                 });
               }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
             >
               <option value="" disabled selected hidden>
               </option>
