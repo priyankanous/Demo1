@@ -157,6 +157,10 @@ function Tr({
     }
   };
 
+  const handleRowExpansionAll = () => {
+    setIsExpanded(prevState => !prevState);
+  };
+
   //   const handleRowExpansion = (cell) => {
   //   console.log("cell value", cell);
   //   if (cell.innerHTML == <ArrowDropDownIcon />) {
@@ -183,7 +187,12 @@ function Tr({
 
   return (
     <React.Fragment>
-      <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white" }}>
+      <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white" }}
+      onClick={(e) => {
+        revenueOpportunity();
+        handleRowExpansionAll();
+      }}
+      >
         <td
           className="rowtable"
           style={{ padding: "1px", borderBottom: "none", width: "15px" }}
@@ -195,12 +204,13 @@ function Tr({
           className="rowtable"
           onClick={(e) => {
             revenueOpportunity();
-            handleRowExpansion(e.target);
+            // handleRowExpansion(e.target);
           }}
 
           style={{padding:"1px 6px", width:"10px", cursor:"pointer"}}
         >
-          ↓{/* <FaIcons.FaArrowDown /> */}
+                    {isExpanded ? "↑" : "↓"}
+
           {/* <ArrowDropDownIcon /> */}
         </td>
 
