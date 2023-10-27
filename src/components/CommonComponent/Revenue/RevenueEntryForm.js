@@ -80,7 +80,6 @@ const ResourceEntryForm = (props) => {
     pricingType: pricingType,
   });
   const [isDisabled, setIsDisabled] = useState(false);
-
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
@@ -147,88 +146,169 @@ const ResourceEntryForm = (props) => {
     return `${day}/${month}/${year}`;
   };
 
+  const handleSave = () => {
+    if (pricingType === "T&M") {
+      const payload = {
+        account: {
+          accountId: formData.account.accountId,
+        },
+        opportunity: {
+          opportunityId: formData.opportunity.opportunityID,
+          opportunityName: formData.opportunity.opportunityName,
+        },
+        projectCode: formData.opportunity.projectCode,
+        projectStartDate: formData.opportunity.projectStartDate,
+        projectEndDate: formData.opportunity.projectEndDate,
 
-  const saveTandMentry = () => {
-    console.log("Before -->", formData);
-    const payload = {
-      account: {
-        accountId: formData.account.accountId,
-      },
-      opportunity: {
-        opportunityId: formData.opportunity.opportunityID,
-        opportunityName: formData.opportunity.opportunityName,
-      },
-      projectCode: formData.opportunity.projectCode,
-      projectStartDate: formData.opportunity.projectStartDate,
-      projectEndDate: formData.opportunity.projectEndDate,
+        businessDevelopmentManager: {
+          bdmId: formData.bdm.bdmID,
+        },
+        currency: {
+          currencyId: formData.currency.currencyID,
+        },
+        probabilityType: {
+          probabilityTypeId: formData.probability.probabilityID,
+        },
+        region: {
+          regionId: formData.region.regionID,
+        },
+        workOrder: {
+          workOrderId: formData.workOrder.workOrderID,
+        },
+        workOrderEndDate: formData.workOrder.workOrderEndDate,
+        workOrderStatus: formData.workOrder.workOrderStatus,
 
-      businessDevelopmentManager: {
-        bdmId: formData.bdm.bdmID,
-      },
-      currency: {
-        currencyId: formData.currency.currencyID,
-      },
-      probabilityType: {
-        probabilityTypeId: formData.probability.probabilityID,
-      },
-      region: {
-        regionId: formData.region.regionID,
-      },
-      workOrder: {
-        workOrderId: formData.workOrder.workOrderID,
-      },
-      workOrderEndDate: formData.workOrder.workOrderEndDate,
-      workOrderStatus: formData.workOrder.workOrderStatus,
+        financialYear: {
+          financialYearId:
+            props?.financialYear?.financialYear[0]?.financialYearId,
+        },
+        resourceCount: resourceData.length,
+        pricingType: pricingType,
+        remarks: "TM Details adding",
+        status: "Submitted",
+        revenueResourceEntries: resourceData.map((ele) => ({
+          strategicBusinessUnit: {
+            sbuId: ele.sbuId,
+          },
+          strategicBusinessUnitHead: {
+            sbuHeadId: ele.sbuHeadId,
+          },
+          businessUnit: {
+            businessUnitId: ele.buisnessUnitId,
+          },
+          businessType: {
+            businessTypeId: ele.businessTypeId,
+          },
+          location: {
+            locationId: ele.locationId,
+          },
+          resourceName: ele.resouceName,
+          employeeId: ele.employeeId,
+          resourceStartDate: formatDateFirstEntry(ele.startDate),
+          resourceEndDate: formatDateFirstEntry(ele.endDate),
+          cocPractice: {
+            cocPracticeId: ele.cocPracticeId,
+          },
+          leaveLossFactor: ele.leaveLossFactor,
+          billingRateType: ele.billingRateType,
+          billingRate: ele.billingRate,
+          allocation: ele.allocation,
+        })),
+      };
+      axios
+        .post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+          payload
+        )
+        .then((res) => {
+          props.setIsOpen(false);
+        })
+        .catch((err) => {
+          props.setIsOpen(false);
+        });
+    } else {
+      const payload2 = {
+        account: {
+          accountId: formData.account.accountId,
+        },
+        opportunity: {
+          opportunityId: formData.opportunity.opportunityID,
+        },
+        projectCode: formData.opportunity.projectCode,
+        projectStartDate: formData.opportunity.projectStartDate,
+        projectEndDate: formData.opportunity.projectEndDate,
+        businessDevelopmentManager: {
+          bdmId: formData.bdm.bdmID,
+        },
+        currency: {
+          currencyId: formData.currency.currencyID,
+        },
+        probabilityType: {
+          probabilityTypeId: formData.probability.probabilityID,
+        },
+        region: {
+          regionId: formData.region.regionID,
+        },
+        workOrder: {
+          workOrderId: formData.workOrder.workOrderID,
+        },
+        workOrderEndDate: formData.workOrder.workOrderEndDate,
+        workOrderStatus: formData.workOrder.workOrderStatus,
+        financialYear: {
+          financialYearId:
+            props?.financialYear?.financialYear[0]?.financialYearId,
+        },
+        milestoneCount: milestoneData.length,
+        pricingType: pricingType,
+        remarks: "No",
+        status: "Submitted",
 
-      financialYear: {
-        financialYearId: props?.financialYear?.financialYear[0]?.financialYearId,
-      },
-      resourceCount: resourceData.length,
-      pricingType: pricingType,
-      remarks: "TM Details adding",
-      status: "Submitted",
-      revenueResourceEntries: resourceData.map((ele) => ({
-        strategicBusinessUnit: {
-          sbuId: ele.sbuId,
-        },
-        strategicBusinessUnitHead: {
-          sbuHeadId: ele.sbuHeadId,
-        },
-        businessUnit: {
-          businessUnitId: ele.buisnessUnitId,
-        },
-        businessType: {
-          businessTypeId: ele.businessTypeId,
-        },
-        location: {
-          locationId: ele.locationId,
-        },
-        resourceName: ele.resouceName,
-        employeeId: ele.employeeId,
-        resourceStartDate: formatDateFirstEntry(ele.startDate),
-        resourceEndDate: formatDateFirstEntry(ele.endDate),
-        cocPractice: {
-          cocPracticeId: ele.cocPracticeId,
-        },
-        leaveLossFactor: ele.leaveLossFactor,
-        billingRateType: ele.billingRateType,
-        billingRate: ele.billingRate,
-        allocation: ele.allocation,
-      })),
-    };
-    axios
-      .post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
-        payload
-      )
-      .then((res) => {
-        props.setIsOpen(false);
-        console.log("res", res);
-      })
-      .catch((err) => {
-        props.setIsOpen(false);
-        console.log("err", err);
-      });
+        milestones: milestoneData?.map((ele) => ({
+          milestoneNumber: ele.milestoneNumber,
+          milestoneBillingDate: ele.milestoneBillingDate,
+          milestoneRevenue: ele.milestoneRevenue,
+          milestoneResourceCount: ele.milestoneResourceCount,
+          revenueResourceEntries: ele?.revenueResourceEntries?.map(
+            (revenueEntry) => {
+              return {
+                strategicBusinessUnit: {
+                  sbuId: revenueEntry.strategicBusinessUnit.sbuId,
+                },
+                strategicBusinessUnitHead: {
+                  sbuHeadId: revenueEntry.strategicBusinessUnitHead.sbuHeadId,
+                },
+                businessUnit: {
+                  businessUnitId: revenueEntry.businessUnit.businessUnitId,
+                },
+                businessType: {
+                  businessTypeId: revenueEntry.businessType.businessTypeId,
+                },
+                location: {
+                  locationId: revenueEntry.location.locationId,
+                },
+                resourceName: revenueEntry.resourceName,
+                employeeId: revenueEntry.employeeId,
+                resourceStartDate: revenueEntry.resourceStartDate,
+                resourceEndDate: revenueEntry.resourceEndDate,
+                allocation: revenueEntry.allocation,
+                milestoneResourceRevenue: revenueEntry.milestoneResourceRevenue,
+              };
+            }
+          ),
+        })),
+      };
+      axios
+        .post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+          payload2
+        )
+        .then((res) => {
+          props.setIsOpen(false);
+        })
+        .catch((err) => {
+          props.setIsOpen(true);
+        });
+    }
   };
 
   const resetData = () => {
@@ -253,7 +333,6 @@ const ResourceEntryForm = (props) => {
     ) {
       setIsSubmitted(true);
     } else {
-      console.log("here", isSubmitted);
       setIsSubmitted(false);
       setPricingType(pricingType);
       props.setTabIndex({
@@ -265,29 +344,24 @@ const ResourceEntryForm = (props) => {
   };
 
   const handleInputChange = (event) => {
-    const inputValue = parseInt(event.target.value); 
+    const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
       setInputNumber(inputValue);
       generateGrid(inputValue);
     }
   };
-  
+
+  const updateMilestoneData = (data, index) => {
+    setMilestoneData(data);
+  };
 
   const updateResourceData = (data, index) => {
     setResourceData(data);
   };
 
-
-  const [milestones, setMilestones] = useState([]);
-
-  const updateMilestoneData = (data) => {
-    // props.saveMileStones(props.milestoneDataNew);
-  };
-
-
   const generateGrid = (value) => {
     const items = [];
-    const iterator = value >=0 ? value : inputNumber;
+    const iterator = value >= 0 ? value : inputNumber;
     if (pricingType == "T&M") {
       const tempResourceDetails = [];
       for (let i = 0; i < iterator; i++) {
@@ -302,7 +376,6 @@ const ResourceEntryForm = (props) => {
           <RevenueResourceAccordian
             id={i}
             formData={props.tabIndex.formData}
-            // updateResourceData={updateResourceData}
             myFormData={formData}
             pricingType={pricingType}
             resourceData={tempResourceDetails}
@@ -316,6 +389,7 @@ const ResourceEntryForm = (props) => {
       for (let i = 0; i < iterator; i++) {
         const milestoneDataRow = {
           index: i,
+          revenueResourceEntries: [],
         };
         tempMilestoneDetails.push(milestoneDataRow);
       }
@@ -325,11 +399,10 @@ const ResourceEntryForm = (props) => {
           <RevenueMilestoneAccordian
             id={i}
             formData={props.tabIndex.formData}
-            // updateResourceData={updateResourceData}
             myFormData={formData}
             pricingType={pricingType}
             milestoneData={tempMilestoneDetails}
-            updateResourceData={setResourceData}
+            updateMilestoneData={setMilestoneData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
           />
         );
@@ -344,21 +417,20 @@ const ResourceEntryForm = (props) => {
       formData: props.tabIndex.formData,
     });
   };
-
-  const saveEntireMilestoneDetails = () => {
-    props.saveMileStones(props.milestoneDataNew);
-    props.saveMilestoneData({
-      allMilestones: props.milestoneDataNew,
-      formData: props.tabIndex.formData,
-    });
-  };
+  // const saveEntireMilestoneDetails = () => {
+  //   props.saveMileStones(props.milestoneDataNew);
+  //   props.saveMilestoneData({
+  //     allMilestones: props.milestoneDataNew,
+  //     formData: props.tabIndex.formData,
+  //   });
+  // };
 
   const saveData = () => {
     if (pricingType == "T&M") {
       saveResourceDetails();
       props.setIsOpen(false);
     } else {
-      saveEntireMilestoneDetails();
+      // saveEntireMilestoneDetails();
       props.setIsOpen(false);
     }
   };
@@ -381,7 +453,6 @@ const ResourceEntryForm = (props) => {
       ({ label, value }) => value === formData?.workOrder?.workOrderID
     );
   };
-
 
   return (
     <ModalDetailSection style={{ borderRadius: "0px" }}>
@@ -441,33 +512,35 @@ const ResourceEntryForm = (props) => {
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
-                <span style={{ marginLeft:"-9px"}}>FY :</span>
+                <span style={{ marginLeft: "-9px" }}>FY :</span>
                 <div style={{ width: "180px" }}>
-                    <InputField
-                      style={{
-                        background: "white",
-                        width: "110Px",
-                        marginLeft: "3px",
-                        borderRadius: "0px !important",
-                        height: "35px",
-                      }}
-                      size="small"
-                      type="text"
-                      id="name"
-                      variant="outlined"
-                      spellcheck="false"
-                      onChange={(e) => {
-                        setFormData({
-                          ...formData,
-                          financialYear: {
-                            ...formData.financialYear,
-                            financialYearName: e.target.value,
-                          },
-                        });
-                      }}
-                      value={props?.financialYear?.financialYear[0]?.financialYearName}
-                    />
-                  </div>
+                  <InputField
+                    style={{
+                      background: "white",
+                      width: "110Px",
+                      marginLeft: "3px",
+                      borderRadius: "0px !important",
+                      height: "35px",
+                    }}
+                    size="small"
+                    type="text"
+                    id="name"
+                    variant="outlined"
+                    spellcheck="false"
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        financialYear: {
+                          ...formData.financialYear,
+                          financialYearName: e.target.value,
+                        },
+                      });
+                    }}
+                    value={
+                      props?.financialYear?.financialYear[0]?.financialYearName
+                    }
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1376,7 +1449,7 @@ const ResourceEntryForm = (props) => {
                 value="Continue"
                 id="create-account"
                 variant="contained"
-                onClick={saveTandMentry}
+                onClick={handleSave}
               >
                 Save
               </ModalControlButton>
