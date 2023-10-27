@@ -629,9 +629,10 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
+                  padding:"0px"
                 }}
               >
-                Leave Loss Factor
+                Leave Loss Factor %
               </td>
               <td
                 style={{
