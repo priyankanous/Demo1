@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Modal, Box, FormControl, TextField } from "@mui/material";
+import { Modal, Box, FormControl, styled,Button } from "@mui/material";
 import * as moment from "moment";
 import {
   ModalHeadingSection,
@@ -27,10 +27,69 @@ import { getRegionData } from "../../../actions/region";
 import { getWorkOrderYearData } from "../../../actions/workOrder";
 import { getBdmData } from "../../../actions/bdm";
 import { getAccountData } from "../../../actions/account";
-import Select from "react-select";
 import { connect } from "react-redux";
 import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
+
+const DownArrowSecordStage = styled('td')({
+  padding: "1px",
+  color: "#000",
+  fontWeight: 700,
+  cursor: "pointer",
+});
+
+const TableCellSecondStage = styled('td')({
+  padding: "1px"
+});
+
+const TableCellSecondStageSpan = styled('span')({
+  fontSize: "14px"
+});
+
+const CopyIconSecondLEvel = styled(FileCopyOutlinedIcon)({
+  fontSize: "15px", 
+  paddingRight: "5px"
+});
+
+const EditIconSecondLevel = styled(EditOutlinedIcon)({
+  fontSize: "15px", paddingRight: "5px"
+});
+
+const DeleteIconSecondLevel = styled(DeleteOutlineIcon)({
+  fontSize: "15px", paddingRight: "5px"
+
+});
+
+const TableThirdLevel = styled('table')({
+    backgroundColor: "rgba(225, 222, 222, 0.5)",
+    borderBottom: "1px solid #0000004d"
+});
+
+const ThirdLevelHeadingCell = styled('table')({
+      padding: "2px 0px 0px 10px",
+    display: "flex",
+    justifyContent: "flex-start",
+});
+
+const ThirdLevelHeading = styled('th')({
+   padding: "4px"
+});
+
+const ThirdLevelCopyIcon = styled(FileCopyOutlinedIcon)({
+    fontSize: "15px",
+    paddingRight: "5px",
+});
+
+const ThirdLevelEditIcon = styled(EditOutlinedIcon)({
+  fontSize: "15px",
+  paddingRight: "5px",
+});
+
+const ThirdLevelDeleteIcon = styled(DeleteOutlineIcon)({
+  fontSize: "15px",
+  paddingRight: "5px",
+});
+
 
 function TrForRevenue(props) {
   useEffect(() => {
@@ -43,11 +102,40 @@ function TrForRevenue(props) {
     props.getCurrencyData();
   }, []);
 
-  console.log("propsIn TrRevenue", props);
-  // console.log("propsIn TrRevenue", props)
-
   const [isExpandedInnerRow, setIsExpandedInnerRow] = useState(false);
   const [resourceTableData, setResourceTableData] = useState([]);
+  const [resourseEntryData, setResourceEntryData] = useState({
+    ...props.opportunityEntryData,
+    opportunityId: props.data.opportunityId,
+    projectCode: props.data.projectCode,
+    opportunityName: props.data.opportunityName,
+    pricingType: props.data.pricingType,
+    projectStartDate: props.data.projectStartDate,
+    projectEndDate: props.data.projectEndDate,
+    cocPractice: props.data.cocPractice,
+    noOfResources: props.data.noOfResources,
+    leaveLossFactor: props.data.leaveLossFactor,
+  });
+  const [selectedRow, setSelectedRow] = useState(-1);
+  const [selectedOpportunityId, setSelectedOpportunityId] = useState(null);
+  const [isDropdown, setDropdown] = useState(false);
+  const [isResourceDropdown, setIsResourceDropdown] = useState(false);
+  const [selectedResourceId, setSelectedResourceId] = useState(null);
+  const [selectedEmployeeID, setSelectedEmployeeID] = useState(null);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [resourceDropdownStates, setResourceDropdownStates] = useState([]);
+  const [isClicked, setIsClicked] = useState(false);
+  //edit modal code
+  const [isOpen, setIsOpen] = useState(false);
+  const [pricingType, setPricingType] = useState("T&M");
+  const [resourceData, setResourceData] = useState([]);
+  const [gridItems, setGridItems] = useState([]);
+  //2nd level edit
+  const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
+  const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);  
+  const [oppId, setOppId] = useState();
+  const [oppDataByOppId, setOppDataByOppId] = useState([]);
+
   const column3 = [
     "Start Date",
     "End Date",
@@ -61,19 +149,38 @@ function TrForRevenue(props) {
     "",
   ];
 
-  const [resourseEntryData, setResourceEntryData] = useState({
-    ...props.opportunityEntryData,
-    opportunityId: props.data.opportunityId,
-    projectCode: props.data.projectCode,
-    opportunityName: props.data.opportunityName,
-    pricingType: props.data.pricingType,
-    projectStartDate: props.data.projectStartDate,
-    projectEndDate: props.data.projectEndDate,
-    cocPractice: props.data.cocPractice,
-    noOfResources: props.data.noOfResources,
-    leaveLossFactor: props.data.leaveLossFactor,
+  const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
+  const [inputNumber, setInputNumber] = useState(initialResourceCount);
+  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
+  const array = [];
+  const [currencyData, setCurrencyData] = useState();
+
+  const [formUpdateData, setFormUpdateData] = useState({
+    account: { accountId: null, accountName: "" },
+    opportunity: {
+      opportunityID: "",
+      opportunityName: "",
+      projectCode: "",
+      projectStartDate: "",
+      projectEndDate: "",
+    },
+    bdm: { bdmID: null, bdmName: "" },
+    currency: { currencyID: null, currencyName: "" },
+    probability: { probabilityID: "", probabilityTypeName: "" },
+    region: { regionID: "", regionName: "" },
+    workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
+    financialYear: {
+      financialYearId: "",
+      financialYearName: "",
+    },
+    pricingType: pricingType,
   });
 
+  //3rd level add
+  const [expandedOppId, setExpandedOppId] = useState("");
+  const [expandedOppData, setExpandedOppData] = useState([]);
+
+  //To expand the table row
   const handleInnerRowExpansion = (cell) => {
     if (cell.innerHTML == "↓") {
       cell.innerHTML = "↑";
@@ -84,13 +191,16 @@ function TrForRevenue(props) {
     }
   };
 
+  const handleRowExpansionAll = () => {
+    setIsExpandedInnerRow(prevState => !prevState);
+  };
+
   const revenueResource = async (e) => {
     try {
       const response = await axios.post(`${apiV1}/revenue-entry/resources`, e);
       // response.data.data.opportunities.map((obj, id) => {
       //   return setOpportunityData(obj);
       // });
-
       if (e.pricingType == "T&M") {
         setResourceTableData(response.data.data.tmResourceEntries);
       } else {
@@ -98,14 +208,6 @@ function TrForRevenue(props) {
       }
     } catch {}
   };
-
-  const [selectedRow, setSelectedRow] = useState(-1);
-  const [selectedOpportunityId, setSelectedOpportunityId] = useState(null);
-  const [isDropdown, setDropdown] = useState(false);
-  const [isResourceDropdown, setIsResourceDropdown] = useState(false);
-  const [selectedResourceId, setSelectedResourceId] = useState(null);
-  const [selectedEmployeeID, setSelectedEmployeeID] = useState(null);
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
 
   const toggleRowSelection = (rowIndex) => {
     if (selectedRow === rowIndex) {
@@ -134,7 +236,6 @@ function TrForRevenue(props) {
   };
 
   const DeleteRecord = () => {
-    // console.log("delete", selectedOpportunityId);
     axios
       .delete(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/${selectedOpportunityId}`
@@ -151,7 +252,6 @@ function TrForRevenue(props) {
     setSelectedEmployeeID((prevSelectedEmployeeID) =>
       prevSelectedEmployeeID === employeeId ? null : employeeId
     );
-    console.log("selectedEmployeeID:", selectedEmployeeID);
   };
 
   const handleResourceStartDate = (startDate) => {
@@ -180,7 +280,6 @@ function TrForRevenue(props) {
     const formattedDay = String(parsedStartDate.getDate()).padStart(2, "0"); // Add leading zero if needed
     const formattedMonth = months[parsedStartDate.getMonth()];
     const formattedYear = parsedStartDate.getFullYear();
-
     const formattedStartDate = `${formattedDay}/${formattedMonth}/${formattedYear}`;
 
     const apiUrl =
@@ -194,16 +293,12 @@ function TrForRevenue(props) {
     axios
       .delete(apiUrl, { data: requestBody })
       .then((res) => {
-        // Handle the success response
         console.log("DELETE request successful:", res);
       })
       .catch((error) => {
-        // Handle errors
         console.error("Error making DELETE request:", error);
       });
   };
-
-  const [resourceDropdownStates, setResourceDropdownStates] = useState([]);
 
   useEffect(() => {
     setResourceDropdownStates(Array(resourceTableData.length).fill(false));
@@ -214,15 +309,6 @@ function TrForRevenue(props) {
     newStates[id] = !newStates[id];
     setResourceDropdownStates(newStates);
   };
-
-  const [isClicked, setIsClicked] = useState(false);
-
-  //edit modal code
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [pricingType, setPricingType] = useState("T&M");
-  const [resourceData, setResourceData] = useState([]);
-  const [gridItems, setGridItems] = useState([]);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -235,65 +321,6 @@ function TrForRevenue(props) {
     // setSelectedFile(null);
   };
 
-  // const handleInputChange = (event) => {
-  //   setInputNumber(event.target.value);
-  //   generateGrid(event.target.value);
-  // };
-
-  // const generateGrid = (value) => {
-  //   const items = [];
-  //   const iterator = value ? value : inputNumber;
-  //   if (pricingType == "T&M") {
-  //     const tempResourceDetails = [];
-  //     for (let i = 0; i < iterator; i++) {
-  //       const resourceDataRow = {
-  //         index: i,
-  //       };
-  //       tempResourceDetails.push(resourceDataRow);
-  //     }
-  //     setResourceData(tempResourceDetails);
-  //     for (let i = 0; i < iterator; i++) {
-  //       items.push(
-  //         <RevenueResourceAccordian
-  //           id={i}
-  //           // formData={props.tabIndex.formData}
-  //           // updateResourceData={updateResourceData}
-  //           pricingType={pricingType}
-  //           resourceData={tempResourceDetails}
-  //           updateResourceData={setResourceData}
-  //           oppId={oppId}
-  //           oppDataByOppId={oppDataByOppId}
-  //         />
-  //       );
-  //     }
-  //   } else {
-  //     for (let i = 0; i < inputNumber; i++) {
-  //       items
-  //         .push
-  //         // <RevenueMilestoneAccordian
-  //         //   id={i}
-  //         //   formData={props.tabIndex.formData}
-  //         //   pricingType={pricingType}
-  //         //   updateMilestoneData={updateMilestoneData}
-  //         // />
-  //         ();
-  //     }
-  //   }
-  //   setGridItems(items);
-  // };
-
-  //2nd level edit
-  const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
-  const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);
-
-  const [oppId, setOppId] = useState();
-  const [oppDataByOppId, setOppDataByOppId] = useState([]);
-  // console.log(
-  //   "oppDataByOppId",
-  //   oppDataByOppId.tmRevenueEntryVO &&
-  //     oppDataByOppId.tmRevenueEntryVO.revenueResourceEntries[0].revenueResourceEntryId
-  // );
-
   const getDataByOppId = (oppId) => {
     axios
       .get(
@@ -304,34 +331,21 @@ function TrForRevenue(props) {
       });
   };
 
-  // useEffect(()=>{
-  //   getDataByOppId();
-  // },[]);
-
   useEffect(() => {
     if (oppId) {
       getDataByOppId(oppId);
     }
   }, [oppId]);
-  const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
 
-  const [inputNumber, setInputNumber] = useState(initialResourceCount);
 
   const handleInputChange = (event) => {
-    const inputValue = parseInt(event.target.value); 
+    const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
       setInputNumber(inputValue);
       generateGrid(inputValue);
     }
   };
 
-  // const handleInputChange = (event) => {
-  //   setInputNumber(prevValue => {
-  //     const newValue = event.target.value;
-  //     generateGrid(newValue);
-  //     return newValue;
-  //   });
-  // };
   const updateResourceData = (data, index) => {
     setResourceData(data);
   };
@@ -431,8 +445,6 @@ function TrForRevenue(props) {
     setGridItems(items);
   };
 
-  const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
-
   const handleNextClick = () => {
     setPricingType(pricingType);
     setTabIndex({
@@ -441,8 +453,6 @@ function TrForRevenue(props) {
     });
   };
 
-  const array = [];
-  const [currencyData, setCurrencyData] = useState();
   const getAllCurrencyForFy = async (e) => {
     await axios
       .get(
@@ -454,36 +464,10 @@ function TrForRevenue(props) {
         setCurrencyData(actualDataObject);
       });
   };
+
   const opportunityNameByOppId =
     oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || "";
-  // console.log("oppId2--->", oppDataByOppId);
 
-  // const initialAccountIdPassingToForm= oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName
-
-  const [formUpdateData, setFormUpdateData] = useState({
-    account: { accountId: null, accountName: "" },
-    opportunity: {
-      opportunityID: "",
-      opportunityName: "",
-      projectCode: "",
-      projectStartDate: "",
-      projectEndDate: "",
-    },
-    bdm: { bdmID: null, bdmName: "" },
-    currency: { currencyID: null, currencyName: "" },
-    probability: { probabilityID: "", probabilityTypeName: "" },
-    region: { regionID: "", regionName: "" },
-    workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
-    financialYear: {
-      financialYearId: "",
-      financialYearName: "",
-    },
-    pricingType: pricingType,
-  });
-
-  // console.log("oppId3--->", formUpdateData)
-
-  console.log("oppId3--->", formUpdateData);
 
   const formatDateA = (dateString) => {
     const date = new Date(dateString);
@@ -715,11 +699,6 @@ function TrForRevenue(props) {
     console.log("initialCOunt", initialResourceCount);
   }, [oppDataByOppId]);
 
-  //3rd level add
-
-  const [expandedOppId, setExpandedOppId] = useState("");
-  const [expandedOppData, setExpandedOppData] = useState([]);
-
   const getDataByExpandedOppId = (expandedOppId) => {
     axios
       .get(
@@ -744,7 +723,6 @@ function TrForRevenue(props) {
     return `${day}/${month}/${year}`;
   };
 
-  console.log("expandedOppData---->", expandedOppData);
   const resourcePayload = {
     account: {
       accountId: expandedOppData?.tmRevenueEntryVO?.account?.accountId,
@@ -822,8 +800,8 @@ function TrForRevenue(props) {
     })),
   };
 
+  //Resource add entry
   const saveTandMentry = () => {
-    console.log("After -->", payload);
     axios
       .post(
         "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
@@ -832,16 +810,12 @@ function TrForRevenue(props) {
       .then((res) => {
         setIsClicked(false);
         setIsClicked(false);
-        console.log("res", res);
       })
       .catch((err) => {
         setIsClicked(false);
         setIsClicked(false);
-        console.log("err", err);
       });
   };
-
-  //3rd level Edit
 
   return (
     <React.Fragment>
@@ -854,78 +828,71 @@ function TrForRevenue(props) {
               : "white",
         }}
         // onClick={() => handleRowClick(props.data.opportunityId)}
+        onClick={(e) => {
+          revenueResource(resourseEntryData);
+          handleRowExpansionAll()
+          setExpandedOppId(props.data.opportunityId);
+        }}
       >
-        <td
-          style={{
-            padding: "1px",
-            color: "#000",
-            fontWeight: 700,
-            cursor: "pointer",
-          }}
+        <DownArrowSecordStage
           className="rowtable"
           onClick={(e) => {
             revenueResource(resourseEntryData);
-            handleInnerRowExpansion(e.target);
+            // handleInnerRowExpansion(e.target);
             setExpandedOppId(props.data.opportunityId);
           }}
         >
-          ↓
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          {isExpandedInnerRow ? "↑" : "↓"}
+        </DownArrowSecordStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.opportunityId || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.projectCode || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.opportunityName || "Unknown"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.pricingType || "Unknown"}
-          </span>
-        </td>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
 
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
-          </span>
-        </td>
-        {/* <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
-            {props.data.cocPractice || "Unknown"}
-          </span>
-        </td> */}
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.noOfResources || "0"}
-          </span>
-        </td>
-        <td className="rowtable" style={{ padding: "1px" }}>
-          <span style={{ fontSize: "14px" }}>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
+        <TableCellSecondStage className="rowtable">
+          <TableCellSecondStageSpan>
             {props.data.leaveLossFactor || ""}
-          </span>
-        </td>
+          </TableCellSecondStageSpan>
+        </TableCellSecondStage>
         <td className="rowtable" style={{ border: "none" }}>
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
-                // console.log("wwwww--->", props.data.opportunityId);
                 handleRowClick(props.data.opportunityId);
                 setOppId(props.data.opportunityId);
                 closeDropDown();
@@ -934,16 +901,12 @@ function TrForRevenue(props) {
             {isDropdown && (
               <div
                 style={{
-                  // float: "left",
                   right: "20px",
                   position: "absolute",
                   overflow: "hidden",
-                  // width: "100px",
                   boxShadow: "5px 5px 10px rgb(0 0 0 / 45%)",
                   backgroundColor: "#F2FBFF",
                   marginRight: "10px",
-                  // overflow: "auto",
-                  // box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
                   zIndex: 1,
                   width: "8%",
                   fontSize: "small",
@@ -953,13 +916,9 @@ function TrForRevenue(props) {
                 }}
                 class="dropdown-content"
               >
-                <a style={{ padding: "5px", margin: "3px 0px" }}>
-                  {/* <div style={{display:"flex"}}> */}
-                  <FileCopyOutlinedIcon
-                    style={{ fontSize: "15px", paddingRight: "5px" }}
-                  />
+                <a style={{padding: "5px",margin: "3px 0px"}} >
+                  <CopyIconSecondLEvel/>
                   copy
-                  {/* </div> */}
                 </a>
                 <a
                   style={{ padding: "5px", margin: "3px 0px" }}
@@ -967,17 +926,14 @@ function TrForRevenue(props) {
                     setIsOpenSecondLevelEdit(true);
                   }}
                 >
-                  <EditOutlinedIcon
-                    style={{ fontSize: "15px", paddingRight: "5px" }}
-                  />
+                  <EditIconSecondLevel/>
                   Edit
                 </a>
                 <a
                   style={{ padding: "5px 0px 5px 10px", margin: "3px 0px" }}
                   onClick={() => DeleteRecord()}
                 >
-                  <DeleteOutlineIcon
-                    style={{ fontSize: "15px", paddingRight: "5px" }}
+                  <DeleteIconSecondLevel
                   />
                   Delete
                 </a>
@@ -992,40 +948,30 @@ function TrForRevenue(props) {
           style={{ backgroundColor: "white" }}
         >
           <td colSpan={10} style={{ padding: "0px 0px 0px 40px" }}>
-            <table
-              style={{
-                backgroundColor: "rgba(225, 222, 222, 0.5)",
-                borderBottom: "1px solid #0000004d",
-              }}
+            <TableThirdLevel
             >
               <tr
                 className="trrevenue"
                 style={{ backgroundColor: "rgba(225, 222, 222, 0)" }}
               >
-                <td
+                <ThirdLevelHeadingCell
                   className="iconsColumn"
-                  style={{
-                    padding: "2px 0px 0px 10px",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
                 >
                   <a
                     onClick={() => {
                       setIsClicked(true);
                     }}
                   >
-                    {/* <FaIcons.FaPlus /> */}
                     <AddIcon fontSize="small" />
                   </a>
-                </td>
+                </ThirdLevelHeadingCell>
               </tr>
               <tr className="nestedtablebgrevenue">
                 {column3.map((header) => {
                   return (
-                    <th className="threvenue" style={{ padding: "4px" }}>
+                    <ThirdLevelHeading className="threvenue">
                       {header}
-                    </th>
+                    </ThirdLevelHeading>
                   );
                 })}
               </tr>
@@ -1044,36 +990,21 @@ function TrForRevenue(props) {
                         toggleRowSelection(id);
                         handleResourceEmployeeID(obj.employeeId);
                         handleResourceStartDate(obj.resourceStartDate);
-                        // setSelectedOpportunityId(obj.opportunityId);
                       }}
                     >
-                      {/* <td>
-                      <a
-                                style={{ display: "block", margin: "3px 0px" }}
-                                // onClick={() => DeleteRecord()}
-                                onClick={()=>{
-                                  deleteResourceRecord();
-                              
-                              }}
-                              >
-                                <DeleteOutlineIcon
-                                  style={{ fontSize: "15px" }}
-                                />
-                              </a>
-                      </td> */}
-
                       <td className="rowtable">
-                        <span style={{ fontSize: "14px" }}>
+                        <span 
+                        style={{fontSize:"14px"}}
+                        >
                           {obj.resourceStartDate
-                            ? moment(obj.resourceEndDate, "YYYY-MM-DD").format(
+                            ? moment(obj.resourceStartDate, "YYYY-MM-DD").format(
                                 "DD/MMM/YYYY"
                               )
                             : ""}
                         </span>
                       </td>
-
                       <td className="rowtable">
-                        <span>
+                        <span style={{fontSize:"14px"}}>
                           {obj.resourceEndDate
                             ? moment(obj.resourceEndDate, "YYYY-MM-DD").format(
                                 "DD/MMM/YYYY"
@@ -1118,29 +1049,21 @@ function TrForRevenue(props) {
                         <span style={{ float: "right", cursor: "pointer" }}>
                           <AiIcons.AiOutlineMore
                             onClick={(e) => {
-                              // setSelectedResourceId(obj.resourceId);
-                              // setIsResourceDropdown(true);
-                              // closeResourceDropDown();
                               toggleResourceDropdown(id);
                               handleResourceEmployeeID(obj.employeeId);
                               handleResourceStartDate(obj.resourceStartDate);
                               setOppId(props.data.opportunityId);
-                              console.log("oppID when clicked", oppId);
                             }}
                           ></AiIcons.AiOutlineMore>
                           {resourceDropdownStates[id] && (
                             <div
                               style={{
-                                // float: "left",
                                 right: "20px",
                                 position: "absolute",
                                 overflow: "hidden",
-                                // width: "100px",
                                 boxShadow: "5px 5px 10px rgb(0 0 0 / 45%)",
                                 backgroundColor: "#F2FBFF",
                                 marginRight: "10px",
-                                // overflow: "auto",
-                                // box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
                                 zIndex: 1,
                                 width: "8%",
                                 fontSize: "small",
@@ -1150,13 +1073,9 @@ function TrForRevenue(props) {
                               }}
                               class="dropdown-content"
                             >
-                              <a style={{ padding: "5px", margin: "3px 0px" }}>
-                                <FileCopyOutlinedIcon
-                                  style={{
-                                    fontSize: "15px",
-                                    paddingRight: "5px",
-                                  }}
-                                />
+                              <a style={{ padding: "5px", margin: "3px 0px" }}
+                              >
+                                <ThirdLevelCopyIcon />
                                 copy
                               </a>
                               <a
@@ -1165,12 +1084,7 @@ function TrForRevenue(props) {
                                   setIsOpenThirdLevelEdit(true);
                                 }}
                               >
-                                <EditOutlinedIcon
-                                  style={{
-                                    fontSize: "15px",
-                                    paddingRight: "5px",
-                                  }}
-                                />
+                                <ThirdLevelEditIcon />
                                 Edit
                               </a>
                               <a
@@ -1182,12 +1096,7 @@ function TrForRevenue(props) {
                                   deleteResourceRecord();
                                 }}
                               >
-                                <DeleteOutlineIcon
-                                  style={{
-                                    fontSize: "15px",
-                                    paddingRight: "5px",
-                                  }}
-                                />
+                                <ThirdLevelDeleteIcon />
                                 Delete
                               </a>
                             </div>
@@ -1197,7 +1106,7 @@ function TrForRevenue(props) {
                     </tr>
                   ))}
               </tbody>
-            </table>
+            </TableThirdLevel>
           </td>
         </tr>
       )}
@@ -2622,6 +2531,7 @@ function TrForRevenue(props) {
                             spellcheck="false"
                             onChange={handleInputChange}
                             value={inputNumber}
+                            disabled
                           />
                         </div>
                       </div>
@@ -2910,10 +2820,8 @@ function TrForRevenue(props) {
                                 const fyId = fyData.financialYearId;
                                 return (
                                   <option
-                                    // data-fyId={fyData?.financialYearId}
                                     data-fyId={fyId}
                                     key={index}
-                                    // selected={fyNameData === "2023-2024"}
                                   >
                                     {fyNameData}
                                   </option>
@@ -2948,31 +2856,6 @@ function TrForRevenue(props) {
                       <span style={{ marginLeft: "-9px" }}>
                         Resource count:
                       </span>
-                      {/* <div>
-                    <label
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <input
-                        type="number"
-                        value={inputNumber}
-                        onChange={handleInputChange}
-                      />
-                      <input
-                        style={{
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        type="button"
-                        value="Add"
-                        id="create-account"
-                        class="button"
-                        onClick={generateGrid}
-                      />
-                    </label>
-                  </div> */}
                       <InputField
                         style={{
                           background: "white",
@@ -2988,6 +2871,7 @@ function TrForRevenue(props) {
                         spellcheck="false"
                         onChange={handleInputChange}
                         value={inputNumber}
+                        disabled
                       />
                     </div>
                   </div>
@@ -3012,31 +2896,6 @@ function TrForRevenue(props) {
                       <span style={{ marginLeft: "-9px" }}>
                         Milestone count:
                       </span>
-                      {/* <div>
-                  <label
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      value={inputNumber}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      style={{
-                        margin: "0px 0px 0px 8px",
-                      }}
-                      type="button"
-                      value="Add"
-                      id="create-account"
-                      class="button"
-                      onClick={generateGrid}
-                    />
-                  </label>
-                </div> */}
                       <InputField
                         style={{
                           background: "white",
@@ -3050,16 +2909,6 @@ function TrForRevenue(props) {
                         id="name"
                         variant="outlined"
                         spellcheck="false"
-                        // onChange={(e) => {
-                        //   setFormData({
-                        //     ...formData,
-                        //     opportunity: {
-                        //       ...formData.opportunity,
-                        //       projectCode: e.target.value,
-                        //     },
-                        //   });
-                        // }}
-                        // value={formData?.opportunity?.projectCode}
                       />
                     </div>
                   </div>
@@ -3108,12 +2957,7 @@ function TrForRevenue(props) {
                     type="button"
                     variant="contained"
                     onClick={() => {
-                      // props.setGridItems([]);
                       setIsOpenThirdLevelEdit(false);
-                      // props.setTabIndex({
-                      //   index: 0,
-                      //   formData: "",
-                      // });
                     }}
                     value="Cancel"
                     id="create-account"
@@ -3159,15 +3003,6 @@ export const ConnectedTrForRevenueOpportunity = connect(
   mapStateToProps,
   mapDispatchToProps
 )(TrForRevenue);
-
-// export const MemoizedTrForRevenueOpportunity = React.memo(
-//   TrForRevenue,
-//   (prevProps, nextProps) => {
-//     if (JSON.stringify(prevProps?.data) === JSON.stringify(nextProps?.data))
-//       return true;
-//     return false;
-//   }
-// );
 
 export const MemoizedTrForRevenueOpportunity = React.memo(
   ConnectedTrForRevenueOpportunity,
