@@ -12,6 +12,7 @@ import {
 } from "../../../actions/milestone";
 
 const RevenueMilestoneResourceData = (props) => {
+  const { milestoneData, id, updateMilestoneData, milestoneId } = props;
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -34,19 +35,17 @@ const RevenueMilestoneResourceData = (props) => {
     "Nov",
     "Dec",
   ];
-  const [milestoneDetails, setMilestoneDetails] = useState({
-    index: props.id,
-    milestoneID: props.milestoneId,
-  });
+
   const createDate = (date) => {
     let t = new Date(date);
     let splitDate = date.split("-");
     return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
   };
 
-  const updateMilestoneDetails = (params) => {
-    const data = { ...milestoneDetails };
 
+  const updateMilestoneDetails = (params) => {
+    const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
+    const data = dataArr[id];
     if (params.attrKey) {
       data[params.milestoneDetailsKey] = {
         [params.milestoneDetailsColumn]: params.event.target.value,
@@ -64,19 +63,18 @@ const RevenueMilestoneResourceData = (props) => {
         params.event.target.value
       );
     }
-    setMilestoneDetails({
-      ...data,
-    });
+    dataArr[id] = data;
+    const temp = [...milestoneData]
+    temp[milestoneId]["revenueResourceEntries"] = dataArr
+    console.log('Milestone Data After Updation', temp)
+    updateMilestoneData(temp);
   };
-  const addMilestone = () => {
-    console.log("resource Details for set resource Data", milestoneDetails);
 
-    props.setRevenueResourceEntriesData(milestoneDetails);
-  };
+ 
 
   return (
     <React.Fragment>
-      {console.log("milestoneDetails1--->", milestoneDetails)}
+      
       <table style={{ backgroundColor: "white" }}>
         <tr>
           <td
@@ -187,7 +185,7 @@ const RevenueMilestoneResourceData = (props) => {
               color: "#525252",
             }}
           >
-            Allocation
+            Allocation %
           </td>
         </tr>
         <tr className="trmilestone" style={{ background: "white", border:"1px solid #898282" }}>
@@ -222,7 +220,7 @@ const RevenueMilestoneResourceData = (props) => {
             </select>
           </td>
           </div>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <select
               // id="milestoneselect"
               required
@@ -243,8 +241,7 @@ const RevenueMilestoneResourceData = (props) => {
                 padding: "0px" }}
 
             >
-              <option value="" disabled selected hidden>
-              </option>
+              <option value="" disabled selected hidden></option>
               {props.sbuHeadData.sbuHeadData &&
                 props.sbuHeadData.sbuHeadData.map((obj, id) => (
                   <option data-sbuHeadId={obj.sbuHeadId}>
@@ -253,7 +250,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <select
               // id="milestoneselect"
               required
@@ -274,9 +271,7 @@ const RevenueMilestoneResourceData = (props) => {
                 padding: "0px" }}
               
             >
-              <option value="" disabled selected hidden>
-                
-              </option>
+              <option value="" disabled selected hidden></option>
               {props.buData.buData &&
                 props.buData.buData.map((obj, id) => (
                   <option data-businessUnitId={obj.businessUnitId}>
@@ -285,7 +280,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <select
               // id="milestoneselect"
               required
@@ -305,9 +300,7 @@ const RevenueMilestoneResourceData = (props) => {
                 boxShadow: "0px 0px 0px 0px",
                 padding: "0px" }}
             >
-              <option value="" disabled selected hidden>
-                
-              </option>
+              <option value="" disabled selected hidden></option>
               {props.locationData.locationData &&
                 props.locationData.locationData.map((obj, id) => (
                   <option data-locationId={obj.locationId}>
@@ -316,7 +309,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
               type="text"
@@ -328,7 +321,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
               type="number"
@@ -340,7 +333,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
               type="date"
@@ -352,7 +345,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             />
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
               type="date"
@@ -365,7 +358,7 @@ const RevenueMilestoneResourceData = (props) => {
             />
           </td>
 
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
               type="text"
@@ -377,7 +370,7 @@ const RevenueMilestoneResourceData = (props) => {
               }}
             ></input>
           </td>
-          <td style={{borderRight:"1px solid #898282"}}>
+          <td style={{ borderRight: "1px solid #898282" }}>
             <select
               // id="milestoneselect"
               required
@@ -397,8 +390,7 @@ const RevenueMilestoneResourceData = (props) => {
                 boxShadow: "0px 0px 0px 0px",
                 padding: "0px" }}
             >
-              <option value="" disabled selected hidden>
-              </option>
+              <option value="" disabled selected hidden></option>
               {props.businessTypeData.businessTypeData &&
                 props.businessTypeData.businessTypeData.map((obj, id) => (
                   <option data-businessTypeId={obj.businessTypeId}>
@@ -407,7 +399,7 @@ const RevenueMilestoneResourceData = (props) => {
                 ))}
             </select>
           </td>
-          <td >
+          <td>
             <input
               type="text"
               id="milestoneinput"
@@ -421,12 +413,10 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
         </tr>
       </table>
-      
     </React.Fragment>
-  )
-}
+  );
+};
 const mapStateToProps = (state) => {
-  console.log("this is the state", state);
 
   return {
     sbuData: state.sbuData,

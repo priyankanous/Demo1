@@ -21,6 +21,7 @@ import { InputField } from "../../../utils/constantsValue";
 import RevenueMilestoneResourceData from "./RevenueMilestoneResourceData";
 
 const RevenueMilestoneAccordian = (props) => {
+  const { milestoneData, updateMilestoneData, id } = props;
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -31,7 +32,7 @@ const RevenueMilestoneAccordian = (props) => {
   const [inputNumber, setInputNumber] = useState("");
 
   const [milestoneGridItems, setMilestoneGridItems] = useState([]);
-  const [milestoneDetails, setMilestoneDetails] = useState({});
+  // const [milestoneDetails, setMilestoneDetails] = useState({});
   const month = [
     "Jan",
     "Feb",
@@ -48,7 +49,8 @@ const RevenueMilestoneAccordian = (props) => {
   ];
 
   const updateMilestoneDetails = (params) => {
-    const data = { ...milestoneDetails };
+    const dataArr = [...milestoneData];
+    const data = dataArr[id];
     data[params.milestoneDetailsColumn] = params.event.target.value;
     if (params.attrKey) {
       data[params.selectedID] =
@@ -59,9 +61,17 @@ const RevenueMilestoneAccordian = (props) => {
         params.event.target.value
       );
     }
-    setMilestoneDetails({
-      ...data,
-    });
+
+    if (params.milestoneDetailsColumn == "milestoneResourceCount") {
+      const inputNumber = parseInt(params.event.target.value);
+      if (!isNaN(inputNumber) && inputNumber >= 0) {
+        setInputNumber(inputNumber);
+        generateMilestoneGrid(inputNumber);
+      }
+      data[params.milestoneDetailsColumn] = inputNumber;
+    }
+    dataArr[id] = data;
+    updateMilestoneData(dataArr);
   };
   const createDate = (date) => {
     let t = new Date(date);
@@ -71,44 +81,47 @@ const RevenueMilestoneAccordian = (props) => {
 
   const [milestones, setMilestonesData] = useState([]);
 
-  const saveOneMilestoneData = () => {
-    const mileStoneData = {
-      milestoneResourceCount: inputNumber,
-      milestoneNumber: props.id + 1,
-      milestoneRevenue: milestoneDetails.milestoneRevenue,
-      milestoneBillingDate: milestoneDetails.milestoneBillingDate,
-      revenueResourceEntries: props.revenueResourceEntries.filter(
-        (revenueResourceEntry) => {
-          const milestoneID = revenueResourceEntry.milestoneID;
-          delete revenueResourceEntry.milestoneID;
-          delete revenueResourceEntry.index;
-          return milestoneID == props.id + 1;
-        }
-      ),
-    };
-    props.saveMileStoneDataNew(mileStoneData);
-  };
-  const [revenueResourceEntries1, setRevenueResourceEntries] = useState([]);
-  const setMilestoneData1 = (data) => {
-    setRevenueResourceEntries([...revenueResourceEntries1, data]);
-  };
+  // const saveOneMilestoneData = () => {
+  //   const mileStoneData = {
+  //     milestoneResourceCount: inputNumber,
+  //     milestoneNumber: props.id + 1,
+  //     milestoneRevenue: milestoneDetails.milestoneRevenue,
+  //     milestoneBillingDate: milestoneDetails.milestoneBillingDate,
+  //     revenueResourceEntries: props.revenueResourceEntries.filter(
+  //       (revenueResourceEntry) => {
+  //         const milestoneID = revenueResourceEntry.milestoneID;
+  //         delete revenueResourceEntry.milestoneID;
+  //         delete revenueResourceEntry.index;
+  //         return milestoneID == props.id + 1;
+  //       }
+  //     ),
+  //   };
+  //   props.saveMileStoneDataNew(mileStoneData);
+  // };
+
   const generateMilestoneGrid = (inputNumber) => {
+    const dataArr = [...milestoneData];
+    const data = dataArr[id];
     const items = [];
+    const tempRevenueResourceItems = [];
     for (let i = 0; i < inputNumber; i++) {
+      tempRevenueResourceItems.push({
+        revenueResourceEntryId: i,
+      });
       items.push(
         <RevenueMilestoneResourceData
+          updateMilestoneData={updateMilestoneData}
+          milestoneData={milestoneData}
           id={i}
-          setMilestoneData1={setMilestoneData1}
-          milestoneId={props.id + 1}
+          // setMilestoneData1={setMilestoneData1}
+          milestoneId={props.id}
         />
       );
     }
-
+    data["revenueResourceEntries"] = [...tempRevenueResourceItems];
+    dataArr[id] = data;
+    updateMilestoneData(dataArr);
     setMilestoneGridItems(items);
-    console.log(
-      "in the  generateMilestoneGrid@@@@@@@@@@@@@@@@@@@@",
-      milestoneGridItems
-    );
   };
   const handleInputChange = (event) => {
     const inputNumber = parseInt(event.target.value);
@@ -135,69 +148,6 @@ const RevenueMilestoneAccordian = (props) => {
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
-          {/* <table>
-            <tr>
-              <td>
-                <label className="required-field">MilestoneNumber</label>
-                <input
-                  type="text"
-                  value={props.id + 1}
-                  onChange={(e) => {
-                    updateMilestoneDetails({
-                      event: e,
-                      milestoneDetailsColumn: "milestoneNumber",
-                    });
-                  }}
-                ></input>
-              </td>
-
-              <td> </td>
-              <td>
-                <label className="required-field">Milestone Billing Date</label>
-                <input
-                  type="date"
-                  onChange={(e) => {
-                    updateMilestoneDetails({
-                      event: e,
-                      milestoneDetailsColumn: "milestoneBillingDate",
-                    });
-                  }}
-                ></input>
-              </td>
-              <td></td>
-              <td>
-                <label className="required-field">MilestoneRevenue</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    updateMilestoneDetails({
-                      event: e,
-                      milestoneDetailsColumn: "milestoneRevenue",
-                    });
-                  }}
-                ></input>
-              </td>
-              <td></td>
-              <td>
-                <label className="required-field">MilestoneCount</label>
-                <input
-                  type="text"
-                  value={inputNumber}
-                  onChange={handleInputChange}
-                ></input>
-              </td>
-              <td style={{ alignContent: "center" }}>
-                <button className="button" onClick={generateMilestoneGrid}>
-                  Add
-                </button>
-              </td>
-              <td style={{ alignContent: "center" }}>
-                <button className="button" onClick={saveOneMilestoneData}>
-                  Save
-                </button>
-              </td>
-            </tr>
-          </table> */}
           <div
             style={{
               display: "flex",
@@ -214,8 +164,9 @@ const RevenueMilestoneAccordian = (props) => {
               }}
             >
               <div style={{ flexBasis: "25%" }}>
-                <div>
+                <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
+                  <span>Milestone Number</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -225,30 +176,26 @@ const RevenueMilestoneAccordian = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      marginTop: "-15px",
+                      // marginTop: "-15px",
                     }}
                     size="small"
                     type="text"
                     id="name"
                     variant="outlined"
                     spellcheck="false"
-                    placeholder="Milestone Number"
-                    // onChange={(e) => {
-                    //   setFormData({
-                    //     ...formData,
-                    //     opportunity: {
-                    //       ...formData.opportunity,
-                    //       projectCode: e.target.value,
-                    //     },
-                    //   });
-                    // }}
-                    // value={formData?.opportunity?.projectCode}
+                    onChange={(e) => {
+                      updateMilestoneDetails({
+                        event: e,
+                        milestoneDetailsColumn: "milestoneNumber",
+                      });
+                    }}
                   />
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-                <div>
+              <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
+                  <span>M1 Billing date</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -258,21 +205,26 @@ const RevenueMilestoneAccordian = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      marginTop: "-15px",
+                      // marginTop: "-15px",
                     }}
-                    placeholder="M1 Billing date"
                     size="small"
                     type="date"
                     id="name"
                     variant="outlined"
                     spellcheck="false"
-                    
+                    onChange={(e) => {
+                      updateMilestoneDetails({
+                        event: e,
+                        milestoneDetailsColumn: "milestoneBillingDate",
+                      });
+                    }}
                   />
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-                <div>
+              <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
+                  <span>M1 Revenue</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -282,21 +234,27 @@ const RevenueMilestoneAccordian = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      marginTop: "-15px",
+                      // marginTop: "-15px",
                     }}
-                    placeholder="M1 Revenue"
+          
                     size="small"
                     type="text"
                     id="name"
                     variant="outlined"
                     spellcheck="false"
-                    
+                    onChange={(e) => {
+                      updateMilestoneDetails({
+                        event: e,
+                        milestoneDetailsColumn: "milestoneRevenue",
+                      });
+                    }}
                   />
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-                <div>
+              <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
+                  <span>Resources Count</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -306,26 +264,20 @@ const RevenueMilestoneAccordian = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      marginTop: "-15px",
+                      // marginTop: "-15px",
                     }}
-                    placeholder="Resources Count"
                     size="small"
                     type="number"
                     id="name"
                     variant="outlined"
                     spellcheck="false"
                     value={inputNumber}
-                    onChange={handleInputChange}
-                    // onChange={(e) => {
-                    //   setFormData({
-                    //     ...formData,
-                    //     opportunity: {
-                    //       ...formData.opportunity,
-                    //       projectEndDate: e.target.value,
-                    //     },
-                    //   });
-                    // }}
-                    // value={formData?.opportunity?.projectEndDate}
+                    onChange={(e) => {
+                      updateMilestoneDetails({
+                        event: e,
+                        milestoneDetailsColumn: "milestoneResourceCount",
+                      });
+                    }}
                   />
                 </div>
               </div>
@@ -339,8 +291,6 @@ const RevenueMilestoneAccordian = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log("this is the state", state);
-
   return {
     sbuData: state.sbuData,
     sbuHeadData: state.sbuHeadData,
