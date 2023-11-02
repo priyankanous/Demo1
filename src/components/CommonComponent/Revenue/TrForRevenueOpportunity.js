@@ -424,6 +424,8 @@ function TrForRevenue(props) {
             initialResourceCount={initialResourceCount}
             generateGrid={generateGrid}
             getDataByOppId={getDataByOppId}
+            currencyID= {formUpdateData.currency.currencyID}
+            currencyLabelResourceLevel = {currencyLabelResourceLevel}
           />
 
           // <TextField />
@@ -722,6 +724,8 @@ function TrForRevenue(props) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+  
+  const currencyLabelResourceLevel = expandedOppData?.tmRevenueEntryVO?.currency?.currency;
 
   const resourcePayload = {
     account: {
