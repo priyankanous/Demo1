@@ -20,9 +20,9 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SnackBar from "../../CommonComponent/SnackBar";
 
 const RevenueResourceAccordian = (props) => {
-  const { selectedFyIdToGetLocation, formData, pricingType, inputNumber, initialResourceCount,setInputNumber, generateGrid , getDataByOppId, oppId} = props;
+  const { selectedFyIdToGetLocation, formData, pricingType, inputNumber, initialResourceCount,setInputNumber, generateGrid , getDataByOppId, oppId, currencyId, currencyCheck, currencyID, currencyLabelResourceLevel } = props;
 
-  console.log("selectedFyId changed added in acc->", initialResourceCount );
+  console.log("currencyId->", currencyID );
   console.log("inputNumber->", inputNumber );
 
 
@@ -57,6 +57,8 @@ const RevenueResourceAccordian = (props) => {
   const [selectedSbuId, setSelectedSbuId] = useState("");
   const [sbuHeadData, setSbuHeadData] = useState(null);
   const [buDataBySbuId, setBuDataBySbuId] = useState(null);
+  const [selectedBuIdToGetCoc, setSelectedBuIdToGetCoc ] = useState("");
+
 
   const updateResourceDetails = async (params) => {
     const dataArr = [...resourceData];
@@ -73,11 +75,26 @@ const RevenueResourceAccordian = (props) => {
       setSelectedSbuId(sbuId);
     }
 
+    // const selectedOptionBu = params?.event?.target?.selectedOptions[0];
+    // if (selectedOptionBu) {
+    //   const buId = selectedOption.getAttribute(params?.attrKeyBu);
+    //   data[params?.selectedID] = buId;
+    //   setSelectedBuIdToGetCoc(buId);
+    // }
+
     if (params.attrKey) {
       data[params?.selectedID] =
         params?.event?.target?.selectedOptions[0]?.getAttribute(
           params?.attrKey
         );
+    }
+
+    if (params.attrKeyBu) {
+      data[params?.selectedID] =
+        params?.event?.target?.selectedOptions[0]?.getAttribute(
+          params?.attrKeyBu
+        );
+              setSelectedBuIdToGetCoc(data[params?.selectedID]);
     }
     if (params?.attrKey == "data-locationId") {
       const response = await axios.get(
@@ -107,6 +124,18 @@ const RevenueResourceAccordian = (props) => {
     try {
       const response = await axios.get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/sbu/${selectedSbuId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching SBU Head data:", error);
+      throw error;
+    }
+  };
+
+  const getCocByBuId = async (selectedBuIdToGetCoc) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice/businessUnitId/${selectedBuIdToGetCoc}`
       );
       return response.data;
     } catch (error) {
@@ -195,6 +224,20 @@ const RevenueResourceAccordian = (props) => {
     }
   }, [selectedSbuId]);
 
+  const [coc, setCoc] = useState([])
+  useEffect(() => {
+    if (selectedBuIdToGetCoc) {
+      getCocByBuId(selectedBuIdToGetCoc)
+        .then((data) => {
+          setCoc(data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching SBU Head data:", error);
+        });
+    }
+  }, [selectedBuIdToGetCoc]);
+  console.log("coc---->", coc);
+
   // useEffect(() => {
   //   console.log("sbuHeadData ->", sbuHeadData);
   //   const dataArr = [...resourceData];
@@ -247,6 +290,8 @@ const RevenueResourceAccordian = (props) => {
     });
 
   };
+
+  const selectedCurrency = props?.oppDataByOppId?.tmRevenueEntryVO?.currency?.currency;
 
   return (
     <React.Fragment>
@@ -446,7 +491,7 @@ const RevenueResourceAccordian = (props) => {
                       event: e,
                       resourseDetailsColumn: "buisnessUnitName",
                       selectedID: "buisnessUnitId",
-                      attrKey: "data-buisnessUnitId",
+                      attrKeyBu: "data-buisnessUnitId",
                     });
                   }}
                 >
@@ -621,7 +666,7 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
-                Billing Rate
+                Billing Rate ({currencyId || selectedCurrency || currencyLabelResourceLevel})
               </td>
               <td
                 style={{
@@ -697,8 +742,9 @@ const RevenueResourceAccordian = (props) => {
                   <option value="" disabled selected hidden>
                     {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeDisplayName}
                   </option>
-                  {props.cocPracticeData.cocPracticeData &&
-                    props.cocPracticeData.cocPracticeData.map((obj, id) => (
+                 
+                  {coc &&
+                    coc.map((obj, id) => (
                       <option data-cocPracticeId={obj.cocPracticeId}>
                         {obj.cocPracticeName}
                       </option>

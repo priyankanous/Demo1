@@ -69,7 +69,7 @@ const ResourceEntryForm = (props) => {
       projectEndDate: "",
     },
     bdm: { bdmID: "", bdmName: "" },
-    currency: { currencyID: "", currencyName: "" },
+    currency: { currencyID: "", currencyName: "", currencyDisplayNAme:"" },
     probability: { probabilityID: "", probabilityTypeName: "" },
     region: { regionID: "", regionName: "" },
     workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
@@ -381,6 +381,7 @@ const ResourceEntryForm = (props) => {
             resourceData={tempResourceDetails}
             updateResourceData={setResourceData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            currencyId={formData.currency.currencyDisplayNAme}
           />
         );
       }
@@ -952,6 +953,7 @@ const ResourceEntryForm = (props) => {
                       (currencyData, index) => ({
                         value: currencyData?.currencyId,
                         label: currencyData?.currencyName,
+                        currencyLabel: currencyData?.currency,
                       })
                     )}
                     onChange={(selectedOption) => {
@@ -961,6 +963,7 @@ const ResourceEntryForm = (props) => {
                           ...formData.currency,
                           currencyID: selectedOption.value,
                           currencyName: selectedOption.label,
+                          currencyDisplayNAme: selectedOption.currencyLabel,
                         },
                       });
                     }}
