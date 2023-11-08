@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 
 
 const TableButtons = styled(Button)({
+  fontFamily: "Roboto",
   background: "#1E4482",
   marginRight: "29px",
   color: "#FFFFFF",
@@ -49,7 +50,7 @@ export function SettingBaseComponent(props) {
             <TableHead>
               <TableRow style={{background:"rgba(225, 222, 222, 0.5)"}} >
               {props.columns.map((header) => {
-                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px"}}>{header}</TableCell>;
+                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px", fontFamily:"Roboto"}}>{header}</TableCell>;
               })}
               </TableRow>
             </TableHead>

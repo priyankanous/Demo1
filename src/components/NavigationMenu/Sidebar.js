@@ -31,6 +31,7 @@ const Img = styled('img')({
 });
 
 const Heading = styled(Typography)({
+  fontFamily: "Roboto",
   paddingLeft: "102px",
   fontSize: "24px",
   fontWeight: "700",
