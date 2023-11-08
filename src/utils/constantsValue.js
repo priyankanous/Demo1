@@ -84,6 +84,7 @@ export const TableRowSection = styled(TableRow)({
 });
 
 export const TableCellSection = styled(TableCell)({
+fontFamily:"Roboto",
   fontSize:"14px", 
   fontWeight:"500", 
   color:"#000000",
@@ -104,7 +105,8 @@ export const ModalHeadingSection = styled('div')({
 export const ModalHeadingText = styled(Typography)({
   fontSize: "17px", 
   fontWeight: "600", 
-  color: "#000000"
+  color: "#000000",
+  fontFamily:"Roboto",
 });
 
 export const ModalDetailSection2 = styled('div')({
@@ -113,7 +115,8 @@ export const ModalDetailSection2 = styled('div')({
   paddingLeft: "20px",
   paddingTop: "25px",
   justifyContent: "Left", 
-  borderRadius: "10px"
+  borderRadius: "10px",
+  fontFamily:"Roboto",
 });
 
 export const ModalDetailSection = styled('div')({
@@ -127,7 +130,8 @@ export const ModalDetailSection = styled('div')({
 export const InputTextLabel = styled(InputLabel)({
   fontSize: "15px", 
   fontWeight: "500", 
-  color: "#000000"
+  color: "#000000",
+  fontFamily:"Roboto",
 });
 
 // export const InputField = styled(TextField)({
@@ -139,6 +143,7 @@ export const InputField = styled(TextField)`
   && {
     background: white;
     box-shadow: none;
+    font-family: Roboto;
   }
 `;
 
@@ -151,6 +156,7 @@ export const ButtonSection = styled('div')({
 export const ModalControlButton = styled(Button)({
   color: "#FFFFFF", 
   background: "#1E4482",
+  fontFamily:"Roboto",
   '&:hover': {
     backgroundColor: '#1E4482',
   },

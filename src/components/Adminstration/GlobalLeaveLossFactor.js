@@ -218,7 +218,7 @@ function GlobalLeaveLossFactor() {
               <div>
                 <label for="name">
                   <span style={{ color: "red" }}>*</span>
-                  <span>Financial Year</span>
+                  <span style={{fontSize:"15px", fontWeight:"500"}}>Financial Year</span>
                 </label>
                 <select
                   style={{
@@ -227,6 +227,7 @@ function GlobalLeaveLossFactor() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
+                    fontFamily:"Roboto",
                     border:
                       isSubmitted &&
                       !globalLeaveLossFactorData?.financialYear
@@ -318,6 +319,7 @@ function GlobalLeaveLossFactor() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
+                    fontFamily:"Roboto",
                     border:
                       isSubmitted && !globalLeaveLossFactorData?.month
                         ? "1px solid red"

@@ -182,7 +182,7 @@ function WorkOrderStatus() {
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
-                    <Typography variant="body1">
+                    <Typography variant="body1" style={{fontFamily:"Roboto"}}>
                       Drag and drop your files here or{" "}
                     </Typography>
                     <Button
@@ -203,6 +203,7 @@ function WorkOrderStatus() {
                         marginLeft: "10px",
                         backgroundColor: "#1E4482",
                         color: "#FFFFFF",
+                        fontFamily:"Roboto"
                       }}
                     >
                       Browse
@@ -221,7 +222,7 @@ function WorkOrderStatus() {
                 <Button
                   variant="contained"
                   onClick={handleFileUpload}
-                  style={{ backgroundColor: "#1E4482", color: "#FFFFFF" }}
+                  style={{ backgroundColor: "#1E4482", color: "#FFFFFF", fontFamily:"Roboto" }}
                 >
                   Upload
                 </Button>
@@ -234,6 +235,7 @@ function WorkOrderStatus() {
                     marginLeft: "10px",
                     backgroundColor: "#1E4482",
                     color: "#FFFFFF",
+                    fontFamily:"Roboto" 
                   }}
                 >
                   Cancel

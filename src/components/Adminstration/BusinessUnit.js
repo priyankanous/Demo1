@@ -140,6 +140,7 @@ function BuisnessUnit() {
                     });
                   }}
                   style={{
+                    fontFamily:"Roboto !important",
                     border: isNameEmpty
                       ? "1px solid red"
                       : "1px solid transparent",
@@ -165,6 +166,7 @@ function BuisnessUnit() {
                     });
                   }}
                   style={{
+                    fontFamily:"Roboto",
                     border: isDisplayNameEmpty
                       ? "1px solid red"
                       : "1px solid transparent",
@@ -295,7 +297,7 @@ function Tr({
     <React.Fragment>
       <TableRowSection ref={wrapperRef}>
         <TableCellSection className={!isActive && "disable-table-row"}>
-          <span>{businessUnitName || "Unknown"}</span>
+          <span style={{fontFamily:"Roboto"}}>{businessUnitName || "Unknown"}</span>
         </TableCellSection>
 
         <TableCellSection className={!isActive && "disable-table-row"}>
@@ -428,6 +430,7 @@ function Tr({
                       businessUnitDisplayName: e.target.value,
                     });
                   }}
+                  style={{fontFamily:"Roboto"}}
                 />
               </div>
 

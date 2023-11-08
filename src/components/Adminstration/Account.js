@@ -223,6 +223,7 @@ function AccountSettings() {
                     marginTop: "2px",
                     borderRadius: "7px",
                     boxShadow: "none",
+                    fontFamily:"Roboto",
                     border:
                       isSubmitted && !accountData?.regions?.regionDisplayName
                         ? "1px solid red"
@@ -579,6 +580,7 @@ function Tr({
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: "1px solid lightgray",
+                    fontFamily:"Roboto !important",
                   }}
                   value={responseData.regions.regionDisplayName}
                   onChange={(e) => {

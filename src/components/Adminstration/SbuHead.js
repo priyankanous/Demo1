@@ -344,6 +344,7 @@ function SbuHead() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
+                    fontFamily:"Roboto",
                     border:
                       isSubmitted && !sbuHeadName
                         ? "1px solid red"
@@ -392,6 +393,7 @@ function SbuHead() {
                   }}
                   value={activeForm}
                   style={{
+                    fontFamily:"Roboto !important",
                     border:
                       isSubmitted && !activeForm
                         ? "1px solid red"

@@ -184,7 +184,7 @@ export const NavBarHeading = styled.div`
   top: 40%;
   margin-left: 4rem;
   font-size: 1.5vw;
-  font-family: sans-serif;
+  // font-family: sans-serif;
   font-weight: 700;
   text-align: middle;
 `;

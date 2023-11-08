@@ -9,8 +9,8 @@ import {
 import { Button, Typography, styled } from "@mui/material";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-
 const TableButtons = styled(Button)({
+  fontFamily: "Roboto",
   background: "#1E4482",
   marginRight: "29px",
   color: "#FFFFFF",
@@ -21,6 +21,10 @@ const TableButtons = styled(Button)({
   '&:hover': {
     backgroundColor: '#1E4482',
   },
+});
+
+const Cell = styled(TableCell)({
+  fontFamily: "Roboto",
 });
 
 
@@ -47,7 +51,7 @@ export function AdminBaseComponent(props) {
         <React.Fragment>
           <div class="filter">
             <div style={{ paddingRight: "2%", display:"flex" }}>
-              <Typography>
+              <Typography style={{fontFamily:"Roboto"}}>
               Financial year:
               </Typography>
               <select
@@ -60,7 +64,7 @@ export function AdminBaseComponent(props) {
                   props.getAllGlobalLLF(e.target.value);
                 }}
                 // style={{height:"35px", borderRadius:"7px"}}
-                style={{height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                style={{height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray",fontFamily:"Roboto"}}
 
               >
                 <option value="" disabled selected hidden>
@@ -90,7 +94,7 @@ export function AdminBaseComponent(props) {
                 onChange={(e) => {
                   setCopyData({ ...copyData, copyFromFy: e.target.value });
                 }}
-                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -129,7 +133,7 @@ export function AdminBaseComponent(props) {
                     },
                   });
                 }}
-                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -160,7 +164,6 @@ export function AdminBaseComponent(props) {
               >
                 Apply
               </TableButtons>
-              {console.log("this is in BC copyFromFy", copyData.copyFromFy)}
             </span>
             </div>
           </div>
@@ -168,10 +171,10 @@ export function AdminBaseComponent(props) {
           <Table style={{overflow:"hidden"}}>
             <TableRow>
               {props.columns.map((header) => {
-                return <TableCell>{header}</TableCell>;
+                return <TableCell style={{fontFamily:"Roboto"}} >{header}</TableCell>;
               })}
             </TableRow>
-            <tbody>
+            <tbody style={{fontFamily:"Roboto"}}>
               {props.data &&
                 props.data.actualDataObject.map((obj, id) =>
                   props.Tr({ ...obj })
@@ -182,14 +185,14 @@ export function AdminBaseComponent(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <TableContainer style={{ width:"98%",marginTop:"25px",overflowY:"scroll",height:"70vh"     
+          <TableContainer style={{ width:"98%",marginTop:"25px",overflowY:"scroll",height:"70vh",   
         }}>
 
-          <Table >
-            <TableHead>
-              <TableRow style={{background:"rgba(225, 222, 222, 0.5)"}} >
+          <Table  >
+            <TableHead >
+              <TableRow style={{background:"rgba(225, 222, 222, 0.5)", }} >
               {props.columns.map((header) => {
-                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px"}}>{header}</TableCell>;
+                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px", fontFamily:"Roboto"}}>{header}</TableCell>;
               })}
               </TableRow>
             </TableHead>

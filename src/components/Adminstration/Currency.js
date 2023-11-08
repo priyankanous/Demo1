@@ -217,7 +217,7 @@ function Currency() {
                 {/* <label for="name">Financial Year</label> */}
                 <select
                   // style={{ width: "100%", height: "40px" }}
-                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}}
+                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto"}}
 
                   onChange={(e) => {
                     const selectedFyId =
