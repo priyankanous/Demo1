@@ -20,11 +20,24 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SnackBar from "../../CommonComponent/SnackBar";
 
 const RevenueResourceAccordian = (props) => {
-  const { selectedFyIdToGetLocation, formData, pricingType, inputNumber, initialResourceCount,setInputNumber, generateGrid , getDataByOppId, oppId, currencyId, currencyCheck, currencyID, currencyLabelResourceLevel } = props;
+  const {
+    selectedFyIdToGetLocation,
+    formData,
+    pricingType,
+    inputNumber,
+    initialResourceCount,
+    setInputNumber,
+    generateGrid,
+    getDataByOppId,
+    oppId,
+    currencyId,
+    currencyCheck,
+    currencyID,
+    currencyLabelResourceLevel,
+  } = props;
 
-  console.log("currencyId->", currencyID );
-  console.log("inputNumber->", inputNumber );
-
+  console.log("currencyId->", currencyID);
+  console.log("inputNumber->", inputNumber);
 
   useEffect(() => {
     props.getSbuData();
@@ -35,9 +48,6 @@ const RevenueResourceAccordian = (props) => {
     props.getCocPracticeData();
   }, []);
   const { resourceData, updateResourceData, id } = props;
-
-  console.log("resourceData",resourceData)
-
   const month = [
     "Jan",
     "Feb",
@@ -52,13 +62,17 @@ const RevenueResourceAccordian = (props) => {
     "Nov",
     "Dec",
   ];
-
   console.log("Props in accordion new------>", props);
   const [selectedSbuId, setSelectedSbuId] = useState("");
   const [sbuHeadData, setSbuHeadData] = useState(null);
   const [buDataBySbuId, setBuDataBySbuId] = useState(null);
-  const [selectedBuIdToGetCoc, setSelectedBuIdToGetCoc ] = useState("");
+  const [selectedBuIdToGetCoc, setSelectedBuIdToGetCoc] = useState("");
 
+  useEffect(() => {
+    if (resourceData[id] && resourceData[id]?.sbuId) {
+      setSelectedSbuId(resourceData[id]?.sbuId);
+    }
+  }, [resourceData]);
 
   const updateResourceDetails = async (params) => {
     const dataArr = [...resourceData];
@@ -81,7 +95,6 @@ const RevenueResourceAccordian = (props) => {
     //   data[params?.selectedID] = buId;
     //   setSelectedBuIdToGetCoc(buId);
     // }
-
     if (params.attrKey) {
       data[params?.selectedID] =
         params?.event?.target?.selectedOptions[0]?.getAttribute(
@@ -94,7 +107,7 @@ const RevenueResourceAccordian = (props) => {
         params?.event?.target?.selectedOptions[0]?.getAttribute(
           params?.attrKeyBu
         );
-              setSelectedBuIdToGetCoc(data[params?.selectedID]);
+      setSelectedBuIdToGetCoc(data[params?.selectedID]);
     }
     if (params?.attrKey == "data-locationId") {
       const response = await axios.get(
@@ -111,7 +124,7 @@ const RevenueResourceAccordian = (props) => {
         params?.event?.target?.value
       );
     }
-    console.log("data in component:", data)
+    console.log("data in component:", data);
     dataArr[id] = data;
     // console.log(dataArr, "After update", updateResourceData);
     updateResourceData(dataArr);
@@ -144,7 +157,6 @@ const RevenueResourceAccordian = (props) => {
     }
   };
 
-
   // console.log("sbuHeadData", sbuHeadData.data[0].sbuHeadName)
   // console.log("sbuHeadDataBU", sbuHeadData.data[0].strategicBusinessUnit.businessUnit.businessUnitName)
 
@@ -159,9 +171,8 @@ const RevenueResourceAccordian = (props) => {
   //   props.updateResourceData(resourseDetails, id);
   // };
 
-  const [selectedLocationToGetLs, setSelectedLocationToGetLs] = useState('');
+  const [selectedLocationToGetLs, setSelectedLocationToGetLs] = useState("");
   const [leaveLossData, setLeaveLossData] = useState(null);
-
 
   // const getLeaveLossByLocation = async (selectedLocationToGetLs) => {
   //   console.log("selectedLocation  value---->",selectedLocationToGetLs);
@@ -185,8 +196,10 @@ const RevenueResourceAccordian = (props) => {
     return `${day}/${month}/${year}`;
   };
 
-  const getLeaveLossByLocation = async (selectedFyIdToGetLocation, selectedLocationToGetLs) => {
-    
+  const getLeaveLossByLocation = async (
+    selectedFyIdToGetLocation,
+    selectedLocationToGetLs
+  ) => {
     try {
       const response = await axios.get(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/location/${selectedFyIdToGetLocation}/${selectedLocationToGetLs}`
@@ -197,26 +210,25 @@ const RevenueResourceAccordian = (props) => {
       throw error;
     }
   };
-  
+
   useEffect(() => {
     if (selectedLocationToGetLs) {
       getLeaveLossByLocation(selectedFyIdToGetLocation, selectedLocationToGetLs)
-        .then(data => {
+        .then((data) => {
           console.log("Data:", data.data);
           setLeaveLossData(data.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching data:", error);
         });
     }
   }, [selectedLocationToGetLs, selectedFyIdToGetLocation]);
-  
 
   useEffect(() => {
     if (selectedSbuId) {
       getSbuHeadBySbuId(selectedSbuId)
-        .then((data) => {
-          setSbuHeadData(data);
+        .then((res) => {
+          setSbuHeadData(res);
         })
         .catch((error) => {
           console.error("Error fetching SBU Head data:", error);
@@ -224,7 +236,8 @@ const RevenueResourceAccordian = (props) => {
     }
   }, [selectedSbuId]);
 
-  const [coc, setCoc] = useState([])
+  const [coc, setCoc] = useState([]);
+
   useEffect(() => {
     if (selectedBuIdToGetCoc) {
       getCocByBuId(selectedBuIdToGetCoc)
@@ -238,24 +251,27 @@ const RevenueResourceAccordian = (props) => {
   }, [selectedBuIdToGetCoc]);
   console.log("coc---->", coc);
 
-  // useEffect(() => {
-  //   console.log("sbuHeadData ->", sbuHeadData);
-  //   const dataArr = [...resourceData];
-  //   const data = dataArr[id];
-  //   data["sbuHeadId"] =
-  //     sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadId;
-  //   data["sbuHeadName"] =
-  //     sbuHeadData?.data?.length > 0 && sbuHeadData?.data[0]?.sbuHeadName;
-  //   data["businessUnitId"] =
-  //     sbuHeadData?.data?.length > 0 &&
-  //     sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit?.businessUnitId;
-  //   data["businessUnitName"] =
-  //     sbuHeadData?.data?.length > 0 &&
-  //     sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
-  //       ?.businessUnitName;
-  //   dataArr[id] = data;
-  // }, [sbuHeadData]);
-
+  useEffect(() => {
+    const dataArr = [...resourceData];
+    const data = dataArr[id];
+    data["sbuHeadId"] =
+      sbuHeadData?.data?.length > 0 ? sbuHeadData?.data[0]?.sbuHeadId : "";
+    data["sbuHeadName"] =
+      sbuHeadData?.data?.length > 0 ? sbuHeadData?.data[0]?.sbuHeadName : "";
+    data["businessUnitId"] =
+      sbuHeadData?.data?.length > 0
+        ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+            ?.businessUnitId
+        : "";
+    data["businessUnitName"] =
+      sbuHeadData?.data?.length > 0
+        ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+            ?.businessUnitName
+        : "";
+    dataArr[id] = data;
+    setSelectedBuIdToGetCoc(data["businessUnitId"]);
+    updateResourceData(dataArr);
+  }, [sbuHeadData]);
 
   // useEffect(() => {
   //   if (selectedLocationToGetLs) {
@@ -277,21 +293,22 @@ const RevenueResourceAccordian = (props) => {
   const handleDeleteRevenueResourceEntries = (revenueResourceEntryId) => {
     console.log("Deleting entry with ID:", initialResourceCount);
     axios
-    .delete(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/revenueresource/${revenueResourceEntryId}`)
-    .then((response) => {
-      console.log("Entry deleted successfully");
-      setShowSnackbar(true);
-      setSnackMessage("Record has been deleted");
-      getDataByOppId(oppId);
-
-    })
-    .catch((error) => {
-      console.error("Error deleting entry:", error);
-    });
-
+      .delete(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/revenueresource/${revenueResourceEntryId}`
+      )
+      .then((response) => {
+        console.log("Entry deleted successfully");
+        setShowSnackbar(true);
+        setSnackMessage("Record has been deleted");
+        getDataByOppId(oppId);
+      })
+      .catch((error) => {
+        console.error("Error deleting entry:", error);
+      });
   };
 
-  const selectedCurrency = props?.oppDataByOppId?.tmRevenueEntryVO?.currency?.currency;
+  const selectedCurrency =
+    props?.oppDataByOppId?.tmRevenueEntryVO?.currency?.currency;
 
   return (
     <React.Fragment>
@@ -306,25 +323,33 @@ const RevenueResourceAccordian = (props) => {
             }}
           >
             <div
-            style={{display:"flex", justifyContent:"space-between", marginRight:"10px"}}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginRight: "10px",
+              }}
             >
               <div>
-            <RiIcons.RiArrowDownSFill />
-            <span>Resource {id + 1} Details </span>
-            </div>
-            <div>
-              <DeleteOutlineIcon
-                 style={{ fontSize: "20px", paddingRight: "5px" }}
-                 onClick={() => handleDeleteRevenueResourceEntries(props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.revenueResourceEntryId)}
-
-              />
-            </div>
+                <RiIcons.RiArrowDownSFill />
+                <span>Resource {id + 1} Details </span>
+              </div>
+              <div>
+                <DeleteOutlineIcon
+                  style={{ fontSize: "20px", paddingRight: "5px" }}
+                  onClick={() =>
+                    handleDeleteRevenueResourceEntries(
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.revenueResourceEntryId
+                    )
+                  }
+                />
+              </div>
             </div>
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
           <br></br>
-          <table style={{backgroundColor:"white"}}>
+          <table style={{ backgroundColor: "white" }}>
             <tr>
               <td
                 style={{
@@ -410,10 +435,14 @@ const RevenueResourceAccordian = (props) => {
 
             <tr className="trmilestone" style={{ background: "white" }}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
-              <select
+                <select
                   id="milestoneselect"
                   required
-                  value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuName}           
+                  value={
+                    sbuHeadData?.data?.length > 0
+                      ? sbuHeadData?.data[0]?.strategicBusinessUnit?.sbuName
+                      : ""
+                  }
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -421,7 +450,7 @@ const RevenueResourceAccordian = (props) => {
                       selectedID: "sbuId",
                       attrKeySbu: "data-sbuId",
                     });
-                  }}   
+                  }}
                 >
                   <option value="" disabled selected hidden>
                     {/* Select SBU */}
@@ -429,15 +458,21 @@ const RevenueResourceAccordian = (props) => {
                   </option>
                   {props.sbuData.sbuData &&
                     props.sbuData.sbuData.map((obj, id) => (
-                      <option  key={id} data-sbuId={obj.sbuId}>{obj.sbuName}</option>
+                      <option key={id} data-sbuId={obj.sbuId}>
+                        {obj.sbuName}
+                      </option>
                     ))}
                 </select>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                {/* <input
+                <input
                   id="milestoneselect"
                   required
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.strategicBusinessUnitHead
+                      ?.sbuHeadName
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadIdsbuHeadIdsbuHeadId}
                   onChange={(e) => {
                     updateResourceDetails({
@@ -450,14 +485,14 @@ const RevenueResourceAccordian = (props) => {
                   type="text"
                   data-sbuHeadId={1}
                   value={
-                    sbuHeadData &&
-                    sbuHeadData.data &&
-                    sbuHeadData.data[id].sbuHeadName
+                    sbuHeadData?.data?.length > 0
+                      ? sbuHeadData?.data[0]?.sbuHeadName
+                      : ""
                   }
                   disabled
-                ></input> */}
+                ></input>
 
-            <select
+                {/* <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -479,11 +514,10 @@ const RevenueResourceAccordian = (props) => {
                         {obj.sbuHeadName}
                       </option>
                     ))}
-                </select>
-
+                </select> */}
               </td>
               <td style={{ borderRight: "solid 1px" }}>
-                <select
+                {/* <select
                   id="milestoneselect"
                   required
                   onChange={(e) => {
@@ -496,8 +530,11 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                  {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName}
-
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.businessUnit
+                        ?.businessUnitDisplayName
+                    }
                   </option>
                   {props.buData.buData &&
                     props.buData.buData.map((obj, id) => (
@@ -505,29 +542,33 @@ const RevenueResourceAccordian = (props) => {
                         {obj.businessUnitName}
                       </option>
                     ))}
-                </select>
-                {/* <input
+                </select> */}
+                <input
                   id="milestoneselect"
                   required
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.businessUnit
+                      ?.businessUnitDisplayName
+                  }
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
-                      resourseDetailsColumn: "buisnessUnitName",
-                      selectedID: "buisnessUnitId",
-                      attrKey: "data-buisnessUnitId",
+                      resourseDetailsColumn: "businessUnitName",
+                      selectedID: "businessUnitId",
+                      attrKey: "data-businessUnitId",
                     });
                   }}
                   type="text"
                   data-sbuHeadId={1}
                   value={
-                    sbuHeadData &&
-                    sbuHeadData.data &&
-                    sbuHeadData.data[0].strategicBusinessUnit.businessUnit
-                      .businessUnitName
+                    sbuHeadData?.data?.length > 0
+                      ? sbuHeadData?.data[0]?.strategicBusinessUnit
+                          ?.businessUnit?.businessUnitName
+                      : ""
                   }
                   disabled
-                ></input> */}
+                ></input>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <select
@@ -549,8 +590,10 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
-
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.location?.locationName
+                    }
                   </option>
                   {props.locationData.locationData &&
                     props.locationData.locationData.map((obj, id) => (
@@ -564,9 +607,11 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="milestoneinput"
                   type="text"
-                  
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.resourceName
+                  }
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -579,7 +624,10 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="milestoneinput"
                   type="string"
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.employeeId}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.employeeId
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.employeeId}
 
                   onChange={(e) => {
@@ -595,8 +643,10 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   type="date"
                   required
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
-
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.resourceStartDate
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
 
                   onChange={(e) => {
@@ -612,8 +662,10 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   type="date"
                   required
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate}
-
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.resourceEndDate
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate}
                   onChange={(e) => {
                     updateResourceDetails({
@@ -626,7 +678,7 @@ const RevenueResourceAccordian = (props) => {
             </tr>
             <br></br>
           </table>
-          <table style={{ marginLeft: "110px", backgroundColor:"white" }}>
+          <table style={{ marginLeft: "110px", backgroundColor: "white" }}>
             <tr>
               <td
                 style={{
@@ -666,7 +718,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
-                Billing Rate ({currencyId || selectedCurrency || currencyLabelResourceLevel})
+                Billing Rate (
+                {currencyId || selectedCurrency || currencyLabelResourceLevel})
               </td>
               <td
                 style={{
@@ -674,7 +727,7 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
-                  padding:"0px"
+                  padding: "0px",
                 }}
               >
                 Leave Loss Factor %
@@ -711,7 +764,11 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.businessType.businessTypeDisplayName}
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.businessType
+                        .businessTypeDisplayName
+                    }
                   </option>
                   {props.businessTypeData.businessTypeData &&
                     props.businessTypeData.businessTypeData.map((obj, id) => (
@@ -740,9 +797,13 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 >
                   <option value="" disabled selected hidden>
-                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.cocPractice.cocPracticeDisplayName}
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.cocPractice
+                        .cocPracticeDisplayName
+                    }
                   </option>
-                 
+
                   {coc &&
                     coc.map((obj, id) => (
                       <option data-cocPracticeId={obj.cocPracticeId}>
@@ -767,7 +828,10 @@ const RevenueResourceAccordian = (props) => {
                   // }}
                 >
                   <option value="" disabled selected hidden>
-                    {props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType}
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.billingRateType
+                    }
                   </option>
                   <option>Hourly</option>
                   <option>Daily</option>
@@ -780,7 +844,10 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRate}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.billingRate
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRate}
 
                   onChange={(e) => {
@@ -799,8 +866,11 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   id="resourceinput"
                   type="number"
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}
-                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}               
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.leaveLossFactor
+                  }
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.leaveLossFactor}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -814,7 +884,10 @@ const RevenueResourceAccordian = (props) => {
                 <input
                   type="text"
                   id="resourceinput"
-                  placeholder={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.allocation}
+                  placeholder={
+                    props?.oppDataByOppId?.tmRevenueEntryVO
+                      ?.revenueResourceEntries[id]?.allocation
+                  }
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.allocation}
                   onChange={(e) => {
                     updateResourceDetails({

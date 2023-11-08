@@ -186,7 +186,7 @@ const ResourceEntryForm = (props) => {
         pricingType: pricingType,
         remarks: "TM Details adding",
         status: "Submitted",
-        revenueResourceEntries: resourceData.map((ele) => ({
+        revenueResourceEntries: resourceData?.map((ele) => ({
           strategicBusinessUnit: {
             sbuId: ele.sbuId,
           },
@@ -194,7 +194,7 @@ const ResourceEntryForm = (props) => {
             sbuHeadId: ele.sbuHeadId,
           },
           businessUnit: {
-            businessUnitId: ele.buisnessUnitId,
+            businessUnitId: ele.businessUnitId,
           },
           businessType: {
             businessTypeId: ele.businessTypeId,
