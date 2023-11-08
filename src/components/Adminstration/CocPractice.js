@@ -216,6 +216,7 @@ function CocPractice() {
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: isBu ? "1px solid red" : "1px solid lightgray",
+                    fontFamily:"Roboto",
                   }}
                   onChange={(e) => {
                     const selectedBuId =
@@ -553,6 +554,7 @@ function Tr({
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: "1px solid lightgray",
+                    fontFamily:"Roboto",
                   }}
                   value={responseData.businessUnit.businessUnitName}
                   onChange={(e) => {

@@ -331,6 +331,7 @@ function Opportunity() {
                     marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
+                    fontFamily:"Roboto",
                     border:
                       isSubmitted && !opportunityData?.account?.accountNameData
                         ? "1px solid red"
@@ -417,6 +418,7 @@ function Opportunity() {
                   id="email"
                   variant="outlined"
                   style={{
+                    fontFamily:"Roboto !important",
                     border:
                       isSubmitted && !opportunityData.projectStartDate
                         ? "1px solid red"
@@ -441,6 +443,7 @@ function Opportunity() {
                   id="email"
                   variant="outlined"
                   style={{
+                    fontFamily:"Roboto !important",
                     border:
                       isSubmitted && !opportunityData.projectEndDate
                         ? "1px solid red"
