@@ -27,6 +27,7 @@ const TableButtons = styled(Button)({
   padding: "0px 10px",
   height: "34px",
   marginTop: "6px",
+  fontFamily:"Roboto",
   "&:hover": {
     backgroundColor: "#1E4482",
   },
@@ -102,7 +103,7 @@ export function CalendarBaseComponent(
                 marginTop: "-3%",
               }}
             >
-              <Typography>Financial year:</Typography>
+              <Typography style={{fontFamily:"Roboto"}}>Financial year:</Typography>
               <select
                 id="filterSelect"
                 onChange={(e) => {
@@ -121,6 +122,7 @@ export function CalendarBaseComponent(
                   borderRadius: "5px",
                   boxShadow: "none",
                   border: "1px solid gray",
+                  fontFamily:"Roboto"
                 }}
               >
                 <option value="" disabled selected hidden></option>
@@ -140,8 +142,8 @@ export function CalendarBaseComponent(
                     indicatorColor="primary"
                     aria-label="secondary tabs example"
                   >
-                    <Tab value="one" label="OFFSHORE" />
-                    <Tab value="two" label="ONSITE" />
+                    <Tab value="one" label="OFFSHORE" style={{fontFamily:"Roboto"}} />
+                    <Tab value="two" label="ONSITE" style={{fontFamily:"Roboto"}} />
                   </Tabs>
                 </Box>
               </div>
@@ -151,7 +153,7 @@ export function CalendarBaseComponent(
             <Table style={{ overflow: "hidden" }}>
               <TableRow style={{ background: "rgba(225, 222, 222, 0.5)" }}>
                 {props.columns.map((header) => {
-                  return <TableCell>{header}</TableCell>;
+                  return <TableCell style={{fontFamily:"Roboto"}}>{header}</TableCell>;
                 })}
               </TableRow>
               <tbody>
