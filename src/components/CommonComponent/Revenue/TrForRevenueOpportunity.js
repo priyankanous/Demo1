@@ -367,7 +367,7 @@ function TrForRevenue(props) {
           sbuHeadId:
             oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
               ?.strategicBusinessUnitHead?.sbuHeadId,
-          buisnessUnitId:
+          businessUnitId:
             oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
               ?.businessUnit?.businessUnitId,
           locationId:
@@ -529,7 +529,7 @@ function TrForRevenue(props) {
         sbuHeadId: ele.sbuHeadId,
       },
       businessUnit: {
-        businessUnitId: ele.buisnessUnitId,
+        businessUnitId: ele.businessUnitId,
       },
       businessType: {
         businessTypeId: ele.businessTypeId,
@@ -599,7 +599,6 @@ function TrForRevenue(props) {
     const initialWorkOrderStatus =
       oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus;
 
-    console.log("initialBdm", initialBdm);
 
     if (initialAccountID !== undefined && initialAccountID !== null) {
       setFormUpdateData((prevState) => ({
@@ -782,7 +781,7 @@ function TrForRevenue(props) {
         sbuHeadId: ele.sbuHeadId,
       },
       businessUnit: {
-        businessUnitId: ele.buisnessUnitId,
+        businessUnitId: ele.businessUnitId,
       },
       businessType: {
         businessTypeId: ele.businessTypeId,
@@ -820,6 +819,8 @@ function TrForRevenue(props) {
         setIsClicked(false);
       });
   };
+
+  console.log("Updated Resource Data -->", resourceData)
 
   return (
     <React.Fragment>
