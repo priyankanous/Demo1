@@ -251,7 +251,7 @@ function HolidayCalendar() {
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Financial Year</InputTextLabel>
                 <select
-                  style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
+                  style={{fontFamily:"Roboto", height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
                   border: isSubmitted && !holidayCalendarData?.financialYear.financialYearName ? "1px solid red" : "1px solid Darkgray",
                   borderRadius: "4px"}}
                   value={holidayCalendarData?.financialYear.financialYearName}
@@ -288,7 +288,7 @@ function HolidayCalendar() {
                 <InputTextLabel><span style={{color:"red"}}>*</span>
                 <span>Location</span></InputTextLabel>
                 <select
-                 style={{height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
+                 style={{fontFamily:"Roboto",height:"37px", width:"100%", marginBottom:"5px",borderRadius:"7px",boxShadow:"none", 
                  border:  isSubmitted && !holidayCalendarData?.location.locationName ? '1px solid red' : '1px solid Darkgray',
                  borderRadius: "5px"
                 }}
