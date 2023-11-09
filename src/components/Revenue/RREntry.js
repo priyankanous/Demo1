@@ -475,6 +475,9 @@ function Tr({
                       style={{
                         backgroundColor: "rgba(72, 130, 225, 0.2)",
                         padding: "4px",
+                        fontFamily:"Roboto",
+                        fontSize:"14px",
+                        fontWeight:"700"
                       }}
                     >
                       {header}
