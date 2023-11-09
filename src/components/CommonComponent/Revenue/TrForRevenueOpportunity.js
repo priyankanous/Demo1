@@ -72,7 +72,9 @@ const ThirdLevelHeadingCell = styled('table')({
 });
 
 const ThirdLevelHeading = styled('th')({
-   padding: "4px"
+   padding: "4px",
+   fontFamily:"Roboto",fontWeight:"700",
+   fontSize:"14px"
 });
 
 const ThirdLevelCopyIcon = styled(FileCopyOutlinedIcon)({
@@ -1128,7 +1130,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontStyle: "normal", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "200" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1445,7 +1447,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontStyle: "normal", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "200" }}
             >
               Edit Entry
             </ModalHeadingText>
@@ -1485,7 +1487,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", }}
                       />
                       T & M
                       <input
@@ -1494,7 +1496,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", }}
                         disabled
                       />
                       FP
@@ -1572,6 +1574,7 @@ function TrForRevenue(props) {
                               variant: "outlined",
                               borderRadius: "0px",
                               height: "35px",
+                              fontFamily:"Roboto",
                             }}
                             onChange={(e) => {
                               getAllCurrencyForFy(e.target.value);
@@ -1671,6 +1674,7 @@ function TrForRevenue(props) {
                               boxShadow: "none",
                               border: "1px solid lightgray",
                               color: "black",
+                              fontFamily:"Roboto",
                             }}
                             // value={ oppDataByOppId.tmRevenueEntryVO?.account?.accountName ||
                             //   formUpdateData.account.accountName ||
@@ -1866,6 +1870,7 @@ function TrForRevenue(props) {
                               border: "1px solid lightgray",
                               color: "black",
                               width: "187Px",
+                              fontFamily:"Roboto",
                               // marginLeft: "8px",
                             }}
                             // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
@@ -1971,6 +1976,7 @@ function TrForRevenue(props) {
                                 border: "1px solid lightgray",
                                 color: "black",
                                 height: "35px",
+                                fontFamily:"Roboto",
                               }}
                               // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
 
@@ -2051,6 +2057,7 @@ function TrForRevenue(props) {
                                 },
                               });
                             }}
+                            style={{fontFamily:"Roboto"}}
                           />
                         </div>
                       </div>
@@ -2080,6 +2087,8 @@ function TrForRevenue(props) {
                                 },
                               });
                             }}
+                            style={{fontFamily:"Roboto"}}
+
                           />
                         </div>
                       </div>
@@ -2106,6 +2115,7 @@ function TrForRevenue(props) {
                               });
                             }}
                             value={formUpdateData?.opportunity?.projectEndDate}
+                            style={{fontFamily:"Roboto"}}
                           />
                         </div>
                       </div>
@@ -2141,6 +2151,8 @@ function TrForRevenue(props) {
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
+                            fontFamily:"Roboto"
+
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.currency.currencyName}
                           onChange={(e) => {
@@ -2195,6 +2207,7 @@ function TrForRevenue(props) {
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
+                            fontFamily:"Roboto"
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.probabilityType.probabilityTypeName}
                           onChange={(e) => {
@@ -2250,6 +2263,7 @@ function TrForRevenue(props) {
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
+                            fontFamily:"Roboto"
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.region.regionDisplayName}
                           onChange={(e) => {
@@ -2320,6 +2334,7 @@ function TrForRevenue(props) {
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
+                            fontFamily:"Roboto"
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderNumber}
                           onChange={(e) => {
@@ -2717,7 +2732,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontStyle: "normal", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "200" }}
             >
               Edit Resource
             </ModalHeadingText>
@@ -2756,7 +2771,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto" }}
                       />
                       T & M
                       <input
@@ -2765,7 +2780,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto" }}
                       />
                       FP
                     </div>

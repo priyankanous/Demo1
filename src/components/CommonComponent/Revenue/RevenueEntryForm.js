@@ -483,7 +483,7 @@ const ResourceEntryForm = (props) => {
                   name="Pricing Type"
                   checked={pricingType === "T&M"}
                   onChange={onOptionChange}
-                  style={{ boxShadow: "none" }}
+                  style={{ boxShadow: "none", fontFamily:"Roboto", }}
                 />
                 T & M
                 <input
@@ -492,7 +492,7 @@ const ResourceEntryForm = (props) => {
                   name="Pricing Type"
                   checked={pricingType === "FP"}
                   onChange={onOptionChange}
-                  style={{ boxShadow: "none" }}
+                  style={{ boxShadow: "none", fontFamily:"Roboto", }}
                 />
                 FP
               </div>
@@ -502,6 +502,8 @@ const ResourceEntryForm = (props) => {
                 display: "flex",
                 alignItems: "center",
                 marginRight: "25px",
+                fontFamily:"Roboto",
+
               }}
             >
               <div
@@ -510,11 +512,13 @@ const ResourceEntryForm = (props) => {
                   display: "flex",
                   alignItems: "center",
                   columnGap: "10px",
+                  fontFamily:"Roboto",
+
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
                 <span style={{ marginLeft: "-9px" }}>FY :</span>
-                <div style={{ width: "180px" }}>
+                <div style={{ width: "180px", fontFamily:"Roboto", }}>
                   <InputField
                     style={{
                       background: "white",
@@ -522,6 +526,7 @@ const ResourceEntryForm = (props) => {
                       marginLeft: "3px",
                       borderRadius: "0px !important",
                       height: "35px",
+                      fontFamily:"Roboto !important",
                     }}
                     size="small"
                     type="text"
@@ -828,6 +833,7 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px !important",
                         height: "35px",
+                        fontFamily:"Roboto",
                       }}
                       size="small"
                       type="text"
@@ -1351,6 +1357,7 @@ const ResourceEntryForm = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
+                      fontFamily: "Roboto !important",
                     }}
                     size="small"
                     type="number"

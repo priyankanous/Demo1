@@ -31,6 +31,7 @@ import { Checkbox } from "@mui/material";
 import { Button, Typography, styled } from "@mui/material";
 
 const TableButtons = styled(Button)({
+  fontFamily: "Roboto",
   background: "#1E4482",
   marginRight: "5px",
   marginLeft: "10px",
@@ -112,13 +113,12 @@ function RevenueEntryScreens(props) {
                   setIsOpen(true);
                 }}
               >
-                {/* <FaIcons.FaPlus /> */}
                 <AddIcon />
               </a>
             </td>
             <td style={{ padding: "0px 0px 0px 220px" }}>
               <td>
-                <Typography style={{ fontWeight: "13px" }}>FY :</Typography>
+                <Typography style={{ fontWeight: "13px", fontFamily: "Roboto"}}>FY :</Typography>
               </td>
               <td>
                 <select
@@ -127,6 +127,7 @@ function RevenueEntryScreens(props) {
                     width: "100%",
                     borderRadius: "5px",
                     boxShadow: "none",
+                    fontFamily: "Roboto"
                   }}
                   id="revenue-select"
                   // onChange={(e) => {
@@ -168,7 +169,7 @@ function RevenueEntryScreens(props) {
               style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
             >
               <ModalHeadingText
-                style={{ fontStyle: "normal", fontWeight: "200" }}
+                style={{fontFamily:"Roboto", fontWeight: "200" }}
               >
                 New Entry
               </ModalHeadingText>
