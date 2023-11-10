@@ -122,8 +122,8 @@ function WorkOrderStatus() {
   const DragAndDropContainer = styled("div")({
     display: "flex",
     alignItems: "center",
-    border: "1px solid #FFFFFF",
-    borderRadius: "5px",
+    border: "1px dotted #000000d9",
+    borderRadius: "12px",
     padding: "20px",
     textAlign: "center",
     cursor: "pointer",
@@ -163,7 +163,7 @@ function WorkOrderStatus() {
                 borderRadius: "8px",
               }}
             >
-              <ModalHeadingSection>
+              <ModalHeadingSection style={{ backgroundColor: "#e1dede80", borderRadius:"8px 8px 0px 0px" }}>
                 <ModalHeadingText>Upload WO</ModalHeadingText>
                 <CloseIcon
                   onClick={() => {
@@ -172,12 +172,12 @@ function WorkOrderStatus() {
                   style={{ cursor: "pointer" }}
                 />
               </ModalHeadingSection>
-              <ModalDetailSection style={{ backgroundColor: "#F2FBFF" }}>
-                <div style={{ marginTop: "16px" }}>
+              <ModalDetailSection style={{ backgroundColor: "#FFFFFF" }}>
+                <Box style={{ backgroundColor: "#FFFFFF", margin: "20px" }}>
+                <div style={{ marginBottom: "5px", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}>
                   <span style={{ color: "red" }}>*</span>
                   <span>File:</span>
                 </div>
-                <Box style={{ backgroundColor: "#FFFFFF", margin: "20px" }}>
                   <DragAndDropContainer
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
@@ -186,8 +186,8 @@ function WorkOrderStatus() {
                       Drag and drop your files here or{" "}
                     </Typography>
                     <Button
-                      variant="contained"
-                      color="primary"
+                      variant="outlined"
+                      // color="primary"
                       onClick={() => {
                         const fileInput = document.createElement("input");
                         fileInput.type = "file";
@@ -201,9 +201,12 @@ function WorkOrderStatus() {
                       }}
                       style={{
                         marginLeft: "10px",
-                        backgroundColor: "#1E4482",
-                        color: "#FFFFFF",
-                        fontFamily:"Roboto"
+                        backgroundColor: "transperent",
+                        color: "black",
+                        fontFamily:"Roboto",
+                        border:"1px solid black",
+                        fontSize:"14",
+                        fontWeight:"500"
                       }}
                     >
                       Browse
@@ -215,7 +218,7 @@ function WorkOrderStatus() {
                 style={{
                   textAlign: "center",
                   paddingBottom: "15px",
-                  backgroundColor: "#F2FBFF",
+                  backgroundColor: "#FFFFFF",
                   borderRadius: "10px",
                 }}
               >
@@ -233,8 +236,8 @@ function WorkOrderStatus() {
                   }}
                   style={{
                     marginLeft: "10px",
-                    backgroundColor: "#1E4482",
-                    color: "#FFFFFF",
+                    backgroundColor: "#EBEBEB",
+                    color: "#000000de",
                     fontFamily:"Roboto" 
                   }}
                 >
