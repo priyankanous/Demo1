@@ -56,7 +56,7 @@ const LoggedInUserName = styled('span')({
   fontWeight: "400",
   fontSize: "16px",
   // color: "rgb(0, 35, 51, 1)",
-  color: "rgb(0, 0, 0, 1)",
+  color: "rgba(0, 35, 51, 1)",
 
 });
 

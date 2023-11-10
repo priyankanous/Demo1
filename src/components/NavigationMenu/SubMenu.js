@@ -18,6 +18,8 @@ const SidebarLink = styled('Link')({
 
 const SidebarLabel = styled('span')({
   marginLeft: "1rem",
+  fontWeight:"400",
+  fontSize:"16px"
 });
 
 const SubMenu = ({

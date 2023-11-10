@@ -103,8 +103,8 @@ export const ModalHeadingSection = styled('div')({
 });
 
 export const ModalHeadingText = styled(Typography)({
-  fontSize: "17px", 
-  fontWeight: "600", 
+  fontSize: "18px", 
+  fontWeight: "500", 
   color: "#000000",
   fontFamily:"Roboto",
 });
