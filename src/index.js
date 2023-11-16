@@ -5,11 +5,20 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./store";
 import { Provider, ReactReduxContext } from "react-redux";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Roboto',
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider context={ReactReduxContext} store={store}>
+    <ThemeProvider theme={theme}>
       <App />
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

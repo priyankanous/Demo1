@@ -218,12 +218,14 @@ function AccountSettings() {
                 <select
                   style={{
                     height: "37px",
-                    width: "92%",
+                    width: "90%",
                     marginBottom: "10px",
                     marginTop: "2px",
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
                     border:
                       isSubmitted && !accountData?.regions?.regionDisplayName
                         ? "1px solid red"
@@ -568,7 +570,7 @@ function Tr({
               <div>
                 <label
                   for="email"
-                  style={{ fontWeight: "400", fontSize: "16px" }}
+                  style={{ fontWeight: "400", fontSize: "16px", fontFamily:"Roboto" }}
                 >
                   Region
                 </label>
@@ -581,6 +583,8 @@ function Tr({
                     boxShadow: "none",
                     border: "1px solid lightgray",
                     fontFamily:"Roboto !important",
+                    fontSize:"16px",
+                    
                   }}
                   value={responseData.regions.regionDisplayName}
                   onChange={(e) => {
@@ -611,6 +615,7 @@ function Tr({
                     if (regions.isActive) {
                       return (
                         <option
+                        style={{fontSize:"16px", fontWeight:"400", fontFamily:"Roboto"}}
                           data-regionId={regionId}
                           data-regionDisplayName={regionDisplayName}
                           key={index}

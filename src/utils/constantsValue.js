@@ -85,8 +85,8 @@ export const TableRowSection = styled(TableRow)({
 
 export const TableCellSection = styled(TableCell)({
 fontFamily:"Roboto",
-  fontSize:"14px", 
-  fontWeight:"500", 
+  fontSize:"16px", 
+  fontWeight:"400", 
   color:"#000000",
   textAlign:"left",
   padding:"7px 15px"
@@ -103,8 +103,8 @@ export const ModalHeadingSection = styled('div')({
 });
 
 export const ModalHeadingText = styled(Typography)({
-  fontSize: "18px", 
-  fontWeight: "500", 
+  fontSize: "20px", 
+  fontWeight: "600", 
   color: "#000000",
   fontFamily:"Roboto",
 });
@@ -128,8 +128,8 @@ export const ModalDetailSection = styled('div')({
 });
 
 export const InputTextLabel = styled(InputLabel)({
-  fontSize: "15px", 
-  fontWeight: "500", 
+  fontSize: "16px", 
+  fontWeight: "400", 
   color: "#000000",
   fontFamily:"Roboto",
 });
@@ -143,13 +143,13 @@ export const InputField = styled(TextField)`
   && {
     background: white;
     box-shadow: none;
-    font-family: Roboto;
+    font-family: Roboto!important;
   }
 `;
 
 export const ButtonSection = styled('div')({
   display: "flex", 
-  justifyContent: "space-between", 
+  justifyContent: "space-evenly", 
   padding: "10px 0px"
 });
 

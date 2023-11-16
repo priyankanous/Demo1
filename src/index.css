@@ -2,7 +2,7 @@ body {
   margin: 0;
   background: rgba(245, 249, 252, 1);
   overflow: hidden;
-  font-family: "Roboto";
+  font-family: "Roboto !important";
 
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -12,10 +12,7 @@ body {
 }
 
 code {
-  /* font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace; */
     font-family: "Roboto";
-
 }
 #milestoneinput::placeholder {
   color: black;
@@ -28,10 +25,10 @@ code {
 #resourceinput::placeholder {
   color: black;
 }
-.css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
+/* .css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input {
   font-family: "Roboto !important";
-}
-.css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root{
+} */
+/* .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root{
   font-family: "Roboto !important";
-}
+} */
 

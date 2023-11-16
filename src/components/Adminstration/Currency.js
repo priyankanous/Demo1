@@ -148,8 +148,6 @@ function Currency() {
             />
           </ModalHeadingSection>
           <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
-
-
             <form id="reg-form" style={{ padding: "0px 30px" }}>
               {/* <div style={{ padding: "10px 0px" }}>
                   <InputTextLabel>Financial Year</InputTextLabel>

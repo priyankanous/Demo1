@@ -129,6 +129,7 @@ function BuisnessUnit() {
                   <span>Name</span>
                 </InputTextLabel>
                 <InputField
+                
                   size="small"
                   type="text"
                   id="name"

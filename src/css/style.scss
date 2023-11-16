@@ -287,8 +287,9 @@ $green-border: #72b372;
 }
 
 .select-btn .btn-text {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 400;
+  font-family: "Roboto";
   color: #333;
 }
 
@@ -394,4 +395,8 @@ $green-border: #72b372;
   background: #1E4482;
 
   border-radius: 25px;
+}
+
+.roboto-textfield {
+  font-family: 'Roboto';
 }

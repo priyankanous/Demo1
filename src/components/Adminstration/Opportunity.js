@@ -332,6 +332,8 @@ function Opportunity() {
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
                     border:
                       isSubmitted && !opportunityData?.account?.accountNameData
                         ? "1px solid red"

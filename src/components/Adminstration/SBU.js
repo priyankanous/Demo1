@@ -219,7 +219,9 @@ function Sbu() {
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: isBu ? '1px solid red' : '1px solid lightgray',
-                    fontFamily:"Roboto"
+                    fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400"
                   }}
                   onChange={(e) => {
                     const selectedBuId =
@@ -539,7 +541,9 @@ function Tr({
                     borderRadius: "7px",
                     boxShadow: "none",
                     border: "1px solid lightgray",
-                    fontFamily:"Roboto"
+                    fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400"
                   }}
                   value={responseData.businessUnit.businessUnitName}
                   onChange={(e) => {

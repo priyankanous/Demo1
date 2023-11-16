@@ -362,6 +362,7 @@ select {
   padding: 5px;
   box-shadow: 0px 2px 5px grey;
   border: blue;
+  font-family: "Roboto";
 }
 #milestoneselect {
   width: 108px;
@@ -376,7 +377,9 @@ select {
   /* padding-left: 4%; */
   /* padding-bottom: 1%; */
   margin-top: 5px;
-  font-size: 1vw;
+  padding-left: 5px;
+  font-size: 16px;
+  font-weight: 400;
 }
 .MuiInputBase-input {
   box-shadow: none;

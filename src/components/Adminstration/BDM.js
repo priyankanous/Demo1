@@ -589,7 +589,7 @@ function Bdm() {
                     style={{ border: "1px solid darkgray" }}
                   />
                   <span style={{ color: "red" }}>*</span>
-                  <span style={{ verticalAlign: "middle", fontSize: "0.8rem" }}>
+                  <span style={{ verticalAlign: "middle", fontSize: "16px", fontWeight:"400", fontFamily:"Roboto" }}>
                     Is Linked to BU
                   </span>
                 </label>
@@ -607,6 +607,9 @@ function Bdm() {
                       marginBottom: "10px",
                       borderRadius: "7px",
                       boxShadow: "none",
+                      fontFamily:"Roboto",
+                      fontSize:"16px",
+                      fontWeight:"400",
                       // border:"1px solid lightgray"
                       border:
                     isSubmitted && !bdmFormData.businessUnits ? "1px solid red" : "1px solid lightgray",
@@ -638,6 +641,7 @@ function Bdm() {
                         if(value.isActive){
                         return (
                           <li
+                          style={{fontSize:"24px"}}
                             onClick={() => {
                               selectMarkDropdown(value, "bu");
                             }}
@@ -681,7 +685,7 @@ function Bdm() {
                     style={{ border: "1px solid darkgray" }}
                   />
                   <span style={{ color: "red" }}>*</span>
-                  <span style={{ verticalAlign: "middle", fontSize: "0.8rem" }}>
+                  <span style={{ verticalAlign: "middle", fontSize: "16px", fontWeight:"400", fontFamily:"Roboto" }}>
                     Is Linked to Region
                   </span>
                 </label>
@@ -699,6 +703,9 @@ function Bdm() {
                       marginBottom: "10px",
                       borderRadius: "7px",
                       boxShadow: "none",
+                      fontFamily:"Roboto",
+                      fontSize:"16px",
+                      fontWeight:"400",
                       // border:"1px solid lightgray"
                       border:isSubmitted && !bdmFormData.regions ? "1px solid red" : "1px solid lightgray",                     
                     }}

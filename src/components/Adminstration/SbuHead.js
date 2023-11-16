@@ -345,6 +345,8 @@ function SbuHead() {
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
                     border:
                       isSubmitted && !sbuHeadName
                         ? "1px solid red"
