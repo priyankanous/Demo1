@@ -36,7 +36,7 @@ const TableButtons = styled(Button)({
   marginRight: "5px",
   marginLeft: "10px",
   color: "#FFFFFF",
-  fontSize: "12px",
+  fontSize: "14px",
   padding: "0px 10px",
   height: "26px",
   // marginTop: "6px",
@@ -151,7 +151,7 @@ function RevenueEntryScreens(props) {
             <td className="tdrevenue" style={{ padding: "0px" }}>
               <Checkbox size="small" />
               {/* <input type="checkbox" className="revenueinput" /> */}
-              <label>Include Additional Quater Display</label>
+              <label style={{fontWeight:400}}>Include Additional Quater Display</label>
               <TableButtons>Submit</TableButtons>
             </td>
           </tr>
