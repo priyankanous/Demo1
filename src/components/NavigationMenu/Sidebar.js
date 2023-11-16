@@ -32,15 +32,15 @@ const Img = styled('img')({
 
 const Heading = styled(Typography)({
   fontFamily: "Roboto",
-  paddingLeft: "102px",
-  fontSize: "24px",
+  paddingLeft: "77px",
+  fontSize: "25px",
   fontWeight: "700",
   color: "#000000",
 });
 
 const LoggedInUserSection = styled('div')({
   display: "flex",
-  paddingLeft: "550px",
+  paddingLeft: "615px",
   alignItems: "center"
 });
 

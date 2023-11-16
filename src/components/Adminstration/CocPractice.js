@@ -217,6 +217,8 @@ function CocPractice() {
                     boxShadow: "none",
                     border: isBu ? "1px solid red" : "1px solid lightgray",
                     fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
                   }}
                   onChange={(e) => {
                     const selectedBuId =
@@ -504,7 +506,10 @@ function Tr({
           <ModalDetailSection>
             <form id="reg-form" style={{ padding: "0px 30px" }}>
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Name</InputTextLabel>
+                <InputTextLabel>
+                <span style={{ color: "red" }}>*</span>
+                  <span>Name</span>
+                </InputTextLabel>
                 <InputField
                   size="small"
                   type="text"
@@ -522,7 +527,10 @@ function Tr({
               </div>
 
               <div style={{ padding: "10px 0px" }}>
-                <InputTextLabel>Display Name</InputTextLabel>
+                <InputTextLabel>
+                <span style={{ color: "red" }}>*</span>
+                  <span>Display Name</span>
+                </InputTextLabel>
                 <InputField
                   size="small"
                   type="text"
@@ -544,6 +552,8 @@ function Tr({
                   for="email"
                   style={{ fontWeight: "400", fontSize: "16px" }}
                 >
+                 <span style={{ color: "red" }}>*</span>
+
                   Parent Business Unit
                 </label>
                 <select
@@ -555,6 +565,8 @@ function Tr({
                     boxShadow: "none",
                     border: "1px solid lightgray",
                     fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
                   }}
                   value={responseData.businessUnit.businessUnitName}
                   onChange={(e) => {

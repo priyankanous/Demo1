@@ -11,10 +11,11 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from
 
 const TableButtons = styled(Button)({
   fontFamily: "Roboto",
+  fontWeight: "500",
+  fontSize:"14px",
   background: "#1E4482",
-  marginRight: "29px",
+  marginRight: "21px",
   color: "#FFFFFF",
-  fontSize: "12px",
   padding: "0px 10px",
   height:"34px",
   marginTop:"6px",
@@ -51,7 +52,7 @@ export function AdminBaseComponent(props) {
         <React.Fragment>
           <div class="filter">
             <div style={{ paddingRight: "2%", display:"flex" }}>
-              <Typography style={{fontFamily:"Roboto"}}>
+              <Typography style={{fontFamily:"Roboto",fontWeight:"400"}}>
               Financial year:
               </Typography>
               <select
@@ -64,8 +65,7 @@ export function AdminBaseComponent(props) {
                   props.getAllGlobalLLF(e.target.value);
                 }}
                 // style={{height:"35px", borderRadius:"7px"}}
-                style={{height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray",fontFamily:"Roboto"}}
-
+                style={{height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray",fontFamily:"Roboto",fontSize:"14px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -81,12 +81,11 @@ export function AdminBaseComponent(props) {
               style={{
                 display: props.globalLeave ? "none" : "",
                 paddingRight: "2%",
-                fontSize:"15px",
               }}
             >
-              Base Currency: <input type="text" id="email" spellcheck="false" style={{height:"23px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray"}} />{" "}
+              Base Currency: <input type="text" id="email" spellcheck="false" style={{height:"23px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray",fontSize:"14px"}} />{" "}
             </span>
-            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
+            <span style={{ paddingRight: "2%"}}>
               Copy From:{" "}
               <select
                 id="filterSelect"
@@ -94,7 +93,7 @@ export function AdminBaseComponent(props) {
                 onChange={(e) => {
                   setCopyData({ ...copyData, copyFromFy: e.target.value });
                 }}
-                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto", fontSize:"14px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -105,7 +104,7 @@ export function AdminBaseComponent(props) {
                 })}
               </select>
             </span>
-            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
+            <span style={{ paddingRight: "2%" }}>
               Copy To:{" "}
               <select
                 type="text"
@@ -133,7 +132,7 @@ export function AdminBaseComponent(props) {
                     },
                   });
                 }}
-                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto"}}
+                style={{marginLeft:"32px",borderRadius:"7px",height:"37px", marginBottom:"10px",borderRadius:"7px",boxShadow:"none", border:"1px solid lightgray", fontFamily:"Roboto", fontSize:"14px"}}
               >
                 <option value="" disabled selected hidden>
                   Please choose one
@@ -157,7 +156,7 @@ export function AdminBaseComponent(props) {
               })}
               </select>
             </span>
-            <span style={{ paddingRight: "2%",fontSize:"15px" }}>
+            <span style={{ paddingRight: "2%",fontSize:"14px", fontWeight:"400" }}>
               <TableButtons
                 id="filterButton"
                 onClick={(e) => props.copyFromFyToNewFy(copyData)}
@@ -171,7 +170,7 @@ export function AdminBaseComponent(props) {
           <Table style={{overflow:"hidden"}}>
             <TableRow>
               {props.columns.map((header) => {
-                return <TableCell style={{fontFamily:"Roboto"}} >{header}</TableCell>;
+                return <TableCell style={{fontFamily:"Roboto",fontSize:"16px", fontWeight:"600"}} >{header}</TableCell>;
               })}
             </TableRow>
             <tbody style={{fontFamily:"Roboto"}}>
@@ -192,7 +191,7 @@ export function AdminBaseComponent(props) {
             <TableHead >
               <TableRow style={{background:"rgba(225, 222, 222, 0.5)", }} >
               {props.columns.map((header) => {
-                return <TableCell style={{fontSize:"15px", fontWeight:"600", color:"#000000", padding :"13px 15px", fontFamily:"Roboto"}}>{header}</TableCell>;
+                return <TableCell style={{fontSize:"16px", fontWeight:"600", color:"#000000", padding :"13px 15px", fontFamily:"Roboto"}}>{header}</TableCell>;
               })}
               </TableRow>
             </TableHead>

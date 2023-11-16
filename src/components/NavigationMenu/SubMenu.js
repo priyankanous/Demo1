@@ -17,7 +17,7 @@ const SidebarLink = styled('Link')({
 });
 
 const SidebarLabel = styled('span')({
-  marginLeft: "1rem",
+  marginLeft: "10px",
   fontWeight:"400",
   fontSize:"16px"
 });
