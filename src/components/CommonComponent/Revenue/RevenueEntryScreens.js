@@ -39,6 +39,7 @@ const TableButtons = styled(Button)({
   fontSize: "14px",
   padding: "0px 10px",
   height: "26px",
+  fontWeight:"500",
   // marginTop: "6px",
   "&:hover": {
     backgroundColor: "#1E4482",
@@ -127,7 +128,9 @@ function RevenueEntryScreens(props) {
                     width: "100%",
                     borderRadius: "5px",
                     boxShadow: "none",
-                    fontFamily: "Roboto"
+                    fontFamily: "Roboto",
+                    fontWeight:"400",
+                    fontSize:"16px"
                   }}
                   id="revenue-select"
                   // onChange={(e) => {
@@ -151,7 +154,7 @@ function RevenueEntryScreens(props) {
             <td className="tdrevenue" style={{ padding: "0px" }}>
               <Checkbox size="small" />
               {/* <input type="checkbox" className="revenueinput" /> */}
-              <label style={{fontWeight:400}}>Include Additional Quater Display</label>
+              <label style={{fontWeight:"400", fontSize:"16px", fontFamily:"Roboto"}}>Include Additional Quater Display</label>
               <TableButtons>Submit</TableButtons>
             </td>
           </tr>

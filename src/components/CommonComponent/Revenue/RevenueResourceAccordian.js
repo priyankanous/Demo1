@@ -331,7 +331,7 @@ const RevenueResourceAccordian = (props) => {
             >
               <div>
                 <RiIcons.RiArrowDownSFill />
-                <span>Resource {id + 1} Details </span>
+                <span style={{fontSize:"16px", fontWeight:"400", fontFamily:"Roboto"}}>Resource {id + 1} Details </span>
               </div>
               <div>
                 <DeleteOutlineIcon
@@ -357,6 +357,7 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
+                  
                 }}
               >
                 SBU
@@ -443,7 +444,7 @@ const RevenueResourceAccordian = (props) => {
                       ? sbuHeadData?.data[0]?.strategicBusinessUnit?.sbuName
                       : ""
                   }
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto", fontSize:"14px", fontFamily:"Roboto"}}        
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -467,6 +468,7 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
+                style={{fontFamily:"Roboto",fontSize:"14px"}}
                   id="milestoneselect"
                   required
                   placeholder={
@@ -547,6 +549,8 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select> */}
                 <input
+                                style={{fontFamily:"Roboto",fontSize:"14px"}}
+
                   id="milestoneselect"
                   required
                   placeholder={
@@ -577,7 +581,7 @@ const RevenueResourceAccordian = (props) => {
                 <select
                   id="milestoneselect"
                   required
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
 
                   onChange={(e) => {
@@ -609,6 +613,7 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
+                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
                   id="milestoneinput"
                   type="text"
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
@@ -622,11 +627,11 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "resouceName",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
                 ></input>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
+                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
                   id="milestoneinput"
                   type="string"
                   placeholder={
@@ -641,11 +646,12 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "employeeId",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}
                 ></input>
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
+                                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
+
                   id="milestoneselect"
                   type="date"
                   required
@@ -661,7 +667,6 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "startDate",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
                 />
               </td>
               <td style={{ borderRight: "solid 1px" }}>
@@ -680,7 +685,8 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "endDate",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
+       
 
                 />
               </td>
@@ -771,7 +777,7 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-businessTypeId",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
 
                 >
                   <option value="" disabled selected hidden>
@@ -806,7 +812,8 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-cocPracticeId",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+        
                 >
                   <option value="" disabled selected hidden>
                     {
@@ -834,7 +841,8 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "billingRateType",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}} 
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+
                   // value={{
                   //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
                   //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
@@ -869,7 +877,8 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "billingRate",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+       
                 ></input>
               </td>
               <td
@@ -891,7 +900,8 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "leaveLossFactor",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+      
                   // value={leaveLossData}
                 ></input>
               </td>
@@ -910,7 +920,8 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "allocation",
                     });
                   }}
-                  style={{fontFamily:"Roboto"}}        
+                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+       
                 ></input>
               </td>
               {/* <td>
