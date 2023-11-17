@@ -477,7 +477,7 @@ function Tr({
                         padding: "4px",
                         fontFamily:"Roboto",
                         fontSize:"14px",
-                        fontWeight:"700"
+                        fontWeight:"600"
                       }}
                     >
                       {header}
@@ -515,11 +515,9 @@ function Tr({
           }}
         >
           <ModalHeadingSection
-            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+            style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
-            <ModalHeadingText
-              style={{ fontStyle: "normal", fontWeight: "200" }}
-            >
+            <ModalHeadingText >
               New Entry
             </ModalHeadingText>
             <CloseIcon

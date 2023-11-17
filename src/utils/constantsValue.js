@@ -162,6 +162,18 @@ export const ModalControlButton = styled(Button)({
   },
 });
 
+export const ModalCancelButton = styled(Button)({
+  color: "#000000", 
+  background: "#EBEBEB",
+  fontSize:"14px",
+  fontWeight:"500",
+  fontFamily:"Roboto",
+  marginLeft:"10px",
+  '&:hover': {
+    backgroundColor: '#EBEBEB',
+  },
+});
+
 export const MoadalStyle = {
   position: 'absolute',
   top: '50%',

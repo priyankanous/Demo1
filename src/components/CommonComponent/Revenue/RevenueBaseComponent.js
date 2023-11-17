@@ -66,19 +66,19 @@ export function RevenueBaseComponent(props) {
           <TableRow  style={{backgroundColor:"rgba(72, 130, 225, 0.3)", padding:"2px 3px", height:"30px"}}>
             <TableCell style={{padding: "1px", textAlign:"center", width:"22px",fontFamily:"Roboto"}}></TableCell>
             <TableCell style={{padding: "1px", textAlign:"center", width:"20px", fontFamily:"Roboto"}}></TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "60px",fontFamily:"Roboto", fontWeight:"700"}}>BU</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"700"}} >SBU</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"700"}} >SBU Head</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "83px",fontFamily:"Roboto",fontWeight:"700"}} >BDM</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "60px",fontFamily:"Roboto", fontWeight:"600", fontSize:"14px"}}>BU</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >SBU</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >SBU Head</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "83px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >BDM</TableCell>
 
-            <TableCell style={{padding: "1px", textAlign:"center", width: "150px",fontFamily:"Roboto", fontWeight:"700"}} >Business Type</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "150px",fontFamily:"Roboto", fontWeight:"600", fontSize:"14px"}} >Business Type</TableCell>
 
-            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"700"}} >Account</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "82px",fontFamily:"Roboto",fontWeight:"700"}} >Region</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "70px",fontFamily:"Roboto",fontWeight:"700"}} >Location</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "72px",fontFamily:"Roboto",fontWeight:"700"}} >Probability</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "90px",fontFamily:"Roboto",fontWeight:"700"}} >COC-Practice</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "70px",fontFamily:"Roboto",fontWeight:"700"}} >Status</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >Account</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "82px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >Region</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "70px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >Location</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "72px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >Probability</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "90px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >COC-Practice</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "70px",fontFamily:"Roboto",fontWeight:"600", fontSize:"14px"}} >Status</TableCell>
 
           </TableRow>
         </TableHead>
@@ -91,7 +91,8 @@ export function RevenueBaseComponent(props) {
                 overflowX: "hidden",
                 width: "100%",
                 position: "absolute",
-                fontFamily:"Roboto"
+                fontFamily:"Roboto",
+                fontWeight:"400",
               }}
               >
                 {data.revenueEntries &&
