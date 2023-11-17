@@ -168,9 +168,20 @@ export const ModalCancelButton = styled(Button)({
   fontSize:"14px",
   fontWeight:"500",
   fontFamily:"Roboto",
-  marginLeft:"10px",
+  // marginLeft:"10px",
   '&:hover': {
     backgroundColor: '#EBEBEB',
+  },
+});
+
+export const ModalBackButton = styled(Button)({
+  color: "#000000", 
+  background: "#FFFFFF",
+  fontSize:"14px",
+  fontWeight:"500",
+  fontFamily:"Roboto",
+  '&:hover': {
+    backgroundColor: '#FFFFFF',
   },
 });
 
