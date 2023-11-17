@@ -11,6 +11,7 @@ import {
   ButtonSection,
   ModalControlButton,
   ModalCancelButton,
+  ModalBackButton,
   MoadalStyle,
   revenueModalStyleObject,
 } from "../../../utils/constantsValue";
@@ -460,7 +461,7 @@ const ResourceEntryForm = (props) => {
   };
 
   return (
-    <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 36px" }}>
+    <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
       <form
         id="reg-form"
         style={{
@@ -525,7 +526,7 @@ const ResourceEntryForm = (props) => {
                   <InputField
                     style={{
                       background: "white",
-                      width: "110Px",
+                      width: "130Px",
                       marginLeft: "3px",
                       borderRadius: "0px !important",
                       height: "35px",
@@ -1309,12 +1310,13 @@ const ResourceEntryForm = (props) => {
                 display: "flex",
                 // alignItems: "center",
                 width: "100%",
-                justifyContent:"center"
+                justifyContent:"center",
+                gap:"12px"
               }}
             >
-              <ButtonSection>
+              {/* <ButtonSection style={{marginLeft:"-25px"}}> */}
                 <ModalControlButton
-                  // sx={{ marginLeft: "400px", marginRight: "75px" }}
+                  sx={{ marginLeft: "-18px" }}
                   type="button"
                   value="Continue"
                   id="create-account"
@@ -1334,7 +1336,7 @@ const ResourceEntryForm = (props) => {
                 >
                   Cancel
                 </ModalCancelButton>
-              </ButtonSection>
+              {/* </ButtonSection> */}
             </div>
           </div>
         ) : (
@@ -1448,32 +1450,7 @@ const ResourceEntryForm = (props) => {
                 gap: "20px",
               }}
             >
-              <ModalControlButton
-                type="button"
-                value="Continue"
-                id="create-account"
-                variant="contained"
-                onClick={() => {
-                  setPricingType(pricingType);
-                  props.setTabIndex({
-                    // ...props.tabIndex,
-                    index: 0,
-                    formData: formData,
-                  });
-                }}
-              >
-                Back
-              </ModalControlButton>
-              <ModalControlButton
-                type="button"
-                value="Continue"
-                id="create-account"
-                variant="contained"
-                onClick={handleSave}
-              >
-                Save
-              </ModalControlButton>
-              <ModalControlButton
+                            <ModalCancelButton
                 type="button"
                 variant="contained"
                 onClick={() => {
@@ -1488,6 +1465,33 @@ const ResourceEntryForm = (props) => {
                 id="create-account"
               >
                 Cancel
+              </ModalCancelButton>
+              <ModalBackButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={() => {
+                  setPricingType(pricingType);
+                  props.setTabIndex({
+                    // ...props.tabIndex,
+                    index: 0,
+                    formData: formData,
+                  });
+                }}
+              >
+                Back
+              </ModalBackButton>
+
+
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={handleSave}
+              >
+                Save
               </ModalControlButton>
             </div>
           </>

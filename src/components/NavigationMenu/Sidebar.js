@@ -62,7 +62,7 @@ const LoggedInUserName = styled('span')({
 
 const SideBar = styled('Nav')({
   background: "#FFFFFF",
-  width: "240px",
+  width: "250px",
   // height: "420px !important",
   height: "90vh",
 
