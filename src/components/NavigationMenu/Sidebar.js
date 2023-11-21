@@ -65,7 +65,6 @@ const SideBar = styled('Nav')({
   width: "250px",
   // height: "420px !important",
   height: "90vh",
-
   top: "60px",
   left: "0px",
   position: "absolute",

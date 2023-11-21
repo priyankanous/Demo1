@@ -434,7 +434,7 @@ const RevenueResourceAccordian = (props) => {
               </td>
             </tr>
 
-            <tr className="trmilestone" style={{ background: "white" }}>
+            <tr className="trmilestone" style={{ background: "white",boxShadow:"none", border:"1px solid #0000004d"}}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
@@ -758,7 +758,7 @@ const RevenueResourceAccordian = (props) => {
                 Allocation %
               </td>
             </tr>
-            <tr className="trmilestone" style={{ background: "white" }}>
+            <tr className="trmilestone" style={{ background: "white",boxShadow:"none", border:"1px solid #0000004d" }}>
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"

@@ -189,7 +189,7 @@ const ResourceEntryForm = (props) => {
         },
         resourceCount: resourceData.length,
         pricingType: pricingType,
-        remarks: "TM Details adding",
+        remarks: "TM Details",
         status: "Submitted",
         revenueResourceEntries: resourceData?.map((ele) => ({
           strategicBusinessUnit: {
@@ -469,6 +469,7 @@ const ResourceEntryForm = (props) => {
           flexDirection: "column",
           rowGap: "20px",
           width: "100%",
+          paddingRight:"10px"
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
@@ -481,7 +482,7 @@ const ResourceEntryForm = (props) => {
           >
             <div style={{ display: "flex" }}>
               <div>
-                <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"500"}}>Pricing Type</label>
+                <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
                 <input
                   type="radio"
                   value="T&M"
@@ -522,11 +523,11 @@ const ResourceEntryForm = (props) => {
               >
                 <span style={{ color: "red" }}>*</span>
                 <span style={{ marginLeft: "-9px", fontSize:"16px",fontWeight:"400" }}>FY :</span>
-                <div style={{ width: "180px", fontFamily:"Roboto", }}>
+                <div style={{ width: "150px", fontFamily:"Roboto", }}>
                   <InputField
                     style={{
                       background: "white",
-                      width: "130Px",
+                      width: "103Px",
                       marginLeft: "3px",
                       borderRadius: "0px !important",
                       height: "35px",
@@ -1305,7 +1306,8 @@ const ResourceEntryForm = (props) => {
 
             <div
               style={{
-                paddingTop: "10px",
+                paddingTop: "8px",
+                paddingBottom:"10px",
                 // marginLeft: "-20px",
                 display: "flex",
                 // alignItems: "center",
@@ -1315,17 +1317,10 @@ const ResourceEntryForm = (props) => {
               }}
             >
               {/* <ButtonSection style={{marginLeft:"-25px"}}> */}
-                <ModalControlButton
-                  sx={{ marginLeft: "-18px" }}
-                  type="button"
-                  value="Continue"
-                  id="create-account"
-                  variant="contained"
-                  onClick={handleNextClick}
-                >
-                  Next
-                </ModalControlButton>
+
                 <ModalCancelButton
+                                  sx={{ marginLeft: "-50px" }}
+
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -1336,6 +1331,15 @@ const ResourceEntryForm = (props) => {
                 >
                   Cancel
                 </ModalCancelButton>
+                <ModalControlButton
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={handleNextClick}
+                >
+                  Next
+                </ModalControlButton>
               {/* </ButtonSection> */}
             </div>
           </div>
@@ -1433,11 +1437,11 @@ const ResourceEntryForm = (props) => {
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
               <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                <div style={{ display: "flex", flexBasis: "25%" }}>
+                <div style={{ display: "flex", flexBasis: "25%",alignItems:"center" }}>
                   <div style={{ width: "75px" }}>
                     <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                   </div>
-                  <input style={{ width: "730px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px" }} />
+                  <input style={{ width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
                 </div>
               </div>
             </div>
