@@ -15,6 +15,7 @@ import {
   ButtonSection,
   ModalControlButton,
   MoadalStyle,
+  MoadalStyleRREntry,
   revenueModalStyleObject,
 } from "../../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
@@ -106,7 +107,7 @@ function RevenueEntryScreens(props) {
             style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
           >
             <td style={{ textAlign: "left", width: "10px", padding: "0px" }}>
-              <Checkbox size="small" />
+              <Checkbox size="small" style={{padding:"2px"}} />
             </td>
             <td style={{ textAlign: "left", padding: "0px" }}>
               <a
@@ -124,7 +125,7 @@ function RevenueEntryScreens(props) {
               <td>
                 <select
                   style={{
-                    height: "24px",
+                    height: "26px",
                     width: "100%",
                     borderRadius: "5px",
                     boxShadow: "none",
@@ -161,12 +162,12 @@ function RevenueEntryScreens(props) {
         </table>
         <Modal open={isOpen} onClose={handleModalClose}>
           <Box
-            sx={MoadalStyle}
-            style={{
-              width: "80%",
-              height: "max-content",
-              borderRadius: "0px",
-            }}
+            sx={MoadalStyleRREntry}
+            // style={{
+            //   width: "80%",
+            //   height: "max-content",
+            //   borderRadius: "0px",
+            // }}
           >
             <ModalHeadingSection
               style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}

@@ -45,7 +45,8 @@ const TableCellSecondStage = styled('td')({
 const TableCellSecondStageSpan = styled('span')({
   fontSize: "14px",
   fontWeight:"400",
-  fontFamily:"Roboto"
+  fontFamily:"Roboto",
+  cursor:"pointer"
 });
 
 const CopyIconSecondLEvel = styled(FileCopyOutlinedIcon)({
@@ -75,7 +76,7 @@ const ThirdLevelHeadingCell = styled('table')({
 
 const ThirdLevelHeading = styled('th')({
    padding: "4px",
-   fontFamily:"Roboto",fontWeight:"600",
+   fontFamily:"Roboto",fontWeight:"500",
    fontSize:"14px"
 });
 

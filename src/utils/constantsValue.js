@@ -198,6 +198,20 @@ export const MoadalStyle = {
   // p: 1,
 };
 
+export const MoadalStyleRREntry = {
+  position: 'absolute',
+  top: '50%',
+  left: '51%',
+  transform: 'translate(-50%, -50%)',
+  width: '80%',
+  bgcolor: 'background.paper',
+  border: '1px solid transparent',
+  height: "max-content",
+  borderRadius: "0px",
+  // boxShadow: 24,
+  // p: 1,
+};
+
 export const MoadalStyle2 = {
   position: 'absolute',
   top: '50%',

@@ -187,7 +187,7 @@ function Tr({
 
   return (
     <React.Fragment>
-      <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white" }}
+      <tr className="nestedtablebgrevenue" style={{ backgroundColor: "white",cursor:"pointer" }}
       onClick={(e) => {
         revenueOpportunity();
         handleRowExpansionAll();
@@ -477,7 +477,7 @@ function Tr({
                         padding: "4px",
                         fontFamily:"Roboto",
                         fontSize:"14px",
-                        fontWeight:"600"
+                        fontWeight:"500"
                       }}
                     >
                       {header}
