@@ -42,6 +42,8 @@ const RevenueMilestoneResourceData = (props) => {
     return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
   };
 
+  console.log("dddddd", props.cocPracticeData)
+
 
   const updateMilestoneDetails = (params) => {
     const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
@@ -70,7 +72,7 @@ const RevenueMilestoneResourceData = (props) => {
     updateMilestoneData(temp);
   };
 
- 
+ console.log("milestone", milestoneData)
 
   return (
     <React.Fragment>
@@ -167,6 +169,7 @@ const RevenueMilestoneResourceData = (props) => {
           >
             Revenue
           </td>
+          
           <td
             style={{
               textAlign: "left",
@@ -176,6 +179,16 @@ const RevenueMilestoneResourceData = (props) => {
             }}
           >
             Business Type
+          </td>
+          <td
+            style={{
+              textAlign: "left",
+              fontWeight: "400",
+              fontSize: "14px",
+              color: "#525252",
+            }}
+          >
+            Coc Pratice
           </td>
           <td
             style={{
@@ -395,6 +408,36 @@ const RevenueMilestoneResourceData = (props) => {
                 props.businessTypeData.businessTypeData.map((obj, id) => (
                   <option data-businessTypeId={obj.businessTypeId}>
                     {obj.businessTypeName}
+                  </option>
+                ))}
+            </select>
+          </td>
+          <td style={{ borderRight: "1px solid #898282" }}>
+            <select
+              // id="milestoneselect"
+              required
+              onChange={(e) => {
+                updateMilestoneDetails({
+                  event: e,
+                  milestoneDetailsKey: "cocPratice",
+                  milestoneDetailsColumn: "cocPraticeName",
+                  selectedID: "cocPracticeId",
+                  attrKey: "data-cocPracticeId",
+                });
+              }}
+              style={{
+                width:"50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px" }}
+
+            >
+              <option value="" disabled selected hidden></option>
+              {props.cocPracticeData.cocPracticeData &&
+                props.cocPracticeData.cocPracticeData.map((obj, id) => (
+                  <option data-cocPracticeId={obj.cocPracticeId}>
+                    {obj.cocPracticeName}
                   </option>
                 ))}
             </select>

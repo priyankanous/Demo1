@@ -85,6 +85,8 @@ const ResourceEntryForm = (props) => {
     pricingType: pricingType,
   });
   const [isDisabled, setIsDisabled] = useState(false);
+
+  console.log("milestonedata", milestoneData)
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
@@ -231,7 +233,8 @@ const ResourceEntryForm = (props) => {
         .catch((err) => {
           props.setIsOpen(false);
         });
-    } else {
+    } else if (pricingType === "FP") {
+
       const payload2 = {
         account: {
           accountId: formData.account.accountId,
@@ -269,34 +272,37 @@ const ResourceEntryForm = (props) => {
         status: "Submitted",
 
         milestones: milestoneData?.map((ele) => ({
-          milestoneNumber: ele.milestoneNumber,
-          milestoneBillingDate: ele.milestoneBillingDate,
-          milestoneRevenue: ele.milestoneRevenue,
-          milestoneResourceCount: ele.milestoneResourceCount,
+          milestoneNumber: ele?.milestoneNumber,
+          milestoneBillingDate: ele?.milestoneBillingDate,
+          milestoneRevenue: ele?.milestoneRevenue,
+          milestoneResourceCount: ele?.milestoneResourceCount,
           revenueResourceEntries: ele?.revenueResourceEntries?.map(
             (revenueEntry) => {
               return {
                 strategicBusinessUnit: {
-                  sbuId: revenueEntry.strategicBusinessUnit.sbuId,
+                  sbuId: revenueEntry?.strategicBusinessUnit?.sbuId,
                 },
                 strategicBusinessUnitHead: {
-                  sbuHeadId: revenueEntry.strategicBusinessUnitHead.sbuHeadId,
+                  sbuHeadId: revenueEntry?.strategicBusinessUnitHead?.sbuHeadId,
                 },
                 businessUnit: {
-                  businessUnitId: revenueEntry.businessUnit.businessUnitId,
+                  businessUnitId: revenueEntry?.businessUnit?.businessUnitId,
                 },
                 businessType: {
-                  businessTypeId: revenueEntry.businessType.businessTypeId,
+                  businessTypeId: revenueEntry?.businessType?.businessTypeId,
                 },
                 location: {
-                  locationId: revenueEntry.location.locationId,
+                  locationId: revenueEntry?.location?.locationId,
                 },
-                resourceName: revenueEntry.resourceName,
-                employeeId: revenueEntry.employeeId,
-                resourceStartDate: revenueEntry.resourceStartDate,
-                resourceEndDate: revenueEntry.resourceEndDate,
-                allocation: revenueEntry.allocation,
-                milestoneResourceRevenue: revenueEntry.milestoneResourceRevenue,
+                resourceName: revenueEntry?.resourceName,
+                employeeId: revenueEntry?.employeeId,
+                resourceStartDate: revenueEntry?.resourceStartDate,
+                resourceEndDate: revenueEntry?.resourceEndDate,
+                cocPractice: {
+                  cocPracticeId: revenueEntry?.cocPratice.cocPracticeId
+                },
+                allocation: revenueEntry?.allocation,
+                milestoneResourceRevenue: revenueEntry?.milestoneResourceRevenue,
               };
             }
           ),
