@@ -16,6 +16,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import { Box } from "@mui/material";
@@ -250,7 +251,7 @@ function PricingType() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -260,7 +261,7 @@ function PricingType() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
