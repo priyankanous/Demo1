@@ -16,6 +16,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import { Box } from "@mui/material";
@@ -148,7 +149,7 @@ function CocPractice() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form" style={{ padding: "0px 30px" }}>
+            <form id="reg-form" style={{ padding: "0px 35px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
@@ -271,7 +272,7 @@ function CocPractice() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -281,7 +282,7 @@ function CocPractice() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -504,7 +505,7 @@ function Tr({
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form" style={{ padding: "0px 30px" }}>
+            <form id="reg-form" style={{ padding: "0px 35px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
@@ -626,7 +627,7 @@ function Tr({
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -636,7 +637,7 @@ function Tr({
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
