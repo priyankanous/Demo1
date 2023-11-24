@@ -24,6 +24,7 @@ import {
   ButtonSection,
   ModalControlButton,
   MoadalStyle,
+  MoadalStyleRREntry,
   revenueModalStyleObject,
 } from "../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
@@ -217,10 +218,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
         <span style={{fontSize:"14px"}}>{businessUnit || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "60px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "79px" }}>
           <div
             style={{
-              width: "60px",
+              width: "79px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -234,10 +235,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}} >
         <span style={{fontSize:"14px"}}>{strategicBusinessUnit || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "81px" }}>
           <div
             style={{
-              width: "80px",
+              width: "81px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -251,10 +252,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
         <span style={{fontSize:"14px"}}>{strategicBusinessUnitHead || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "79px" }}>
           <div
             style={{
-              width: "80px",
+              width: "79px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -268,10 +269,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
         <span style={{fontSize:"14px"}}>{businessDevelopmentManager || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "82px" }}>
           <div
             style={{
-              width: "80px",
+              width: "82px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -285,10 +286,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"150px", whiteSpace:"nowrap"}}>
         <span style={{fontSize:"14px"}}>{businessType || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "150px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "97px" }}>
           <div
             style={{
-              width: "150px",
+              width: "97px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -303,10 +304,10 @@ function Tr({
         <span style={{fontSize:"14px"}}>{account || "Unknown"}</span>
       </td> */}
 
-        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "81px" }}>
           <div
             style={{
-              width: "80px",
+              width: "81px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -333,10 +334,10 @@ function Tr({
         {/* <td className="rowtable" style={{padding:"1px", width:"100px", whiteSpace:"nowrap"}}>
         <span style={{fontSize:"14px"}}>{location || "Unknown"}</span>
       </td> */}
-        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "80px" }}>
           <div
             style={{
-              width: "70px",
+              width: "80px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -349,10 +350,10 @@ function Tr({
         <span style={{fontSize:"14px"}}>{probabilityType || "Unknown"}</span>
       </td> */}
 
-        <td className="rowtable" style={{ padding: "1px", width: "70px" }}>
+        <td className="rowtable" style={{ padding: "1px", width: "78px" }}>
           <div
             style={{
-              width: "70px",
+              width: "78px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -381,11 +382,11 @@ function Tr({
         </td>
         <td
           className="rowtable"
-          style={{ border: "none", padding: "1px", width: "70px" }}
+          style={{ border: "none", padding: "1px", width: "80px" }}
         >
           <div
             style={{
-              width: "70px",
+              width: "80px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -507,7 +508,7 @@ function Tr({
 
       <Modal open={isOpen} onClose={handleModalClose}>
         <Box
-          sx={MoadalStyle}
+          sx={MoadalStyleRREntry}
           style={{
             width: "80%",
             height: "max-content",

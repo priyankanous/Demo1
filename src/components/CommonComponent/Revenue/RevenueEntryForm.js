@@ -38,6 +38,7 @@ import {
   Checkbox,
   Radio,
   Modal,
+  styled,
 } from "@mui/material";
 import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
@@ -45,6 +46,12 @@ import { Accordion } from "react-accessible-accordion";
 import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
+
+const Label = styled('span')({
+  fontFamily: "Roboto",
+  color: "#000000",
+  fontSize: "14px",
+});
 
 const ResourceEntryForm = (props) => {
   useEffect(() => {
@@ -528,7 +535,7 @@ const ResourceEntryForm = (props) => {
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
-                <span style={{ marginLeft: "-9px", fontSize:"16px",fontWeight:"400" }}>FY :</span>
+                <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
                 <div style={{ width: "150px", fontFamily:"Roboto", }}>
                   <InputField
                     style={{
@@ -589,7 +596,7 @@ const ResourceEntryForm = (props) => {
                 >
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Account</span>
+                    <Label>Account</Label>
                   </div>
                   <div>
                     <Select
@@ -633,7 +640,7 @@ const ResourceEntryForm = (props) => {
                 </div>
                 <div style={{ flexBasis: "25%" }}>
                   <span style={{ color: "red" }}>*</span>
-                  <span>Opportunity Name</span>
+                  <Label>Opportunity Name</Label>
                   <Tooltip title="Add Opportunity" placement="top">
             {/* <Button> */}
             <a
@@ -646,7 +653,7 @@ const ResourceEntryForm = (props) => {
                           fontSize: "12px",
                         }}
                       >
-                                     <AddIcon style={{fontWeight:"400", fontSize:"20px", fontWeight:"700", paddingLeft:"8px",marginTop:"-7px"}}/>
+                                     <AddIcon style={{fontWeight:"400", fontSize:"20px", fontWeight:"700",marginTop:"-7px"}}/>
                       </a>
             {/* </Button> */}
           </Tooltip>
@@ -789,7 +796,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>BDM</span>
+                    <Label>BDM</Label>
                   </div>
                   <div style={{ width: "187px" }}>
                     <Select
@@ -834,7 +841,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Project Code</span>
+                    <Label>Project Code</Label>
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
@@ -885,7 +892,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Project Start Date</span>
+                    <Label>Project Start Date</Label>
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
@@ -917,7 +924,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Project End date</span>
+                    <Label>Project End date</Label>
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
@@ -950,7 +957,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Currency(As per WO)</span>
+                    <Label>Currency(As per WO)</Label>
                   </div>
                   <Select
                     styles={{
@@ -995,7 +1002,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Probablity</span>
+                    <Label>Probablity</Label>
                   </div>
 
                   <Select
@@ -1062,7 +1069,7 @@ const ResourceEntryForm = (props) => {
                                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Region</span>
+                    <Label>Region</Label>
                   </div>
 
                   <Select
@@ -1112,7 +1119,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Work Order</span>
+                    <Label>Work Order</Label>
                   </div>
                   {/* <FormControl>
                     <select
@@ -1244,7 +1251,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Work Order End Date</span>
+                    <Label>Work Order End Date</Label>
                   </div>
 
                   <div style={{ width: "195px" }}>
@@ -1277,7 +1284,7 @@ const ResourceEntryForm = (props) => {
                 <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
-                    <span>Work Order Status</span>
+                    <Label>Work Order Status</Label>
                   </div>
 
                   <div style={{ width: "187px" }}>

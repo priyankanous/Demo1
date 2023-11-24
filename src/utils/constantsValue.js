@@ -97,8 +97,8 @@ export const ModalHeadingSection = styled('div')({
   justifyContent: 'space-between', 
   alignItems: 'center', 
   height: "50px", 
-  background: '#FFFFFF', 
-  borderRadius: "10px", 
+  background: '#EBEBEB', 
+  borderRadius: "10px 10px 0px 0px", 
   padding: "0px 15px"
 });
 
@@ -120,7 +120,7 @@ export const ModalDetailSection2 = styled('div')({
 });
 
 export const ModalDetailSection = styled('div')({
-  background: "#F5F9FC", 
+  background: "#FFFFFF", 
   padding: "12px 10px",
   display: "flex", 
   justifyContent: "center", 
