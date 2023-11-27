@@ -382,11 +382,11 @@ function Tr({
         </td>
         <td
           className="rowtable"
-          style={{ border: "none", padding: "1px", width: "80px" }}
+          style={{ border: "none", padding: "1px", width: "95px" }}
         >
           <div
             style={{
-              width: "80px",
+              width: "95px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
@@ -518,7 +518,9 @@ function Tr({
           <ModalHeadingSection
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
-            <ModalHeadingText >
+            <ModalHeadingText 
+                            style={{fontFamily:"Roboto", fontWeight: "400" }}
+                            >
               New Entry
             </ModalHeadingText>
             <CloseIcon

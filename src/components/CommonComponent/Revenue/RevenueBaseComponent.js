@@ -78,7 +78,7 @@ export function RevenueBaseComponent(props) {
             <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"500", fontSize:"14px"}} >Location</TableCell>
             <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"500", fontSize:"14px"}} >Probability</TableCell>
             <TableCell style={{padding: "1px", textAlign:"center", width: "90px",fontFamily:"Roboto",fontWeight:"500", fontSize:"14px"}} >COC-Practice</TableCell>
-            <TableCell style={{padding: "1px", textAlign:"center", width: "80px",fontFamily:"Roboto",fontWeight:"500", fontSize:"14px"}} >Status</TableCell>
+            <TableCell style={{padding: "1px", textAlign:"center", width: "98px",fontFamily:"Roboto",fontWeight:"500", fontSize:"14px"}} >Status</TableCell>
 
           </TableRow>
         </TableHead>
@@ -109,7 +109,7 @@ export function RevenueBaseComponent(props) {
       </div>
       </div>
       <div style={{position:"relative", top:"370px"}}>
-        <TableScroll data={data} />
+        {/* <TableScroll data={data} /> */}
       </div>
       
     </React.Fragment>
