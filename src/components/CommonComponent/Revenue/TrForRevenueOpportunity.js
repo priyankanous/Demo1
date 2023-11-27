@@ -16,8 +16,10 @@ import {
   ModalDetailSection,
   InputField,
   MoadalStyle,
+  MoadalStyleRREntry,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
 } from "../../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
 import RevenueResourceAccordian from "./RevenueResourceAccordian";
@@ -1122,7 +1124,7 @@ function TrForRevenue(props) {
       )}
       <Modal open={isClicked} onClose={handleModalClose}>
         <Box
-          sx={MoadalStyle}
+          sx={MoadalStyleRREntry}
           style={{
             width: "80%",
             height: "max-content",
@@ -1133,7 +1135,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1144,13 +1146,14 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px" }}>
+          <ModalDetailSection style={{ borderRadius: "0px",  padding:"12px 10px 12px 46px" }}>
             <form
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "30px",
+                rowGap: "20px",
                 width: "100%",
+                paddingRight:"10px"
               }}
             >
               <div
@@ -1165,14 +1168,14 @@ function TrForRevenue(props) {
                 >
                   <div style={{ display: "flex" }}>
                     <div>
-                      <label for="username">Pricing Type</label>
+                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                       />
                       T & M
                       <input
@@ -1181,7 +1184,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto",fontSize:"16px", fontWeight:"400" }}
                       />
                       FP
                     </div>
@@ -1190,7 +1193,8 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginRight: "25px",
+                      fontFamily:"Roboto",
+                      // marginRight: "25px",
                     }}
                   >
                     <div
@@ -1202,12 +1206,12 @@ function TrForRevenue(props) {
                       }}
                     >
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>FY :</span>
-                      <div style={{ width: "180px" }}>
+                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <InputField
                           style={{
                             background: "white",
-                            width: "110Px",
+                            width: "138Px",
                             marginLeft: "3px",
                             borderRadius: "0px !important",
                             height: "35px",
@@ -1381,6 +1385,8 @@ function TrForRevenue(props) {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   marginLeft: "0px",
+                  maxHeight:"250px",
+                  overflowY:"auto"
                 }}
               >
                 <Accordion id="accordian">{gridItems}</Accordion>
@@ -1389,11 +1395,11 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                  <div style={{ display: "flex", flexBasis: "25%",alignItems:"center" }}>
                     <div style={{ width: "75px" }}>
-                      <span>Remarks :</span>
+                      <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                     </div>
-                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                    <input style={{  width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
                   </div>
                 </div>
               </div>
@@ -1406,16 +1412,7 @@ function TrForRevenue(props) {
                   gap: "20px",
                 }}
               >
-                <ModalControlButton
-                  type="button"
-                  value="Continue"
-                  id="create-account"
-                  variant="contained"
-                  onClick={saveTandMentry}
-                >
-                  Save
-                </ModalControlButton>
-                <ModalControlButton
+                                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -1430,7 +1427,17 @@ function TrForRevenue(props) {
                   id="create-account"
                 >
                   Cancel
+                </ModalCancelButton>
+                <ModalControlButton
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={saveTandMentry}
+                >
+                  Save
                 </ModalControlButton>
+
               </div>
             </form>
           </ModalDetailSection>
