@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import { connect } from "react-redux";
 import { getSbuData } from "../../../actions/sbu";
 import { getSbuHeadData } from "../../../actions/sbuHead";
@@ -21,6 +23,12 @@ const RevenueMilestoneResourceData = (props) => {
     props.getLocationData();
     props.getCocPracticeData();
   }, []);
+  const [coc, setCoc] = useState([]);
+  const [selectedBuIdToGetCoc, setSelectedBuIdToGetCoc] = useState("");
+  const [sbuHeadData, setSbuHeadData] = useState(null);
+  const [selectedSbuId, setSelectedSbuId] = useState("");
+
+
   const month = [
     "Jan",
     "Feb",
@@ -36,52 +44,150 @@ const RevenueMilestoneResourceData = (props) => {
     "Dec",
   ];
 
+  console.log("sbu",sbuHeadData)
+  
+  useEffect(() => {
+    const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
+    const data = dataArr[id];
+    data["sbuHeadId"] =
+      sbuHeadData?.data?.length > 0 ? sbuHeadData?.data[0]?.sbuHeadId : "";
+    data["sbuHeadName"] =
+      sbuHeadData?.data?.length > 0 ? sbuHeadData?.data[0]?.sbuHeadName : "";
+    data["businessUnitId"] =
+      sbuHeadData?.data?.length > 0
+        ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+            ?.businessUnitId
+        : "";
+    data["businessUnitName"] =
+      sbuHeadData?.data?.length > 0
+        ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
+            ?.businessUnitName
+        : "";
+    dataArr[id] = data;
+    setSelectedBuIdToGetCoc(data["businessUnitId"]);
+    const temp = [...milestoneData];
+    temp[milestoneId]["revenueResourceEntries"] = dataArr;
+    updateMilestoneData(temp);
+  }, [sbuHeadData]);
+
+  useEffect(() => {
+    if (milestoneData[id] && milestoneData[id]?.sbuId) {
+      setSelectedSbuId(milestoneData[id]?.sbuId);
+    }
+  }, [milestoneData])
+
+  useEffect(() => {
+    if (selectedBuIdToGetCoc) {
+      getCocByBuId(selectedBuIdToGetCoc)
+        .then((data) => {
+          setCoc(data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching SBU Head data:", error);
+        });
+    }
+  }, [selectedBuIdToGetCoc]);
+  console.log("coc---->", coc);
+
   const createDate = (date) => {
     let t = new Date(date);
-    let splitDate = date.split("-");
-    return `${splitDate[2]}/${month[t.getMonth()]}/${t.getFullYear()}`;
+    let splitDate = date?.split("-");
+    return `${splitDate[2]}/${month[t?.getMonth()]}/${t?.getFullYear()}`;
   };
 
-  console.log("dddddd", props.cocPracticeData)
+  const getSbuHeadBySbuId = async (selectedSbuId) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/sbuhead/sbu/${selectedSbuId}`
+      );
+      return response?.data;
+    } catch (error) {
+      console.error("Error fetching SBU Head data:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSbuId) {
+      getSbuHeadBySbuId(selectedSbuId)
+        .then((res) => {
+          setSbuHeadData(res);
+        })
+        .catch((error) => {
+          console.error("Error fetching SBU Head data:", error);
+        });
+    }
+  }, [selectedSbuId]);
+
+  const getCocByBuId = async (selectedBuIdToGetCoc) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/cocpractice/businessUnitId/${selectedBuIdToGetCoc}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error", error);
+      throw error;
+    }
+  };
 
 
   const updateMilestoneDetails = (params) => {
+    console.log("Params -->", params)
     const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
     const data = dataArr[id];
-    if (params.attrKey) {
-      data[params.milestoneDetailsKey] = {
-        [params.milestoneDetailsColumn]: params.event.target.value,
-        [params.selectedID]:
-          params.event.target.selectedOptions[0].getAttribute(params.attrKey),
-      };
-    } else {
-      data[params.milestoneDetailsColumn] = params.event.target.value;
+    let selectedOption
+    // Store sbuId based on the selected option
+    if(params?.event?.target?.selectedOptions) {
+      selectedOption = params?.event?.target?.selectedOptions[0];
     }
+    if (selectedOption) {
+      const sbuId = selectedOption.getAttribute(params?.attrKeySbu);
+      data[params?.selectedID] = sbuId;
+      setSelectedSbuId(sbuId);
+    }
+
+    if (params?.attrKey) {
+      // data[params.milestoneDetailsKey] = {
+        data[params.milestoneDetailsColumn] = params.event.target.value
+        data[params.selectedID] =
+          params.event.target.selectedOptions[0].getAttribute(params.attrKey)
+      // };
+    } 
+
+    if (params?.attrKeyBu) {
+      data[params?.selectedID] =
+        params?.event?.target?.selectedOptions[0]?.getAttribute(
+          params?.attrKeyBu
+        );
+      setSelectedBuIdToGetCoc(data[params?.selectedID]);
+    }
+
     if (
-      params.milestoneDetailsColumn == "resourceStartDate" ||
-      params.milestoneDetailsColumn == "resourceEndDate"
+      params?.milestoneDetailsColumn == "resourceStartDate" ||
+      params?.milestoneDetailsColumn == "resourceEndDate"
     ) {
-      data[params.milestoneDetailsColumn] = createDate(
+      data[params?.milestoneDetailsColumn] = createDate(
         params.event.target.value
       );
+    } else {
+      data[params?.milestoneDetailsColumn] = params?.event?.target?.value;
     }
+
     dataArr[id] = data;
-    const temp = [...milestoneData]
-    temp[milestoneId]["revenueResourceEntries"] = dataArr
-    console.log('Milestone Data After Updation', temp)
+    const temp = [...milestoneData];
+    temp[milestoneId]["revenueResourceEntries"] = dataArr;
+    console.log("Milestone Data After Updation", temp);
     updateMilestoneData(temp);
   };
 
- console.log("milestone", milestoneData)
-
   return (
     <React.Fragment>
-      
       <table style={{ backgroundColor: "white" }}>
         <tr>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -91,7 +197,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -101,7 +207,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -111,7 +217,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -121,7 +227,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -131,7 +237,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -141,7 +247,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -151,7 +257,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -161,7 +267,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -169,10 +275,10 @@ const RevenueMilestoneResourceData = (props) => {
           >
             Revenue
           </td>
-          
+
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -182,7 +288,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -192,7 +298,7 @@ const RevenueMilestoneResourceData = (props) => {
           </td>
           <td
             style={{
-              textAlign: "left",
+              textAlign: "center",
               fontWeight: "400",
               fontSize: "14px",
               color: "#525252",
@@ -201,41 +307,48 @@ const RevenueMilestoneResourceData = (props) => {
             Allocation %
           </td>
         </tr>
-        <tr className="trmilestone" style={{ background: "white", border:"1px solid #898282" }}>
-          <div >
-          <td style={{borderRight:"1px solid #898282"}}>
-            <select
-              // id="milestoneselect"
-              required
-              onChange={(e) => {
-                updateMilestoneDetails({
-                  event: e,
-                  milestoneDetailsKey: "strategicBusinessUnit",
-                  milestoneDetailsColumn: "sbuName",
-                  selectedID: "sbuId",
-                  attrKey: "data-sbuId",
-                })
-              }}
+        <tr
+          className="trmilestone"
+          style={{ background: "white", border: "1px solid #898282" }}
+        >
+          <div>
+            <td
               style={{
-                width:"50px",
-                backgroundColor: "white",
-                borderRadius: "0px",
-                boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
+                borderRight: "1px solid #898282",
+                height: "30px",
+                verticalAlign: "middle",
+              }}
             >
-              <option value="" disabled selected hidden>
-                
-              </option>
-              {props.sbuData.sbuData &&
-                props.sbuData.sbuData.map((obj, id) => (
-                  <option data-sbuId={obj.sbuId}>{obj.sbuName}</option>
-                ))}
-            </select>
-          </td>
+              <select
+                // id="milestoneselect"
+                required
+                onChange={(e) => {
+                  updateMilestoneDetails({
+                    event: e,
+                    milestoneDetailsKey: "strategicBusinessUnit",
+                    milestoneDetailsColumn: "sbuName",
+                    selectedID: "sbuId",
+                    attrKeySbu: "data-sbuId",
+                  });
+                }}
+                style={{
+                  width: "50px",
+                  backgroundColor: "white",
+                  borderRadius: "0px",
+                  boxShadow: "0px 0px 0px 0px",
+                  padding: "0px",
+                }}
+              >
+                <option value="" disabled selected hidden></option>
+                {props.sbuData.sbuData &&
+                  props.sbuData.sbuData.map((obj, id) => (
+                    <option data-sbuId={obj.sbuId}>{obj.sbuName}</option>
+                  ))}
+              </select>
+            </td>
           </div>
           <td style={{ borderRight: "1px solid #898282" }}>
-            <select
-              // id="milestoneselect"
+            {/* <select
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -247,12 +360,12 @@ const RevenueMilestoneResourceData = (props) => {
                 });
               }}
               style={{
-                width:"50px",
+                width: "50px",
                 backgroundColor: "white",
                 borderRadius: "0px",
                 boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
-
+                padding: "0px",
+              }}
             >
               <option value="" disabled selected hidden></option>
               {props.sbuHeadData.sbuHeadData &&
@@ -261,11 +374,45 @@ const RevenueMilestoneResourceData = (props) => {
                     {obj.sbuHeadName}
                   </option>
                 ))}
-            </select>
+            </select> */}
+            <input
+              style={{
+                width: "50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px",
+                fontFamily: "Roboto",
+                fontSize: "14px",
+              }}
+              id="milestoneselect"
+              required
+              placeholder={
+                props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[
+                  id
+                ]?.strategicBusinessUnitHead?.sbuHeadName
+              }
+              // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadIdsbuHeadIdsbuHeadId}
+              onChange={(e) => {
+                updateMilestoneDetails({
+                  event: e.target.value,
+                  resourseDetailsColumn: "sbuHeadName",
+                  selectedID: "sbuHeadId",
+                  attrKey: "data-sbuHeadId",
+                });
+              }}
+              type="text"
+              data-sbuHeadId={1}
+              value={
+                sbuHeadData?.data?.length > 0
+                  ? sbuHeadData?.data[0]?.sbuHeadName
+                  : ""
+              }
+              disabled
+            ></input>
           </td>
           <td style={{ borderRight: "1px solid #898282" }}>
-            <select
-              // id="milestoneselect"
+            {/* <select
               required
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -277,12 +424,12 @@ const RevenueMilestoneResourceData = (props) => {
                 });
               }}
               style={{
-                width:"50px",
+                width: "50px",
                 backgroundColor: "white",
                 borderRadius: "0px",
                 boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
-              
+                padding: "0px",
+              }}
             >
               <option value="" disabled selected hidden></option>
               {props.buData.buData &&
@@ -291,7 +438,42 @@ const RevenueMilestoneResourceData = (props) => {
                     {obj.businessUnitName}
                   </option>
                 ))}
-            </select>
+            </select> */}
+            <input
+              style={{
+                width: "50px",
+                backgroundColor: "white",
+                borderRadius: "0px",
+                boxShadow: "0px 0px 0px 0px",
+                padding: "0px",
+                fontFamily: "Roboto",
+                fontSize: "14px",
+              }}
+              id="milestoneselect"
+              required
+              placeholder={
+                props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[
+                  id
+                ]?.businessUnit?.businessUnitDisplayName
+              }
+              onChange={(e) => {
+                updateMilestoneDetails({
+                  event: e,
+                  resourseDetailsColumn: "businessUnitName",
+                  selectedID: "businessUnitId",
+                  attrKey: "data-businessUnitId",
+                });
+              }}
+              type="text"
+              data-sbuHeadId={1}
+              value={
+                sbuHeadData?.data?.length > 0
+                  ? sbuHeadData?.data[0]?.strategicBusinessUnit?.businessUnit
+                      ?.businessUnitName
+                  : ""
+              }
+              disabled
+            ></input>
           </td>
           <td style={{ borderRight: "1px solid #898282" }}>
             <select
@@ -307,11 +489,12 @@ const RevenueMilestoneResourceData = (props) => {
                 });
               }}
               style={{
-                width:"50px",
+                width: "50px",
                 backgroundColor: "white",
                 borderRadius: "0px",
                 boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
+                padding: "0px",
+              }}
             >
               <option value="" disabled selected hidden></option>
               {props.locationData.locationData &&
@@ -397,11 +580,12 @@ const RevenueMilestoneResourceData = (props) => {
                 });
               }}
               style={{
-                width:"50px",
+                width: "50px",
                 backgroundColor: "white",
                 borderRadius: "0px",
                 boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
+                padding: "0px",
+              }}
             >
               <option value="" disabled selected hidden></option>
               {props.businessTypeData.businessTypeData &&
@@ -426,16 +610,22 @@ const RevenueMilestoneResourceData = (props) => {
                 });
               }}
               style={{
-                width:"50px",
+                width: "50px",
                 backgroundColor: "white",
                 borderRadius: "0px",
                 boxShadow: "0px 0px 0px 0px",
-                padding: "0px" }}
-
+                padding: "0px",
+              }}
             >
               <option value="" disabled selected hidden></option>
               {props.cocPracticeData.cocPracticeData &&
                 props.cocPracticeData.cocPracticeData.map((obj, id) => (
+                  <option data-cocPracticeId={obj.cocPracticeId}>
+                    {obj.cocPracticeName}
+                  </option>
+                ))}
+              {coc &&
+                coc.map((obj, id) => (
                   <option data-cocPracticeId={obj.cocPracticeId}>
                     {obj.cocPracticeName}
                   </option>
@@ -460,7 +650,6 @@ const RevenueMilestoneResourceData = (props) => {
   );
 };
 const mapStateToProps = (state) => {
-
   return {
     sbuData: state.sbuData,
     cocPracticeData: state.cocPracticeData,

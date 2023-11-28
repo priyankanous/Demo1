@@ -78,7 +78,6 @@ const RevenueResourceAccordian = (props) => {
     const dataArr = [...resourceData];
     console.log("dataArr in updateResourceDetails: ", dataArr);
     const data = dataArr[id];
-    // console.log("update Data Obj at", id, data, dataArr);
     data[params?.resourseDetailsColumn] = params?.event?.target?.value;
 
     // Store sbuId based on the selected option
@@ -126,12 +125,11 @@ const RevenueResourceAccordian = (props) => {
     }
     console.log("data in component:", data);
     dataArr[id] = data;
-    // console.log(dataArr, "After update", updateResourceData);
+    console.log(dataArr, "After update", updateResourceData);
     updateResourceData(dataArr);
   };
   // setSelectedSbuId(resourceData[0].sbuId);
 
-  console.log("Selected sbuId state-->:", selectedSbuId);
 
   const getSbuHeadBySbuId = async (selectedSbuId) => {
     try {
@@ -331,7 +329,15 @@ const RevenueResourceAccordian = (props) => {
             >
               <div>
                 <RiIcons.RiArrowDownSFill />
-                <span style={{fontSize:"16px", fontWeight:"400", fontFamily:"Roboto"}}>Resource {id + 1} Details </span>
+                <span
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    fontFamily: "Roboto",
+                  }}
+                >
+                  Resource {id + 1} Details{" "}
+                </span>
               </div>
               <div>
                 <DeleteOutlineIcon
@@ -357,7 +363,6 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
-                  
                 }}
               >
                 SBU
@@ -434,7 +439,14 @@ const RevenueResourceAccordian = (props) => {
               </td>
             </tr>
 
-            <tr className="trmilestone" style={{ background: "white",boxShadow:"none", border:"1px solid #0000004d"}}>
+            <tr
+              className="trmilestone"
+              style={{
+                background: "white",
+                boxShadow: "none",
+                border: "1px solid #0000004d",
+              }}
+            >
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
@@ -444,7 +456,11 @@ const RevenueResourceAccordian = (props) => {
                       ? sbuHeadData?.data[0]?.strategicBusinessUnit?.sbuName
                       : ""
                   }
-                  style={{fontFamily:"Roboto", fontSize:"14px", fontFamily:"Roboto"}}        
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontFamily: "Roboto",
+                  }}
                   onChange={(e) => {
                     updateResourceDetails({
                       event: e,
@@ -468,7 +484,7 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
-                style={{fontFamily:"Roboto",fontSize:"14px"}}
+                  style={{ fontFamily: "Roboto", fontSize: "14px" }}
                   id="milestoneselect"
                   required
                   placeholder={
@@ -549,8 +565,7 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select> */}
                 <input
-                                style={{fontFamily:"Roboto",fontSize:"14px"}}
-
+                  style={{ fontFamily: "Roboto", fontSize: "14px" }}
                   id="milestoneselect"
                   required
                   placeholder={
@@ -581,7 +596,11 @@ const RevenueResourceAccordian = (props) => {
                 <select
                   id="milestoneselect"
                   required
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.location?.locationName}
 
                   onChange={(e) => {
@@ -613,7 +632,11 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
-                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                   id="milestoneinput"
                   type="text"
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceName}
@@ -631,7 +654,11 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
-                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                   id="milestoneinput"
                   type="string"
                   placeholder={
@@ -650,8 +677,11 @@ const RevenueResourceAccordian = (props) => {
               </td>
               <td style={{ borderRight: "solid 1px" }}>
                 <input
-                                style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
-
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                   id="milestoneselect"
                   type="date"
                   required
@@ -685,9 +715,11 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "endDate",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}
-       
-
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                 />
               </td>
             </tr>
@@ -758,7 +790,14 @@ const RevenueResourceAccordian = (props) => {
                 Allocation %
               </td>
             </tr>
-            <tr className="trmilestone" style={{ background: "white",boxShadow:"none", border:"1px solid #0000004d" }}>
+            <tr
+              className="trmilestone"
+              style={{
+                background: "white",
+                boxShadow: "none",
+                border: "1px solid #0000004d",
+              }}
+            >
               <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
                 <select
                   id="milestoneselect"
@@ -777,8 +816,11 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-businessTypeId",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
-
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                 >
                   <option value="" disabled selected hidden>
                     {
@@ -812,8 +854,11 @@ const RevenueResourceAccordian = (props) => {
                       attrKey: "data-cocPracticeId",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
-        
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                 >
                   <option value="" disabled selected hidden>
                     {
@@ -841,7 +886,11 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "billingRateType",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
 
                   // value={{
                   //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
@@ -877,8 +926,11 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "billingRate",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
-       
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                 ></input>
               </td>
               <td
@@ -900,8 +952,12 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "leaveLossFactor",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
-      
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
+
                   // value={leaveLossData}
                 ></input>
               </td>
@@ -920,8 +976,11 @@ const RevenueResourceAccordian = (props) => {
                       resourseDetailsColumn: "allocation",
                     });
                   }}
-                  style={{fontFamily:"Roboto",fontSize:"14px", fontWeight:"400"}}        
-       
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
                 ></input>
               </td>
               {/* <td>
