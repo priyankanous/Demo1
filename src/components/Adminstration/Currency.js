@@ -9,7 +9,7 @@ import { MemoizedBaseComponent } from "../CommonComponent/AdminBaseComponent";
 import * as AiIcons from "react-icons/ai";
 import { async } from "q";
 import { Table, Modal, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, TextField, InputLabel, FormControl, Select, MenuItem, Button, Checkbox } from '@mui/material';
-import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, MoadalStyle } from "../../utils/constantsValue";
+import { TableRowSection, TableCellSection, ModalHeadingSection, ModalHeadingText, ModalDetailSection, InputTextLabel, InputField, ButtonSection, ModalControlButton, ModalCancelButton, MoadalStyle } from "../../utils/constantsValue";
 import { Box, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
@@ -147,6 +147,8 @@ function Currency() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
+          <div style={{paddingBottom:"6px"}}>
+
           <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
             <form id="reg-form" style={{ padding: "0px 30px" }}>
               {/* <div style={{ padding: "10px 0px" }}>
@@ -390,7 +392,7 @@ function Currency() {
 
 
                 >Save</ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -400,11 +402,13 @@ function Currency() {
                   value="Cancel"
                   id="create-account"
 
-                >Cancel</ModalControlButton>
+                >Cancel</ModalCancelButton>
               </ButtonSection>
 
             </form>
           </ModalDetailSection>
+          </div>
+
         </Box>
       </Modal>
     </div>
@@ -722,7 +726,7 @@ function Tr({
                   id="create-account"
                   onClick={OnSubmit}
                 >Save</ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
 
                   type="button"
                   variant="contained"
@@ -731,7 +735,7 @@ function Tr({
                   }}
                   value="Cancel"
                   id="create-account"
-                >Cancel</ModalControlButton>
+                >Cancel</ModalCancelButton>
               </ButtonSection>
 
 

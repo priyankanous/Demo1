@@ -17,6 +17,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
@@ -182,7 +183,7 @@ function Region() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -192,7 +193,7 @@ function Region() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -442,7 +443,7 @@ function Tr({
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -452,7 +453,7 @@ function Tr({
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>

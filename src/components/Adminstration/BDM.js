@@ -16,6 +16,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import { Box } from "@mui/material";
@@ -375,11 +376,12 @@ function Bdm() {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
+          <div style={{paddingBottom:"6px"}}>
           <ModalDetailSection
-            style={{ padding: "2px 0px", height: "475px", overflow: "auto" }}
+            style={{ padding: "2px 0px", height: "400px", overflow: "auto" }}
           >
             <form id="bdm-form">
-              <div>
+              <div style={{ padding: "10px 0px" }}>
               <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
                   <span>Name</span>
@@ -403,7 +405,7 @@ function Bdm() {
                 />
               </div>
 
-              <div style={{ padding: "2px 0px" }}>
+              <div style={{ padding: "10px 0px" }}>
               <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
 <span>
@@ -427,7 +429,7 @@ function Bdm() {
                 />
               </div>
 
-              <div style={{ padding: "2px 0px" }}>
+              <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 <span style={{ color: "red" }}>*</span>
                 <span>Active From</span></InputTextLabel>
@@ -452,7 +454,7 @@ function Bdm() {
                 />
               </div>
 
-              <div style={{ padding: "2px 0px" }}>
+              <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                 
                 Active Until</InputTextLabel>
@@ -574,7 +576,7 @@ function Bdm() {
                   </select>
                 </div> */}
 
-              <div>
+              <div style={{ padding: "10px 0px" }}>
                 <label className="label-bdm">
                   <input
                     onClick={() => {
@@ -672,7 +674,7 @@ function Bdm() {
                   </ul>
                 </div>
               </div>
-              <div>
+              <div style={{ padding: "10px 0px" }}>
                 <label className="label-bdm">
                   <input
                     onClick={() => {
@@ -779,7 +781,7 @@ function Bdm() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -789,10 +791,11 @@ function Bdm() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
+          </div>
         </Box>
       </Modal>
       <SnackBar

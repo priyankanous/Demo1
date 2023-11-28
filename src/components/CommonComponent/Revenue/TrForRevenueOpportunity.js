@@ -16,8 +16,11 @@ import {
   ModalDetailSection,
   InputField,
   MoadalStyle,
+  MoadalStyleRREntry,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
+  ModalBackButton
 } from "../../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
 import RevenueResourceAccordian from "./RevenueResourceAccordian";
@@ -32,7 +35,8 @@ import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
 
 const DownArrowSecordStage = styled('td')({
-  padding: "1px",
+  padding:"1px 6px",
+  width:"10px",
   color: "#000",
   fontWeight: 700,
   cursor: "pointer",
@@ -46,7 +50,8 @@ const TableCellSecondStageSpan = styled('span')({
   fontSize: "14px",
   fontWeight:"400",
   fontFamily:"Roboto",
-  cursor:"pointer"
+  cursor:"pointer",
+  textAlign:"center"
 });
 
 const CopyIconSecondLEvel = styled(FileCopyOutlinedIcon)({
@@ -854,52 +859,125 @@ function TrForRevenue(props) {
         >
           {isExpandedInnerRow ? "↑" : "↓"}
         </DownArrowSecordStage>
-        <TableCellSecondStage className="rowtable">
+        <TableCellSecondStage className="rowtable" style={{ width: "98px" }}>
+        <div
+            style={{
+              width: "100px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.opportunityId || "Unknown"}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.projectCode || "Unknown"}
           </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage >
+
+        <TableCellSecondStage className="rowtable" style={{width:"112px"}}>
+        <div style={{overflow: "hidden", whiteSpace: "nowrap",textOverflow: "ellipsis", width:"112px"}}>
+        <TableCellSecondStageSpan>
             {props.data.opportunityName || "Unknown"}
-          </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
-            {props.data.pricingType || "Unknown"}
-          </TableCellSecondStageSpan>
+            </TableCellSecondStageSpan>
+            </div>
         </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+          <TableCellSecondStageSpan >
+            {props.data.pricingType || "Unknown"}
+          </TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage>
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+          <TableCellSecondStageSpan >
             {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
           </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+          </div>
+        </TableCellSecondStage >
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+        <TableCellSecondStage className="rowtable" style={{width:"108px"}}>
+        <div
+            style={{
+              width: "108px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.noOfResources || "0"}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.leaveLossFactor || ""}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <td className="rowtable" style={{ border: "none" }}>
+
+        <td className="rowtable" style={{ border: "none",display:"flex",justifyContent:"center" }}>
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -1122,7 +1200,7 @@ function TrForRevenue(props) {
       )}
       <Modal open={isClicked} onClose={handleModalClose}>
         <Box
-          sx={MoadalStyle}
+          sx={MoadalStyleRREntry}
           style={{
             width: "80%",
             height: "max-content",
@@ -1130,10 +1208,10 @@ function TrForRevenue(props) {
           }}
         >
           <ModalHeadingSection
-            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+            style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1144,13 +1222,14 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px" }}>
+          <ModalDetailSection style={{ borderRadius: "0px",  padding:"12px 10px 12px 46px" }}>
             <form
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "30px",
+                rowGap: "20px",
                 width: "100%",
+                paddingRight:"10px"
               }}
             >
               <div
@@ -1165,14 +1244,14 @@ function TrForRevenue(props) {
                 >
                   <div style={{ display: "flex" }}>
                     <div>
-                      <label for="username">Pricing Type</label>
+                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                       />
                       T & M
                       <input
@@ -1181,7 +1260,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto",fontSize:"16px", fontWeight:"400" }}
                       />
                       FP
                     </div>
@@ -1190,7 +1269,8 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginRight: "25px",
+                      fontFamily:"Roboto",
+                      // marginRight: "25px",
                     }}
                   >
                     <div
@@ -1202,12 +1282,12 @@ function TrForRevenue(props) {
                       }}
                     >
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>FY :</span>
-                      <div style={{ width: "180px" }}>
+                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <InputField
                           style={{
                             background: "white",
-                            width: "110Px",
+                            width: "138Px",
                             marginLeft: "3px",
                             borderRadius: "0px !important",
                             height: "35px",
@@ -1381,6 +1461,8 @@ function TrForRevenue(props) {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   marginLeft: "0px",
+                  maxHeight:"250px",
+                  overflowY:"auto"
                 }}
               >
                 <Accordion id="accordian">{gridItems}</Accordion>
@@ -1389,11 +1471,11 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                  <div style={{ display: "flex", flexBasis: "25%",alignItems:"center" }}>
                     <div style={{ width: "75px" }}>
-                      <span>Remarks :</span>
+                      <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                     </div>
-                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                    <input style={{  width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
                   </div>
                 </div>
               </div>
@@ -1406,16 +1488,7 @@ function TrForRevenue(props) {
                   gap: "20px",
                 }}
               >
-                <ModalControlButton
-                  type="button"
-                  value="Continue"
-                  id="create-account"
-                  variant="contained"
-                  onClick={saveTandMentry}
-                >
-                  Save
-                </ModalControlButton>
-                <ModalControlButton
+                                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -1430,7 +1503,17 @@ function TrForRevenue(props) {
                   id="create-account"
                 >
                   Cancel
+                </ModalCancelButton>
+                <ModalControlButton
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={saveTandMentry}
+                >
+                  Save
                 </ModalControlButton>
+
               </div>
             </form>
           </ModalDetailSection>
@@ -1439,7 +1522,7 @@ function TrForRevenue(props) {
 
       <Modal open={isOpenSecondLevelEdit} onClose={handleModalClose}>
         <Box
-          sx={MoadalStyle}
+          sx={MoadalStyleRREntry}
           style={{
             width: "80%",
             height: "max-content",
@@ -1447,10 +1530,10 @@ function TrForRevenue(props) {
           }}
         >
           <ModalHeadingSection
-            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+            style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400" }}
             >
               Edit Entry
             </ModalHeadingText>
@@ -1461,14 +1544,15 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px" }}>
+          <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
             <form
               id="reg-form"
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "30px",
+                rowGap: "20px",
                 width: "100%",
+                paddingRight:"10px"
               }}
             >
               <div
@@ -1483,14 +1567,14 @@ function TrForRevenue(props) {
                 >
                   <div style={{ display: "flex" }}>
                     <div>
-                      <label for="username">Pricing Type</label>
+                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                       />
                       T & M
                       <input
@@ -1499,7 +1583,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                         disabled
                       />
                       FP
@@ -1509,7 +1593,7 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginRight: "25px",
+                      // marginRight: "25px",
                     }}
                   >
                     <div
@@ -1518,66 +1602,25 @@ function TrForRevenue(props) {
                         display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
-                      }}
-                    >
-                      <span>FY :</span>
-                      <div>
-                        {/* <FormControl>
-                    <select
-                      style={{
-                        background: "white",
-                        width: "150px",
-                        marginLeft: "8px",
-                        variant: "outlined",
-                        borderRadius: "0px",
-                        height: "35px",
-                      }}
-                      onChange={(e) => {
-                        getAllCurrencyForFy(e.target.value);
-                        const selectedFyId =
-                          e.target.selectedOptions[0].getAttribute("data-fyId");
-                          setFormUpdateData({
-                          ...formUpdateData,
-                          financialYear: {
-                            ...formUpdateData.financialYear,
-                            financialYearId: selectedFyId,
-                            financialYearName: e.target.value,
-                          },
-                        });
-                      }}
-                    >
-                      <option value="" disabled selected hidden>
-                        Select
-                      </option>
-                      {props?.financialYear?.financialYear.map(
-                        (fyData, index) => {
+                  fontFamily:"Roboto",
+                  marginRight:"46px"
 
-                          const fyNameData = fyData?.financialYearName;
-                          const fyId = fyData.financialYearId;
-                          {console.log("check financial year new", fyNameData)}
-                          return (
-                            <option
-                              data-fyId={fyId}
-                              key={index}
-                              // selected={fyNameData}
-                            >
-                              {fyNameData}
-                            </option>
-                          );
-                        }
-                      )}
-                    </select>
-                  </FormControl> */}
+                      }}
+                    >
+                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <div style={{ width: "103px", fontFamily:"Roboto", }}>
                         <FormControl>
                           <select
                             style={{
                               background: "white",
-                              width: "150px",
-                              marginLeft: "8px",
+                              width: "103Px",
+                              marginLeft: "3px",
                               variant: "outlined",
-                              borderRadius: "0px",
+                              borderRadius: "5px",
                               height: "35px",
                               fontFamily:"Roboto",
+                              boxShadow:"none",
+                              border:"1px solid #0000004d"
                             }}
                             onChange={(e) => {
                               getAllCurrencyForFy(e.target.value);
@@ -1636,7 +1679,9 @@ function TrForRevenue(props) {
                       style={{
                         display: "flex",
                         flexBasis: "100%",
-                        gap: "100px",
+                        // gap: "100px",
+                        marginBottom: "20px",
+
                       }}
                     >
                       <div
@@ -1670,10 +1715,11 @@ function TrForRevenue(props) {
                     </FormControl> */}
                           <select
                             style={{
-                              height: "35px",
-                              width: "80%",
-                              marginBottom: "10px",
-                              borderRadius: "1px",
+                          background: "white",
+                          width: "187px",
+                          marginLeft: "8px",
+                          borderRadius: "5px",
+                          height: "39px",
                               boxShadow: "none",
                               border: "1px solid lightgray",
                               color: "black",
@@ -1865,14 +1911,15 @@ function TrForRevenue(props) {
                           <select
                             // size="small"
                             style={{
-                              height: "35px",
-
+                              height: "39px",
                               background: "white",
-                              borderRadius: "1px",
+                        marginLeft: "8px",
+
+                          width: "187px",
+                              borderRadius: "5px",
                               boxShadow: "none",
                               border: "1px solid lightgray",
                               color: "black",
-                              width: "187Px",
                               fontFamily:"Roboto",
                               // marginLeft: "8px",
                             }}
@@ -1974,11 +2021,13 @@ function TrForRevenue(props) {
                               style={{
                                 background: "white",
                                 width: "187Px",
-                                borderRadius: "1px",
+                          marginLeft: "8px",
+
+                                borderRadius: "5px",
                                 boxShadow: "none",
                                 border: "1px solid lightgray",
                                 color: "black",
-                                height: "35px",
+                                height: "39px",
                                 fontFamily:"Roboto",
                               }}
                               // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
@@ -2019,31 +2068,21 @@ function TrForRevenue(props) {
                           </FormControl>
                         </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
                           <span>Project Code</span>
                         </div>
-                        <div style={{ width: "200px" }}>
+                        <div style={{ width: "187px" }}>
                           <InputField
+                                                style={{
+                                                  background: "white",
+                                                  width: "187Px",
+                                                  marginLeft: "8px",
+                                                  borderRadius: "0px !important",
+                                                  height: "35px",
+                                                  fontFamily:"Roboto",
+                                                }}
                             size="small"
                             type="text"
                             id="email"
@@ -2060,18 +2099,43 @@ function TrForRevenue(props) {
                                 },
                               });
                             }}
-                            style={{fontFamily:"Roboto"}}
                           />
                         </div>
                       </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        // gap: "100px",
+                  marginBottom: "20px",
+
+                      }}
+                    >
 
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
                           <span>Project Start Date</span>
                         </div>
-                        <div style={{ width: "188px" }}>
+                        <div style={{ width: "187px" }}>
                           <InputField
+                                                style={{
+                                                  background: "white",
+                                                  width: "187Px",
+                                                  marginLeft: "8px",
+                                                  borderRadius: "0px !important",
+                                                  height: "35px",
+                                                }}
                             size="small"
                             type="text"
                             id="email"
@@ -2090,7 +2154,6 @@ function TrForRevenue(props) {
                                 },
                               });
                             }}
-                            style={{fontFamily:"Roboto"}}
 
                           />
                         </div>
@@ -2102,6 +2165,13 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
+                                                style={{
+                                                  background: "white",
+                                                  width: "187Px",
+                                                  marginLeft: "8px",
+                                                  borderRadius: "0px !important",
+                                                  height: "35px",
+                                                }}
                             size="small"
                             type="text"
                             id="email"
@@ -2118,28 +2188,10 @@ function TrForRevenue(props) {
                               });
                             }}
                             value={formUpdateData?.opportunity?.projectEndDate}
-                            style={{fontFamily:"Roboto"}}
                           />
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2147,10 +2199,12 @@ function TrForRevenue(props) {
                         </div>
                         <select
                           style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
+                            height: "39px",
+                        width: "187px",
+                        marginLeft: "8px",
+
+
+                            borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
@@ -2203,10 +2257,10 @@ function TrForRevenue(props) {
 
                         <select
                           style={{
-                            height: "35px",
-                            width: "74%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
+                            height: "39px",
+                            width: "187px",
+                        marginLeft: "8px",
+                            borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
@@ -2252,6 +2306,25 @@ function TrForRevenue(props) {
                             )}
                         </select>
                       </div>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        // gap: "100px",
+                        marginBottom: "20px",
+                      }}
+                    >
+
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2259,10 +2332,11 @@ function TrForRevenue(props) {
                         </div>
                         <select
                           style={{
-                            height: "35px",
-                            width: "70%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
+                            height: "39px",
+                            width: "187px",
+                        marginLeft: "8px",
+
+                            borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
@@ -2305,24 +2379,6 @@ function TrForRevenue(props) {
                             )}
                         </select>
                       </div>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                        marginBottom: "15px",
-                      }}
-                    >
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2330,10 +2386,11 @@ function TrForRevenue(props) {
                         </div>
                         <select
                           style={{
-                            height: "35px",
-                            width: "80%",
-                            marginBottom: "10px",
-                            borderRadius: "1px",
+                            height: "39px",
+                            width: "187px",
+                        marginLeft: "8px",
+
+                            borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
@@ -2399,14 +2456,22 @@ function TrForRevenue(props) {
                             )}
                         </select>
                       </div>
+
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
                           <span>Work Order End Date</span>
                         </div>
 
-                        <div style={{ width: "188px" }}>
+                        <div style={{ width: "195px" }}>
                           <InputField
+                                                style={{
+                                                  background: "white",
+                                                  width: "187Px",
+                                                  marginLeft: "8px",
+                                                  borderRadius: "0px !important",
+                                                  height: "35px",
+                                                }}
                             size="small"
                             type="text"
                             id="email"
@@ -2426,6 +2491,7 @@ function TrForRevenue(props) {
                           />
                         </div>
                       </div>
+
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2434,6 +2500,13 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "187px" }}>
                           <InputField
+                                                style={{
+                                                  background: "white",
+                                                  width: "187Px",
+                                                  marginLeft: "8px",
+                                                  borderRadius: "0px !important",
+                                                  height: "35px",
+                                                }}
                             size="small"
                             type="text"
                             id="email"
@@ -2458,26 +2531,19 @@ function TrForRevenue(props) {
 
                   <div
                     style={{
-                      paddingTop: "10px",
+                      paddingTop: "8px",
+                      paddingBottom:"10px",
                       // marginLeft: "-78px",
                       display: "flex",
-                      alignItems: "center",
-                      width: "80%",
+                      // alignItems: "center",
+                      width: "100%",
+                justifyContent:"center",
+                gap:"12px"
                     }}
                   >
-                    <ButtonSection>
-                      <ModalControlButton
-                        sx={{ marginLeft: "400px", marginRight: "75px" }}
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={handleNextClick}
-                      >
-                        Next
-                      </ModalControlButton>
-                      <ModalControlButton
-                        sx={{ marginRight: "380px" }}
+                    {/* <ButtonSection> */}
+                    <ModalCancelButton
+                        sx={{ marginLeft: "-50px" }}
                         type="button"
                         variant="contained"
                         onClick={() => {
@@ -2487,8 +2553,18 @@ function TrForRevenue(props) {
                         id="create-account"
                       >
                         Cancel
+                      </ModalCancelButton>
+                      <ModalControlButton
+                        type="button"
+                        value="Continue"
+                        id="create-account"
+                        variant="contained"
+                        onClick={handleNextClick}
+                      >
+                        Next
                       </ModalControlButton>
-                    </ButtonSection>
+
+                    {/* </ButtonSection> */}
                   </div>
                 </div>
               ) : (
@@ -2546,6 +2622,8 @@ function TrForRevenue(props) {
                               marginLeft: "8px",
                               borderRadius: "0px !important",
                               height: "35px",
+                      fontFamily: "Roboto !important",
+
                             }}
                             size="small"
                             type="number"
@@ -2640,6 +2718,8 @@ function TrForRevenue(props) {
                       justifyContent: "flex-start",
                       alignItems: "center",
                       marginLeft: "0px",
+                      maxHeight:"250px",
+                      overflowY:"auto"
                     }}
                   >
                     <Accordion id="accordian">{gridItems}</Accordion>
@@ -2652,52 +2732,32 @@ function TrForRevenue(props) {
                       rowGap: "30px",
                     }}
                   >
+                                <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
+
                     <div
                       style={{ display: "flex", flexBasis: "100%", gap: "5px" }}
                     >
-                      <div style={{ display: "flex", flexBasis: "25%" }}>
+                      <div style={{ display: "flex", flexBasis: "25%", alignItems:"center" }}>
                         <div style={{ width: "75px" }}>
-                          <span>Remarks :</span>
+                          <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                         </div>
                         <input
-                          style={{ width: "730px", borderRadius: "0px" }}
+                          style={{ width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }}
                         />
                       </div>
+                    </div>
                     </div>
 
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
+                alignItems: "center",
+                        width:"100%",
                         gap: "20px",
-                        width: "100%",
                       }}
                     >
-                      <ModalControlButton
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={() => {
-                          setPricingType(pricingType);
-                          setTabIndex({
-                            index: 0,
-                            formData: "",
-                          });
-                        }}
-                      >
-                        Back
-                      </ModalControlButton>
-                      <ModalControlButton
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={OnSubmit}
-                      >
-                        Save
-                      </ModalControlButton>
-                      <ModalControlButton
+                                            <ModalCancelButton
                         type="button"
                         variant="contained"
                         onClick={() => {
@@ -2712,7 +2772,32 @@ function TrForRevenue(props) {
                         id="create-account"
                       >
                         Cancel
+                      </ModalCancelButton>
+                      <ModalBackButton
+                        type="button"
+                        value="Continue"
+                        id="create-account"
+                        variant="contained"
+                        onClick={() => {
+                          setPricingType(pricingType);
+                          setTabIndex({
+                            index: 0,
+                            formData: "",
+                          });
+                        }}
+                      >
+                        Back
+                      </ModalBackButton>
+                      <ModalControlButton
+                        type="button"
+                        value="Continue"
+                        id="create-account"
+                        variant="contained"
+                        onClick={OnSubmit}
+                      >
+                        Save
                       </ModalControlButton>
+
                     </div>
                   </div>
                 </>
@@ -2724,7 +2809,7 @@ function TrForRevenue(props) {
 
       <Modal open={isOpenThirdLevelEdit} onClose={handleModalClose}>
         <Box
-          sx={MoadalStyle}
+          sx={MoadalStyleRREntry}
           style={{
             width: "80%",
             height: "max-content",
@@ -2732,10 +2817,10 @@ function TrForRevenue(props) {
           }}
         >
           <ModalHeadingSection
-            style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+            style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "200" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400" }}
             >
               Edit Resource
             </ModalHeadingText>
@@ -2746,13 +2831,14 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px" }}>
+          <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
             <form
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "30px",
+                rowGap: "20px",
                 width: "100%",
+                paddingRight:"10px"
               }}
             >
               <div
@@ -2765,16 +2851,16 @@ function TrForRevenue(props) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: "flex",  }}>
                     <div>
-                      <label for="username">Pricing Type</label>
+                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                       />
                       T & M
                       <input
@@ -2783,7 +2869,7 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
                       />
                       FP
                     </div>
@@ -2792,7 +2878,8 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      marginRight: "25px",
+                      fontFamily:"Roboto",
+                      // marginRight: "25px",
                     }}
                   >
                     <div
@@ -2803,17 +2890,19 @@ function TrForRevenue(props) {
                         columnGap: "10px",
                       }}
                     >
-                      <span>FY :</span>
-                      <div>
+                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <FormControl>
                           <select
                             style={{
                               background: "white",
-                              width: "150px",
-                              marginLeft: "8px",
+                              width: "138px",
+                              marginLeft: "3px",
                               variant: "outlined",
-                              borderRadius: "0px",
+                              borderRadius: "5px",
                               height: "35px",
+                              boxShadow:"none",
+                              border:"1px solid #0000004d"
                             }}
                             onChange={(e) => {
                               getAllCurrencyForFy(e.target.value);
@@ -2944,6 +3033,8 @@ function TrForRevenue(props) {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   marginLeft: "0px",
+                  maxHeight:"250px",
+                  overflowY:"auto"
                 }}
               >
                 <Accordion id="accordian">{gridItems}</Accordion>
@@ -2952,31 +3043,23 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ display: "flex", flexBasis: "25%" }}>
+                  <div style={{ display: "flex", flexBasis: "25%", alignItems:"center" }}>
                     <div style={{ width: "75px" }}>
-                      <span>Remarks :</span>
+                      <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                     </div>
-                    <input style={{ width: "730px", borderRadius: "0px" }} />
+                    <input style={{  width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
                   </div>
+                </div>
                 </div>
                 <div
                   style={{
                     display: "flex",
+                  alignItems: "center",
                     justifyContent: "center",
                     gap: "20px",
-                    width: "100%",
                   }}
                 >
-                  <ModalControlButton
-                    type="button"
-                    value="Continue"
-                    id="create-account"
-                    variant="contained"
-                    onClick={OnSubmit}
-                  >
-                    Save
-                  </ModalControlButton>
-                  <ModalControlButton
+                                    <ModalCancelButton
                     type="button"
                     variant="contained"
                     onClick={() => {
@@ -2986,9 +3069,18 @@ function TrForRevenue(props) {
                     id="create-account"
                   >
                     Cancel
+                  </ModalCancelButton>
+                  <ModalControlButton
+                    type="button"
+                    value="Continue"
+                    id="create-account"
+                    variant="contained"
+                    onClick={OnSubmit}
+                  >
+                    Save
                   </ModalControlButton>
+
                 </div>
-              </div>
             </form>
           </ModalDetailSection>
         </Box>

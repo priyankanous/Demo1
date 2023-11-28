@@ -10,6 +10,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import { Box, Typography, IconButton, Checkbox, MenuItem } from "@mui/material";
@@ -185,7 +186,7 @@ function AccountSettings() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form">
+            <form id="reg-form" style={{padding:"0px 37px"}}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
@@ -207,7 +208,7 @@ function AccountSettings() {
                 />
               </div>
 
-              <div>
+              <div style={{ padding: "10px 0px" }}>
                 <label
                   id="region"
                   style={{ fontWeight: "400", fontSize: "16px" }}
@@ -218,7 +219,7 @@ function AccountSettings() {
                 <select
                   style={{
                     height: "37px",
-                    width: "90%",
+                    width: "100%",
                     marginBottom: "10px",
                     marginTop: "2px",
                     borderRadius: "7px",
@@ -283,7 +284,7 @@ function AccountSettings() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -293,7 +294,7 @@ function AccountSettings() {
                   id="cancel"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -533,7 +534,7 @@ function Tr({
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form" style={{ padding: "0px 30px" }}>
+            <form id="reg-form" style={{ padding: "0px 37px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>Name</InputTextLabel>
                 <InputField
@@ -637,7 +638,7 @@ function Tr({
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -647,7 +648,7 @@ function Tr({
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>

@@ -16,6 +16,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import { Box } from "@mui/material";
@@ -254,7 +255,7 @@ function SbuHead() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form id="reg-form" style={{ padding: "0px 30px" }}>
+            <form id="reg-form" style={{ padding: "0px 35px" }}>
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
@@ -328,7 +329,7 @@ function SbuHead() {
                 </FormControl>
               </div> */}
 
-              <div>
+              <div style={{ padding: "10px 0px" }}>
                 <label
                   for="email"
                   style={{ fontWeight: "400", fontSize: "16px" }}
@@ -341,7 +342,6 @@ function SbuHead() {
                   style={{
                     height: "37px",
                     width: "100%",
-                    marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
@@ -432,7 +432,7 @@ function SbuHead() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -442,7 +442,7 @@ function SbuHead() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>

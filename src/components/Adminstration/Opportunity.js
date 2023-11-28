@@ -34,6 +34,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
@@ -294,7 +295,7 @@ function Opportunity() {
             />
           </ModalHeadingSection>
           <ModalDetailSection>
-            <form style={{ padding: "0px 30px" }} id="reg-form">
+            <form style={{ padding: "0px 35px" }} id="reg-form">
               <div style={{ padding: "10px 0px" }}>
                 <InputTextLabel>
                   <span style={{ color: "red" }}>*</span>
@@ -316,7 +317,7 @@ function Opportunity() {
                   }}
                 />
               </div>
-              <div>
+              <div style={{ padding: "10px 0px" }}>
                 <span style={{ color: "red" }}>*</span>
                 <label
                   for="email"
@@ -328,7 +329,6 @@ function Opportunity() {
                   style={{
                     height: "37px",
                     width: "100%",
-                    marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
@@ -474,7 +474,7 @@ function Opportunity() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -484,7 +484,7 @@ function Opportunity() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>

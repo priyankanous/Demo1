@@ -14,6 +14,7 @@ import {
   InputField,
   ButtonSection,
   ModalControlButton,
+  ModalCancelButton,
   MoadalStyle,
 } from "../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
@@ -215,7 +216,7 @@ function GlobalLeaveLossFactor() {
           </ModalHeadingSection>
           <ModalDetailSection style={{ height: "370px", overflow: "auto" }}>
             <form id="reg-form" style={{ padding: "0px 30px" }}>
-              <div>
+              <div style={{ padding: "0px 0px 10px 0px" }}>
                 <label for="name">
                   <span style={{ color: "red" }}>*</span>
                   <span style={{fontSize:"15px", fontWeight:"500"}}>Financial Year</span>
@@ -224,7 +225,6 @@ function GlobalLeaveLossFactor() {
                   style={{
                     width: "100%",
                     height: "37px",
-                    marginBottom: "10px",
                     borderRadius: "7px",
                     boxShadow: "none",
                     fontFamily:"Roboto",
@@ -425,7 +425,7 @@ function GlobalLeaveLossFactor() {
                 >
                   Save
                 </ModalControlButton>
-                <ModalControlButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -435,7 +435,7 @@ function GlobalLeaveLossFactor() {
                   id="create-account"
                 >
                   Cancel
-                </ModalControlButton>
+                </ModalCancelButton>
               </ButtonSection>
             </form>
           </ModalDetailSection>
@@ -661,7 +661,7 @@ function Tr({
         >
           <Box sx={MoadalStyle}>
             <ModalHeadingSection>
-              <ModalHeadingText>Edit Global Leave loss Factor</ModalHeadingText>
+              <ModalHeadingText>Edit Leave loss Factor</ModalHeadingText>
               <CloseIcon
                 onClick={() => {
                   setIsOpen(false);
@@ -669,6 +669,7 @@ function Tr({
                 style={{ cursor: "pointer" }}
               />
             </ModalHeadingSection>
+            <div style={{paddingBottom:"6px"}}>
             <ModalDetailSection style={{ height: "300px", overflow: "auto" }}>
               <form id="reg-form">
                 <div style={{ padding: "10px 0px" }}>
@@ -718,7 +719,6 @@ function Tr({
                     style={{
                       height: "37px",
                       width: "100%",
-                      marginBottom: "10px",
                       borderRadius: "7px",
                       boxShadow: "none",
                       border: "1px solid lightgray",
@@ -788,7 +788,7 @@ function Tr({
                   >
                     Save
                   </ModalControlButton>
-                  <ModalControlButton
+                  <ModalCancelButton
                     type="button"
                     variant="contained"
                     onClick={() => {
@@ -798,10 +798,11 @@ function Tr({
                     id="create-account"
                   >
                     Cancel
-                  </ModalControlButton>
+                  </ModalCancelButton>
                 </ButtonSection>
               </form>
             </ModalDetailSection>
+            </div>
           </Box>
         </Modal>
       </TableRowSection>
