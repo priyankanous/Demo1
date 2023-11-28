@@ -43,9 +43,9 @@ import {
 import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
 import { Accordion } from "react-accessible-accordion";
-import Tooltip from '@mui/material/Tooltip';
-import AddIcon from '@mui/icons-material/Add';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
+import Tooltip from "@mui/material/Tooltip";
+import AddIcon from "@mui/icons-material/Add";
+import AddSharpIcon from "@mui/icons-material/AddSharp";
 
 const Label = styled('span')({
   fontFamily: "Roboto",
@@ -81,7 +81,7 @@ const ResourceEntryForm = (props) => {
       projectEndDate: "",
     },
     bdm: { bdmID: "", bdmName: "" },
-    currency: { currencyID: "", currencyName: "", currencyDisplayNAme:"" },
+    currency: { currencyID: "", currencyName: "", currencyDisplayNAme: "" },
     probability: { probabilityID: "", probabilityTypeName: "" },
     region: { regionID: "", regionName: "" },
     workOrder: { workOrderID: "", workOrderEndDate: "", workOrderStatus: "" },
@@ -93,7 +93,6 @@ const ResourceEntryForm = (props) => {
   });
   const [isDisabled, setIsDisabled] = useState(false);
 
-  console.log("milestonedata", milestoneData)
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
@@ -241,7 +240,6 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(false);
         });
     } else if (pricingType === "FP") {
-
       const payload2 = {
         account: {
           accountId: formData.account.accountId,
@@ -285,31 +283,33 @@ const ResourceEntryForm = (props) => {
           milestoneResourceCount: ele?.milestoneResourceCount,
           revenueResourceEntries: ele?.revenueResourceEntries?.map(
             (revenueEntry) => {
+              console.log("revenueResourceEntries", revenueEntry)
               return {
                 strategicBusinessUnit: {
-                  sbuId: revenueEntry?.strategicBusinessUnit?.sbuId,
+                  sbuId: revenueEntry?.sbuId,
                 },
                 strategicBusinessUnitHead: {
-                  sbuHeadId: revenueEntry?.strategicBusinessUnitHead?.sbuHeadId,
+                  sbuHeadId: revenueEntry?.sbuHeadId,
                 },
                 businessUnit: {
-                  businessUnitId: revenueEntry?.businessUnit?.businessUnitId,
+                  businessUnitId: revenueEntry?.businessUnitId,
                 },
                 businessType: {
-                  businessTypeId: revenueEntry?.businessType?.businessTypeId,
+                  businessTypeId: revenueEntry?.businessTypeId,
                 },
                 location: {
-                  locationId: revenueEntry?.location?.locationId,
+                  locationId: revenueEntry?.locationId,
                 },
                 resourceName: revenueEntry?.resourceName,
                 employeeId: revenueEntry?.employeeId,
                 resourceStartDate: revenueEntry?.resourceStartDate,
                 resourceEndDate: revenueEntry?.resourceEndDate,
                 cocPractice: {
-                  cocPracticeId: revenueEntry?.cocPratice.cocPracticeId
+                  cocPracticeId: revenueEntry?.cocPracticeId,
                 },
                 allocation: revenueEntry?.allocation,
-                milestoneResourceRevenue: revenueEntry?.milestoneResourceRevenue,
+                milestoneResourceRevenue:
+                  revenueEntry?.milestoneResourceRevenue,
               };
             }
           ),
@@ -474,7 +474,9 @@ const ResourceEntryForm = (props) => {
   };
 
   return (
-    <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
+    <ModalDetailSection
+      style={{ borderRadius: "0px", padding: "12px 10px 12px 46px" }}
+    >
       <form
         id="reg-form"
         style={{
@@ -482,7 +484,7 @@ const ResourceEntryForm = (props) => {
           flexDirection: "column",
           rowGap: "20px",
           width: "100%",
-          paddingRight:"10px"
+          paddingRight: "10px",
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
@@ -495,14 +497,28 @@ const ResourceEntryForm = (props) => {
           >
             <div style={{ display: "flex" }}>
               <div>
-                <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                <label
+                  for="username"
+                  style={{
+                    fontFamily: "roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                  }}
+                >
+                  Pricing Type
+                </label>
                 <input
                   type="radio"
                   value="T&M"
                   name="Pricing Type"
                   checked={pricingType === "T&M"}
                   onChange={onOptionChange}
-                  style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                  style={{
+                    boxShadow: "none",
+                    fontFamily: "Roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                  }}
                 />
                 T & M
                 <input
@@ -511,7 +527,12 @@ const ResourceEntryForm = (props) => {
                   name="Pricing Type"
                   checked={pricingType === "FP"}
                   onChange={onOptionChange}
-                  style={{ boxShadow: "none", fontFamily:"Roboto",fontSize:"16px", fontWeight:"400" }}
+                  style={{
+                    boxShadow: "none",
+                    fontFamily: "Roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                  }}
                 />
                 FP
               </div>
@@ -520,8 +541,7 @@ const ResourceEntryForm = (props) => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontFamily:"Roboto",
-
+                fontFamily: "Roboto",
               }}
             >
               <div
@@ -530,8 +550,7 @@ const ResourceEntryForm = (props) => {
                   display: "flex",
                   alignItems: "center",
                   columnGap: "10px",
-                  fontFamily:"Roboto",
-
+                  fontFamily: "Roboto",
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
@@ -544,7 +563,7 @@ const ResourceEntryForm = (props) => {
                       marginLeft: "3px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      fontFamily:"Roboto !important",
+                      fontFamily: "Roboto !important",
                     }}
                     size="small"
                     type="text"
@@ -584,8 +603,7 @@ const ResourceEntryForm = (props) => {
                   display: "flex",
                   flexBasis: "100%",
                   // gap: "100px",
-                                    marginBottom: "20px",
-
+                  marginBottom: "20px",
                 }}
               >
                 <div
@@ -642,19 +660,19 @@ const ResourceEntryForm = (props) => {
                   <span style={{ color: "red" }}>*</span>
                   <Label>Opportunity Name</Label>
                   <Tooltip title="Add Opportunity" placement="top">
-            {/* <Button> */}
-            <a
-                        href="/administration/opportunity"
-                        style={{
-                          display: "inline-block",
-                          textDecoration: "none",
-                          color: "#000000",
-                          fontWeight: "400",
-                          fontSize: "12px",
-                        }}
-                      >
-                                     <AddIcon style={{fontWeight:"400", fontSize:"20px", fontWeight:"700",marginTop:"-7px"}}/>
-                      </a>
+                    {/* <Button> */}
+                    <a
+                      href="/administration/opportunity"
+                      style={{
+                        display: "inline-block",
+                        textDecoration: "none",
+                        color: "#000000",
+                        fontWeight: "400",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <AddIcon style={{fontWeight:"400", fontSize:"20px", fontWeight:"700",marginTop:"-7px"}}/>
+                    </a>
             {/* </Button> */}
           </Tooltip>
                   <div>
@@ -851,7 +869,7 @@ const ResourceEntryForm = (props) => {
                         marginLeft: "8px",
                         borderRadius: "0px !important",
                         height: "35px",
-                        fontFamily:"Roboto",
+                        fontFamily: "Roboto",
                       }}
                       size="small"
                       type="text"
@@ -1045,9 +1063,6 @@ const ResourceEntryForm = (props) => {
                     isDisabled={isDisabled ? true : false}
                   />
                 </div>
-
-                
-
               </div>
             </div>
 
@@ -1066,7 +1081,7 @@ const ResourceEntryForm = (props) => {
                   marginBottom: "20px",
                 }}
               >
-                                <div style={{ flexBasis: "25%" }}>
+                <div style={{ flexBasis: "25%" }}>
                   <div>
                     <span style={{ color: "red" }}>*</span>
                     <Label>Region</Label>
@@ -1320,39 +1335,38 @@ const ResourceEntryForm = (props) => {
             <div
               style={{
                 paddingTop: "8px",
-                paddingBottom:"10px",
+                paddingBottom: "10px",
                 // marginLeft: "-20px",
                 display: "flex",
                 // alignItems: "center",
                 width: "100%",
-                justifyContent:"center",
-                gap:"12px"
+                justifyContent: "center",
+                gap: "12px",
               }}
             >
               {/* <ButtonSection style={{marginLeft:"-25px"}}> */}
 
-                <ModalCancelButton
-                                  sx={{ marginLeft: "-50px" }}
-
-                  type="button"
-                  variant="contained"
-                  onClick={() => {
-                    props.setIsOpen(false);
-                  }}
-                  value="Cancel"
-                  id="create-account"
-                >
-                  Cancel
-                </ModalCancelButton>
-                <ModalControlButton
-                  type="button"
-                  value="Continue"
-                  id="create-account"
-                  variant="contained"
-                  onClick={handleNextClick}
-                >
-                  Next
-                </ModalControlButton>
+              <ModalCancelButton
+                sx={{ marginLeft: "-50px" }}
+                type="button"
+                variant="contained"
+                onClick={() => {
+                  props.setIsOpen(false);
+                }}
+                value="Cancel"
+                id="create-account"
+              >
+                Cancel
+              </ModalCancelButton>
+              <ModalControlButton
+                type="button"
+                value="Continue"
+                id="create-account"
+                variant="contained"
+                onClick={handleNextClick}
+              >
+                Next
+              </ModalControlButton>
               {/* </ButtonSection> */}
             </div>
           </div>
@@ -1442,19 +1456,37 @@ const ResourceEntryForm = (props) => {
                 justifyContent: "flex-start",
                 alignItems: "center",
                 marginLeft: "0px",
-                maxHeight:"250px",
-                overflowY:"auto"
+                maxHeight: "250px",
+                // overflowY: "auto",
               }}
             >
               <Accordion id="accordian">{gridItems}</Accordion>
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
               <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                <div style={{ display: "flex", flexBasis: "25%",alignItems:"center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexBasis: "25%",
+                    alignItems: "center",
+                  }}
+                >
                   <div style={{ width: "75px" }}>
-                    <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
+                    <span style={{ fontWeight: "400", fontSize: "16px" }}>
+                      Remarks :
+                    </span>
                   </div>
-                  <input style={{ width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                  <input
+                    style={{
+                      width: "862px",
+                      borderRadius: "0px",
+                      fontFamily: "Roboto",
+                      fontWeight: "400",
+                      fontSize: "14px",
+                      boxShadow: "none",
+                      border: "1px solid #00000066",
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -1467,7 +1499,7 @@ const ResourceEntryForm = (props) => {
                 gap: "20px",
               }}
             >
-                            <ModalCancelButton
+              <ModalCancelButton
                 type="button"
                 variant="contained"
                 onClick={() => {
@@ -1499,7 +1531,6 @@ const ResourceEntryForm = (props) => {
               >
                 Back
               </ModalBackButton>
-
 
               <ModalControlButton
                 type="button"
