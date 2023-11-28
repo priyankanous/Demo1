@@ -606,7 +606,7 @@ const ResourceEntryForm = (props) => {
                           background: "white",
                           width: "187px",
                           marginLeft: "8px",
-                          borderRadius: "0px",
+                          borderRadius: "4px",
                           height: "35px",
                           border:
                             isSubmitted && !formData?.account?.accountName
@@ -735,7 +735,7 @@ const ResourceEntryForm = (props) => {
                           background: "white",
                           width: "187px",
                           marginLeft: "8px",
-                          borderRadius: "0px",
+                          borderRadius: "4px",
                           height: "35px",
                           border:
                             isSubmitted &&
@@ -806,7 +806,7 @@ const ResourceEntryForm = (props) => {
                           background: "white",
                           width: "187px",
                           marginLeft: "8px",
-                          borderRadius: "0px",
+                          borderRadius: "4px",
                           height: "35px",
                           border:
                             isSubmitted && !formData?.bdm?.bdmName
@@ -966,7 +966,7 @@ const ResourceEntryForm = (props) => {
                         background: "white",
                         width: "187px",
                         marginLeft: "8px",
-                        borderRadius: "0px",
+                        borderRadius: "4px",
                         height: "35px",
                         border:
                           isSubmitted && !formData?.currency?.currencyName
@@ -1013,7 +1013,7 @@ const ResourceEntryForm = (props) => {
                         background: "white",
                         width: "187px",
                         marginLeft: "8px",
-                        borderRadius: "0px",
+                        borderRadius: "4px",
                         height: "35px",
                         border:
                           isSubmitted &&
@@ -1079,7 +1079,7 @@ const ResourceEntryForm = (props) => {
                         background: "white",
                         width: "187px",
                         marginLeft: "8px",
-                        borderRadius: "0px",
+                        borderRadius: "4px",
                         height: "35px",
                         border:
                           isSubmitted && !formData?.region?.regionName
@@ -1191,7 +1191,7 @@ const ResourceEntryForm = (props) => {
                         background: "white",
                         width: "187px",
                         marginLeft: "8px",
-                        borderRadius: "0px",
+                        borderRadius: "4px",
                         height: "35px",
                         border:
                           isSubmitted && !formData?.workOrder?.workOrderID
