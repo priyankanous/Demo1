@@ -35,7 +35,8 @@ import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
 
 const DownArrowSecordStage = styled('td')({
-  padding: "1px",
+  padding:"1px 6px",
+  width:"10px",
   color: "#000",
   fontWeight: 700,
   cursor: "pointer",
@@ -49,7 +50,8 @@ const TableCellSecondStageSpan = styled('span')({
   fontSize: "14px",
   fontWeight:"400",
   fontFamily:"Roboto",
-  cursor:"pointer"
+  cursor:"pointer",
+  textAlign:"center"
 });
 
 const CopyIconSecondLEvel = styled(FileCopyOutlinedIcon)({
@@ -857,52 +859,125 @@ function TrForRevenue(props) {
         >
           {isExpandedInnerRow ? "↑" : "↓"}
         </DownArrowSecordStage>
-        <TableCellSecondStage className="rowtable">
+        <TableCellSecondStage className="rowtable" style={{ width: "98px" }}>
+        <div
+            style={{
+              width: "100px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.opportunityId || "Unknown"}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.projectCode || "Unknown"}
           </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage >
+
+        <TableCellSecondStage className="rowtable" style={{width:"112px"}}>
+        <div style={{overflow: "hidden", whiteSpace: "nowrap",textOverflow: "ellipsis", width:"112px"}}>
+        <TableCellSecondStageSpan>
             {props.data.opportunityName || "Unknown"}
-          </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
-            {props.data.pricingType || "Unknown"}
-          </TableCellSecondStageSpan>
+            </TableCellSecondStageSpan>
+            </div>
         </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable">
-          <TableCellSecondStageSpan>
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+          <TableCellSecondStageSpan >
+            {props.data.pricingType || "Unknown"}
+          </TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage>
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+          <TableCellSecondStageSpan >
             {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
           </TableCellSecondStageSpan>
-        </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+          </div>
+        </TableCellSecondStage >
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
               "DD/MMM/YYYY"
             )}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+        <TableCellSecondStage className="rowtable" style={{width:"108px"}}>
+        <div
+            style={{
+              width: "108px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.noOfResources || "0"}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <TableCellSecondStage className="rowtable">
+
+
+        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
+        <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
           <TableCellSecondStageSpan>
             {props.data.leaveLossFactor || ""}
           </TableCellSecondStageSpan>
+          </div>
         </TableCellSecondStage>
-        <td className="rowtable" style={{ border: "none" }}>
+
+        <td className="rowtable" style={{ border: "none",display:"flex",justifyContent:"center" }}>
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {

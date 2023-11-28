@@ -475,7 +475,7 @@ function Tr({
                       className="threvenue"
                       style={{
                         backgroundColor: "rgba(72, 130, 225, 0.2)",
-                        padding: "4px",
+                        padding: "4px 0px",
                         fontFamily:"Roboto",
                         fontSize:"14px",
                         fontWeight:"500"
