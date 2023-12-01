@@ -170,7 +170,7 @@ function RevenueEntryScreens(props) {
             // }}
           >
             <ModalHeadingSection
-              style={{ backgroundColor: "lightgray", borderRadius: "0Px" }}
+              style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
             >
               <ModalHeadingText
                 style={{fontFamily:"Roboto", fontWeight: "400" }}

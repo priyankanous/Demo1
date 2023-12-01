@@ -1080,7 +1080,15 @@ function TrForRevenue(props) {
                         handleResourceStartDate(obj.resourceStartDate);
                       }}
                     >
-                      <td className="rowtable">
+                      <td className="rowtable" style={{width: "90px"}}>
+                          <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
                         <span 
                         style={{fontSize:"14px"}}
                         >
@@ -1090,8 +1098,19 @@ function TrForRevenue(props) {
                               )
                             : ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{fontSize:"14px"}}>
                           {obj.resourceEndDate
                             ? moment(obj.resourceEndDate, "YYYY-MM-DD").format(
@@ -1099,41 +1118,117 @@ function TrForRevenue(props) {
                               )
                             : ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.workOrderNumber || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.employeeId || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+
+                      <td className="rowtable" style={{ padding: "1px", width: "105px" }}>
+                      <div
+            style={{
+              width: "105px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.resourceName || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+
+                      <td className="rowtable" style={{ padding: "1px", width: "92px" }}>
+                      <div
+            style={{
+              width: "92px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.cocPractice || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.billingRate || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span>{obj.allocation || ""}</span>
+                        </div>
                       </td>
-                      <td className="rowtable">
+
+
+                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                      <div
+            style={{
+              width: "90px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
                         <span style={{ fontSize: "14px" }}>
                           {obj.leaveLossFactor || ""}
                         </span>
+                        </div>
                       </td>
-                      <td className="rowtable" style={{ border: "none" }}>
+
+                      <td className="rowtable" style={{ border: "none", display:"flex",justifyContent:"center", margin:"1px" }}>
                         <span style={{ float: "right", cursor: "pointer" }}>
                           <AiIcons.AiOutlineMore
                             onClick={(e) => {
@@ -1227,9 +1322,10 @@ function TrForRevenue(props) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "20px",
+                rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px"
+                paddingRight:"10px",
+                maxHeight:"470px"
               }}
             >
               <div
@@ -1240,18 +1336,21 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
+              margin:"10px 0px 0px 0px"
                   }}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div>
                     <div>
                       <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      </div>
+                      <div style={{paddingTop:"10px"}}>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400",marginLeft:"0px" }}
                       />
                       T & M
                       <input
@@ -1276,13 +1375,13 @@ function TrForRevenue(props) {
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
                     >
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
                       <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <InputField
                           style={{
@@ -1291,6 +1390,7 @@ function TrForRevenue(props) {
                             marginLeft: "3px",
                             borderRadius: "0px !important",
                             height: "35px",
+                      fontFamily: "Roboto !important",
                           }}
                           size="small"
                           type="text"
@@ -1317,6 +1417,7 @@ function TrForRevenue(props) {
                 </div>
               </div>
               <div>
+
                 {pricingType == "T&M" && (
                   <div
                     style={{
@@ -1471,11 +1572,13 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ display: "flex", flexBasis: "25%",alignItems:"center" }}>
+                  <div style={{  flexBasis: "25%",alignItems:"center" }}>
                     <div style={{ width: "75px" }}>
                       <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                     </div>
-                    <input style={{  width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                    <div style={{paddingTop:"5px"}}>
+                    <input style={{  width: "935px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1550,9 +1653,10 @@ function TrForRevenue(props) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "20px",
+                rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px"
+                paddingRight:"10px",
+          maxHeight:"470px"
               }}
             >
               <div
@@ -1563,11 +1667,14 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
+              margin:"10px 0px 0px 0px"
                   }}
                 >
-                  <div style={{ display: "flex" }}>
+                  <div>
                     <div>
                       <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      </div>
+                      <div style={{paddingTop:"10px"}}>
                       <input
                         type="radio"
                         value="T&M"
@@ -1593,22 +1700,23 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
+                fontFamily: "Roboto",
                       // marginRight: "25px",
                     }}
                   >
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
                   fontFamily:"Roboto",
-                  marginRight:"46px"
+                  // marginRight:"46px"
 
                       }}
                     >
-                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
-                      <div style={{ width: "103px", fontFamily:"Roboto", }}>
+                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <FormControl>
                           <select
                             style={{
@@ -2581,15 +2689,17 @@ function TrForRevenue(props) {
                         <div
                           style={{
                             width: "auto",
-                            display: "flex",
+                            // display: "flex",
                             alignItems: "center",
                             columnGap: "10px",
                           }}
                         >
+                  <div style={{margin:"0px 0px 4px 4px"}}>
                           <span style={{ color: "red" }}>*</span>
-                          <span style={{ marginLeft: "-9px" }}>
+                          <span >
                             Resource count:
                           </span>
+                          </div>
                           {/* <div>
                     <label
                       style={{
@@ -2615,6 +2725,7 @@ function TrForRevenue(props) {
                       />
                     </label>
                   </div> */}
+                  <div>
                           <InputField
                             style={{
                               background: "white",
@@ -2634,6 +2745,7 @@ function TrForRevenue(props) {
                             value={inputNumber}
                             disabled
                           />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -2719,7 +2831,8 @@ function TrForRevenue(props) {
                       alignItems: "center",
                       marginLeft: "0px",
                       maxHeight:"250px",
-                      overflowY:"auto"
+                      overflowY:"auto",
+                marginTop:"-8px"
                     }}
                   >
                     <Accordion id="accordian">{gridItems}</Accordion>
@@ -2732,18 +2845,18 @@ function TrForRevenue(props) {
                       rowGap: "30px",
                     }}
                   >
-                                <div style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}>
-
                     <div
                       style={{ display: "flex", flexBasis: "100%", gap: "5px" }}
                     >
-                      <div style={{ display: "flex", flexBasis: "25%", alignItems:"center" }}>
+                      <div style={{ flexBasis: "25%", alignItems:"center" }}>
                         <div style={{ width: "75px" }}>
                           <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                         </div>
+                  <div style={{paddingTop:"5px"}}>
                         <input
                           style={{ width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }}
                         />
+                        </div>
                       </div>
                     </div>
                     </div>
@@ -2798,7 +2911,6 @@ function TrForRevenue(props) {
                         Save
                       </ModalControlButton>
 
-                    </div>
                   </div>
                 </>
               )}
@@ -2836,9 +2948,10 @@ function TrForRevenue(props) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "20px",
+                rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px"
+                paddingRight:"10px",
+          maxHeight:"470px"
               }}
             >
               <div
@@ -2849,18 +2962,21 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
+              margin:"10px 0px 0px 0px"
                   }}
                 >
-                  <div style={{ display: "flex",  }}>
+                  <div>
                     <div>
                       <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      </div>
+                <div style={{paddingTop:"10px"}}>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400", marginLeft:"0px"  }}
                       />
                       T & M
                       <input
@@ -2885,12 +3001,13 @@ function TrForRevenue(props) {
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
+                  fontFamily: "Roboto",
                       }}
                     >
-                      <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
                       <div style={{ width: "150px", fontFamily:"Roboto", }}>
                         <FormControl>
                           <select
@@ -2947,7 +3064,6 @@ function TrForRevenue(props) {
                   </div>
                 </div>
               </div>
-              <div>
                 {pricingType == "T&M" && (
                   <div
                     style={{
@@ -2959,15 +3075,18 @@ function TrForRevenue(props) {
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
                     >
+                  <div style={{margin:"0px 0px 4px 4px"}}>
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>
+                      <span>
                         Resource count:
                       </span>
+                      </div>
+                      <div>
                       <InputField
                         style={{
                           background: "white",
@@ -2986,6 +3105,7 @@ function TrForRevenue(props) {
                         disabled
                       />
                     </div>
+                  </div>
                   </div>
                 )}
                 {pricingType == "FP" && (
@@ -3025,7 +3145,6 @@ function TrForRevenue(props) {
                     </div>
                   </div>
                 )}
-              </div>
               <div
                 style={{
                   display: "flex",
@@ -3043,14 +3162,17 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ display: "flex", flexBasis: "25%", alignItems:"center" }}>
+                  <div style={{ flexBasis: "25%", alignItems:"center" }}>
                     <div style={{ width: "75px" }}>
                       <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
                     </div>
-                    <input style={{  width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                  <div style={{paddingTop:"5px"}}>
+                    <input style={{  width: "935px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                    </div>
                   </div>
                 </div>
                 </div>
+
                 <div
                   style={{
                     display: "flex",

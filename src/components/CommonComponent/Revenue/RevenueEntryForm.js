@@ -482,9 +482,10 @@ const ResourceEntryForm = (props) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          rowGap: "20px",
+          rowGap: "15px",
           width: "100%",
           paddingRight: "10px",
+          maxHeight:"470px"
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
@@ -493,10 +494,11 @@ const ResourceEntryForm = (props) => {
               display: "flex",
               flexBasis: "100%",
               justifyContent: "space-between",
+              margin:"10px 0px 0px 0px"
             }}
           >
-            <div style={{ display: "flex" }}>
-              <div>
+            <div>
+                <div>
                 <label
                   for="username"
                   style={{
@@ -507,6 +509,8 @@ const ResourceEntryForm = (props) => {
                 >
                   Pricing Type
                 </label>
+                </div>
+                <div style={{paddingTop:"10px"}}>
                 <input
                   type="radio"
                   value="T&M"
@@ -518,6 +522,7 @@ const ResourceEntryForm = (props) => {
                     fontFamily: "Roboto",
                     fontSize: "16px",
                     fontWeight: "400",
+                    marginLeft:"0px"
                   }}
                 />
                 T & M
@@ -535,8 +540,8 @@ const ResourceEntryForm = (props) => {
                   }}
                 />
                 FP
+                </div>
               </div>
-            </div>
             <div
               style={{
                 display: "flex",
@@ -547,14 +552,14 @@ const ResourceEntryForm = (props) => {
               <div
                 style={{
                   width: "auto",
-                  display: "flex",
+                  // display: "flex",
                   alignItems: "center",
                   columnGap: "10px",
                   fontFamily: "Roboto",
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
-                <span style={{ marginLeft: "-9px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
+                <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
                 <div style={{ width: "150px", fontFamily:"Roboto", }}>
                   <InputField
                     style={{
@@ -1383,14 +1388,16 @@ const ResourceEntryForm = (props) => {
                 <div
                   style={{
                     width: "auto",
-                    display: "flex",
+                    // display: "flex",
                     alignItems: "center",
                     columnGap: "10px",
                   }}
                 >
+                  <div style={{margin:"0px 0px 4px 4px"}}>
                   <span style={{ color: "red" }}>*</span>
-                  <span style={{ marginLeft: "-9px" }}>Resource count:</span>
-
+                  <span>Resource count:</span>
+                  </div>
+<div>
                   <InputField
                     style={{
                       background: "white",
@@ -1408,6 +1415,7 @@ const ResourceEntryForm = (props) => {
                     onChange={handleInputChange}
                     value={inputNumber >= 0 ? inputNumber : 0}
                   />
+                  </div>
                 </div>
               </div>
             )}
@@ -1457,7 +1465,8 @@ const ResourceEntryForm = (props) => {
                 alignItems: "center",
                 marginLeft: "0px",
                 maxHeight: "250px",
-                // overflowY: "auto",
+                overflowY: "auto",
+                marginTop:"-8px"
               }}
             >
               <Accordion id="accordian">{gridItems}</Accordion>
@@ -1466,7 +1475,7 @@ const ResourceEntryForm = (props) => {
               <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
                 <div
                   style={{
-                    display: "flex",
+                    // display: "flex",
                     flexBasis: "25%",
                     alignItems: "center",
                   }}
@@ -1476,9 +1485,10 @@ const ResourceEntryForm = (props) => {
                       Remarks :
                     </span>
                   </div>
+                  <div style={{paddingTop:"5px"}}>
                   <input
                     style={{
-                      width: "862px",
+                      width: "935px",
                       borderRadius: "0px",
                       fontFamily: "Roboto",
                       fontWeight: "400",
@@ -1487,6 +1497,7 @@ const ResourceEntryForm = (props) => {
                       border: "1px solid #00000066",
                     }}
                   />
+                  </div>
                 </div>
               </div>
             </div>
