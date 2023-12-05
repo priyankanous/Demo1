@@ -324,7 +324,7 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(false);
         })
         .catch((err) => {
-          props.setIsOpen(true);
+          props.setIsOpen(false);
         });
     }
   };
