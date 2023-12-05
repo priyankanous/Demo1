@@ -1426,7 +1426,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily: "Roboto", fontWeight: "400" }}
+              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -2996,7 +2996,7 @@ function TrForRevenue(props) {
                           <div style={{paddingTop:"5px"}}>
                           <input
                             style={{
-                              width: "862px",
+                              width: "935px",
                               borderRadius: "0px",
                               fontFamily: "Roboto",
                               fontWeight: "400",
@@ -3048,7 +3048,7 @@ function TrForRevenue(props) {
                           });
                         }}
                       >
-                        Back
+                        Previous
                       </ModalBackButton>
                       <ModalControlButton
                         type="button"
@@ -3259,7 +3259,7 @@ function TrForRevenue(props) {
                     >
                         <div style={{margin:"0px 0px 4px 4px"}}>
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>
+                      <span style={{ marginLeft: "4px" }}>
                         Resource count:
                       </span>
                       </div>
