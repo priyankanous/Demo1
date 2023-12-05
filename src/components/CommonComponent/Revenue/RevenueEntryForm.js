@@ -1540,7 +1540,7 @@ const ResourceEntryForm = (props) => {
                   });
                 }}
               >
-                Back
+                Previous
               </ModalBackButton>
 
               <ModalControlButton
