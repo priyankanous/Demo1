@@ -519,7 +519,7 @@ function Tr({
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText 
-                            style={{fontFamily:"Roboto", fontWeight: "400" }}
+                            style={{fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
                             >
               New Entry
             </ModalHeadingText>

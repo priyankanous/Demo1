@@ -1306,7 +1306,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1636,7 +1636,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400",paddingLeft:"30px" }}
             >
               Edit Entry
             </ModalHeadingText>
@@ -2932,7 +2932,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400" }}
+              style={{ fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
             >
               Edit Resource
             </ModalHeadingText>
