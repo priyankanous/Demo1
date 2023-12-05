@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Modal, Box, FormControl, styled,Button } from "@mui/material";
+import { Modal, Box, FormControl, styled, Button } from "@mui/material";
 import * as moment from "moment";
 import {
   ModalHeadingSection,
@@ -20,12 +20,14 @@ import {
   ButtonSection,
   ModalControlButton,
   ModalCancelButton,
-  ModalBackButton
+  ModalBackButton,
 } from "../../../utils/constantsValue";
 import CloseIcon from "@mui/icons-material/Close";
 import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import { Accordion } from "react-accessible-accordion";
 import { getProbabilityData } from "../../../actions/probability";
+import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
+
 import { getRegionData } from "../../../actions/region";
 import { getWorkOrderYearData } from "../../../actions/workOrder";
 import { getBdmData } from "../../../actions/bdm";
@@ -34,60 +36,62 @@ import { connect } from "react-redux";
 import { getOpportunityData } from "../../../actions/opportunity";
 import { getCurrencyData } from "../../../actions/currency";
 
-const DownArrowSecordStage = styled('td')({
-  padding:"1px 6px",
-  width:"10px",
+const DownArrowSecordStage = styled("td")({
+  padding: "1px 6px",
+  width: "10px",
   color: "#000",
   fontWeight: 700,
   cursor: "pointer",
 });
 
-const TableCellSecondStage = styled('td')({
-  padding: "1px"
+const TableCellSecondStage = styled("td")({
+  padding: "1px",
 });
 
-const TableCellSecondStageSpan = styled('span')({
+const TableCellSecondStageSpan = styled("span")({
   fontSize: "14px",
-  fontWeight:"400",
-  fontFamily:"Roboto",
-  cursor:"pointer",
-  textAlign:"center"
+  fontWeight: "400",
+  fontFamily: "Roboto",
+  cursor: "pointer",
+  textAlign: "center",
 });
 
 const CopyIconSecondLEvel = styled(FileCopyOutlinedIcon)({
-  fontSize: "15px", 
-  paddingRight: "5px"
+  fontSize: "15px",
+  paddingRight: "5px",
 });
 
 const EditIconSecondLevel = styled(EditOutlinedIcon)({
-  fontSize: "15px", paddingRight: "5px"
+  fontSize: "15px",
+  paddingRight: "5px",
 });
 
 const DeleteIconSecondLevel = styled(DeleteOutlineIcon)({
-  fontSize: "15px", paddingRight: "5px"
-
+  fontSize: "15px",
+  paddingRight: "5px",
 });
 
-const TableThirdLevel = styled('table')({
-    backgroundColor: "rgba(225, 222, 222, 0.5)",
-    borderBottom: "1px solid #0000004d"
+const TableThirdLevel = styled("table")({
+  backgroundColor: "rgba(225, 222, 222, 0.5)",
+  borderBottom: "1px solid #0000004d",
 });
 
-const ThirdLevelHeadingCell = styled('table')({
-      padding: "2px 0px 0px 10px",
-    display: "flex",
-    justifyContent: "flex-start",
+const ThirdLevelHeadingCell = styled("table")({
+  padding: "2px 0px 0px 10px",
+  display: "flex",
+  justifyContent: "flex-start",
 });
 
-const ThirdLevelHeading = styled('th')({
-   padding: "4px",
-   fontFamily:"Roboto",fontWeight:"500",
-   fontSize:"14px"
+const ThirdLevelHeading = styled("th")({
+  padding: "4px",
+  fontFamily: "Roboto",
+  fontWeight: "500",
+  fontSize: "14px",
 });
 
 const ThirdLevelCopyIcon = styled(FileCopyOutlinedIcon)({
-    fontSize: "15px",
-    paddingRight: "5px",
+  fontSize: "15px",
+  paddingRight: "5px",
 });
 
 const ThirdLevelEditIcon = styled(EditOutlinedIcon)({
@@ -99,7 +103,6 @@ const ThirdLevelDeleteIcon = styled(DeleteOutlineIcon)({
   fontSize: "15px",
   paddingRight: "5px",
 });
-
 
 function TrForRevenue(props) {
   useEffect(() => {
@@ -139,12 +142,16 @@ function TrForRevenue(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [pricingType, setPricingType] = useState("T&M");
   const [resourceData, setResourceData] = useState([]);
+  const [milestoneData, setMilestoneData] = useState([]);
+
   const [gridItems, setGridItems] = useState([]);
   //2nd level edit
   const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
-  const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);  
+  const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);
   const [oppId, setOppId] = useState();
   const [oppDataByOppId, setOppDataByOppId] = useState([]);
+
+  console.log("ssssssssss", resourseEntryData?.pricingType);
 
   const column3 = [
     "Start Date",
@@ -157,6 +164,18 @@ function TrForRevenue(props) {
     "Allocation %",
     "Leave loss %",
     "",
+  ];
+
+  const Fpcolumn3 = [
+    "Start Date",
+    "End Date",
+    "WO No",
+    "Milestone Number",
+    "Resource Name",
+    "Coc-Practice",
+    "Milestone Billing Date",
+    "Allocation % ",
+    "Milestone Revenue",
   ];
 
   const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
@@ -202,8 +221,10 @@ function TrForRevenue(props) {
   };
 
   const handleRowExpansionAll = () => {
-    setIsExpandedInnerRow(prevState => !prevState);
+    setIsExpandedInnerRow((prevState) => !prevState);
   };
+
+  console.log("resourceTableData", resourceTableData);
 
   const revenueResource = async (e) => {
     try {
@@ -211,6 +232,7 @@ function TrForRevenue(props) {
       // response.data.data.opportunities.map((obj, id) => {
       //   return setOpportunityData(obj);
       // });
+      console.log("response.data.data", response.data.data);
       if (e.pricingType == "T&M") {
         setResourceTableData(response.data.data.tmResourceEntries);
       } else {
@@ -347,7 +369,6 @@ function TrForRevenue(props) {
     }
   }, [oppId]);
 
-
   const handleInputChange = (event) => {
     const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
@@ -434,24 +455,33 @@ function TrForRevenue(props) {
             initialResourceCount={initialResourceCount}
             generateGrid={generateGrid}
             getDataByOppId={getDataByOppId}
-            currencyID= {formUpdateData.currency.currencyID}
-            currencyLabelResourceLevel = {currencyLabelResourceLevel}
+            currencyID={formUpdateData.currency.currencyID}
+            currencyLabelResourceLevel={currencyLabelResourceLevel}
           />
-
-          // <TextField />
         );
       }
     } else {
-      for (let i = 0; i < inputNumber; i++) {
-        items
-          .push
-          // <RevenueMilestoneAccordian
-          //   id={i}
-          //   formData={props.tabIndex.formData}
-          //   pricingType={pricingType}
-          //   updateMilestoneData={updateMilestoneData}
-          // />
-          ();
+      const tempMilestoneDetails = [];
+      for (let i = 0; i < iterator; i++) {
+        const milestoneDataRow = {
+          index: i,
+          revenueResourceEntries: [],
+        };
+        tempMilestoneDetails.push(milestoneDataRow);
+      }
+      setMilestoneData(tempMilestoneDetails);
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueMilestoneAccordian
+            id={i}
+            // formData={props.tabIndex.formData}
+            // myFormData={formData}
+            pricingType={pricingType}
+            milestoneData={tempMilestoneDetails}
+            updateMilestoneData={setMilestoneData}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+          />
+        );
       }
     }
     setGridItems(items);
@@ -479,7 +509,6 @@ function TrForRevenue(props) {
 
   const opportunityNameByOppId =
     oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || "";
-
 
   const formatDateA = (dateString) => {
     const date = new Date(dateString);
@@ -609,7 +638,6 @@ function TrForRevenue(props) {
     const initialWorkOrderStatus =
       oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus;
 
-
     if (initialAccountID !== undefined && initialAccountID !== null) {
       setFormUpdateData((prevState) => ({
         ...prevState,
@@ -716,6 +744,7 @@ function TrForRevenue(props) {
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/getbyid/${expandedOppId}`
       )
       .then((responseData) => {
+        console.log("rescccc", responseData.data.data);
         setExpandedOppData(responseData.data.data);
       });
   };
@@ -733,8 +762,9 @@ function TrForRevenue(props) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  
-  const currencyLabelResourceLevel = expandedOppData?.tmRevenueEntryVO?.currency?.currency;
+
+  const currencyLabelResourceLevel =
+    expandedOppData?.tmRevenueEntryVO?.currency?.currency;
 
   const resourcePayload = {
     account: {
@@ -813,24 +843,111 @@ function TrForRevenue(props) {
     })),
   };
 
-  //Resource add entry
-  const saveTandMentry = () => {
-    axios
-      .post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
-        resourcePayload
-      )
-      .then((res) => {
-        setIsClicked(false);
-        setIsClicked(false);
-      })
-      .catch((err) => {
-        setIsClicked(false);
-        setIsClicked(false);
-      });
+  const milestonePayload = {
+    account: {
+      accountId: expandedOppData?.fpRevenueEntryVO?.account?.accountId,
+    },
+    opportunity: {
+      opportunityId:
+        expandedOppData?.fpRevenueEntryVO?.opportunity?.opportunityId,
+    },
+    projectCode: expandedOppData?.fpRevenueEntryVO?.projectCode,
+    projectStartDate: expandedOppData?.fpRevenueEntryVO?.projectStartDate,
+    projectEndDate: expandedOppData?.fpRevenueEntryVO?.projectEndDate,
+    businessDevelopmentManager: {
+      bdmId:
+        expandedOppData?.fpRevenueEntryVO?.businessDevelopmentManager?.bdmId,
+    },
+    currency: {
+      currencyId: expandedOppData?.fpRevenueEntryVO?.currency?.currencyId,
+    },
+    probabilityType: {
+      probabilityTypeId:
+        expandedOppData?.fpRevenueEntryVO?.probabilityType?.probabilityTypeId,
+    },
+    region: {
+      regionId: expandedOppData?.fpRevenueEntryVO?.region?.regionId,
+    },
+    workOrder: {
+      workOrderId: expandedOppData?.fpRevenueEntryVO?.workOrder?.workOrderId,
+    },
+    workOrderEndDate: expandedOppData?.fpRevenueEntryVO?.workOrderEndDate,
+    workOrderStatus: expandedOppData?.fpRevenueEntryVO?.workOrderStatus,
+    financialYear: {
+      financialYearId:
+        expandedOppData?.fpRevenueEntryVO?.financialYear?.financialYearId,
+    },
+    milestoneCount: expandedOppData?.fpRevenueEntryVO?.milestoneCount,
+    pricingType: expandedOppData?.fpRevenueEntryVO?.pricingType,
+    remarks: "No",
+    status: expandedOppData?.fpRevenueEntryVO?.status,
+
+    milestones: milestoneData?.map((ele) => ({
+      milestoneNumber: ele?.milestoneNumber,
+      milestoneBillingDate: ele?.milestoneBillingDate,
+      milestoneRevenue: ele?.milestoneRevenue,
+      milestoneResourceCount: ele?.milestoneResourceCount,
+      revenueResourceEntries: ele?.revenueResourceEntries?.map(
+        (revenueEntry) => {
+          console.log("revenueResourceEntries", revenueEntry);
+          return {
+            strategicBusinessUnit: {
+              sbuId: revenueEntry?.sbuId,
+            },
+            strategicBusinessUnitHead: {
+              sbuHeadId: revenueEntry?.sbuHeadId,
+            },
+            businessUnit: {
+              businessUnitId: revenueEntry?.businessUnitId,
+            },
+            businessType: {
+              businessTypeId: revenueEntry?.businessTypeId,
+            },
+            location: {
+              locationId: revenueEntry?.locationId,
+            },
+            resourceName: revenueEntry?.resourceName,
+            employeeId: revenueEntry?.employeeId,
+            resourceStartDate: revenueEntry?.resourceStartDate,
+            resourceEndDate: revenueEntry?.resourceEndDate,
+            cocPractice: {
+              cocPracticeId: revenueEntry?.cocPracticeId,
+            },
+            allocation: revenueEntry?.allocation,
+            milestoneResourceRevenue: revenueEntry?.milestoneResourceRevenue,
+          };
+        }
+      ),
+    })),
   };
 
-  console.log("Updated Resource Data -->", resourceData)
+  const handleSave = () => {
+    if (pricingType === "T&M") {
+      axios
+        .post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+          resourcePayload
+        )
+        .then((res) => {
+          setIsClicked(false);
+        })
+        .catch((err) => {
+          setIsClicked(false);
+        });
+    } else if (pricingType === "FP") {
+      axios
+        .post(
+          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+          milestonePayload
+        )
+        .then((res) => {
+          setIsClicked(false);
+        })
+        .catch((err) => {
+          setIsClicked(false);
+        });
+    }
+  };
 
   return (
     <React.Fragment>
@@ -845,7 +962,7 @@ function TrForRevenue(props) {
         // onClick={() => handleRowClick(props.data.opportunityId)}
         onClick={(e) => {
           revenueResource(resourseEntryData);
-          handleRowExpansionAll()
+          handleRowExpansionAll();
           setExpandedOppId(props.data.opportunityId);
         }}
       >
@@ -860,7 +977,7 @@ function TrForRevenue(props) {
           {isExpandedInnerRow ? "↑" : "↓"}
         </DownArrowSecordStage>
         <TableCellSecondStage className="rowtable" style={{ width: "98px" }}>
-        <div
+          <div
             style={{
               width: "100px",
               overflow: "hidden",
@@ -868,37 +985,14 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan>
-            {props.data.opportunityId || "Unknown"}
-          </TableCellSecondStageSpan>
-          </div>
-        </TableCellSecondStage>
-
-        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
-        <div
-            style={{
-              width: "103px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-          <TableCellSecondStageSpan>
-            {props.data.projectCode || "Unknown"}
-          </TableCellSecondStageSpan>
-          </div>
-        </TableCellSecondStage >
-
-        <TableCellSecondStage className="rowtable" style={{width:"112px"}}>
-        <div style={{overflow: "hidden", whiteSpace: "nowrap",textOverflow: "ellipsis", width:"112px"}}>
-        <TableCellSecondStageSpan>
-            {props.data.opportunityName || "Unknown"}
+            <TableCellSecondStageSpan>
+              {props.data.opportunityId || "Unknown"}
             </TableCellSecondStageSpan>
-            </div>
+          </div>
         </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
-        <div
+        <TableCellSecondStage className="rowtable" style={{ width: "103px" }}>
+          <div
             style={{
               width: "103px",
               overflow: "hidden",
@@ -906,14 +1000,29 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan >
-            {props.data.pricingType || "Unknown"}
-          </TableCellSecondStageSpan>
+            <TableCellSecondStageSpan>
+              {props.data.projectCode || "Unknown"}
+            </TableCellSecondStageSpan>
           </div>
         </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
-        <div
+        <TableCellSecondStage className="rowtable" style={{ width: "112px" }}>
+          <div
+            style={{
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              width: "112px",
+            }}
+          >
+            <TableCellSecondStageSpan>
+              {props.data.opportunityName || "Unknown"}
+            </TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage>
+
+        <TableCellSecondStage className="rowtable" style={{ width: "103px" }}>
+          <div
             style={{
               width: "103px",
               overflow: "hidden",
@@ -921,16 +1030,14 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan >
-            {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
-              "DD/MMM/YYYY"
-            )}
-          </TableCellSecondStageSpan>
+            <TableCellSecondStageSpan>
+              {props.data.pricingType || "Unknown"}
+            </TableCellSecondStageSpan>
           </div>
-        </TableCellSecondStage >
+        </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
-        <div
+        <TableCellSecondStage className="rowtable" style={{ width: "103px" }}>
+          <div
             style={{
               width: "103px",
               overflow: "hidden",
@@ -938,16 +1045,33 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan>
-            {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
-              "DD/MMM/YYYY"
-            )}
-          </TableCellSecondStageSpan>
+            <TableCellSecondStageSpan>
+              {moment(props.data.projectStartDate, "YYYY-MM-DD").format(
+                "DD/MMM/YYYY"
+              )}
+            </TableCellSecondStageSpan>
           </div>
         </TableCellSecondStage>
 
-        <TableCellSecondStage className="rowtable" style={{width:"108px"}}>
-        <div
+        <TableCellSecondStage className="rowtable" style={{ width: "103px" }}>
+          <div
+            style={{
+              width: "103px",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <TableCellSecondStageSpan>
+              {moment(props.data.projectEndDate, "YYYY-MM-DD").format(
+                "DD/MMM/YYYY"
+              )}
+            </TableCellSecondStageSpan>
+          </div>
+        </TableCellSecondStage>
+
+        <TableCellSecondStage className="rowtable" style={{ width: "108px" }}>
+          <div
             style={{
               width: "108px",
               overflow: "hidden",
@@ -955,15 +1079,14 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan>
-            {props.data.noOfResources || "0"}
-          </TableCellSecondStageSpan>
+            <TableCellSecondStageSpan>
+              {props.data.noOfResources || "0"}
+            </TableCellSecondStageSpan>
           </div>
         </TableCellSecondStage>
 
-
-        <TableCellSecondStage className="rowtable" style={{width:"103px"}}>
-        <div
+        <TableCellSecondStage className="rowtable" style={{ width: "103px" }}>
+          <div
             style={{
               width: "103px",
               overflow: "hidden",
@@ -971,13 +1094,16 @@ function TrForRevenue(props) {
               textOverflow: "ellipsis",
             }}
           >
-          <TableCellSecondStageSpan>
-            {props.data.leaveLossFactor || ""}
-          </TableCellSecondStageSpan>
+            <TableCellSecondStageSpan>
+              {props.data.leaveLossFactor || ""}
+            </TableCellSecondStageSpan>
           </div>
         </TableCellSecondStage>
 
-        <td className="rowtable" style={{ border: "none",display:"flex",justifyContent:"center" }}>
+        <td
+          className="rowtable"
+          style={{ border: "none", display: "flex", justifyContent: "center" }}
+        >
           <span style={{ float: "right", cursor: "pointer" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -1004,8 +1130,8 @@ function TrForRevenue(props) {
                 }}
                 class="dropdown-content"
               >
-                <a style={{padding: "5px",margin: "3px 0px"}} >
-                  <CopyIconSecondLEvel/>
+                <a style={{ padding: "5px", margin: "3px 0px" }}>
+                  <CopyIconSecondLEvel />
                   copy
                 </a>
                 <a
@@ -1014,15 +1140,14 @@ function TrForRevenue(props) {
                     setIsOpenSecondLevelEdit(true);
                   }}
                 >
-                  <EditIconSecondLevel/>
+                  <EditIconSecondLevel />
                   Edit
                 </a>
                 <a
                   style={{ padding: "5px 0px 5px 10px", margin: "3px 0px" }}
                   onClick={() => DeleteRecord()}
                 >
-                  <DeleteIconSecondLevel
-                  />
+                  <DeleteIconSecondLevel />
                   Delete
                 </a>
               </div>
@@ -1036,15 +1161,12 @@ function TrForRevenue(props) {
           style={{ backgroundColor: "white" }}
         >
           <td colSpan={10} style={{ padding: "0px 0px 0px 40px" }}>
-            <TableThirdLevel
-            >
+            <TableThirdLevel>
               <tr
                 className="trrevenue"
                 style={{ backgroundColor: "rgba(225, 222, 222, 0)" }}
               >
-                <ThirdLevelHeadingCell
-                  className="iconsColumn"
-                >
+                <ThirdLevelHeadingCell className="iconsColumn">
                   <a
                     onClick={() => {
                       setIsClicked(true);
@@ -1055,33 +1177,39 @@ function TrForRevenue(props) {
                 </ThirdLevelHeadingCell>
               </tr>
               <tr className="nestedtablebgrevenue">
-                {column3.map((header) => {
-                  return (
-                    <ThirdLevelHeading className="threvenue">
-                      {header}
-                    </ThirdLevelHeading>
-                  );
-                })}
+                {resourseEntryData?.pricingType === "T&M"
+                  ? column3.map((header) => (
+                      <ThirdLevelHeading className="threvenue" key={header}>
+                        {header}
+                      </ThirdLevelHeading>
+                    ))
+                  : Fpcolumn3.map((header) => (
+                      <ThirdLevelHeading className="threvenue" key={header}>
+                        {header}
+                      </ThirdLevelHeading>
+                    ))}
               </tr>
               <tbody>
                 {resourceTableData.length > 0 &&
-                  resourceTableData.map((obj, id) => (
-                    <tr
-                      key={obj.employeeId}
-                      style={{
-                        backgroundColor:
-                          selectedRow === id
-                            ? "rgba(192, 228, 234, 0.43)"
-                            : "white",
-                      }}
-                      onClick={() => {
-                        toggleRowSelection(id);
-                        handleResourceEmployeeID(obj.employeeId);
-                        handleResourceStartDate(obj.resourceStartDate);
-                      }}
-                    >
-                      <td className="rowtable" style={{width: "90px"}}>
-                          <div
+                  resourceTableData.map((obj, id) => {
+                    const pricingType = resourseEntryData?.pricingType
+                    return (
+                      <tr
+                        key={obj.employeeId}
+                        style={{
+                          backgroundColor:
+                            selectedRow === id
+                              ? "rgba(192, 228, 234, 0.43)"
+                              : "white",
+                        }}
+                        onClick={() => {
+                          toggleRowSelection(id);
+                          handleResourceEmployeeID(obj.employeeId);
+                          handleResourceStartDate(obj.resourceStartDate);
+                        }}
+                      >
+                        <td className="rowtable">
+                        <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1089,205 +1217,197 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                        <span 
-                        style={{fontSize:"14px"}}
-                        >
-                          {obj.resourceStartDate
-                            ? moment(obj.resourceStartDate, "YYYY-MM-DD").format(
-                                "DD/MMM/YYYY"
-                              )
-                            : ""}
-                        </span>
-                        </div>
-                      </td>
-
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{fontSize:"14px"}}>
-                          {obj.resourceEndDate
-                            ? moment(obj.resourceEndDate, "YYYY-MM-DD").format(
-                                "DD/MMM/YYYY"
-                              )
-                            : ""}
-                        </span>
-                        </div>
-                      </td>
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.workOrderNumber || ""}
-                        </span>
-                        </div>
-                      </td>
-
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.employeeId || ""}
-                        </span>
-                        </div>
-                      </td>
-
-
-                      <td className="rowtable" style={{ padding: "1px", width: "105px" }}>
-                      <div
-            style={{
-              width: "105px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.resourceName || ""}
-                        </span>
-                        </div>
-                      </td>
-
-
-                      <td className="rowtable" style={{ padding: "1px", width: "92px" }}>
-                      <div
-            style={{
-              width: "92px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.cocPractice || ""}
-                        </span>
-                        </div>
-                      </td>
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.billingRate || ""}
-                        </span>
-                        </div>
-                      </td>
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span>{obj.allocation || ""}</span>
-                        </div>
-                      </td>
-
-
-                      <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                      <div
-            style={{
-              width: "90px",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-                        <span style={{ fontSize: "14px" }}>
-                          {obj.leaveLossFactor || ""}
-                        </span>
-                        </div>
-                      </td>
-
-                      <td className="rowtable" style={{ border: "none", display:"flex",justifyContent:"center", margin:"1px" }}>
-                        <span style={{ float: "right", cursor: "pointer" }}>
-                          <AiIcons.AiOutlineMore
-                            onClick={(e) => {
-                              toggleResourceDropdown(id);
-                              handleResourceEmployeeID(obj.employeeId);
-                              handleResourceStartDate(obj.resourceStartDate);
-                              setOppId(props.data.opportunityId);
+                          <span style={{ fontSize: "14px" }}>
+                            {obj.resourceStartDate
+                              ? moment(
+                                  obj.resourceStartDate,
+                                  "YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY")
+                              : ""}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
                             }}
-                          ></AiIcons.AiOutlineMore>
-                          {resourceDropdownStates[id] && (
-                            <div
-                              style={{
-                                right: "20px",
-                                position: "absolute",
-                                overflow: "hidden",
-                                boxShadow: "5px 5px 10px rgb(0 0 0 / 45%)",
-                                backgroundColor: "#F2FBFF",
-                                marginRight: "10px",
-                                zIndex: 1,
-                                width: "8%",
-                                fontSize: "small",
-                                cursor: "pointer",
-                                border: "1px solid transparent",
-                                borderRadius: "5px",
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {obj.resourceEndDate
+                              ? moment(
+                                  obj.resourceEndDate,
+                                  "YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY")
+                              : ""}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {obj.workOrderNumber || ""}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {pricingType === "T&M"
+                              ? obj.employeeId
+                              : obj.milestoneNumber}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "105px" }}>
+                        <div
+                            style={{
+                              width: "105px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {obj.resourceName || ""}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "92px" }}>
+                        <div
+                            style={{
+                              width: "92px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {obj.cocPractice || ""}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                            {pricingType === "T&M"
+                              ? obj.billingRate
+                              : obj.milestoneBillingDate}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span>{obj.allocation || ""}</span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ padding: "1px", width: "90px" }} >
+                        <div
+                            style={{
+                              width: "90px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                          <span style={{ fontSize: "14px" }}>
+                             {pricingType === "T&M"? obj.leaveLossFactor : obj.revenue}
+                          </span>
+                          </div>
+                        </td>
+                        <td className="rowtable" style={{ border: "none", display:"flex",justifyContent:"center", margin:"1px" }}>
+                          <span style={{ float: "right", cursor: "pointer" }}>
+                            <AiIcons.AiOutlineMore
+                              onClick={(e) => {
+                                toggleResourceDropdown(id);
+                                handleResourceEmployeeID(obj.employeeId);
+                                handleResourceStartDate(obj.resourceStartDate);
+                                setOppId(props.data.opportunityId);
                               }}
-                              class="dropdown-content"
-                            >
-                              <a style={{ padding: "5px", margin: "3px 0px" }}
-                              >
-                                <ThirdLevelCopyIcon />
-                                copy
-                              </a>
-                              <a
-                                style={{ padding: "5px", margin: "3px 0px" }}
-                                onClick={() => {
-                                  setIsOpenThirdLevelEdit(true);
-                                }}
-                              >
-                                <ThirdLevelEditIcon />
-                                Edit
-                              </a>
-                              <a
+                            ></AiIcons.AiOutlineMore>
+                            {resourceDropdownStates[id] && (
+                              <div
                                 style={{
-                                  padding: "5px 0px 5px 10px",
-                                  margin: "3px 0px",
+                                  right: "20px",
+                                  position: "absolute",
+                                  overflow: "hidden",
+                                  boxShadow: "5px 5px 10px rgb(0 0 0 / 45%)",
+                                  backgroundColor: "#F2FBFF",
+                                  marginRight: "10px",
+                                  zIndex: 1,
+                                  width: "8%",
+                                  fontSize: "small",
+                                  cursor: "pointer",
+                                  border: "1px solid transparent",
+                                  borderRadius: "5px",
                                 }}
-                                onClick={() => {
-                                  deleteResourceRecord();
-                                }}
+                                class="dropdown-content"
                               >
-                                <ThirdLevelDeleteIcon />
-                                Delete
-                              </a>
-                            </div>
-                          )}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                                <a
+                                  style={{ padding: "5px", margin: "3px 0px" }}
+                                >
+                                  <ThirdLevelCopyIcon />
+                                  copy
+                                </a>
+                                <a
+                                  style={{ padding: "5px", margin: "3px 0px" }}
+                                  onClick={() => {
+                                    setIsOpenThirdLevelEdit(true);
+                                  }}
+                                >
+                                  <ThirdLevelEditIcon />
+                                  Edit
+                                </a>
+                                <a
+                                  style={{
+                                    padding: "5px 0px 5px 10px",
+                                    margin: "3px 0px",
+                                  }}
+                                  onClick={() => {
+                                    deleteResourceRecord();
+                                  }}
+                                >
+                                  <ThirdLevelDeleteIcon />
+                                  Delete
+                                </a>
+                              </div>
+                            )}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </TableThirdLevel>
           </td>
@@ -1306,7 +1426,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
+              style={{ fontFamily: "Roboto", fontWeight: "400" }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1317,14 +1437,16 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px",  padding:"12px 10px 12px 46px" }}>
+          <ModalDetailSection
+            style={{ borderRadius: "0px", padding: "12px 10px 12px 46px" }}
+          >
             <form
               style={{
                 display: "flex",
                 flexDirection: "column",
                 rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px",
+                paddingRight: "10px",
                 maxHeight:"470px"
               }}
             >
@@ -1336,12 +1458,21 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-              margin:"10px 0px 0px 0px"
+                    margin:"10px 0px 0px 0px"
                   }}
                 >
                   <div>
                     <div>
-                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      <label
+                        for="username"
+                        style={{
+                          fontFamily: "roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Pricing Type
+                      </label>
                       </div>
                       <div style={{paddingTop:"10px"}}>
                       <input
@@ -1350,7 +1481,13 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400",marginLeft:"0px" }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                          marginLeft:"0px"
+                        }}
                       />
                       T & M
                       <input
@@ -1359,7 +1496,12 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto",fontSize:"16px", fontWeight:"400" }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
                       />
                       FP
                     </div>
@@ -1368,7 +1510,7 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      fontFamily:"Roboto",
+                      fontFamily: "Roboto",
                       // marginRight: "25px",
                     }}
                   >
@@ -1381,8 +1523,16 @@ function TrForRevenue(props) {
                       }}
                     >
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
-                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
+                      <span
+                        style={{
+                          marginLeft: "4px",
+                          fontSize: "14px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        FY :
+                      </span>
+                      <div style={{ width: "150px", fontFamily: "Roboto" }}>
                         <InputField
                           style={{
                             background: "white",
@@ -1390,7 +1540,7 @@ function TrForRevenue(props) {
                             marginLeft: "3px",
                             borderRadius: "0px !important",
                             height: "35px",
-                      fontFamily: "Roboto !important",
+                            fontFamily: "Roboto"
                           }}
                           size="small"
                           type="text"
@@ -1417,7 +1567,6 @@ function TrForRevenue(props) {
                 </div>
               </div>
               <div>
-
                 {pricingType == "T&M" && (
                   <div
                     style={{
@@ -1438,31 +1587,6 @@ function TrForRevenue(props) {
                       <span style={{ marginLeft: "-9px" }}>
                         Resource count:
                       </span>
-                      {/* <div>
-                    <label
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <input
-                        type="number"
-                        value={inputNumber}
-                        onChange={handleInputChange}
-                      />
-                      <input
-                        style={{
-                          margin: "0px 0px 0px 8px",
-                        }}
-                        type="button"
-                        value="Add"
-                        id="create-account"
-                        class="button"
-                        onClick={generateGrid}
-                      />
-                    </label>
-                  </div> */}
                       <InputField
                         style={{
                           background: "white",
@@ -1502,31 +1626,6 @@ function TrForRevenue(props) {
                       <span style={{ marginLeft: "-9px" }}>
                         Milestone count:
                       </span>
-                      {/* <div>
-                  <label
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      value={inputNumber}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      style={{
-                        margin: "0px 0px 0px 8px",
-                      }}
-                      type="button"
-                      value="Add"
-                      id="create-account"
-                      class="button"
-                      onClick={generateGrid}
-                    />
-                  </label>
-                </div> */}
                       <InputField
                         style={{
                           background: "white",
@@ -1536,20 +1635,12 @@ function TrForRevenue(props) {
                           height: "35px",
                         }}
                         size="small"
-                        type="text"
+                        type="number"
                         id="name"
                         variant="outlined"
                         spellcheck="false"
-                        // onChange={(e) => {
-                        //   setFormData({
-                        //     ...formData,
-                        //     opportunity: {
-                        //       ...formData.opportunity,
-                        //       projectCode: e.target.value,
-                        //     },
-                        //   });
-                        // }}
-                        // value={formData?.opportunity?.projectCode}
+                        onChange={handleInputChange}
+                        value={inputNumber}
                       />
                     </div>
                   </div>
@@ -1562,8 +1653,8 @@ function TrForRevenue(props) {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   marginLeft: "0px",
-                  maxHeight:"250px",
-                  overflowY:"auto"
+                  maxHeight: "250px",
+                  overflowY: "auto",
                 }}
               >
                 <Accordion id="accordian">{gridItems}</Accordion>
@@ -1572,12 +1663,29 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{  flexBasis: "25%",alignItems:"center" }}>
+                  <div
+                    style={{
+                      flexBasis: "25%",
+                      alignItems: "center",
+                    }}
+                  >
                     <div style={{ width: "75px" }}>
-                      <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
+                      <span style={{ fontWeight: "400", fontSize: "16px" }}>
+                        Remarks :
+                      </span>
                     </div>
                     <div style={{paddingTop:"5px"}}>
-                    <input style={{  width: "935px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                    <input
+                      style={{
+                        width: "935px",
+                        borderRadius: "0px",
+                        fontFamily: "Roboto",
+                        fontWeight: "400",
+                        fontSize: "14px",
+                        boxShadow: "none",
+                        border: "1px solid #00000066",
+                      }}
+                    />
                     </div>
                   </div>
                 </div>
@@ -1591,7 +1699,7 @@ function TrForRevenue(props) {
                   gap: "20px",
                 }}
               >
-                                <ModalCancelButton
+                <ModalCancelButton
                   type="button"
                   variant="contained"
                   onClick={() => {
@@ -1612,11 +1720,10 @@ function TrForRevenue(props) {
                   value="Continue"
                   id="create-account"
                   variant="contained"
-                  onClick={saveTandMentry}
+                  onClick={handleSave}
                 >
                   Save
                 </ModalControlButton>
-
               </div>
             </form>
           </ModalDetailSection>
@@ -1636,7 +1743,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400",paddingLeft:"30px" }}
+              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
             >
               Edit Entry
             </ModalHeadingText>
@@ -1647,7 +1754,9 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
+          <ModalDetailSection
+            style={{ borderRadius: "0px", padding: "12px 10px 12px 46px" }}
+          >
             <form
               id="reg-form"
               style={{
@@ -1655,8 +1764,8 @@ function TrForRevenue(props) {
                 flexDirection: "column",
                 rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px",
-          maxHeight:"470px"
+                paddingRight: "10px",
+                maxHeight:"470px"
               }}
             >
               <div
@@ -1667,12 +1776,21 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-              margin:"10px 0px 0px 0px"
+                    margin: "10px 0px 0px 0px"
                   }}
                 >
                   <div>
                     <div>
-                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      <label
+                        for="username"
+                        style={{
+                          fontFamily: "roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Pricing Type
+                      </label>
                       </div>
                       <div style={{paddingTop:"10px"}}>
                       <input
@@ -1681,7 +1799,12 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
                       />
                       T & M
                       <input
@@ -1690,7 +1813,12 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         // onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
                         disabled
                       />
                       FP
@@ -1700,23 +1828,28 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                fontFamily: "Roboto",
                       // marginRight: "25px",
                     }}
                   >
                     <div
                       style={{
                         width: "auto",
-                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
-                  fontFamily:"Roboto",
-                  // marginRight:"46px"
-
+                        fontFamily: "Roboto",
+                        // marginRight: "46px",
                       }}
                     >
-                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
-                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
+                      <span
+                        style={{
+                          marginLeft: "4px",
+                          fontSize: "14px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        FY :
+                      </span>
+                      <div style={{ width: "150px", fontFamily: "Roboto" }}>
                         <FormControl>
                           <select
                             style={{
@@ -1726,9 +1859,9 @@ function TrForRevenue(props) {
                               variant: "outlined",
                               borderRadius: "5px",
                               height: "35px",
-                              fontFamily:"Roboto",
-                              boxShadow:"none",
-                              border:"1px solid #0000004d"
+                              fontFamily: "Roboto",
+                              boxShadow: "none",
+                              border: "1px solid #0000004d",
                             }}
                             onChange={(e) => {
                               getAllCurrencyForFy(e.target.value);
@@ -1789,7 +1922,6 @@ function TrForRevenue(props) {
                         flexBasis: "100%",
                         // gap: "100px",
                         marginBottom: "20px",
-
                       }}
                     >
                       <div
@@ -1823,15 +1955,15 @@ function TrForRevenue(props) {
                     </FormControl> */}
                           <select
                             style={{
-                          background: "white",
-                          width: "187px",
-                          marginLeft: "8px",
-                          borderRadius: "5px",
-                          height: "39px",
+                              background: "white",
+                              width: "187px",
+                              marginLeft: "8px",
+                              borderRadius: "5px",
+                              height: "39px",
                               boxShadow: "none",
                               border: "1px solid lightgray",
                               color: "black",
-                              fontFamily:"Roboto",
+                              fontFamily: "Roboto",
                             }}
                             // value={ oppDataByOppId.tmRevenueEntryVO?.account?.accountName ||
                             //   formUpdateData.account.accountName ||
@@ -2021,14 +2153,14 @@ function TrForRevenue(props) {
                             style={{
                               height: "39px",
                               background: "white",
-                        marginLeft: "8px",
+                              marginLeft: "8px",
 
-                          width: "187px",
+                              width: "187px",
                               borderRadius: "5px",
                               boxShadow: "none",
                               border: "1px solid lightgray",
                               color: "black",
-                              fontFamily:"Roboto",
+                              fontFamily: "Roboto",
                               // marginLeft: "8px",
                             }}
                             // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
@@ -2129,14 +2261,14 @@ function TrForRevenue(props) {
                               style={{
                                 background: "white",
                                 width: "187Px",
-                          marginLeft: "8px",
+                                marginLeft: "8px",
 
                                 borderRadius: "5px",
                                 boxShadow: "none",
                                 border: "1px solid lightgray",
                                 color: "black",
                                 height: "39px",
-                                fontFamily:"Roboto",
+                                fontFamily: "Roboto",
                               }}
                               // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
 
@@ -2183,14 +2315,14 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                                                style={{
-                                                  background: "white",
-                                                  width: "187Px",
-                                                  marginLeft: "8px",
-                                                  borderRadius: "0px !important",
-                                                  height: "35px",
-                                                  fontFamily:"Roboto",
-                                                }}
+                            style={{
+                              background: "white",
+                              width: "187Px",
+                              marginLeft: "8px",
+                              borderRadius: "0px !important",
+                              height: "35px",
+                              fontFamily: "Roboto",
+                            }}
                             size="small"
                             type="text"
                             id="email"
@@ -2225,11 +2357,9 @@ function TrForRevenue(props) {
                         display: "flex",
                         flexBasis: "100%",
                         // gap: "100px",
-                  marginBottom: "20px",
-
+                        marginBottom: "20px",
                       }}
                     >
-
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2237,13 +2367,13 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                                                style={{
-                                                  background: "white",
-                                                  width: "187Px",
-                                                  marginLeft: "8px",
-                                                  borderRadius: "0px !important",
-                                                  height: "35px",
-                                                }}
+                            style={{
+                              background: "white",
+                              width: "187Px",
+                              marginLeft: "8px",
+                              borderRadius: "0px !important",
+                              height: "35px",
+                            }}
                             size="small"
                             type="text"
                             id="email"
@@ -2262,7 +2392,6 @@ function TrForRevenue(props) {
                                 },
                               });
                             }}
-
                           />
                         </div>
                       </div>
@@ -2273,13 +2402,13 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                                                style={{
-                                                  background: "white",
-                                                  width: "187Px",
-                                                  marginLeft: "8px",
-                                                  borderRadius: "0px !important",
-                                                  height: "35px",
-                                                }}
+                            style={{
+                              background: "white",
+                              width: "187Px",
+                              marginLeft: "8px",
+                              borderRadius: "0px !important",
+                              height: "35px",
+                            }}
                             size="small"
                             type="text"
                             id="email"
@@ -2308,16 +2437,14 @@ function TrForRevenue(props) {
                         <select
                           style={{
                             height: "39px",
-                        width: "187px",
-                        marginLeft: "8px",
-
+                            width: "187px",
+                            marginLeft: "8px",
 
                             borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
-                            fontFamily:"Roboto"
-
+                            fontFamily: "Roboto",
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.currency.currencyName}
                           onChange={(e) => {
@@ -2367,12 +2494,12 @@ function TrForRevenue(props) {
                           style={{
                             height: "39px",
                             width: "187px",
-                        marginLeft: "8px",
+                            marginLeft: "8px",
                             borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
-                            fontFamily:"Roboto"
+                            fontFamily: "Roboto",
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.probabilityType.probabilityTypeName}
                           onChange={(e) => {
@@ -2432,7 +2559,6 @@ function TrForRevenue(props) {
                         marginBottom: "20px",
                       }}
                     >
-
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
@@ -2442,13 +2568,13 @@ function TrForRevenue(props) {
                           style={{
                             height: "39px",
                             width: "187px",
-                        marginLeft: "8px",
+                            marginLeft: "8px",
 
                             borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
-                            fontFamily:"Roboto"
+                            fontFamily: "Roboto",
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.region.regionDisplayName}
                           onChange={(e) => {
@@ -2496,13 +2622,13 @@ function TrForRevenue(props) {
                           style={{
                             height: "39px",
                             width: "187px",
-                        marginLeft: "8px",
+                            marginLeft: "8px",
 
                             borderRadius: "5px",
                             boxShadow: "none",
                             border: "1px solid lightgray",
                             color: "black",
-                            fontFamily:"Roboto"
+                            fontFamily: "Roboto",
                           }}
                           // value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.workOrder.workOrderNumber}
                           onChange={(e) => {
@@ -2573,13 +2699,13 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "195px" }}>
                           <InputField
-                                                style={{
-                                                  background: "white",
-                                                  width: "187Px",
-                                                  marginLeft: "8px",
-                                                  borderRadius: "0px !important",
-                                                  height: "35px",
-                                                }}
+                            style={{
+                              background: "white",
+                              width: "187Px",
+                              marginLeft: "8px",
+                              borderRadius: "0px !important",
+                              height: "35px",
+                            }}
                             size="small"
                             type="text"
                             id="email"
@@ -2608,13 +2734,13 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "187px" }}>
                           <InputField
-                                                style={{
-                                                  background: "white",
-                                                  width: "187Px",
-                                                  marginLeft: "8px",
-                                                  borderRadius: "0px !important",
-                                                  height: "35px",
-                                                }}
+                            style={{
+                              background: "white",
+                              width: "187Px",
+                              marginLeft: "8px",
+                              borderRadius: "0px !important",
+                              height: "35px",
+                            }}
                             size="small"
                             type="text"
                             id="email"
@@ -2640,37 +2766,37 @@ function TrForRevenue(props) {
                   <div
                     style={{
                       paddingTop: "8px",
-                      paddingBottom:"10px",
+                      paddingBottom: "10px",
                       // marginLeft: "-78px",
                       display: "flex",
                       // alignItems: "center",
                       width: "100%",
-                justifyContent:"center",
-                gap:"12px"
+                      justifyContent: "center",
+                      gap: "12px",
                     }}
                   >
                     {/* <ButtonSection> */}
                     <ModalCancelButton
-                        sx={{ marginLeft: "-50px" }}
-                        type="button"
-                        variant="contained"
-                        onClick={() => {
-                          setIsOpenSecondLevelEdit(false);
-                        }}
-                        value="Cancel"
-                        id="create-account"
-                      >
-                        Cancel
-                      </ModalCancelButton>
-                      <ModalControlButton
-                        type="button"
-                        value="Continue"
-                        id="create-account"
-                        variant="contained"
-                        onClick={handleNextClick}
-                      >
-                        Next
-                      </ModalControlButton>
+                      sx={{ marginLeft: "-50px" }}
+                      type="button"
+                      variant="contained"
+                      onClick={() => {
+                        setIsOpenSecondLevelEdit(false);
+                      }}
+                      value="Cancel"
+                      id="create-account"
+                    >
+                      Cancel
+                    </ModalCancelButton>
+                    <ModalControlButton
+                      type="button"
+                      value="Continue"
+                      id="create-account"
+                      variant="contained"
+                      onClick={handleNextClick}
+                    >
+                      Next
+                    </ModalControlButton>
 
                     {/* </ButtonSection> */}
                   </div>
@@ -2689,17 +2815,15 @@ function TrForRevenue(props) {
                         <div
                           style={{
                             width: "auto",
-                            // display: "flex",
+                            display: "flex",
                             alignItems: "center",
                             columnGap: "10px",
                           }}
                         >
-                  <div style={{margin:"0px 0px 4px 4px"}}>
                           <span style={{ color: "red" }}>*</span>
-                          <span >
+                          <span style={{ marginLeft: "-9px" }}>
                             Resource count:
                           </span>
-                          </div>
                           {/* <div>
                     <label
                       style={{
@@ -2725,7 +2849,6 @@ function TrForRevenue(props) {
                       />
                     </label>
                   </div> */}
-                  <div>
                           <InputField
                             style={{
                               background: "white",
@@ -2733,8 +2856,7 @@ function TrForRevenue(props) {
                               marginLeft: "8px",
                               borderRadius: "0px !important",
                               height: "35px",
-                      fontFamily: "Roboto !important",
-
+                              fontFamily: "Roboto !important",
                             }}
                             size="small"
                             type="number"
@@ -2745,7 +2867,6 @@ function TrForRevenue(props) {
                             value={inputNumber}
                             disabled
                           />
-                          </div>
                         </div>
                       </div>
                     )}
@@ -2830,9 +2951,9 @@ function TrForRevenue(props) {
                       justifyContent: "flex-start",
                       alignItems: "center",
                       marginLeft: "0px",
-                      maxHeight:"250px",
-                      overflowY:"auto",
-                marginTop:"-8px"
+                      maxHeight: "250px",
+                      overflowY: "auto",
+                      marginTop:"-8px"
                     }}
                   >
                     <Accordion id="accordian">{gridItems}</Accordion>
@@ -2846,31 +2967,59 @@ function TrForRevenue(props) {
                     }}
                   >
                     <div
-                      style={{ display: "flex", flexBasis: "100%", gap: "5px" }}
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap:"5px"
+                      }}
                     >
-                      <div style={{ flexBasis: "25%", alignItems:"center" }}>
-                        <div style={{ width: "75px" }}>
-                          <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
-                        </div>
-                  <div style={{paddingTop:"5px"}}>
-                        <input
-                          style={{ width: "862px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }}
-                        />
+                      <div
+                        style={{
+                          display: "flex",
+                          flexBasis: "100%",
+                          gap: "5px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            flexBasis: "25%",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div style={{ width: "75px" }}>
+                            <span
+                              style={{ fontWeight: "400", fontSize: "16px" }}
+                            >
+                              Remarks :
+                            </span>
+                          </div>
+                          <div style={{paddingTop:"5px"}}>
+                          <input
+                            style={{
+                              width: "862px",
+                              borderRadius: "0px",
+                              fontFamily: "Roboto",
+                              fontWeight: "400",
+                              fontSize: "14px",
+                              boxShadow: "none",
+                              border: "1px solid #00000066",
+                            }}
+                          />
+                          </div>
                         </div>
                       </div>
-                    </div>
                     </div>
 
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
-                alignItems: "center",
-                        width:"100%",
+                        alignItems: "center",
+                        width: "100%",
                         gap: "20px",
                       }}
                     >
-                                            <ModalCancelButton
+                      <ModalCancelButton
                         type="button"
                         variant="contained"
                         onClick={() => {
@@ -2910,7 +3059,7 @@ function TrForRevenue(props) {
                       >
                         Save
                       </ModalControlButton>
-
+                    </div>
                   </div>
                 </>
               )}
@@ -2932,7 +3081,7 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
+              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
             >
               Edit Resource
             </ModalHeadingText>
@@ -2943,15 +3092,17 @@ function TrForRevenue(props) {
               style={{ cursor: "pointer" }}
             />
           </ModalHeadingSection>
-          <ModalDetailSection style={{ borderRadius: "0px", padding:"12px 10px 12px 46px" }}>
+          <ModalDetailSection
+            style={{ borderRadius: "0px", padding: "12px 10px 12px 46px" }}
+          >
             <form
               style={{
                 display: "flex",
                 flexDirection: "column",
                 rowGap: "15px",
                 width: "100%",
-                paddingRight:"10px",
-          maxHeight:"470px"
+                paddingRight: "10px",
+                maxHeight:'470px'
               }}
             >
               <div
@@ -2962,21 +3113,36 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-              margin:"10px 0px 0px 0px"
+                    margin:"10px 0px 0px 0px"
                   }}
                 >
                   <div>
                     <div>
-                      <label for="username" style={{fontFamily:"roboto", fontSize:"16px", fontWeight:"400"}}>Pricing Type</label>
+                      <label
+                        for="username"
+                        style={{
+                          fontFamily: "roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Pricing Type
+                      </label>
                       </div>
-                <div style={{paddingTop:"10px"}}>
+                      <div style={{paddingTop:"10px"}}>
                       <input
                         type="radio"
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400", marginLeft:"0px"  }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                          marginLeft:"0px"
+                        }}
                       />
                       T & M
                       <input
@@ -2985,7 +3151,12 @@ function TrForRevenue(props) {
                         name="Pricing Type"
                         checked={pricingType === "FP"}
                         onChange={onOptionChange}
-                        style={{ boxShadow: "none", fontFamily:"Roboto", fontSize:"16px", fontWeight:"400" }}
+                        style={{
+                          boxShadow: "none",
+                          fontFamily: "Roboto",
+                          fontSize: "16px",
+                          fontWeight: "400",
+                        }}
                       />
                       FP
                     </div>
@@ -2994,7 +3165,7 @@ function TrForRevenue(props) {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      fontFamily:"Roboto",
+                      fontFamily: "Roboto",
                       // marginRight: "25px",
                     }}
                   >
@@ -3004,11 +3175,19 @@ function TrForRevenue(props) {
                         // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
-                  fontFamily: "Roboto",
+                        fontFamily:"Roboto"
                       }}
                     >
-                      <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
-                      <div style={{ width: "150px", fontFamily:"Roboto", }}>
+                      <span
+                        style={{
+                          marginLeft: "4px",
+                          fontSize: "14px",
+                          fontWeight: "400",
+                        }}
+                      >
+                        FY :
+                      </span>
+                      <div style={{ width: "150px", fontFamily: "Roboto" }}>
                         <FormControl>
                           <select
                             style={{
@@ -3018,8 +3197,8 @@ function TrForRevenue(props) {
                               variant: "outlined",
                               borderRadius: "5px",
                               height: "35px",
-                              boxShadow:"none",
-                              border:"1px solid #0000004d"
+                              boxShadow: "none",
+                              border: "1px solid #0000004d",
                             }}
                             onChange={(e) => {
                               getAllCurrencyForFy(e.target.value);
@@ -3048,10 +3227,7 @@ function TrForRevenue(props) {
                                 const fyNameData = fyData?.financialYearName;
                                 const fyId = fyData.financialYearId;
                                 return (
-                                  <option
-                                    data-fyId={fyId}
-                                    key={index}
-                                  >
+                                  <option data-fyId={fyId} key={index}>
                                     {fyNameData}
                                   </option>
                                 );
@@ -3064,6 +3240,7 @@ function TrForRevenue(props) {
                   </div>
                 </div>
               </div>
+              <div>
                 {pricingType == "T&M" && (
                   <div
                     style={{
@@ -3080,9 +3257,9 @@ function TrForRevenue(props) {
                         columnGap: "10px",
                       }}
                     >
-                  <div style={{margin:"0px 0px 4px 4px"}}>
+                        <div style={{margin:"0px 0px 4px 4px"}}>
                       <span style={{ color: "red" }}>*</span>
-                      <span>
+                      <span style={{ marginLeft: "-9px" }}>
                         Resource count:
                       </span>
                       </div>
@@ -3145,6 +3322,7 @@ function TrForRevenue(props) {
                     </div>
                   </div>
                 )}
+              </div>
               <div
                 style={{
                   display: "flex",
@@ -3152,8 +3330,8 @@ function TrForRevenue(props) {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   marginLeft: "0px",
-                  maxHeight:"250px",
-                  overflowY:"auto"
+                  maxHeight: "250px",
+                  overflowY: "auto",
                 }}
               >
                 <Accordion id="accordian">{gridItems}</Accordion>
@@ -3162,47 +3340,63 @@ function TrForRevenue(props) {
                 style={{ display: "flex", flexWrap: "wrap", rowGap: "30px" }}
               >
                 <div style={{ display: "flex", flexBasis: "100%", gap: "5px" }}>
-                  <div style={{ flexBasis: "25%", alignItems:"center" }}>
+                  <div
+                    style={{
+                      // display: "flex",
+                      flexBasis: "25%",
+                      alignItems: "center",
+                    }}
+                  >
                     <div style={{ width: "75px" }}>
-                      <span style={{fontWeight:"400", fontSize:"16px"}}>Remarks :</span>
+                      <span style={{ fontWeight: "400", fontSize: "16px" }}>
+                        Remarks :
+                      </span>
                     </div>
-                  <div style={{paddingTop:"5px"}}>
-                    <input style={{  width: "935px", borderRadius: "0px", fontFamily:"Roboto",fontWeight:"400", fontSize:"14px", boxShadow:"none",border:"1px solid #00000066" }} />
+                    <div style={{paddingTop:"5px"}}>
+                    <input
+                      style={{
+                        width: "935px",
+                        borderRadius: "0px",
+                        fontFamily: "Roboto",
+                        fontWeight: "400",
+                        fontSize: "14px",
+                        boxShadow: "none",
+                        border: "1px solid #00000066",
+                      }}
+                    />
                     </div>
                   </div>
                 </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
+              </div>
+              <div
+                style={{
+                  display: "flex",
                   alignItems: "center",
-                    justifyContent: "center",
-                    gap: "20px",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                <ModalCancelButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    setIsOpenThirdLevelEdit(false);
                   }}
+                  value="Cancel"
+                  id="create-account"
                 >
-                                    <ModalCancelButton
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      setIsOpenThirdLevelEdit(false);
-                    }}
-                    value="Cancel"
-                    id="create-account"
-                  >
-                    Cancel
-                  </ModalCancelButton>
-                  <ModalControlButton
-                    type="button"
-                    value="Continue"
-                    id="create-account"
-                    variant="contained"
-                    onClick={OnSubmit}
-                  >
-                    Save
-                  </ModalControlButton>
-
-                </div>
+                  Cancel
+                </ModalCancelButton>
+                <ModalControlButton
+                  type="button"
+                  value="Continue"
+                  id="create-account"
+                  variant="contained"
+                  onClick={OnSubmit}
+                >
+                  Save
+                </ModalControlButton>
+              </div>
             </form>
           </ModalDetailSection>
         </Box>
