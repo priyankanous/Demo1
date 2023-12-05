@@ -87,7 +87,6 @@ const RevenueMilestoneResourceData = (props) => {
         });
     }
   }, [selectedBuIdToGetCoc]);
-  console.log("coc---->", coc);
 
   const createDate = (date) => {
     let t = new Date(date);
@@ -617,13 +616,13 @@ const RevenueMilestoneResourceData = (props) => {
                 padding: "0px",
               }}
             >
-              <option value="" disabled selected hidden></option>
-              {props.cocPracticeData.cocPracticeData &&
-                props.cocPracticeData.cocPracticeData.map((obj, id) => (
-                  <option data-cocPracticeId={obj.cocPracticeId}>
-                    {obj.cocPracticeName}
+              <option value="" disabled selected hidden>
+                    {
+                      props?.oppDataByOppId?.tmRevenueEntryVO
+                        ?.revenueResourceEntries[id]?.cocPractice
+                        .cocPracticeDisplayName
+                    }
                   </option>
-                ))}
               {coc &&
                 coc.map((obj, id) => (
                   <option data-cocPracticeId={obj.cocPracticeId}>
