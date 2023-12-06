@@ -47,7 +47,7 @@ import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
 
-const Label = styled('span')({
+const Label = styled("span")({
   fontFamily: "Roboto",
   color: "#000000",
   fontSize: "14px",
@@ -69,7 +69,7 @@ const ResourceEntryForm = (props) => {
   const [gridItems, setGridItems] = useState([]);
   const [resourceData, setResourceData] = useState([]);
   const [milestoneData, setMilestoneData] = useState([]);
-  const [pricingType, setPricingType] = useState("T&M");
+  const [pricingType, setPricingType] = useState(props?.dataObj?.pricingType?props.dataObj.pricingType: "T&M");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     account: { accountId: "", accountName: "" },
@@ -283,7 +283,7 @@ const ResourceEntryForm = (props) => {
           milestoneResourceCount: ele?.milestoneResourceCount,
           revenueResourceEntries: ele?.revenueResourceEntries?.map(
             (revenueEntry) => {
-              console.log("revenueResourceEntries", revenueEntry)
+              console.log("revenueResourceEntries", revenueEntry);
               return {
                 strategicBusinessUnit: {
                   sbuId: revenueEntry?.sbuId,
@@ -485,7 +485,7 @@ const ResourceEntryForm = (props) => {
           rowGap: "15px",
           width: "100%",
           paddingRight: "10px",
-          maxHeight:"470px"
+          maxHeight: "470px",
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap", rowGap: "10px" }}>
@@ -494,11 +494,11 @@ const ResourceEntryForm = (props) => {
               display: "flex",
               flexBasis: "100%",
               justifyContent: "space-between",
-              margin:"10px 0px 0px 0px"
+              margin: "10px 0px 0px 0px",
             }}
           >
             <div>
-                <div>
+              <div>
                 <label
                   for="username"
                   style={{
@@ -509,8 +509,8 @@ const ResourceEntryForm = (props) => {
                 >
                   Pricing Type
                 </label>
-                </div>
-                <div style={{paddingTop:"10px"}}>
+              </div>
+              <div style={{ paddingTop: "10px" }}>
                 <input
                   type="radio"
                   value="T&M"
@@ -522,7 +522,7 @@ const ResourceEntryForm = (props) => {
                     fontFamily: "Roboto",
                     fontSize: "16px",
                     fontWeight: "400",
-                    marginLeft:"0px"
+                    marginLeft: "0px",
                   }}
                 />
                 T & M
@@ -540,8 +540,8 @@ const ResourceEntryForm = (props) => {
                   }}
                 />
                 FP
-                </div>
               </div>
+            </div>
             <div
               style={{
                 display: "flex",
@@ -559,8 +559,16 @@ const ResourceEntryForm = (props) => {
                 }}
               >
                 <span style={{ color: "red" }}>*</span>
-                <span style={{ marginLeft: "4px", fontSize:"14px",fontWeight:"400" }}>FY :</span>
-                <div style={{ width: "150px", fontFamily:"Roboto", }}>
+                <span
+                  style={{
+                    marginLeft: "4px",
+                    fontSize: "14px",
+                    fontWeight: "400",
+                  }}
+                >
+                  FY :
+                </span>
+                <div style={{ width: "150px", fontFamily: "Roboto" }}>
                   <InputField
                     style={{
                       background: "white",
@@ -676,10 +684,17 @@ const ResourceEntryForm = (props) => {
                         fontSize: "12px",
                       }}
                     >
-                      <AddIcon style={{fontWeight:"400", fontSize:"20px", fontWeight:"700",marginTop:"-7px"}}/>
+                      <AddIcon
+                        style={{
+                          fontWeight: "400",
+                          fontSize: "20px",
+                          fontWeight: "700",
+                          marginTop: "-7px",
+                        }}
+                      />
                     </a>
-            {/* </Button> */}
-          </Tooltip>
+                    {/* </Button> */}
+                  </Tooltip>
                   <div>
                     {/* <FormControl>
                       <select
@@ -1393,28 +1408,28 @@ const ResourceEntryForm = (props) => {
                     columnGap: "10px",
                   }}
                 >
-                  <div style={{margin:"0px 0px 4px 4px"}}>
-                  <span style={{ color: "red" }}>*</span>
-                  <span>Resource count:</span>
+                  <div style={{ margin: "0px 0px 4px 4px" }}>
+                    <span style={{ color: "red" }}>*</span>
+                    <span>Resource count:</span>
                   </div>
-<div>
-                  <InputField
-                    style={{
-                      background: "white",
-                      width: "75Px",
-                      marginLeft: "8px",
-                      borderRadius: "0px !important",
-                      height: "35px",
-                      fontFamily: "Roboto !important",
-                    }}
-                    size="small"
-                    type="number"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    onChange={handleInputChange}
-                    value={inputNumber >= 0 ? inputNumber : 0}
-                  />
+                  <div>
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "75Px",
+                        marginLeft: "8px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                        fontFamily: "Roboto !important",
+                      }}
+                      size="small"
+                      type="number"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={handleInputChange}
+                      value={inputNumber >= 0 ? inputNumber : 0}
+                    />
                   </div>
                 </div>
               </div>
@@ -1430,14 +1445,16 @@ const ResourceEntryForm = (props) => {
                 <div
                   style={{
                     width: "auto",
-                    display: "flex",
+                    // display: "flex",
                     alignItems: "center",
                     columnGap: "10px",
                   }}
                 >
-                  <span style={{ color: "red" }}>*</span>
-                  <span style={{ marginLeft: "-9px" }}>Milestone count:</span>
-
+                  <div style={{ margin: "0px 0px 4px 4px" }}>
+                    <span style={{ color: "red" }}>*</span>
+                    <span >Milestone count:</span>
+                  </div>
+                  <div>
                   <InputField
                     style={{
                       background: "white",
@@ -1456,6 +1473,7 @@ const ResourceEntryForm = (props) => {
                   />
                 </div>
               </div>
+              </div>
             )}
             <div
               style={{
@@ -1466,7 +1484,7 @@ const ResourceEntryForm = (props) => {
                 marginLeft: "0px",
                 maxHeight: "250px",
                 overflowY: "auto",
-                marginTop:"-8px"
+                marginTop: "-8px",
               }}
             >
               <Accordion id="accordian">{gridItems}</Accordion>
@@ -1485,18 +1503,18 @@ const ResourceEntryForm = (props) => {
                       Remarks :
                     </span>
                   </div>
-                  <div style={{paddingTop:"5px"}}>
-                  <input
-                    style={{
-                      width: "935px",
-                      borderRadius: "0px",
-                      fontFamily: "Roboto",
-                      fontWeight: "400",
-                      fontSize: "14px",
-                      boxShadow: "none",
-                      border: "1px solid #00000066",
-                    }}
-                  />
+                  <div style={{ paddingTop: "5px" }}>
+                    <input
+                      style={{
+                        width: "935px",
+                        borderRadius: "0px",
+                        fontFamily: "Roboto",
+                        fontWeight: "400",
+                        fontSize: "14px",
+                        boxShadow: "none",
+                        border: "1px solid #00000066",
+                      }}
+                    />
                   </div>
                 </div>
               </div>

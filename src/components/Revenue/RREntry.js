@@ -60,7 +60,6 @@ function RREntry(props) {
     "",
   ];
 
-  console.log("fYear", props);
   return (
     <div>
       <RevenueMemoizedBaseComponent
@@ -109,6 +108,7 @@ function Tr({
   const [opportunityData, setOpportunityData] = useState([]);
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: {} });
 
+
   const [opportunityEntryData, setOpportunityEntryData] = useState({
     financialYearName: financialYearName,
     businessUnit: businessUnit,
@@ -142,7 +142,7 @@ function Tr({
         `${apiV1}/revenue-entry/opportunity`,
         revenueEntriesData
       );
-
+      console.log("dfghjk", response.data.data.opportunities)
       setOpportunityData(response.data.data.opportunities);
     } catch {}
   };
@@ -445,11 +445,12 @@ function Tr({
                         financialYearName: financialYearName,
                       };
                       
-                      tempObj["pricingType"] = "T&M"
+                      tempObj["pricingType"] = Array.isArray(opportunityData) && opportunityData?.length>0 ?
+                      opportunityData[opportunityData?.length-1]?.pricingType
+                      : "T&M"
                       setSelectedRowData({ ...tempObj });
                       setIsOpen(true);
                     }}
-
                   >
                     {/* <FaIcons.FaPlus /> */}
                     <AddIcon fontSize="small" />
@@ -519,7 +520,7 @@ function Tr({
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText 
-                            style={{fontFamily:"Roboto", fontWeight: "400", paddingLeft:"30px" }}
+                            style={{fontFamily:"Roboto", fontWeight: "400" }}
                             >
               New Entry
             </ModalHeadingText>
