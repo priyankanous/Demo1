@@ -140,7 +140,7 @@ function TrForRevenue(props) {
   const [isClicked, setIsClicked] = useState(false);
   //edit modal code
   const [isOpen, setIsOpen] = useState(false);
-  const [pricingType, setPricingType] = useState("T&M");
+  const [pricingType, setPricingType] = useState(props.data.pricingType);
   const [resourceData, setResourceData] = useState([]);
   const [milestoneData, setMilestoneData] = useState([]);
 
@@ -1578,15 +1578,18 @@ function TrForRevenue(props) {
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
                     >
+                      <div style={{ margin: "0px 0px 4px 4px" }}>
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>
+                      <span >
                         Resource count:
                       </span>
+                      <div>
+                      </div>
                       <InputField
                         style={{
                           background: "white",
@@ -1605,6 +1608,7 @@ function TrForRevenue(props) {
                       />
                     </div>
                   </div>
+                  </div>
                 )}
                 {pricingType == "FP" && (
                   <div
@@ -1617,15 +1621,18 @@ function TrForRevenue(props) {
                     <div
                       style={{
                         width: "auto",
-                        display: "flex",
+                        // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
                     >
+                      <div style={{ margin: "0px 0px 4px 4px" }}>
                       <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "-9px" }}>
+                      <span >
                         Milestone count:
                       </span>
+                      </div>
+                      <div>
                       <InputField
                         style={{
                           background: "white",
@@ -1643,6 +1650,7 @@ function TrForRevenue(props) {
                         value={inputNumber}
                       />
                     </div>
+                  </div>
                   </div>
                 )}
               </div>
