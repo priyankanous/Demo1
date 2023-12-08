@@ -51,7 +51,18 @@ const RevenueMilestoneAccordian = (props) => {
   const updateMilestoneDetails = (params) => {
     const dataArr = [...milestoneData];
     const data = dataArr[id];
-    data[params.milestoneDetailsColumn] = params.event.target.value;
+    if (params.milestoneDetailsColumn === "milestoneResourceCount") {
+      const inputNumber = parseInt(params.event.target.value);
+      if (!isNaN(inputNumber) && inputNumber >= 0) {
+        setInputNumber(inputNumber);
+        generateMilestoneGrid(inputNumber);
+
+        // Auto-populate milestone number and disable the field
+        data["milestoneNumber"] = inputNumber;
+      }
+    } else {
+      data[params.milestoneDetailsColumn] = params.event.target.value;
+    }
     if (params.attrKey) {
       data[params.selectedID] =
         params.event.target.selectedOptions[0].getAttribute(params.attrKey);

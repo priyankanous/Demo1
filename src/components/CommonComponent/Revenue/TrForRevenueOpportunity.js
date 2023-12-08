@@ -1579,6 +1579,7 @@ function TrForRevenue(props) {
                       style={{
                         width: "auto",
                         // display: "flex",
+                        marginLeft:"-11px",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
@@ -1594,7 +1595,7 @@ function TrForRevenue(props) {
                         style={{
                           background: "white",
                           width: "75Px",
-                          marginLeft: "8px",
+                          marginLeft: "12px",
                           borderRadius: "0px !important",
                           height: "35px",
                         }}
@@ -1624,6 +1625,8 @@ function TrForRevenue(props) {
                         // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
+                        marginLeft:"-10px"
+
                       }}
                     >
                       <div style={{ margin: "0px 0px 4px 4px" }}>
@@ -1637,7 +1640,7 @@ function TrForRevenue(props) {
                         style={{
                           background: "white",
                           width: "75Px",
-                          marginLeft: "8px",
+                          marginLeft: "12px",
                           borderRadius: "0px !important",
                           height: "35px",
                         }}
@@ -1660,7 +1663,7 @@ function TrForRevenue(props) {
                   width: "100%",
                   justifyContent: "flex-start",
                   alignItems: "center",
-                  marginLeft: "0px",
+                  marginLeft: "-4px",
                   maxHeight: "250px",
                   overflowY: "auto",
                 }}
