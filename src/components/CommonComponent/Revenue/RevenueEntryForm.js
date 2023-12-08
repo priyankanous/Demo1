@@ -1404,6 +1404,7 @@ const ResourceEntryForm = (props) => {
                   style={{
                     width: "auto",
                     // display: "flex",
+                    marginLeft:"-11px",
                     alignItems: "center",
                     columnGap: "10px",
                   }}
@@ -1417,7 +1418,7 @@ const ResourceEntryForm = (props) => {
                       style={{
                         background: "white",
                         width: "75Px",
-                        marginLeft: "8px",
+                        marginLeft: "12px",
                         borderRadius: "0px !important",
                         height: "35px",
                         fontFamily: "Roboto !important",
@@ -1448,6 +1449,7 @@ const ResourceEntryForm = (props) => {
                     // display: "flex",
                     alignItems: "center",
                     columnGap: "10px",
+                    marginLeft:"-10px"
                   }}
                 >
                   <div style={{ margin: "0px 0px 4px 4px" }}>
@@ -1459,7 +1461,7 @@ const ResourceEntryForm = (props) => {
                     style={{
                       background: "white",
                       width: "75Px",
-                      marginLeft: "8px",
+                      marginLeft: "12px",
                       borderRadius: "0px !important",
                       height: "35px",
                     }}
@@ -1481,7 +1483,7 @@ const ResourceEntryForm = (props) => {
                 width: "100%",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                marginLeft: "0px",
+                marginLeft: "-4px",
                 maxHeight: "250px",
                 overflowY: "auto",
                 marginTop: "-8px",

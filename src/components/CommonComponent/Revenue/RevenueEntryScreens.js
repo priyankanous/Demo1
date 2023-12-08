@@ -125,7 +125,7 @@ function RevenueEntryScreens(props) {
               <td>
                 <select
                   style={{
-                    height: "26px",
+                    height: "28px",
                     width: "100%",
                     borderRadius: "5px",
                     boxShadow: "none",

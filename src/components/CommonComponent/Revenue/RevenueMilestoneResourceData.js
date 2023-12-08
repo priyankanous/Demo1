@@ -519,7 +519,7 @@ const RevenueMilestoneResourceData = (props) => {
           <td style={{ borderRight: "1px solid #898282" }}>
             <input
               id="milestoneinput"
-              type="number"
+              type="string"
               onChange={(e) => {
                 updateMilestoneDetails({
                   event: e,
@@ -590,7 +590,7 @@ const RevenueMilestoneResourceData = (props) => {
               {props.businessTypeData.businessTypeData &&
                 props.businessTypeData.businessTypeData.map((obj, id) => (
                   <option data-businessTypeId={obj.businessTypeId}>
-                    {obj.businessTypeName}
+                    {obj.businessTypeDisplayName}
                   </option>
                 ))}
             </select>

@@ -16,7 +16,7 @@ import { getCocPracticeData } from "../../../actions/cocPractice";
 import { setResourceData } from "../../../actions/resource";
 import axios from "axios";
 import { apiV1 } from "../../../utils/constantsValue";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+// import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SnackBar from "../../CommonComponent/SnackBar";
 
 const RevenueResourceAccordian = (props) => {
@@ -340,7 +340,7 @@ const RevenueResourceAccordian = (props) => {
                 </span>
               </div>
               <div>
-                <DeleteOutlineIcon
+                {/* <DeleteOutlineIcon
                   style={{ fontSize: "20px", paddingRight: "5px" }}
                   onClick={() =>
                     handleDeleteRevenueResourceEntries(
@@ -348,7 +348,7 @@ const RevenueResourceAccordian = (props) => {
                         ?.revenueResourceEntries[id]?.revenueResourceEntryId
                     )
                   }
-                />
+                /> */}
               </div>
             </div>
           </AccordionItemButton>
@@ -940,7 +940,7 @@ const RevenueResourceAccordian = (props) => {
               >
                 <input
                   id="resourceinput"
-                  type="number"
+                  type="text"
                   placeholder={
                     props?.oppDataByOppId?.tmRevenueEntryVO
                       ?.revenueResourceEntries[id]?.leaveLossFactor

@@ -216,7 +216,7 @@ table {
 }
 .trmilestone {
   background-color: white;
-  box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3);
+  /* box-shadow: 0px 5px 10px rgba(0, 35, 51, 0.3); */
 }
 /* .rowtable {
   margin: 3%;
