@@ -93,6 +93,8 @@ const ResourceEntryForm = (props) => {
   });
   const [isDisabled, setIsDisabled] = useState(false);
 
+  console.log('milestonedsta', milestoneData)
+
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
   };
@@ -237,7 +239,7 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(false);
         })
         .catch((err) => {
-          props.setIsOpen(false);
+          props.setIsOpen(true);
         });
     } else if (pricingType === "FP") {
       const payload2 = {
@@ -324,7 +326,7 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(false);
         })
         .catch((err) => {
-          props.setIsOpen(false);
+          props.setIsOpen(true);
         });
     }
   };
@@ -408,6 +410,7 @@ const ResourceEntryForm = (props) => {
       for (let i = 0; i < iterator; i++) {
         const milestoneDataRow = {
           index: i,
+          milestoneNumber: `M${i+1}`,
           revenueResourceEntries: [],
         };
         tempMilestoneDetails.push(milestoneDataRow);
