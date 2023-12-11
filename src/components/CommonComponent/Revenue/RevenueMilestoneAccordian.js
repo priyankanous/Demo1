@@ -51,18 +51,11 @@ const RevenueMilestoneAccordian = (props) => {
   const updateMilestoneDetails = (params) => {
     const dataArr = [...milestoneData];
     const data = dataArr[id];
-    if (params.milestoneDetailsColumn === "milestoneResourceCount") {
-      const inputNumber = parseInt(params.event.target.value);
-      if (!isNaN(inputNumber) && inputNumber >= 0) {
-        setInputNumber(inputNumber);
-        generateMilestoneGrid(inputNumber);
 
-        // Auto-populate milestone number and disable the field
-        data["milestoneNumber"] = inputNumber;
-      }
-    } else {
+    
       data[params.milestoneDetailsColumn] = params.event.target.value;
-    }
+    
+
     if (params.attrKey) {
       data[params.selectedID] =
         params.event.target.selectedOptions[0].getAttribute(params.attrKey);
@@ -109,6 +102,7 @@ const RevenueMilestoneAccordian = (props) => {
   //   };
   //   props.saveMileStoneDataNew(mileStoneData);
   // };
+
 
   const generateMilestoneGrid = (inputNumber) => {
     const dataArr = [...milestoneData];
@@ -194,19 +188,22 @@ const RevenueMilestoneAccordian = (props) => {
                     id="name"
                     variant="outlined"
                     spellcheck="false"
+                    value={`M${props.id + 1}`}
+
                     onChange={(e) => {
                       updateMilestoneDetails({
                         event: e,
                         milestoneDetailsColumn: "milestoneNumber",
                       });
                     }}
+                    disabled
                   />
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-              <div style={{ marginLeft: "4px" }}>
+                <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
-                  <span>M1 Billing date</span>
+                  <span>M{props.id + 1} Billing date</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -233,9 +230,9 @@ const RevenueMilestoneAccordian = (props) => {
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-              <div style={{ marginLeft: "4px" }}>
+                <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
-                  <span>M1 Revenue</span>
+                  <span>M{props.id + 1} Revenue</span>
                 </div>
                 <div style={{ width: "187px" }}>
                   <InputField
@@ -247,7 +244,6 @@ const RevenueMilestoneAccordian = (props) => {
                       height: "35px",
                       // marginTop: "-15px",
                     }}
-          
                     size="small"
                     type="text"
                     id="name"
@@ -263,7 +259,7 @@ const RevenueMilestoneAccordian = (props) => {
                 </div>
               </div>
               <div style={{ flexBasis: "25%" }}>
-              <div style={{ marginLeft: "4px" }}>
+                <div style={{ marginLeft: "4px" }}>
                   <span style={{ color: "red" }}>*</span>
                   <span>Resources Count</span>
                 </div>
