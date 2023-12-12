@@ -27,6 +27,8 @@ import RevenueResourceAccordian from "./RevenueResourceAccordian";
 import { Accordion } from "react-accessible-accordion";
 import { getProbabilityData } from "../../../actions/probability";
 import RevenueMilestoneAccordian from "./RevenueMilestoneAccordian";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 import { getRegionData } from "../../../actions/region";
 import { getWorkOrderYearData } from "../../../actions/workOrder";
@@ -102,6 +104,10 @@ const ThirdLevelEditIcon = styled(EditOutlinedIcon)({
 const ThirdLevelDeleteIcon = styled(DeleteOutlineIcon)({
   fontSize: "15px",
   paddingRight: "5px",
+});
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function TrForRevenue(props) {
@@ -180,6 +186,8 @@ function TrForRevenue(props) {
 
   const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
   const [inputNumber, setInputNumber] = useState(initialResourceCount);
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
   const array = [];
   const [currencyData, setCurrencyData] = useState();
@@ -493,6 +501,13 @@ function TrForRevenue(props) {
       index: 1,
       formData: "",
     });
+  };
+
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenErrorSnackbar(false);
   };
 
   const getAllCurrencyForFy = async (e) => {
@@ -920,6 +935,14 @@ function TrForRevenue(props) {
       ),
     })),
   };
+  const calculateTotalRevenue = (revenueResourceEntries) => {
+    let total = 0;
+    revenueResourceEntries.forEach((data) => {
+      total += Number(data.milestoneResourceRevenue);
+    });
+    return total;
+  };
+
 
   const handleSave = () => {
     if (pricingType === "T&M") {
@@ -935,17 +958,34 @@ function TrForRevenue(props) {
           setIsClicked(false);
         });
     } else if (pricingType === "FP") {
-      axios
-        .post(
-          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
-          milestonePayload
-        )
-        .then((res) => {
-          setIsClicked(false);
-        })
-        .catch((err) => {
-          setIsClicked(false);
-        });
+      const filtered = milestoneData.filter((ele) => {
+        const calculatedTotalRevenue = calculateTotalRevenue(
+          ele.revenueResourceEntries
+        );
+        if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+
+      if (filtered.length > 0) {
+        console.log("filtered",filtered.length)
+
+        setOpenErrorSnackbar(true);
+      } else {
+        axios
+          .post(
+            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+            milestonePayload
+          )
+          .then((res) => {
+            setIsClicked(false);
+          })
+          .catch((err) => {
+            setIsClicked(false);
+          });
+      }
     }
   };
 
@@ -1192,7 +1232,7 @@ function TrForRevenue(props) {
               <tbody>
                 {resourceTableData.length > 0 &&
                   resourceTableData.map((obj, id) => {
-                    const pricingType = resourseEntryData?.pricingType
+                    const pricingType = resourseEntryData?.pricingType;
                     return (
                       <tr
                         key={obj.employeeId}
@@ -1209,7 +1249,7 @@ function TrForRevenue(props) {
                         }}
                       >
                         <td className="rowtable">
-                        <div
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1217,18 +1257,21 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {obj.resourceStartDate
-                              ? moment(
-                                  obj.resourceStartDate,
-                                  "YYYY-MM-DD"
-                                ).format("DD/MMM/YYYY")
-                              : ""}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {obj.resourceStartDate
+                                ? moment(
+                                    obj.resourceStartDate,
+                                    "YYYY-MM-DD"
+                                  ).format("DD/MMM/YYYY")
+                                : ""}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1236,18 +1279,21 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {obj.resourceEndDate
-                              ? moment(
-                                  obj.resourceEndDate,
-                                  "YYYY-MM-DD"
-                                ).format("DD/MMM/YYYY")
-                              : ""}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {obj.resourceEndDate
+                                ? moment(
+                                    obj.resourceEndDate,
+                                    "YYYY-MM-DD"
+                                  ).format("DD/MMM/YYYY")
+                                : ""}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1255,13 +1301,16 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {obj.workOrderNumber || ""}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {obj.workOrderNumber || ""}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1269,15 +1318,18 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {pricingType === "T&M"
-                              ? obj.employeeId
-                              : obj.milestoneNumber}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {pricingType === "T&M"
+                                ? obj.employeeId
+                                : obj.milestoneNumber}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "105px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "105px" }}
+                        >
+                          <div
                             style={{
                               width: "105px",
                               overflow: "hidden",
@@ -1285,13 +1337,16 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {obj.resourceName || ""}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {obj.resourceName || ""}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "92px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "92px" }}
+                        >
+                          <div
                             style={{
                               width: "92px",
                               overflow: "hidden",
@@ -1299,13 +1354,16 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {obj.cocPractice || ""}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {obj.cocPractice || ""}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1313,15 +1371,18 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                            {pricingType === "T&M"
-                              ? obj.billingRate
-                              : obj.milestoneBillingDate}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {pricingType === "T&M"
+                                ? obj.billingRate
+                                : obj.milestoneBillingDate}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }}>
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1329,11 +1390,14 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span>{obj.allocation || ""}</span>
+                            <span>{obj.allocation || ""}</span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ padding: "1px", width: "90px" }} >
-                        <div
+                        <td
+                          className="rowtable"
+                          style={{ padding: "1px", width: "90px" }}
+                        >
+                          <div
                             style={{
                               width: "90px",
                               overflow: "hidden",
@@ -1341,12 +1405,22 @@ function TrForRevenue(props) {
                               textOverflow: "ellipsis",
                             }}
                           >
-                          <span style={{ fontSize: "14px" }}>
-                             {pricingType === "T&M"? obj.leaveLossFactor : obj.revenue}
-                          </span>
+                            <span style={{ fontSize: "14px" }}>
+                              {pricingType === "T&M"
+                                ? obj.leaveLossFactor
+                                : obj.revenue}
+                            </span>
                           </div>
                         </td>
-                        <td className="rowtable" style={{ border: "none", display:"flex",justifyContent:"center", margin:"1px" }}>
+                        <td
+                          className="rowtable"
+                          style={{
+                            border: "none",
+                            display: "flex",
+                            justifyContent: "center",
+                            margin: "1px",
+                          }}
+                        >
                           <span style={{ float: "right", cursor: "pointer" }}>
                             <AiIcons.AiOutlineMore
                               onClick={(e) => {
@@ -1426,7 +1500,11 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
+              style={{
+                fontFamily: "Roboto",
+                fontWeight: "400",
+                paddingLeft: "30px",
+              }}
             >
               Add Resource
             </ModalHeadingText>
@@ -1447,7 +1525,7 @@ function TrForRevenue(props) {
                 rowGap: "15px",
                 width: "100%",
                 paddingRight: "10px",
-                maxHeight:"470px"
+                maxHeight: "470px",
               }}
             >
               <div
@@ -1458,7 +1536,7 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-                    margin:"10px 0px 0px 0px"
+                    margin: "10px 0px 0px 0px",
                   }}
                 >
                   <div>
@@ -1473,8 +1551,8 @@ function TrForRevenue(props) {
                       >
                         Pricing Type
                       </label>
-                      </div>
-                      <div style={{paddingTop:"10px"}}>
+                    </div>
+                    <div style={{ paddingTop: "10px" }}>
                       <input
                         type="radio"
                         value="T&M"
@@ -1486,7 +1564,7 @@ function TrForRevenue(props) {
                           fontFamily: "Roboto",
                           fontSize: "16px",
                           fontWeight: "400",
-                          marginLeft:"0px"
+                          marginLeft: "0px",
                         }}
                       />
                       T & M
@@ -1540,7 +1618,7 @@ function TrForRevenue(props) {
                             marginLeft: "3px",
                             borderRadius: "0px !important",
                             height: "35px",
-                            fontFamily: "Roboto"
+                            fontFamily: "Roboto",
                           }}
                           size="small"
                           type="text"
@@ -1579,36 +1657,33 @@ function TrForRevenue(props) {
                       style={{
                         width: "auto",
                         // display: "flex",
-                        marginLeft:"-11px",
+                        marginLeft: "-11px",
                         alignItems: "center",
                         columnGap: "10px",
                       }}
                     >
                       <div style={{ margin: "0px 0px 4px 4px" }}>
-                      <span style={{ color: "red" }}>*</span>
-                      <span >
-                        Resource count:
-                      </span>
-                      <div>
+                        <span style={{ color: "red" }}>*</span>
+                        <span>Resource count:</span>
+                        <div></div>
+                        <InputField
+                          style={{
+                            background: "white",
+                            width: "75Px",
+                            marginLeft: "12px",
+                            borderRadius: "0px !important",
+                            height: "35px",
+                          }}
+                          size="small"
+                          type="number"
+                          id="name"
+                          variant="outlined"
+                          spellcheck="false"
+                          onChange={handleInputChange}
+                          value={inputNumber >= 0 ? inputNumber : 0}
+                        />
                       </div>
-                      <InputField
-                        style={{
-                          background: "white",
-                          width: "75Px",
-                          marginLeft: "12px",
-                          borderRadius: "0px !important",
-                          height: "35px",
-                        }}
-                        size="small"
-                        type="number"
-                        id="name"
-                        variant="outlined"
-                        spellcheck="false"
-                        onChange={handleInputChange}
-                        value={inputNumber >= 0 ? inputNumber : 0}
-                      />
                     </div>
-                  </div>
                   </div>
                 )}
                 {pricingType == "FP" && (
@@ -1625,35 +1700,32 @@ function TrForRevenue(props) {
                         // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
-                        marginLeft:"-10px"
-
+                        marginLeft: "-10px",
                       }}
                     >
                       <div style={{ margin: "0px 0px 4px 4px" }}>
-                      <span style={{ color: "red" }}>*</span>
-                      <span >
-                        Milestone count:
-                      </span>
+                        <span style={{ color: "red" }}>*</span>
+                        <span>Milestone count:</span>
                       </div>
                       <div>
-                      <InputField
-                        style={{
-                          background: "white",
-                          width: "75Px",
-                          marginLeft: "12px",
-                          borderRadius: "0px !important",
-                          height: "35px",
-                        }}
-                        size="small"
-                        type="number"
-                        id="name"
-                        variant="outlined"
-                        spellcheck="false"
-                        onChange={handleInputChange}
-                        value={inputNumber}
-                      />
+                        <InputField
+                          style={{
+                            background: "white",
+                            width: "75Px",
+                            marginLeft: "12px",
+                            borderRadius: "0px !important",
+                            height: "35px",
+                          }}
+                          size="small"
+                          type="number"
+                          id="name"
+                          variant="outlined"
+                          spellcheck="false"
+                          onChange={handleInputChange}
+                          value={inputNumber}
+                        />
+                      </div>
                     </div>
-                  </div>
                   </div>
                 )}
               </div>
@@ -1685,18 +1757,18 @@ function TrForRevenue(props) {
                         Remarks :
                       </span>
                     </div>
-                    <div style={{paddingTop:"5px"}}>
-                    <input
-                      style={{
-                        width: "935px",
-                        borderRadius: "0px",
-                        fontFamily: "Roboto",
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        boxShadow: "none",
-                        border: "1px solid #00000066",
-                      }}
-                    />
+                    <div style={{ paddingTop: "5px" }}>
+                      <input
+                        style={{
+                          width: "935px",
+                          borderRadius: "0px",
+                          fontFamily: "Roboto",
+                          fontWeight: "400",
+                          fontSize: "14px",
+                          boxShadow: "none",
+                          border: "1px solid #00000066",
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -1736,6 +1808,31 @@ function TrForRevenue(props) {
                   Save
                 </ModalControlButton>
               </div>
+              <Snackbar
+                open={openErrorSnackbar}
+                autoHideDuration={5000} // 5 seconds
+                onClose={handleCloseErrorSnackbar}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                style={{
+                  marginTop: "50px",
+                  width: "300px",
+                  padding: "10px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Alert
+                  onClose={handleCloseErrorSnackbar}
+                  severity="error"
+                  sx={{
+                    backgroundColor: "#FFBABA",
+                    color: "#D8000C",
+                    fontSize: "14px",
+                  }}
+                >
+                  Error: Milestone Revenue and Resource Revenue Entry doesn't
+                  match
+                </Alert>
+              </Snackbar>
             </form>
           </ModalDetailSection>
         </Box>
@@ -1754,7 +1851,11 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#EBEBEB", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
+              style={{
+                fontFamily: "Roboto",
+                fontWeight: "400",
+                paddingLeft: "30px",
+              }}
             >
               Edit Entry
             </ModalHeadingText>
@@ -1776,7 +1877,7 @@ function TrForRevenue(props) {
                 rowGap: "15px",
                 width: "100%",
                 paddingRight: "10px",
-                maxHeight:"470px"
+                maxHeight: "470px",
               }}
             >
               <div
@@ -1787,7 +1888,7 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-                    margin: "10px 0px 0px 0px"
+                    margin: "10px 0px 0px 0px",
                   }}
                 >
                   <div>
@@ -1802,8 +1903,8 @@ function TrForRevenue(props) {
                       >
                         Pricing Type
                       </label>
-                      </div>
-                      <div style={{paddingTop:"10px"}}>
+                    </div>
+                    <div style={{ paddingTop: "10px" }}>
                       <input
                         type="radio"
                         value="T&M"
@@ -2964,7 +3065,7 @@ function TrForRevenue(props) {
                       marginLeft: "0px",
                       maxHeight: "250px",
                       overflowY: "auto",
-                      marginTop:"-8px"
+                      marginTop: "-8px",
                     }}
                   >
                     <Accordion id="accordian">{gridItems}</Accordion>
@@ -2981,7 +3082,7 @@ function TrForRevenue(props) {
                       style={{
                         display: "flex",
                         flexWrap: "wrap",
-                        gap:"5px"
+                        gap: "5px",
                       }}
                     >
                       <div
@@ -3004,18 +3105,18 @@ function TrForRevenue(props) {
                               Remarks :
                             </span>
                           </div>
-                          <div style={{paddingTop:"5px"}}>
-                          <input
-                            style={{
-                              width: "935px",
-                              borderRadius: "0px",
-                              fontFamily: "Roboto",
-                              fontWeight: "400",
-                              fontSize: "14px",
-                              boxShadow: "none",
-                              border: "1px solid #00000066",
-                            }}
-                          />
+                          <div style={{ paddingTop: "5px" }}>
+                            <input
+                              style={{
+                                width: "935px",
+                                borderRadius: "0px",
+                                fontFamily: "Roboto",
+                                fontWeight: "400",
+                                fontSize: "14px",
+                                boxShadow: "none",
+                                border: "1px solid #00000066",
+                              }}
+                            />
                           </div>
                         </div>
                       </div>
@@ -3092,7 +3193,11 @@ function TrForRevenue(props) {
             style={{ backgroundColor: "#ebebeb", borderRadius: "0Px" }}
           >
             <ModalHeadingText
-              style={{ fontFamily: "Roboto", fontWeight: "400", paddingLeft:"30px" }}
+              style={{
+                fontFamily: "Roboto",
+                fontWeight: "400",
+                paddingLeft: "30px",
+              }}
             >
               Edit Resource
             </ModalHeadingText>
@@ -3113,7 +3218,7 @@ function TrForRevenue(props) {
                 rowGap: "15px",
                 width: "100%",
                 paddingRight: "10px",
-                maxHeight:'470px'
+                maxHeight: "470px",
               }}
             >
               <div
@@ -3124,7 +3229,7 @@ function TrForRevenue(props) {
                     display: "flex",
                     flexBasis: "100%",
                     justifyContent: "space-between",
-                    margin:"10px 0px 0px 0px"
+                    margin: "10px 0px 0px 0px",
                   }}
                 >
                   <div>
@@ -3139,8 +3244,8 @@ function TrForRevenue(props) {
                       >
                         Pricing Type
                       </label>
-                      </div>
-                      <div style={{paddingTop:"10px"}}>
+                    </div>
+                    <div style={{ paddingTop: "10px" }}>
                       <input
                         type="radio"
                         value="T&M"
@@ -3152,7 +3257,7 @@ function TrForRevenue(props) {
                           fontFamily: "Roboto",
                           fontSize: "16px",
                           fontWeight: "400",
-                          marginLeft:"0px"
+                          marginLeft: "0px",
                         }}
                       />
                       T & M
@@ -3186,7 +3291,7 @@ function TrForRevenue(props) {
                         // display: "flex",
                         alignItems: "center",
                         columnGap: "10px",
-                        fontFamily:"Roboto"
+                        fontFamily: "Roboto",
                       }}
                     >
                       <span
@@ -3268,32 +3373,32 @@ function TrForRevenue(props) {
                         columnGap: "10px",
                       }}
                     >
-                        <div style={{margin:"0px 0px 4px 4px"}}>
-                      <span style={{ color: "red" }}>*</span>
-                      <span style={{ marginLeft: "4px" }}>
-                        Resource count:
-                      </span>
+                      <div style={{ margin: "0px 0px 4px 4px" }}>
+                        <span style={{ color: "red" }}>*</span>
+                        <span style={{ marginLeft: "4px" }}>
+                          Resource count:
+                        </span>
                       </div>
                       <div>
-                      <InputField
-                        style={{
-                          background: "white",
-                          width: "75Px",
-                          marginLeft: "8px",
-                          borderRadius: "0px !important",
-                          height: "35px",
-                        }}
-                        size="small"
-                        type="number"
-                        id="name"
-                        variant="outlined"
-                        spellcheck="false"
-                        onChange={handleInputChange}
-                        value={inputNumber}
-                        disabled
-                      />
+                        <InputField
+                          style={{
+                            background: "white",
+                            width: "75Px",
+                            marginLeft: "8px",
+                            borderRadius: "0px !important",
+                            height: "35px",
+                          }}
+                          size="small"
+                          type="number"
+                          id="name"
+                          variant="outlined"
+                          spellcheck="false"
+                          onChange={handleInputChange}
+                          value={inputNumber}
+                          disabled
+                        />
+                      </div>
                     </div>
-                  </div>
                   </div>
                 )}
                 {pricingType == "FP" && (
@@ -3363,18 +3468,18 @@ function TrForRevenue(props) {
                         Remarks :
                       </span>
                     </div>
-                    <div style={{paddingTop:"5px"}}>
-                    <input
-                      style={{
-                        width: "935px",
-                        borderRadius: "0px",
-                        fontFamily: "Roboto",
-                        fontWeight: "400",
-                        fontSize: "14px",
-                        boxShadow: "none",
-                        border: "1px solid #00000066",
-                      }}
-                    />
+                    <div style={{ paddingTop: "5px" }}>
+                      <input
+                        style={{
+                          width: "935px",
+                          borderRadius: "0px",
+                          fontFamily: "Roboto",
+                          fontWeight: "400",
+                          fontSize: "14px",
+                          boxShadow: "none",
+                          border: "1px solid #00000066",
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -3408,6 +3513,7 @@ function TrForRevenue(props) {
                   Save
                 </ModalControlButton>
               </div>
+              
             </form>
           </ModalDetailSection>
         </Box>

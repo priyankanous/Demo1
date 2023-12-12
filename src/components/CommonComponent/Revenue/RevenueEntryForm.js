@@ -46,11 +46,17 @@ import { Accordion } from "react-accessible-accordion";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 import AddSharpIcon from "@mui/icons-material/AddSharp";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const Label = styled("span")({
   fontFamily: "Roboto",
   color: "#000000",
   fontSize: "14px",
+});
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const ResourceEntryForm = (props) => {
@@ -69,8 +75,12 @@ const ResourceEntryForm = (props) => {
   const [gridItems, setGridItems] = useState([]);
   const [resourceData, setResourceData] = useState([]);
   const [milestoneData, setMilestoneData] = useState([]);
-  const [pricingType, setPricingType] = useState(props?.dataObj?.pricingType?props.dataObj.pricingType: "T&M");
+  const [pricingType, setPricingType] = useState(
+    props?.dataObj?.pricingType ? props.dataObj.pricingType : "T&M"
+  );
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
+
   const [formData, setFormData] = useState({
     account: { accountId: "", accountName: "" },
     opportunity: {
@@ -93,7 +103,7 @@ const ResourceEntryForm = (props) => {
   });
   const [isDisabled, setIsDisabled] = useState(false);
 
-  console.log('milestonedsta', milestoneData)
+  console.log("milestonedsta", milestoneData);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -159,6 +169,14 @@ const ResourceEntryForm = (props) => {
     const month = date.toLocaleString("default", { month: "short" });
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+  };
+
+  const calculateTotalRevenue = (revenueResourceEntries) => {
+    let total = 0;
+    revenueResourceEntries.forEach((data) => {
+      total += Number(data.milestoneResourceRevenue);
+    });
+    return total;
   };
 
   const handleSave = () => {
@@ -242,104 +260,116 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(true);
         });
     } else if (pricingType === "FP") {
-      const payload2 = {
-        account: {
-          accountId: formData.account.accountId,
-        },
-        opportunity: {
-          opportunityId: formData.opportunity.opportunityID,
-        },
-        projectCode: formData.opportunity.projectCode,
-        projectStartDate: formData.opportunity.projectStartDate,
-        projectEndDate: formData.opportunity.projectEndDate,
-        businessDevelopmentManager: {
-          bdmId: formData.bdm.bdmID,
-        },
-        currency: {
-          currencyId: formData.currency.currencyID,
-        },
-        probabilityType: {
-          probabilityTypeId: formData.probability.probabilityID,
-        },
-        region: {
-          regionId: formData.region.regionID,
-        },
-        workOrder: {
-          workOrderId: formData.workOrder.workOrderID,
-        },
-        workOrderEndDate: formData.workOrder.workOrderEndDate,
-        workOrderStatus: formData.workOrder.workOrderStatus,
-        financialYear: {
-          financialYearId:
-            props?.financialYear?.financialYear[0]?.financialYearId,
-        },
-        milestoneCount: milestoneData.length,
-        pricingType: pricingType,
-        remarks: "No",
-        status: "Submitted",
+      const filtered = milestoneData.filter((ele) => {
+        const calculatedTotalRevenue = calculateTotalRevenue(
+          ele.revenueResourceEntries
+        );
+        if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
 
-        milestones: milestoneData?.map((ele) => ({
-          milestoneNumber: ele?.milestoneNumber,
-          milestoneBillingDate: ele?.milestoneBillingDate,
-          milestoneRevenue: ele?.milestoneRevenue,
-          milestoneResourceCount: ele?.milestoneResourceCount,
-          revenueResourceEntries: ele?.revenueResourceEntries?.map(
-            (revenueEntry) => {
-              console.log("revenueResourceEntries", revenueEntry);
-              return {
-                strategicBusinessUnit: {
-                  sbuId: revenueEntry?.sbuId,
-                },
-                strategicBusinessUnitHead: {
-                  sbuHeadId: revenueEntry?.sbuHeadId,
-                },
-                businessUnit: {
-                  businessUnitId: revenueEntry?.businessUnitId,
-                },
-                businessType: {
-                  businessTypeId: revenueEntry?.businessTypeId,
-                },
-                location: {
-                  locationId: revenueEntry?.locationId,
-                },
-                resourceName: revenueEntry?.resourceName,
-                employeeId: revenueEntry?.employeeId,
-                resourceStartDate: revenueEntry?.resourceStartDate,
-                resourceEndDate: revenueEntry?.resourceEndDate,
-                cocPractice: {
-                  cocPracticeId: revenueEntry?.cocPracticeId,
-                },
-                allocation: revenueEntry?.allocation,
-                milestoneResourceRevenue:
-                  revenueEntry?.milestoneResourceRevenue,
-              };
-            }
-          ),
-        })),
-      };
-      axios
-        .post(
-          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
-          payload2
-        )
-        .then((res) => {
-          props.setIsOpen(false);
-        })
-        .catch((err) => {
-          props.setIsOpen(true);
-        });
+      if (filtered.length > 0) {
+        setOpenErrorSnackbar(true);
+
+      } else {
+        const payload2 = {
+          account: {
+            accountId: formData.account.accountId,
+          },
+          opportunity: {
+            opportunityId: formData.opportunity.opportunityID,
+          },
+          projectCode: formData.opportunity.projectCode,
+          projectStartDate: formData.opportunity.projectStartDate,
+          projectEndDate: formData.opportunity.projectEndDate,
+          businessDevelopmentManager: {
+            bdmId: formData.bdm.bdmID,
+          },
+          currency: {
+            currencyId: formData.currency.currencyID,
+          },
+          probabilityType: {
+            probabilityTypeId: formData.probability.probabilityID,
+          },
+          region: {
+            regionId: formData.region.regionID,
+          },
+          workOrder: {
+            workOrderId: formData.workOrder.workOrderID,
+          },
+          workOrderEndDate: formData.workOrder.workOrderEndDate,
+          workOrderStatus: formData.workOrder.workOrderStatus,
+          financialYear: {
+            financialYearId:
+              props?.financialYear?.financialYear[0]?.financialYearId,
+          },
+          milestoneCount: milestoneData.length,
+          pricingType: pricingType,
+          remarks: "No",
+          status: "Submitted",
+
+          milestones: milestoneData?.map((ele) => ({
+            milestoneNumber: ele?.milestoneNumber,
+            milestoneBillingDate: ele?.milestoneBillingDate,
+            milestoneRevenue: ele?.milestoneRevenue,
+            milestoneResourceCount: ele?.milestoneResourceCount,
+            revenueResourceEntries: ele?.revenueResourceEntries?.map(
+              (revenueEntry) => {
+                console.log("revenueResourceEntries", revenueEntry);
+                return {
+                  strategicBusinessUnit: {
+                    sbuId: revenueEntry?.sbuId,
+                  },
+                  strategicBusinessUnitHead: {
+                    sbuHeadId: revenueEntry?.sbuHeadId,
+                  },
+                  businessUnit: {
+                    businessUnitId: revenueEntry?.businessUnitId,
+                  },
+                  businessType: {
+                    businessTypeId: revenueEntry?.businessTypeId,
+                  },
+                  location: {
+                    locationId: revenueEntry?.locationId,
+                  },
+                  resourceName: revenueEntry?.resourceName,
+                  employeeId: revenueEntry?.employeeId,
+                  resourceStartDate: revenueEntry?.resourceStartDate,
+                  resourceEndDate: revenueEntry?.resourceEndDate,
+                  cocPractice: {
+                    cocPracticeId: revenueEntry?.cocPracticeId,
+                  },
+                  allocation: revenueEntry?.allocation,
+                  milestoneResourceRevenue:
+                    revenueEntry?.milestoneResourceRevenue,
+                };
+              }
+            ),
+          })),
+        };
+        axios
+          .post(
+            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+            payload2
+          )
+          .then((res) => {
+            props.setIsOpen(false);
+          })
+          .catch((err) => {
+            props.setIsOpen(true);
+          });
+      }
     }
   };
 
-  const resetData = () => {
-    // setIsOpen(false);
-    // getAllRegionData();
-    // setOpportunityId(null);
-    // setOpportunityName(null);
-    // setProjectCode(null);
-    // setAccountName(null);
-    // setProjectStartDate(null);
-    // setProjectEndDate(null)
+  const handleCloseErrorSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenErrorSnackbar(false);
   };
 
   const handleNextClick = () => {
@@ -410,7 +440,7 @@ const ResourceEntryForm = (props) => {
       for (let i = 0; i < iterator; i++) {
         const milestoneDataRow = {
           index: i,
-          milestoneNumber: `M${i+1}`,
+          milestoneNumber: `M${i + 1}`,
           revenueResourceEntries: [],
         };
         tempMilestoneDetails.push(milestoneDataRow);
@@ -1407,7 +1437,7 @@ const ResourceEntryForm = (props) => {
                   style={{
                     width: "auto",
                     // display: "flex",
-                    marginLeft:"-11px",
+                    marginLeft: "-11px",
                     alignItems: "center",
                     columnGap: "10px",
                   }}
@@ -1452,32 +1482,32 @@ const ResourceEntryForm = (props) => {
                     // display: "flex",
                     alignItems: "center",
                     columnGap: "10px",
-                    marginLeft:"-10px"
+                    marginLeft: "-10px",
                   }}
                 >
                   <div style={{ margin: "0px 0px 4px 4px" }}>
                     <span style={{ color: "red" }}>*</span>
-                    <span >Milestone count:</span>
+                    <span>Milestone count:</span>
                   </div>
                   <div>
-                  <InputField
-                    style={{
-                      background: "white",
-                      width: "75Px",
-                      marginLeft: "12px",
-                      borderRadius: "0px !important",
-                      height: "35px",
-                    }}
-                    size="small"
-                    type="number"
-                    id="name"
-                    variant="outlined"
-                    spellcheck="false"
-                    onChange={handleInputChange}
-                    value={inputNumber}
-                  />
+                    <InputField
+                      style={{
+                        background: "white",
+                        width: "75Px",
+                        marginLeft: "12px",
+                        borderRadius: "0px !important",
+                        height: "35px",
+                      }}
+                      size="small"
+                      type="number"
+                      id="name"
+                      variant="outlined"
+                      spellcheck="false"
+                      onChange={handleInputChange}
+                      value={inputNumber}
+                    />
+                  </div>
                 </div>
-              </div>
               </div>
             )}
             <div
@@ -1576,6 +1606,16 @@ const ResourceEntryForm = (props) => {
                 Save
               </ModalControlButton>
             </div>
+            <Snackbar
+              open={openErrorSnackbar}
+              autoHideDuration={5000} // 5 seconds
+              onClose={handleCloseErrorSnackbar}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              style={{ marginTop: '50px', width: '300px', padding: '10px', whiteSpace: 'nowrap' }}                                    >
+              <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ backgroundColor: '#FFBABA', color: '#D8000C', fontSize: '14px' }}>
+                Error: Milestone Revenue and Resource Revenue Entry doesn't match
+              </Alert>
+            </Snackbar>
           </>
         )}
       </form>
