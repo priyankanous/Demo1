@@ -78,6 +78,7 @@ const ResourceEntryForm = (props) => {
   const [pricingType, setPricingType] = useState(
     props?.dataObj?.pricingType ? props.dataObj.pricingType : "T&M"
   );
+  const [disabledOpt, setDisabledOpt]=useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
@@ -104,6 +105,8 @@ const ResourceEntryForm = (props) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   console.log("milestonedsta", milestoneData);
+
+  // const [isSaved, setIsSaved] = useState(false);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -260,113 +263,118 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(true);
         });
     } else if (pricingType === "FP") {
-      const filtered = milestoneData.filter((ele) => {
-        const calculatedTotalRevenue = calculateTotalRevenue(
-          ele.revenueResourceEntries
-        );
-        if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
-          return true;
+    //   console.log("mmmm", milestoneData)
+    //   if (!milestoneData?.milestoneRevenue || !milestoneData?.milestoneRevenue || !milestoneData?.milestoneResourceCount) {
+    //     setIsSaved(true);
+    //   } else {
+        // setIsSaved(false);
+        const filtered = milestoneData.filter((ele) => {
+          const calculatedTotalRevenue = calculateTotalRevenue(
+            ele.revenueResourceEntries
+          );
+          if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+  
+        if (filtered.length > 0) {
+          setOpenErrorSnackbar(true);
         } else {
-          return false;
+          const payload2 = {
+            account: {
+              accountId: formData.account.accountId,
+            },
+            opportunity: {
+              opportunityId: formData.opportunity.opportunityID,
+            },
+            projectCode: formData.opportunity.projectCode,
+            projectStartDate: formData.opportunity.projectStartDate,
+            projectEndDate: formData.opportunity.projectEndDate,
+            businessDevelopmentManager: {
+              bdmId: formData.bdm.bdmID,
+            },
+            currency: {
+              currencyId: formData.currency.currencyID,
+            },
+            probabilityType: {
+              probabilityTypeId: formData.probability.probabilityID,
+            },
+            region: {
+              regionId: formData.region.regionID,
+            },
+            workOrder: {
+              workOrderId: formData.workOrder.workOrderID,
+            },
+            workOrderEndDate: formData.workOrder.workOrderEndDate,
+            workOrderStatus: formData.workOrder.workOrderStatus,
+            financialYear: {
+              financialYearId:
+                props?.financialYear?.financialYear[0]?.financialYearId,
+            },
+            milestoneCount: milestoneData.length,
+            pricingType: pricingType,
+            remarks: "No",
+            status: "Submitted",
+  
+            milestones: milestoneData?.map((ele) => ({
+              milestoneNumber: ele?.milestoneNumber,
+              milestoneBillingDate: ele?.milestoneBillingDate,
+              milestoneRevenue: ele?.milestoneRevenue,
+              milestoneResourceCount: ele?.milestoneResourceCount,
+              revenueResourceEntries: ele?.revenueResourceEntries?.map(
+                (revenueEntry) => {
+                  console.log("revenueResourceEntries", revenueEntry);
+                  return {
+                    strategicBusinessUnit: {
+                      sbuId: revenueEntry?.sbuId,
+                    },
+                    strategicBusinessUnitHead: {
+                      sbuHeadId: revenueEntry?.sbuHeadId,
+                    },
+                    businessUnit: {
+                      businessUnitId: revenueEntry?.businessUnitId,
+                    },
+                    businessType: {
+                      businessTypeId: revenueEntry?.businessTypeId,
+                    },
+                    location: {
+                      locationId: revenueEntry?.locationId,
+                    },
+                    resourceName: revenueEntry?.resourceName,
+                    employeeId: revenueEntry?.employeeId,
+                    resourceStartDate: revenueEntry?.resourceStartDate,
+                    resourceEndDate: revenueEntry?.resourceEndDate,
+                    cocPractice: {
+                      cocPracticeId: revenueEntry?.cocPracticeId,
+                    },
+                    allocation: revenueEntry?.allocation,
+                    milestoneResourceRevenue:
+                      revenueEntry?.milestoneResourceRevenue,
+                  };
+                }
+              ),
+            })),
+          };
+          axios
+            .post(
+              "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+              payload2
+            )
+            .then((res) => {
+              props.setIsOpen(false);
+            })
+            .catch((err) => {
+              props.setIsOpen(true);
+            });
         }
-      });
-
-      if (filtered.length > 0) {
-        setOpenErrorSnackbar(true);
-
-      } else {
-        const payload2 = {
-          account: {
-            accountId: formData.account.accountId,
-          },
-          opportunity: {
-            opportunityId: formData.opportunity.opportunityID,
-          },
-          projectCode: formData.opportunity.projectCode,
-          projectStartDate: formData.opportunity.projectStartDate,
-          projectEndDate: formData.opportunity.projectEndDate,
-          businessDevelopmentManager: {
-            bdmId: formData.bdm.bdmID,
-          },
-          currency: {
-            currencyId: formData.currency.currencyID,
-          },
-          probabilityType: {
-            probabilityTypeId: formData.probability.probabilityID,
-          },
-          region: {
-            regionId: formData.region.regionID,
-          },
-          workOrder: {
-            workOrderId: formData.workOrder.workOrderID,
-          },
-          workOrderEndDate: formData.workOrder.workOrderEndDate,
-          workOrderStatus: formData.workOrder.workOrderStatus,
-          financialYear: {
-            financialYearId:
-              props?.financialYear?.financialYear[0]?.financialYearId,
-          },
-          milestoneCount: milestoneData.length,
-          pricingType: pricingType,
-          remarks: "No",
-          status: "Submitted",
-
-          milestones: milestoneData?.map((ele) => ({
-            milestoneNumber: ele?.milestoneNumber,
-            milestoneBillingDate: ele?.milestoneBillingDate,
-            milestoneRevenue: ele?.milestoneRevenue,
-            milestoneResourceCount: ele?.milestoneResourceCount,
-            revenueResourceEntries: ele?.revenueResourceEntries?.map(
-              (revenueEntry) => {
-                console.log("revenueResourceEntries", revenueEntry);
-                return {
-                  strategicBusinessUnit: {
-                    sbuId: revenueEntry?.sbuId,
-                  },
-                  strategicBusinessUnitHead: {
-                    sbuHeadId: revenueEntry?.sbuHeadId,
-                  },
-                  businessUnit: {
-                    businessUnitId: revenueEntry?.businessUnitId,
-                  },
-                  businessType: {
-                    businessTypeId: revenueEntry?.businessTypeId,
-                  },
-                  location: {
-                    locationId: revenueEntry?.locationId,
-                  },
-                  resourceName: revenueEntry?.resourceName,
-                  employeeId: revenueEntry?.employeeId,
-                  resourceStartDate: revenueEntry?.resourceStartDate,
-                  resourceEndDate: revenueEntry?.resourceEndDate,
-                  cocPractice: {
-                    cocPracticeId: revenueEntry?.cocPracticeId,
-                  },
-                  allocation: revenueEntry?.allocation,
-                  milestoneResourceRevenue:
-                    revenueEntry?.milestoneResourceRevenue,
-                };
-              }
-            ),
-          })),
-        };
-        axios
-          .post(
-            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
-            payload2
-          )
-          .then((res) => {
-            props.setIsOpen(false);
-          })
-          .catch((err) => {
-            props.setIsOpen(true);
-          });
-      }
+      // }
     }
   };
 
   const handleCloseErrorSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenErrorSnackbar(false);
@@ -385,6 +393,7 @@ const ResourceEntryForm = (props) => {
     } else {
       setIsSubmitted(false);
       setPricingType(pricingType);
+      setDisabledOpt(true)
       props.setTabIndex({
         // ...props.tabIndex,
         index: 1,
@@ -447,6 +456,8 @@ const ResourceEntryForm = (props) => {
       }
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
+        // console.log("in form", isSaved)
+
         items.push(
           <RevenueMilestoneAccordian
             id={i}
@@ -456,12 +467,17 @@ const ResourceEntryForm = (props) => {
             milestoneData={tempMilestoneDetails}
             updateMilestoneData={setMilestoneData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            // isSaved={isSaved}
           />
         );
       }
     }
     setGridItems(items);
   };
+
+  // useEffect(()=>{
+
+  // },[isSaved])
 
   const saveResourceDetails = () => {
     props.saveResourceData({
@@ -557,6 +573,7 @@ const ResourceEntryForm = (props) => {
                     fontWeight: "400",
                     marginLeft: "0px",
                   }}
+                  disabled={disabledOpt && pricingType !== "T&M"}
                 />
                 T & M
                 <input
@@ -571,6 +588,7 @@ const ResourceEntryForm = (props) => {
                     fontSize: "16px",
                     fontWeight: "400",
                   }}
+                  disabled={disabledOpt && pricingType !== "FP"}
                 />
                 FP
               </div>
@@ -1591,6 +1609,7 @@ const ResourceEntryForm = (props) => {
                 variant="contained"
                 onClick={() => {
                   setPricingType(pricingType);
+                  setDisabledOpt(false)
                   props.setTabIndex({
                     // ...props.tabIndex,
                     index: 0,
@@ -1615,10 +1634,29 @@ const ResourceEntryForm = (props) => {
               open={openErrorSnackbar}
               autoHideDuration={5000} // 5 seconds
               onClose={handleCloseErrorSnackbar}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              style={{ marginTop: '50px', width: '300px', padding: '10px', whiteSpace: 'nowrap' }}                                    >
-              <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ backgroundColor: '#FFBABA', color: '#D8000C', fontSize: '14px' }}>
-                Error: Milestone Revenue and Resource Revenue Entry doesn't match
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              style={{
+                marginTop: "50px",
+                width: "300px",
+                padding: "10px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <Alert
+                onClose={handleCloseErrorSnackbar}
+                severity="error"
+                sx={{
+                  backgroundColor: "white",
+                  color: "black",
+                  fontSize: "14px",
+                  border:"1px solid black",
+                  borderRadius:"0px !important",
+                  boxShadow:"none"
+
+                }}
+              >
+                Error: Milestone Revenue and Resource Revenue Entry doesn't
+                match
               </Alert>
             </Snackbar>
           </>

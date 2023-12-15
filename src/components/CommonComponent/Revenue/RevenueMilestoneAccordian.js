@@ -52,9 +52,7 @@ const RevenueMilestoneAccordian = (props) => {
     const dataArr = [...milestoneData];
     const data = dataArr[id];
 
-    
-      data[params.milestoneDetailsColumn] = params.event.target.value;
-    
+    data[params.milestoneDetailsColumn] = params.event.target.value;
 
     if (params.attrKey) {
       data[params.selectedID] =
@@ -102,7 +100,6 @@ const RevenueMilestoneAccordian = (props) => {
   //   };
   //   props.saveMileStoneDataNew(mileStoneData);
   // };
-
 
   const generateMilestoneGrid = (inputNumber) => {
     const dataArr = [...milestoneData];
@@ -181,7 +178,6 @@ const RevenueMilestoneAccordian = (props) => {
                       marginLeft: "8px",
                       borderRadius: "0px !important",
                       height: "35px",
-                      // marginTop: "-15px",
                     }}
                     size="small"
                     type="text"
@@ -189,7 +185,6 @@ const RevenueMilestoneAccordian = (props) => {
                     variant="outlined"
                     spellcheck="false"
                     value={`M${props.id + 1}`}
-
                     onChange={(e) => {
                       updateMilestoneDetails({
                         event: e,
@@ -214,6 +209,7 @@ const RevenueMilestoneAccordian = (props) => {
                       borderRadius: "0px !important",
                       height: "35px",
                       // marginTop: "-15px",
+                      // border: isSaved && !milestoneData?.milestoneBillingDate ? "1px solid red" : "",
                     }}
                     size="small"
                     type="date"
@@ -243,6 +239,7 @@ const RevenueMilestoneAccordian = (props) => {
                       borderRadius: "0px !important",
                       height: "35px",
                       // marginTop: "-15px",
+                      // border: isSaved && !milestoneData?.milestoneRevenue ? "1px solid red" : "",
                     }}
                     size="small"
                     type="text"
@@ -272,6 +269,7 @@ const RevenueMilestoneAccordian = (props) => {
                       borderRadius: "0px !important",
                       height: "35px",
                       // marginTop: "-15px",
+                      // border: isSaved && !milestoneData?.milestoneResourceCount ? "1px solid red" : "",
                     }}
                     size="small"
                     type="number"
