@@ -916,6 +916,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
+                    disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -967,6 +968,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
+                    disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -999,6 +1001,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
+                    disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1324,6 +1327,7 @@ const ResourceEntryForm = (props) => {
 
                   <div style={{ width: "195px" }}>
                     <InputField
+                    disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1357,6 +1361,7 @@ const ResourceEntryForm = (props) => {
 
                   <div style={{ width: "187px" }}>
                     <InputField
+                    disabled
                       style={{
                         background: "white",
                         width: "187Px",
