@@ -182,6 +182,7 @@ function TrForRevenue(props) {
     "Milestone Billing Date",
     "Allocation % ",
     "Milestone Revenue",
+    "",
   ];
 
   const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
@@ -1224,8 +1225,19 @@ function TrForRevenue(props) {
                       </ThirdLevelHeading>
                     ))
                   : Fpcolumn3.map((header) => (
-                      <ThirdLevelHeading className="threvenue" key={header}>
+                      <ThirdLevelHeading className="threvenue" key={header} 
+                      style={{width:"70px"}}
+                      >
+                        <div 
+                            style={{
+                              width: "70px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                        >
                         {header}
+                        </div>
                       </ThirdLevelHeading>
                     ))}
               </tr>
@@ -1248,7 +1260,7 @@ function TrForRevenue(props) {
                           handleResourceStartDate(obj.resourceStartDate);
                         }}
                       >
-                        <td className="rowtable">
+                        <td className="rowtable" style={{width:"90px"}}>
                           <div
                             style={{
                               width: "90px",
@@ -2427,6 +2439,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
+                          disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2479,6 +2492,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
+                          disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2514,6 +2528,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
+                          disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2811,6 +2826,7 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "195px" }}>
                           <InputField
+                          disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2846,6 +2862,7 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "187px" }}>
                           <InputField
+                          disabled
                             style={{
                               background: "white",
                               width: "187Px",

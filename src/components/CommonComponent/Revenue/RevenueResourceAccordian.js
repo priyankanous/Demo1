@@ -403,9 +403,19 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
+                  width:"110px"
                 }}
               >
+                <div
+                  style={{
+                    width: "110px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
                 Resource Name
+                </div>
               </td>
               <td
                 style={{
@@ -775,9 +785,19 @@ const RevenueResourceAccordian = (props) => {
                   fontSize: "14px",
                   color: "#525252",
                   padding: "0px",
+                  width:"130px"
+                }}
+              >
+              <div
+                style={{
+                  width: "130px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
                 }}
               >
                 Leave Loss Factor %
+                </div>
               </td>
               <td
                 style={{
