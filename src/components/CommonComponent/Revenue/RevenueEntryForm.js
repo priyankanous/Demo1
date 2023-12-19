@@ -1536,7 +1536,7 @@ const ResourceEntryForm = (props) => {
             <div
               style={{
                 display: "flex",
-                width: "100%",
+                // width: "100%",
                 justifyContent: "flex-start",
                 alignItems: "center",
                 marginLeft: "-4px",
