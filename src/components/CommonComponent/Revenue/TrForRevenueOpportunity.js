@@ -150,12 +150,17 @@ function TrForRevenue(props) {
   const [resourceData, setResourceData] = useState([]);
   const [milestoneData, setMilestoneData] = useState([]);
 
+  console.log("revenueEntry114", milestoneData)
+
   const [gridItems, setGridItems] = useState([]);
   //2nd level edit
   const [isOpenSecondLevelEdit, setIsOpenSecondLevelEdit] = useState(false);
   const [isOpenThirdLevelEdit, setIsOpenThirdLevelEdit] = useState(false);
   const [oppId, setOppId] = useState();
   const [oppDataByOppId, setOppDataByOppId] = useState([]);
+
+  console.log("oppDataByOppId-->", oppDataByOppId);
+
 
   console.log("ssssssssss", resourseEntryData?.pricingType);
 
@@ -186,7 +191,13 @@ function TrForRevenue(props) {
   ];
 
   const initialResourceCount = oppDataByOppId?.tmRevenueEntryVO?.resourceCount;
+  const initialMileStoneCount = oppDataByOppId?.fpRevenueEntryVO?.milestoneCount;
+
   const [inputNumber, setInputNumber] = useState(initialResourceCount);
+  const [inputNumberMileStone, setInputNumberMileStone] = useState(initialMileStoneCount);
+  console.log("initialMileStoneCount",initialMileStoneCount)
+
+
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
@@ -396,7 +407,6 @@ function TrForRevenue(props) {
     // const iterator = value ? value : inputNumber;
     const iterator = value;
     if (pricingType == "T&M") {
-      console.log("oppDataByOppId-->", oppDataByOppId);
       const tempResourceDetails = [];
       for (let i = 0; i < iterator; i++) {
         const resourceDataRow = {
@@ -472,12 +482,42 @@ function TrForRevenue(props) {
     } else {
       const tempMilestoneDetails = [];
       for (let i = 0; i < iterator; i++) {
+        console.log("datdata", tempMilestoneDetails)
         const milestoneDataRow = {
           index: i,
-          revenueResourceEntries: [],
+          milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+          ?.milestoneEntryId,
+          milestoneNumber: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+          ?.milestoneNumber,
+          milestoneBillingDate: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+          ?.milestoneBillingDate,
+          milestoneResourceCount: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+          ?.milestoneResourceCount,
+          milestoneRevenue: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+          ?.milestoneRevenue,           
+          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz,i)=>(
+            console.log("revenueEntry113",zzz.revenueResourceEntryId),
+  {
+    revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+    allocation: zzz.allocation,
+    milestoneResourceRevenue: zzz.milestoneResourceRevenue,
+    employeeId: zzz.employeeId,
+    resourceName: zzz.resourceName,
+    businessTypeId:zzz.businessType.businessTypeId,
+    location: zzz.location?.locationId,
+    resourceStartDate: zzz.resourceStartDate,
+    resourceEndDate: zzz.resourceEndDate,
+    cocPracticeId: zzz.cocPractice.cocPracticeId,
+    sbuId: zzz.strategicBusinessUnit?.sbuId,
+    sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
+    businessUnitId: zzz.businessUnit?.businessUnitId,
+
+  }
+))       
         };
         tempMilestoneDetails.push(milestoneDataRow);
       }
+      console.log(tempMilestoneDetails,'tempMilestoneDetails')
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -488,7 +528,15 @@ function TrForRevenue(props) {
             pricingType={pricingType}
             milestoneData={tempMilestoneDetails}
             updateMilestoneData={setMilestoneData}
+            oppId={oppId}
+            //issue here
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            inputNumberMileStone ={inputNumberMileStone}
+            // oppDataByOppId={oppDataByOppId}
+            //done issue
+            // setInputNumber={setInputNumber}
+            // inputNumber={inputNumber}
+
           />
         );
       }
@@ -497,6 +545,7 @@ function TrForRevenue(props) {
   };
 
   const handleNextClick = () => {
+    console.log("milestoneData", milestoneData)
     setPricingType(pricingType);
     setTabIndex({
       index: 1,
@@ -534,81 +583,155 @@ function TrForRevenue(props) {
     return `${day}/${month}/${year}`;
   };
 
-  const payload = {
-    account: {
-      accountId: formUpdateData.account.accountId,
-    },
-    opportunity: {
-      opportunityId: formUpdateData.opportunity.opportunityID,
-      opportunityName: formUpdateData.opportunity.opportunityName,
-    },
-    projectCode: formUpdateData.opportunity.projectCode,
-    projectStartDate: formUpdateData.opportunity.projectStartDate,
-    projectEndDate: formUpdateData.opportunity.projectEndDate,
+  
+  // const payload = {
+  //   account: {
+  //     accountId: formUpdateData.account.accountId,
+  //   },
+  //   opportunity: {
+  //     opportunityId: formUpdateData.opportunity.opportunityID,
+  //     opportunityName: formUpdateData.opportunity.opportunityName,
+  //   },
+  //   projectCode: formUpdateData.opportunity.projectCode,
+  //   projectStartDate: formUpdateData.opportunity.projectStartDate,
+  //   projectEndDate: formUpdateData.opportunity.projectEndDate,
 
-    businessDevelopmentManager: {
-      bdmId: formUpdateData.bdm.bdmID,
-    },
-    currency: {
-      currencyId: formUpdateData.currency.currencyID,
-    },
-    probabilityType: {
-      probabilityTypeId: formUpdateData.probability.probabilityID,
-    },
-    region: {
-      regionId: formUpdateData.region.regionID,
-    },
-    workOrder: {
-      workOrderId: formUpdateData.workOrder.workOrderID,
-    },
-    workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
-    workOrderStatus: formUpdateData.workOrder.workOrderStatus,
+  //   businessDevelopmentManager: {
+  //     bdmId: formUpdateData.bdm.bdmID,
+  //   },
+  //   currency: {
+  //     currencyId: formUpdateData.currency.currencyID,
+  //   },
+  //   probabilityType: {
+  //     probabilityTypeId: formUpdateData.probability.probabilityID,
+  //   },
+  //   region: {
+  //     regionId: formUpdateData.region.regionID,
+  //   },
+  //   workOrder: {
+  //     workOrderId: formUpdateData.workOrder.workOrderID,
+  //   },
+  //   workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
+  //   workOrderStatus: formUpdateData.workOrder.workOrderStatus,
 
-    financialYear: {
-      financialYearId: formUpdateData.financialYear.financialYearId,
-    },
-    // resourceCount: resourceData.length,
-    resourceCount: inputNumber,
-    pricingType: pricingType,
-    remarks: "TM Details adding",
-    status: "Submitted",
-    tmRevenueEntryId: oppDataByOppId?.tmRevenueEntryVO?.tmRevenueEntryId,
-    revenueResourceEntries: resourceData.map((ele, index) => ({
-      revenueResourceEntryId:
-        oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
-          ?.revenueResourceEntryId,
-      strategicBusinessUnit: {
-        sbuId: ele.sbuId,
-      },
-      strategicBusinessUnitHead: {
-        sbuHeadId: ele.sbuHeadId,
-      },
-      businessUnit: {
-        businessUnitId: ele.businessUnitId,
-      },
-      businessType: {
-        businessTypeId: ele.businessTypeId,
-      },
-      location: {
-        locationId: ele.locationId,
-      },
-      resourceName: ele.resouceName,
-      employeeId: ele.employeeId,
-      resourceStartDate: formatDateA(ele.startDate),
-      resourceEndDate: formatDateA(ele.endDate),
-      cocPractice: {
-        cocPracticeId: ele.cocPracticeId,
-      },
-      leaveLossFactor: ele.leaveLossFactor,
-      billingRateType: ele.billingRateType,
-      billingRate: ele.billingRate,
-      allocation: ele.allocation,
-    })),
-  };
+  //   financialYear: {
+  //     financialYearId: formUpdateData.financialYear.financialYearId,
+  //   },
+  //   // resourceCount: resourceData.length,
+  //   resourceCount: inputNumber,
+  //   pricingType: pricingType,
+  //   remarks: "TM Details adding",
+  //   status: "Submitted",
+  //   tmRevenueEntryId: oppDataByOppId?.tmRevenueEntryVO?.tmRevenueEntryId,
+  //   revenueResourceEntries: resourceData.map((ele, index) => ({
+  //     revenueResourceEntryId:
+  //       oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
+  //         ?.revenueResourceEntryId,
+  //     strategicBusinessUnit: {
+  //       sbuId: ele.sbuId,
+  //     },
+  //     strategicBusinessUnitHead: {
+  //       sbuHeadId: ele.sbuHeadId,
+  //     },
+  //     businessUnit: {
+  //       businessUnitId: ele.businessUnitId,
+  //     },
+  //     businessType: {
+  //       businessTypeId: ele.businessTypeId,
+  //     },
+  //     location: {
+  //       locationId: ele.locationId,
+  //     },
+  //     resourceName: ele.resouceName,
+  //     employeeId: ele.employeeId,
+  //     resourceStartDate: formatDateA(ele.startDate),
+  //     resourceEndDate: formatDateA(ele.endDate),
+  //     cocPractice: {
+  //       cocPracticeId: ele.cocPracticeId,
+  //     },
+  //     leaveLossFactor: ele.leaveLossFactor,
+  //     billingRateType: ele.billingRateType,
+  //     billingRate: ele.billingRate,
+  //     allocation: ele.allocation,
+  //   })),
+  // };
 
-  const OnSubmit = () => {
-    axios
-      .put(
+  const OnSubmit = () =>{
+    console.log(milestoneData, 'abcd')
+    if (pricingType === "T&M") {
+      const payload = {
+        account: {
+          accountId: formUpdateData.account.accountId,
+        },
+        opportunity: {
+          opportunityId: formUpdateData.opportunity.opportunityID,
+          opportunityName: formUpdateData.opportunity.opportunityName,
+        },
+        projectCode: formUpdateData.opportunity.projectCode,
+        projectStartDate: formUpdateData.opportunity.projectStartDate,
+        projectEndDate: formUpdateData.opportunity.projectEndDate,
+    
+        businessDevelopmentManager: {
+          bdmId: formUpdateData.bdm.bdmID,
+        },
+        currency: {
+          currencyId: formUpdateData.currency.currencyID,
+        },
+        probabilityType: {
+          probabilityTypeId: formUpdateData.probability.probabilityID,
+        },
+        region: {
+          regionId: formUpdateData.region.regionID,
+        },
+        workOrder: {
+          workOrderId: formUpdateData.workOrder.workOrderID,
+        },
+        workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
+        workOrderStatus: formUpdateData.workOrder.workOrderStatus,
+    
+        financialYear: {
+          financialYearId: formUpdateData.financialYear.financialYearId,
+        },
+        // resourceCount: resourceData.length,
+        resourceCount: inputNumber,
+        pricingType: pricingType,
+        remarks: "TM Details adding",
+        status: "Submitted",
+        tmRevenueEntryId: oppDataByOppId?.tmRevenueEntryVO?.tmRevenueEntryId,
+        revenueResourceEntries: resourceData.map((ele, index) => ({
+          revenueResourceEntryId:
+            oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
+              ?.revenueResourceEntryId,
+          strategicBusinessUnit: {
+            sbuId: ele.sbuId,
+          },
+          strategicBusinessUnitHead: {
+            sbuHeadId: ele.sbuHeadId,
+          },
+          businessUnit: {
+            businessUnitId: ele.businessUnitId,
+          },
+          businessType: {
+            businessTypeId: ele.businessTypeId,
+          },
+          location: {
+            locationId: ele.locationId,
+          },
+          resourceName: ele.resouceName,
+          employeeId: ele.employeeId,
+          resourceStartDate: formatDateA(ele.startDate),
+          resourceEndDate: formatDateA(ele.endDate),
+          cocPractice: {
+            cocPracticeId: ele.cocPracticeId,
+          },
+          leaveLossFactor: ele.leaveLossFactor,
+          billingRateType: ele.billingRateType,
+          billingRate: ele.billingRate,
+          allocation: ele.allocation,
+        })),
+      };
+      axios
+            .put(
         `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM/${oppId}`,
         payload
       )
@@ -618,7 +741,119 @@ function TrForRevenue(props) {
         setIsOpenThirdLevelEdit(false);
         console.log("editSave", actualDataObject);
       });
-  };
+    } else if ( pricingType === "FP") {
+      console.log("oppDataByOppId.fpRevenueEntryVO.milestones", oppDataByOppId.fpRevenueEntryVO.milestones)
+      const payloadForFPEditFirstLevel = {
+        account: {
+          accountId: formUpdateData.account.accountId,
+        },
+        opportunity: {
+          opportunityId: formUpdateData.opportunity.opportunityID,
+          opportunityName: formUpdateData.opportunity.opportunityName,
+        },
+        projectCode: formUpdateData.opportunity.projectCode,
+        projectStartDate: formUpdateData.opportunity.projectStartDate,
+        projectEndDate: formUpdateData.opportunity.projectEndDate,
+    
+        businessDevelopmentManager: {
+          bdmId: formUpdateData.bdm.bdmID,
+        },
+        currency: {
+          currencyId: formUpdateData.currency.currencyID,
+        },
+        probabilityType: {
+          probabilityTypeId: formUpdateData.probability.probabilityID,
+        },
+        region: {
+          regionId: formUpdateData.region.regionID,
+        },
+        workOrder: {
+          workOrderId: formUpdateData.workOrder.workOrderID,
+        },
+        workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
+        workOrderStatus: formUpdateData.workOrder.workOrderStatus,
+    
+        financialYear: {
+          financialYearId: formUpdateData.financialYear.financialYearId,
+        },
+        milestoneCount: initialMileStoneCount,
+        pricingType: pricingType,
+        remarks: "No",
+        status: "Submitted",
+        milestones: milestoneData?.map((ele,index) => (
+          console.log("revenueEntry111", ele),        
+          {
+          milestoneEntryId: ele.milestoneEntryId,
+          milestoneNumber: ele?.milestoneNumber,
+          milestoneBillingDate: ele?.milestoneBillingDate,
+          milestoneRevenue: ele?.milestoneRevenue,
+          milestoneResourceCount: ele?.milestoneResourceCount,
+          revenueResourceEntries: ele?.revenueResourceEntries?.map(
+            (revenueEntry) => {
+              console.log("revenueEntry112---->", revenueEntry)
+              return {
+            //     revenueResourceEntryId:
+            // oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
+            //   ?.revenueResourceEntryId,
+                revenueResourceEntryId: revenueEntry?.revenueResourceEntryId,
+                strategicBusinessUnit: {
+                  sbuId: revenueEntry?.sbuId,
+                },
+                strategicBusinessUnitHead: {
+                  sbuHeadId: revenueEntry?.sbuHeadId,
+                },
+                businessUnit: {
+                  businessUnitId: revenueEntry?.businessUnitId,
+                },
+                businessType: {
+                  businessTypeId: revenueEntry?.businessTypeId,
+                },
+                location: {
+                  locationId: revenueEntry?.locationId,
+                },
+                resourceName: revenueEntry?.resourceName,
+                employeeId: revenueEntry?.employeeId,
+                resourceStartDate: revenueEntry?.resourceStartDate,
+                resourceEndDate: revenueEntry?.resourceEndDate,
+                cocPractice: {
+                  cocPracticeId: revenueEntry?.cocPracticeId,
+                },
+                allocation: revenueEntry?.allocation,
+                milestoneResourceRevenue:
+                  revenueEntry?.milestoneResourceRevenue,
+              };
+            }
+          ),
+        })),
+      };
+      axios
+      .put(
+  `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
+  payloadForFPEditFirstLevel
+)
+.then((response) => {
+  const actualDataObject = response.data.data;
+  setIsOpenSecondLevelEdit(false);
+  setIsOpenThirdLevelEdit(false);
+  console.log("editSave", actualDataObject);
+});
+    }
+  }
+  console.log("formUpdateData", formUpdateData);
+
+  // const OnSubmit = () => {
+  //   axios
+  //     .put(
+  //       `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM/${oppId}`,
+  //       payload
+  //     )
+  //     .then((response) => {
+  //       const actualDataObject = response.data.data;
+  //       setIsOpenSecondLevelEdit(false);
+  //       setIsOpenThirdLevelEdit(false);
+  //       console.log("editSave", actualDataObject);
+  //     });
+  // };
 
   const initialOpportunityId = oppDataByOppId.tmRevenueEntryVO;
   const selectedFyIdToGetLocation =
@@ -626,33 +861,39 @@ function TrForRevenue(props) {
 
   useEffect(() => {
     const initialAccountID =
-      oppDataByOppId?.tmRevenueEntryVO?.account?.accountId;
+      oppDataByOppId?.tmRevenueEntryVO?.account?.accountId || oppDataByOppId?.fpRevenueEntryVO?.account?.accountId ;
     const initialOpportunityId =
-      oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityId;
+      oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityId || oppDataByOppId.fpRevenueEntryVO?.opportunity?.opportunityId;
     const initialOpportunityName =
-      oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName;
-    const initialProjectCode = oppDataByOppId.tmRevenueEntryVO?.projectCode;
+      oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName || oppDataByOppId.fpRevenueEntryVO?.opportunity?.opportunityName;
+
+    const initialProjectCode = oppDataByOppId.tmRevenueEntryVO?.projectCode || oppDataByOppId.fpRevenueEntryVO?.projectCode;
+
     const initialProjectStartDate =
-      oppDataByOppId.tmRevenueEntryVO?.projectStartDate;
+      oppDataByOppId.tmRevenueEntryVO?.projectStartDate || oppDataByOppId.fpRevenueEntryVO?.projectStartDate;
+
     const initialProjectEndDate =
-      oppDataByOppId.tmRevenueEntryVO?.projectEndDate;
+      oppDataByOppId.tmRevenueEntryVO?.projectEndDate || oppDataByOppId.fpRevenueEntryVO?.projectEndDate;
+
     const initialCurrencyId =
-      oppDataByOppId?.tmRevenueEntryVO?.currency?.currencyId;
+      oppDataByOppId?.tmRevenueEntryVO?.currency?.currencyId || oppDataByOppId?.fpRevenueEntryVO?.currency?.currencyId;
     const initialBdm =
-      oppDataByOppId?.tmRevenueEntryVO?.businessDevelopmentManager?.bdmId;
+      oppDataByOppId?.tmRevenueEntryVO?.businessDevelopmentManager?.bdmId || oppDataByOppId?.fpRevenueEntryVO?.businessDevelopmentManager?.bdmId;
     const initialProbability =
-      oppDataByOppId?.tmRevenueEntryVO?.probabilityType?.probabilityTypeId;
-    const initialRegion = oppDataByOppId?.tmRevenueEntryVO?.region?.regionId;
+      oppDataByOppId?.tmRevenueEntryVO?.probabilityType?.probabilityTypeId || oppDataByOppId?.fpRevenueEntryVO?.probabilityType?.probabilityTypeId;
+    const initialRegion = oppDataByOppId?.tmRevenueEntryVO?.region?.regionId || oppDataByOppId?.fpRevenueEntryVO?.region?.regionId;
     const initialFinancialYearId =
-      oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearId;
+      oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearId || oppDataByOppId?.fpRevenueEntryVO?.financialYear?.financialYearId;
     const initialFinancialYearName =
-      oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearName;
+      oppDataByOppId?.tmRevenueEntryVO?.financialYear?.financialYearName || oppDataByOppId?.fpRevenueEntryVO?.financialYear?.financialYearName;
     const initialWorkOrderId =
-      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderId;
+      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderId || oppDataByOppId?.fpRevenueEntryVO?.workOrder?.workOrderId;
+
     const initialWorkOrderEndDate =
-      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderEndDate;
+      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderEndDate || oppDataByOppId?.fpRevenueEntryVO?.workOrder?.workOrderEndDate;
+
     const initialWorkOrderStatus =
-      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus;
+      oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderStatus || oppDataByOppId?.fpRevenueEntryVO?.workOrder?.workOrderStatus;
 
     if (initialAccountID !== undefined && initialAccountID !== null) {
       setFormUpdateData((prevState) => ({
@@ -749,6 +990,12 @@ function TrForRevenue(props) {
       setInputNumber(initialResourceCount);
       console.log("line 654");
       generateGrid(initialResourceCount);
+    }
+
+    if (initialMileStoneCount !== undefined && initialMileStoneCount !== null) {
+      setInputNumberMileStone(initialMileStoneCount);
+      console.log("line 654");
+      generateGrid(initialMileStoneCount);
     }
 
     console.log("initialCOunt", initialResourceCount);
@@ -1943,7 +2190,6 @@ function TrForRevenue(props) {
                           fontSize: "16px",
                           fontWeight: "400",
                         }}
-                        disabled
                       />
                       FP
                     </div>
@@ -2006,7 +2252,9 @@ function TrForRevenue(props) {
                             <option value="" disabled selected hidden>
                               {oppDataByOppId.tmRevenueEntryVO &&
                                 oppDataByOppId.tmRevenueEntryVO.financialYear
-                                  .financialYearName}
+                                  .financialYearName || oppDataByOppId.fpRevenueEntryVO &&
+                                  oppDataByOppId.fpRevenueEntryVO.financialYear
+                                    .financialYearName}    
                             </option>
                             {props?.financialYear?.financialYear.map(
                               (fyData, index) => {
@@ -2059,24 +2307,6 @@ function TrForRevenue(props) {
                           <span>Account</span>
                         </div>
                         <div>
-                          {/* <FormControl>
-                      <select
-                        size="small"
-                        value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.account.accountName}
-                        style={{
-                          background: "white",
-                          width: "187Px",
-                          marginLeft: "8px",
-                          borderRadius: "0px",
-                          height: "35px",
-
-                        }}
-                      >
-                        <option value="" disabled selected hidden>
-                          Select
-                        </option>
-                      </select>
-                    </FormControl> */}
                           <select
                             style={{
                               background: "white",
@@ -2110,7 +2340,9 @@ function TrForRevenue(props) {
                             <option value="" disabled selected hidden>
                               {oppDataByOppId.tmRevenueEntryVO &&
                                 oppDataByOppId.tmRevenueEntryVO.account
-                                  .accountName}
+                                  .accountName || oppDataByOppId.fpRevenueEntryVO &&
+                                  oppDataByOppId.fpRevenueEntryVO.account
+                                    .accountName}
                             </option>
                             {console.log("datacheckprop", formUpdateData)}
                             {props.accountData &&
@@ -2138,140 +2370,6 @@ function TrForRevenue(props) {
                         <span style={{ color: "red" }}>*</span>
                         <span>Opportunity Name</span>
                         <div>
-                          {/* <select
-                  style={{
-                    height: "35px",
-                    width: "80%",
-                    marginBottom: "10px",
-                    borderRadius: "1px",
-                    boxShadow: "none",
-                    border: "1px solid lightgray",
-                    color:"black"
-                  }}
-                  value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.opportunity.opportunityName}
-                  onChange={(e)=>{                  
-                  }}
-                  >
-                  <option value="" disabled selected hidden>
-                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.opportunity.opportunityName}
-
-                  </option>
-
-                  </select> */}
-                          {/* <FormControl> */}
-                          {/* <select
-                        size="small"
-                        style={{
-                          background: "white",
-                          width: "187Px",
-                          marginLeft: "8px",
-                          borderRadius: "0px",
-                          height: "35px",
-                        }}
-                        // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
-                        onChange={(e) => {
-                          const selectedOpportunityId =
-                            e.target.selectedOptions[0].getAttribute(
-                              "data-fyId"
-                            );
-                          const found =
-                            props?.opportunityData?.opportunityData?.filter(
-                              (each) => {
-                                return (
-                                  each?.opportunityId ===
-                                  Number(selectedOpportunityId)
-                                );
-                              }
-                            );
-                          setFormUpdateData({
-                            ...formUpdateData,
-                            opportunity: {
-                              ...formUpdateData.opportunity,
-                              opportunityID: selectedOpportunityId,
-                              opportunityName: e.target.value,
-                              projectCode: found?.length
-                                ? found[0]?.projectCode
-                                : "",
-                              projectStartDate: found?.length
-                                ? found[0]?.projectStartDate
-                                : "",
-                              projectEndDate: found?.length
-                                ? found[0]?.projectEndDate
-                                : "",
-                            },
-                          });
-                        }}
-                      >
-                        <option value="" disabled selected hidden>
-                        {oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
-
-                        </option>
-                        {props?.opportunityData?.opportunityData &&
-                          props?.opportunityData?.opportunityData.map(
-                            (opportunityData, index) => {
-                              const opportunityNamedata =
-                                opportunityData.opportunityName;
-                              return (
-                                <option
-                                  data-fyId={String(
-                                    opportunityData.opportunityId
-                                  )}
-                                  key={index}
-                                >
-                                  {opportunityNamedata}
-                                </option>
-                              );
-                            }
-                          )}
-                      </select> */}
-                          {/* </FormControl> */}
-
-                          {/* <Select
-                      styles={{
-                        control: (provided) => ({
-                          ...provided,
-                          background: "white",
-                          width: "187px",
-                          marginLeft: "8px",
-                          borderRadius: "0px",
-                          height: "35px",
-                        }),
-                      }}
-                      
-                     // value={oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityName}
-                      options={props?.opportunityData?.opportunityData?.map(
-                        (opportunityData, index) => ({
-                          value: opportunityData.opportunityId,
-                          label: opportunityData.opportunityName,
-                        })
-                      )}
-                      onChange={(selectedOption) => {
-                        const selectedOpportunityId = selectedOption.value;
-                        const found =
-                          props?.opportunityData?.opportunityData?.find(
-                            (each) =>
-                              each?.opportunityId === selectedOpportunityId
-                          );
-
-                        setFormUpdateData({
-                          ...formUpdateData,
-                          opportunity: {
-                            ...formUpdateData.opportunity,
-                            opportunityID: selectedOption.value,
-                            opportunityName: selectedOption.label,
-                            projectCode: found?.projectCode || "", // Set the auto-populated value or an empty string if not found
-                            projectStartDate: found?.projectStartDate || "", // Set the auto-populated value or an empty string if not found
-                            projectEndDate: found?.projectEndDate || "", // Set the auto-populated value or an empty string if not found
-                          },
-                        });
-                      }}
-                      
-                      value={{
-                        value: formUpdateData.opportunity.opportunityID,
-                        label: formUpdateData.opportunity.opportunityName,
-                      }}
-                    /> */}
-
                           <select
                             // size="small"
                             style={{
@@ -2328,6 +2426,7 @@ function TrForRevenue(props) {
                             <option value="" disabled selected hidden>
                               {
                                 oppDataByOppId.tmRevenueEntryVO?.opportunity
+                                  ?.opportunityName || oppDataByOppId.fpRevenueEntryVO?.opportunity
                                   ?.opportunityName
                               }
                             </option>
@@ -2358,27 +2457,6 @@ function TrForRevenue(props) {
                           <span>BDM</span>
                         </div>
                         <div style={{ width: "187px" }}>
-                          {/* <select
-                  style={{
-                    height: "35px",
-                    width: "100%",
-                    marginBottom: "10px",
-                    borderRadius: "1px",
-                    boxShadow: "none",
-                    border: "1px solid lightgray",
-                    color:"black"
-                  }}
-                  value={oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
-                  onChange={(e)=>{
-                    
-                  }}
-                  >
-                  <option value="" disabled selected hidden>
-                  {oppDataByOppId.tmRevenueEntryVO && oppDataByOppId.tmRevenueEntryVO.businessDevelopmentManager.bdmDisplayName}
-
-                  </option>
-
-                  </select> */}
                           <FormControl>
                             <select
                               size="small"
@@ -2386,7 +2464,6 @@ function TrForRevenue(props) {
                                 background: "white",
                                 width: "187Px",
                                 marginLeft: "8px",
-
                                 borderRadius: "5px",
                                 boxShadow: "none",
                                 border: "1px solid lightgray",
@@ -2420,7 +2497,11 @@ function TrForRevenue(props) {
                               <option value="" disabled selected hidden>
                                 {oppDataByOppId.tmRevenueEntryVO &&
                                   oppDataByOppId.tmRevenueEntryVO
-                                    .businessDevelopmentManager.bdmDisplayName}
+                                    .businessDevelopmentManager.bdmDisplayName ||
+                                    oppDataByOppId.fpRevenueEntryVO &&
+                                  oppDataByOppId.fpRevenueEntryVO
+                                    .businessDevelopmentManager.bdmDisplayName
+                                    }
                               </option>
                               {props?.bdmData?.bdmData &&
                                 props?.bdmData?.bdmData.map((obj, id) => (
@@ -2592,6 +2673,9 @@ function TrForRevenue(props) {
                           <option value="" disabled selected hidden>
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.currency
+                                .currencyName || 
+                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO.currency
                                 .currencyName}
                           </option>
                           {props?.currencyData?.currencyData &&
@@ -2647,7 +2731,11 @@ function TrForRevenue(props) {
                           <option value="" disabled selected hidden>
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.probabilityType
-                                .probabilityTypeName}
+                                .probabilityTypeName ||
+                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO.probabilityType
+                                .probabilityTypeName
+                                }
                           </option>
                           {props?.probabilityData?.probabilityData &&
                             props?.probabilityData?.probabilityData.map(
@@ -2722,6 +2810,9 @@ function TrForRevenue(props) {
                           <option value="" disabled selected hidden>
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.region
+                                .regionDisplayName ||
+                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO.region
                                 .regionDisplayName}
                           </option>
                           {props?.regionData?.regionData &&
@@ -2796,7 +2887,11 @@ function TrForRevenue(props) {
                           <option value="" disabled selected hidden>
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.workOrder
-                                .workOrderNumber}
+                                .workOrderNumber ||
+                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO.workOrder
+                                .workOrderNumber
+                                }
                           </option>
                           {props?.workOrderData?.workOrderData &&
                             props?.workOrderData?.workOrderData.map(
@@ -3019,31 +3114,6 @@ function TrForRevenue(props) {
                           <span style={{ marginLeft: "-9px" }}>
                             Milestone count:
                           </span>
-                          {/* <div>
-                  <label
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <input
-                      type="number"
-                      value={inputNumber}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      style={{
-                        margin: "0px 0px 0px 8px",
-                      }}
-                      type="button"
-                      value="Add"
-                      id="create-account"
-                      class="button"
-                      onClick={generateGrid}
-                    />
-                  </label>
-                </div> */}
                           <InputField
                             style={{
                               background: "white",
@@ -3057,16 +3127,9 @@ function TrForRevenue(props) {
                             id="name"
                             variant="outlined"
                             spellcheck="false"
-                            // onChange={(e) => {
-                            //   setFormData({
-                            //     ...formData,
-                            //     opportunity: {
-                            //       ...formData.opportunity,
-                            //       projectCode: e.target.value,
-                            //     },
-                            //   });
-                            // }}
-                            // value={formData?.opportunity?.projectCode}
+                            value={inputNumberMileStone}
+                            onChange={handleInputChange}
+
                           />
                         </div>
                       </div>

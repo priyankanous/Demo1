@@ -21,7 +21,7 @@ import { InputField } from "../../../utils/constantsValue";
 import RevenueMilestoneResourceData from "./RevenueMilestoneResourceData";
 
 const RevenueMilestoneAccordian = (props) => {
-  const { milestoneData, updateMilestoneData, id } = props;
+  const { milestoneData, updateMilestoneData, id, oppId } = props;
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -29,7 +29,16 @@ const RevenueMilestoneAccordian = (props) => {
     props.getSbuHeadData();
     props.getLocationData();
   }, []);
+
+  const [newOppData, setNewOppData] = useState([])
+
+  let initialRe = newOppData?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount;
+
+
   const [inputNumber, setInputNumber] = useState("");
+  console.log("inp", inputNumber)
+
+
 
   const [milestoneGridItems, setMilestoneGridItems] = useState([]);
   // const [milestoneDetails, setMilestoneDetails] = useState({});
@@ -101,6 +110,7 @@ const RevenueMilestoneAccordian = (props) => {
   //   props.saveMileStoneDataNew(mileStoneData);
   // };
 
+  console.log("cddd", newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.revenueResourceEntryId  )
   const generateMilestoneGrid = (inputNumber) => {
     const dataArr = [...milestoneData];
     const data = dataArr[id];
@@ -108,7 +118,23 @@ const RevenueMilestoneAccordian = (props) => {
     const tempRevenueResourceItems = [];
     for (let i = 0; i < inputNumber; i++) {
       tempRevenueResourceItems.push({
-        revenueResourceEntryId: i,
+        revenueResourceEntryId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.revenueResourceEntryId,
+        businessTypeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.businessType.businessTypeId,
+        allocation: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.allocation,
+        milestoneResourceRevenue: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.milestoneResourceRevenue,
+        employeeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.employeeId,
+        resourceName: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceName ,
+        locationId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.location?.locationId,
+        resourceStartDate: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceStartDate,
+        resourceEndDate:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceEndDate,
+        cocPracticeId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.cocPractice.cocPracticeId,
+        sbuId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuId,
+        sbuHeadId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadId,
+      businessUnitId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.businessUnit?.businessUnitId,
+            
+
+        
+
       });
       items.push(
         <RevenueMilestoneResourceData
@@ -117,6 +143,8 @@ const RevenueMilestoneAccordian = (props) => {
           id={i}
           // setMilestoneData1={setMilestoneData1}
           milestoneId={props.id}
+          newOppData={newOppData}
+          // oppDataByOppId={props.oppDataByOppId}
         />
       );
     }
@@ -132,6 +160,53 @@ const RevenueMilestoneAccordian = (props) => {
       generateMilestoneGrid(inputNumber);
     }
   };
+  // useEffect(() => {
+  //   if (props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount) {
+  //     const receivedInputNumber = parseInt(props.oppDataByOppId.fpRevenueEntryVO.milestones[id].milestoneResourceCount); 
+  //     if (!isNaN(receivedInputNumber) && receivedInputNumber >= 0) {
+  //       setInputNumber(receivedInputNumber); 
+  //       generateMilestoneGrid(receivedInputNumber); 
+  //     }
+  //   }
+  // }, [props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount]);
+
+  useEffect(() => {
+    if (newOppData?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount) {
+      const receivedInputNumber = parseInt(newOppData?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount); 
+      if (!isNaN(receivedInputNumber) && receivedInputNumber >= 0) {
+        setInputNumber(receivedInputNumber); 
+        generateMilestoneGrid(receivedInputNumber); 
+      }
+    }
+  }, [newOppData?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount]);
+
+
+  const getNewDataByOppId = (oppId) => {
+    axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/getbyid/${oppId}`
+      )
+      .then((responseData) => {
+        setNewOppData(responseData.data.data);
+      });
+  };
+
+  useEffect(() => {
+    if (oppId) {
+      getNewDataByOppId(oppId);
+    }
+  }, [oppId]);
+
+  useEffect(() => {
+    // Check if newOppData exists and set inputNumber accordingly
+    if (newOppData) {
+      const initialRe = newOppData?.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount;
+      setInputNumber(initialRe);
+    }
+  }, [newOppData, id]);
+  
+
+  console.log(" newOppData", newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount)
   return (
     <React.Fragment>
       <br></br>
@@ -246,6 +321,9 @@ const RevenueMilestoneAccordian = (props) => {
                     id="name"
                     variant="outlined"
                     spellcheck="false"
+                    placeholder={
+                      newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneRevenue
+                    }
                     onChange={(e) => {
                       updateMilestoneDetails({
                         event: e,
@@ -277,6 +355,8 @@ const RevenueMilestoneAccordian = (props) => {
                     variant="outlined"
                     spellcheck="false"
                     value={inputNumber}
+                    // onChange={handleInputChange}
+
                     onChange={(e) => {
                       updateMilestoneDetails({
                         event: e,
