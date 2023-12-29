@@ -410,9 +410,9 @@ const ResourceEntryForm = (props) => {
     }
   };
 
-  const updateMilestoneData = (data, index) => {
-    setMilestoneData(data);
-  };
+  // const updateMilestoneData = (data, index) => {
+  //   setMilestoneData(data);
+  // };
 
   const updateResourceData = (data, index) => {
     setResourceData(data);
