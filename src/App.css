@@ -270,7 +270,7 @@ table {
 }
 td {
   text-align: center;
-  padding: 2px;
+  /* padding: 2px; */
 }
 .grid-container {
   display: inline-grid;
