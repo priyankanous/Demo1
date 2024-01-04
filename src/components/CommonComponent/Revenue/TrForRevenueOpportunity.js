@@ -2885,11 +2885,11 @@ function TrForRevenue(props) {
                           }}
                         >
                           <option value="" disabled selected hidden>
-                            {oppDataByOppId.tmRevenueEntryVO &&
-                              oppDataByOppId.tmRevenueEntryVO.workOrder
+                            {oppDataByOppId?.tmRevenueEntryVO &&
+                              oppDataByOppId?.tmRevenueEntryVO?.workOrder
                                 .workOrderNumber ||
-                                oppDataByOppId.fpRevenueEntryVO &&
-                              oppDataByOppId.fpRevenueEntryVO.workOrder
+                                oppDataByOppId?.fpRevenueEntryVO &&
+                              oppDataByOppId?.fpRevenueEntryVO?.workOrder
                                 .workOrderNumber
                                 }
                           </option>
@@ -3331,7 +3331,7 @@ function TrForRevenue(props) {
                         value="T&M"
                         name="Pricing Type"
                         checked={pricingType === "T&M"}
-                        onChange={onOptionChange}
+                        // onChange={onOptionChange}
                         style={{
                           boxShadow: "none",
                           fontFamily: "Roboto",
@@ -3346,7 +3346,7 @@ function TrForRevenue(props) {
                         value="FP"
                         name="Pricing Type"
                         checked={pricingType === "FP"}
-                        onChange={onOptionChange}
+                        // onChange={onOptionChange}
                         style={{
                           boxShadow: "none",
                           fontFamily: "Roboto",
@@ -3514,6 +3514,9 @@ function TrForRevenue(props) {
                         id="name"
                         variant="outlined"
                         spellcheck="false"
+                        value={inputNumberMileStone}
+                        onChange={handleInputChange}
+
                       />
                     </div>
                   </div>
