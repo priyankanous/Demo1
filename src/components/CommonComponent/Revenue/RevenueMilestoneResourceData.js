@@ -14,7 +14,8 @@ import {
 } from "../../../actions/milestone";
 
 const RevenueMilestoneResourceData = (props) => {
-  const { milestoneData, id, updateMilestoneData, milestoneId } = props;
+  const { milestoneData, id, updateMilestoneData, milestoneId, isSaved } =
+    props;
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -36,7 +37,6 @@ const RevenueMilestoneResourceData = (props) => {
 
   console.log("selectedSbuId", selectedSbuId )
 
-
   const month = [
     "Jan",
     "Feb",
@@ -52,8 +52,8 @@ const RevenueMilestoneResourceData = (props) => {
     "Dec",
   ];
 
-  console.log("sbu",sbuHeadData)
-  
+  console.log("sbu", sbuHeadData);
+
   useEffect(() => {
     const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
     const data = dataArr[id];
@@ -82,7 +82,7 @@ const RevenueMilestoneResourceData = (props) => {
     if (milestoneData[id] && milestoneData[id]?.sbuId) {
       setSelectedSbuId(milestoneData[id]?.sbuId);
     }
-  }, [milestoneData])
+  }, [milestoneData]);
 
   useEffect(() => {
     if (selectedBuIdToGetCoc) {
@@ -138,14 +138,13 @@ const RevenueMilestoneResourceData = (props) => {
     }
   };
 
-
   const updateMilestoneDetails = (params) => {
-    console.log("Params -->", params)
+    console.log("Params -->", params);
     const dataArr = [...milestoneData[milestoneId]?.revenueResourceEntries];
     const data = dataArr[id];   
     let selectedOption
     // Store sbuId based on the selected option
-    if(params?.event?.target?.selectedOptions) {
+    if (params?.event?.target?.selectedOptions) {
       selectedOption = params?.event?.target?.selectedOptions[0];
     }
     if (selectedOption) {
@@ -156,11 +155,11 @@ const RevenueMilestoneResourceData = (props) => {
 
     if (params?.attrKey) {
       // data[params.milestoneDetailsKey] = {
-        data[params.milestoneDetailsColumn] = params.event.target.value
-        data[params.selectedID] =
-          params.event.target.selectedOptions[0].getAttribute(params.attrKey)
+      data[params.milestoneDetailsColumn] = params.event.target.value;
+      data[params.selectedID] =
+        params.event.target.selectedOptions[0].getAttribute(params.attrKey);
       // };
-    } 
+    }
 
     if (params?.attrKeyBu) {
       data[params?.selectedID] =
@@ -280,7 +279,11 @@ let recievedResourceName =""
 
   return (
     <React.Fragment>
-      <table style={{ backgroundColor: "white" }}>
+      <table
+        style={{
+          backgroundColor: "white",
+        }}
+      >
         <tr>
           <td
             style={{
@@ -290,6 +293,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             SBU
           </td>
           <td
@@ -320,6 +324,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Location
           </td>
           <td
@@ -330,6 +335,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Resource Name
           </td>
           <td
@@ -340,6 +346,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Employee ID
           </td>
           <td
@@ -350,6 +357,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Start Date
           </td>
           <td
@@ -360,6 +368,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             End Date
           </td>
           <td
@@ -370,7 +379,8 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
-            Revenue
+            <span style={{ color: "red" }}>*</span>
+            Revenue (INR)
           </td>
 
           <td
@@ -381,6 +391,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Business Type
           </td>
           <td
@@ -391,7 +402,8 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
-            Coc Pratice
+            <span style={{ color: "red" }}>*</span>
+            CoC Pratice
           </td>
           <td
             style={{
@@ -401,6 +413,7 @@ let recievedResourceName =""
               color: "#525252",
             }}
           >
+            <span style={{ color: "red" }}>*</span>
             Allocation %
           </td>
         </tr>
@@ -414,6 +427,18 @@ let recievedResourceName =""
                 borderRight: "1px solid #898282",
                 height: "30px",
                 verticalAlign: "middle",
+                borderBottom:
+                  isSaved &&
+                  !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                    ?.sbuName
+                    ? "1px solid red"
+                    : "",
+                borderTop:
+                  isSaved &&
+                  !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                    ?.sbuName
+                    ? "1px solid red"
+                    : "",
               }}
             >
               <select
@@ -515,7 +540,11 @@ let recievedResourceName =""
               disabled
             ></input>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+            }}
+          >
             {/* <select
               required
               onChange={(e) => {
@@ -580,7 +609,23 @@ let recievedResourceName =""
               disabled
             ></input>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.locationName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.locationName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <select
               // id="milestoneselect"
               required
@@ -615,7 +660,23 @@ let recievedResourceName =""
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               id="milestoneinput"
               type="text"
@@ -633,7 +694,23 @@ let recievedResourceName =""
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.employeeId
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.employeeId
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               id="milestoneinput"
               type="string"
@@ -651,7 +728,23 @@ let recievedResourceName =""
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceStartDate
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceStartDate
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               id="milestoneinput"
               type="date"
@@ -663,7 +756,23 @@ let recievedResourceName =""
               }}
             />
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceEndDate
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.resourceEndDate
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               id="milestoneinput"
               type="date"
@@ -676,7 +785,23 @@ let recievedResourceName =""
             />
           </td>
 
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.milestoneResourceRevenue
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.milestoneResourceRevenue
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               id="milestoneinput"
               type="text"
@@ -693,7 +818,23 @@ let recievedResourceName =""
               }}
             ></input>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.businessTypeName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.businessTypeName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <select
               // id="milestoneselect"
               required
@@ -721,14 +862,30 @@ let recievedResourceName =""
                     }
               </option>
               {props.businessTypeData.businessTypeData &&
-                props.businessTypeData.businessTypeData.map((obj, id) => (
+                props.businessTypeData.businessTypeData.map((obj) => (
                   <option data-businessTypeId={obj.businessTypeId}>
                     {obj.businessTypeDisplayName}
                   </option>
                 ))}
             </select>
           </td>
-          <td style={{ borderRight: "1px solid #898282" }}>
+          <td
+            style={{
+              borderRight: "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.cocPraticeName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.cocPraticeName
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <select
               // id="milestoneselect"
               required
@@ -762,7 +919,22 @@ let recievedResourceName =""
                 ))}
             </select>
           </td>
-          <td>
+          <td
+            style={{
+              borderTop:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.allocation
+                  ? "1px solid red"
+                  : "1px solid #898282",
+              borderBottom:
+                isSaved &&
+                !milestoneData[milestoneId]?.revenueResourceEntries[id]
+                  ?.allocation
+                  ? "1px solid red"
+                  : "1px solid #898282",
+            }}
+          >
             <input
               type="text"
               id="milestoneinput"

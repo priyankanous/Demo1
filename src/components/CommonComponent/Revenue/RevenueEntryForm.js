@@ -103,10 +103,9 @@ const ResourceEntryForm = (props) => {
     pricingType: pricingType,
   });
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
-  console.log("milestonedsta", milestoneData);
-
-  // const [isSaved, setIsSaved] = useState(false);
+  // console.log("isSaved", isSaved, "milestonedsta", milestoneData);
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -263,11 +262,27 @@ const ResourceEntryForm = (props) => {
           props.setIsOpen(true);
         });
     } else if (pricingType === "FP") {
-    //   console.log("mmmm", milestoneData)
-    //   if (!milestoneData?.milestoneRevenue || !milestoneData?.milestoneRevenue || !milestoneData?.milestoneResourceCount) {
-    //     setIsSaved(true);
-    //   } else {
-        // setIsSaved(false);
+      console.log("mmmm", milestoneData)
+      const isError = milestoneData?.filter((each) => !each?.milestoneBillingDate || 
+        !each?.milestoneRevenue || 
+        !each?.milestoneResourceCount ||
+        each?.revenueResourceEntries?.filter((ele)=> 
+        !ele?.sbuName || 
+          !ele?.locationName ||
+          !ele?.resourceName || 
+          !ele?.resourceStartDate ||
+          !ele?.resourceEndDate || 
+          !ele?.cocPraticeName ||
+          !ele?.employeeId || 
+          !ele?.businessTypeName || 
+          !ele?.allocation ||
+          !ele?.milestoneResourceRevenue)?.length>0
+      )
+      if (isError?.length> 0) {
+        setIsSaved(true);
+        console.log('isError?.length', isError)
+      } else {
+        setIsSaved(false);
         const filtered = milestoneData.filter((ele) => {
           const calculatedTotalRevenue = calculateTotalRevenue(
             ele.revenueResourceEntries
@@ -357,6 +372,8 @@ const ResourceEntryForm = (props) => {
               ),
             })),
           };
+          console.log("milestone", milestoneData)
+
           axios
             .post(
               "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
@@ -369,7 +386,7 @@ const ResourceEntryForm = (props) => {
               props.setIsOpen(true);
             });
         }
-      // }
+      }
     }
   };
 
@@ -405,6 +422,7 @@ const ResourceEntryForm = (props) => {
   const handleInputChange = (event) => {
     const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
+      setIsSaved(false)
       setInputNumber(inputValue);
       generateGrid(inputValue);
     }
@@ -456,7 +474,7 @@ const ResourceEntryForm = (props) => {
       }
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
-        // console.log("in form", isSaved)
+        console.log("in form", isSaved)
 
         items.push(
           <RevenueMilestoneAccordian
@@ -467,7 +485,8 @@ const ResourceEntryForm = (props) => {
             milestoneData={tempMilestoneDetails}
             updateMilestoneData={setMilestoneData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
-            // isSaved={isSaved}
+            isSaved={isSaved}
+            setIsSaved={setIsSaved}
           />
         );
       }
@@ -475,9 +494,29 @@ const ResourceEntryForm = (props) => {
     setGridItems(items);
   };
 
-  // useEffect(()=>{
-
-  // },[isSaved])
+  useEffect(()=>{
+    const items = [];
+    const iterator = inputNumber >= 0 ? inputNumber : 0;
+    if (pricingType == "FP" && iterator >= 1){
+      let tempMilestoneDetails = [...milestoneData]
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueMilestoneAccordian
+            id={i}
+            formData={props.tabIndex.formData}
+            myFormData={formData}
+            pricingType={pricingType}
+            milestoneData={tempMilestoneDetails}
+            updateMilestoneData={setMilestoneData}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            isSaved={isSaved}
+            setIsSaved={setIsSaved}
+          />
+        );
+      }
+    }
+    setGridItems(items);
+  },[isSaved, milestoneData])
 
   const saveResourceDetails = () => {
     props.saveResourceData({
