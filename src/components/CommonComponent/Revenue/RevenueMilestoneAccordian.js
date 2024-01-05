@@ -112,7 +112,50 @@ const RevenueMilestoneAccordian = (props) => {
   //   props.saveMileStoneDataNew(mileStoneData);
   // };
 
-  console.log("cddd", newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.revenueResourceEntryId  )
+  console.log("cddd", newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.revenueResourceEntryId  )
+
+  const allRevenueResourceEntryIds = [];
+
+newOppData?.fpRevenueEntryVO?.milestones.forEach(milestone => {
+  milestone?.revenueResourceEntries?.forEach(entry => {
+    if (entry?.revenueResourceEntryId) {
+      allRevenueResourceEntryIds.push(entry.revenueResourceEntryId);
+    }
+  });
+});
+
+console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
+
+// Now allRevenueResourceEntryIds array contains all revenueResourceEntryId values
+// You can use it as needed, send it to the backend, or perform other operations.
+
+
+  // const mm = newOppData?.fpRevenueEntryVO?.milestones;
+  // const revenueResourceEntryIds = [];
+  
+  // if (mm && mm.length > 0) {
+  //   mm.forEach(milestone => {
+  //     if (milestone && milestone.revenueResourceEntries && milestone.revenueResourceEntries.length > 0) {
+  //       milestone.revenueResourceEntries.forEach(entry => {
+  //         if (entry && entry.revenueResourceEntryId) {
+  //           revenueResourceEntryIds.push(entry.revenueResourceEntryId); // Pushing each ID into the array
+  //         }
+  //       });
+  //     }
+  //   });
+  // } else {
+  //   console.log("No milestones or revenueResourceEntries found.");
+  // }
+
+  
+  
+  // Looping through each milestone and its revenueResourceEntries
+  // mm.forEach(milestone => {
+  //   milestone.revenueResourceEntries.forEach(entry => {
+  //     console.log("revenueResourceEntryIdaa:", entry.revenueResourceEntryId);
+  //   });
+  // });
+  
   const generateMilestoneGrid = (inputNumber) => {
     const dataArr = [...milestoneData];
     const data = dataArr[id];
@@ -120,23 +163,19 @@ const RevenueMilestoneAccordian = (props) => {
     const tempRevenueResourceItems = [];
     for (let i = 0; i < inputNumber; i++) {
       tempRevenueResourceItems.push({
-        revenueResourceEntryId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.revenueResourceEntryId,
-        businessTypeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.businessType.businessTypeId,
-        allocation: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.allocation,
-        milestoneResourceRevenue: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.milestoneResourceRevenue,
-        employeeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.employeeId,
-        resourceName: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceName ,
-        locationId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.location?.locationId,
-        resourceStartDate: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceStartDate,
-        resourceEndDate:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceEndDate,
-        cocPracticeId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.cocPractice.cocPracticeId,
-        sbuId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuId,
-        sbuHeadId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadId,
-      businessUnitId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.businessUnit?.businessUnitId,
-            
-
-        
-
+        revenueResourceEntryId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+        businessTypeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.businessType.businessTypeId,
+        allocation: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.allocation,
+        milestoneResourceRevenue: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.milestoneResourceRevenue,
+        employeeId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.employeeId,
+        resourceName: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.resourceName ,
+        locationId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.location?.locationId,
+        resourceStartDate: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.resourceStartDate,
+        resourceEndDate:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.resourceEndDate,
+        cocPracticeId:newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.cocPractice.cocPracticeId,
+        sbuId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.strategicBusinessUnit?.sbuId,
+        sbuHeadId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.strategicBusinessUnitHead?.sbuHeadId,
+      businessUnitId: newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[i]?.businessUnit?.businessUnitId,
       });
       items.push(
         <RevenueMilestoneResourceData
