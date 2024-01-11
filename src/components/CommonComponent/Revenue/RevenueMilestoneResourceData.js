@@ -29,7 +29,7 @@ const RevenueMilestoneResourceData = (props) => {
   const [sbuHeadData, setSbuHeadData] = useState(null);
 
 
-  const receivedSbuId = props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuId;
+  const receivedSbuId = props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.strategicBusinessUnit?.sbuId;
 
   const [selectedSbuId, setSelectedSbuId] = useState(receivedSbuId || "");
 
@@ -271,11 +271,42 @@ let recievedResourceName =""
     // const printResourceNameOutside = (name) => {
     //   console.log("namename", name); 
     // };
-  
-    
-  
 
-    console.log("placeholderText", id)
+    const resourceNameArray = [];
+
+props.newOppData?.fpRevenueEntryVO?.milestones.forEach((milestone) => {
+  if (milestone && milestone.revenueResourceEntries) {
+    milestone.revenueResourceEntries.forEach((entry) => {
+      if (entry && entry.resourceName) {
+        console.log("nameRec",entry.resourceName);
+        resourceNameArray.push(entry.resourceName);
+      }
+    });
+  }
+});
+console.log("resourceNameArray", resourceNameArray);
+
+
+console.log("zzShyam", props.milestoneId);
+
+
+const getMilestoneId = () => {
+  return 0; // For example, this returns index 0, replace with your dynamic logic
+};
+
+const getResourceId = () => {
+  return 1; // For example, this returns index 1, replace with your dynamic logic
+};
+
+const dynamicMilestoneId = getMilestoneId();
+const dynamicResourceId = getResourceId();
+
+const milestone = props?.oppDataByOppId?.fpRevenueEntryVO?.milestones?.[dynamicMilestoneId];
+const resourceName = milestone?.revenueResourceEntries?.[dynamicResourceId]?.resourceName;
+
+console.log(resourceName);
+
+
 
   return (
     <React.Fragment>
@@ -519,7 +550,7 @@ let recievedResourceName =""
                 // props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[
                 //   id
                 // ]?.strategicBusinessUnitHead?.sbuHeadName
-                props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName
+                props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadName
               }
               // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.strategicBusinessUnitHead?.sbuHeadIdsbuHeadIdsbuHeadId}
               onChange={(e) => {
@@ -588,7 +619,7 @@ let recievedResourceName =""
                 // props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[
                 //   id
                 // ]?.businessUnit?.businessUnitDisplayName
-                props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName
+                props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.businessUnit?.businessUnitDisplayName
               }
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -648,7 +679,7 @@ let recievedResourceName =""
             >
               <option value="" disabled selected hidden>
               {
-                        props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.location?.locationName
+                        props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.location?.locationName
 
                     }
               </option>
@@ -683,8 +714,9 @@ let recievedResourceName =""
               placeholder={
                 // props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]
                 // ?.revenueResourceEntries[id]?.resourceName
-                 props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.resourceName
-
+                //  props.newOppData?.fpRevenueEntryVO?.milestones[id]?.revenueResourceEntries[id]?.resourceName
+                props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceName
+                
               }
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -717,7 +749,7 @@ let recievedResourceName =""
               placeholder={
                 // props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]
                 // ?.revenueResourceEntries[id]?.employeeId
-        props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.employeeId
+        props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.employeeId
         // props.newOppData?.fpRevenueEntryVO?.milestones.map(milestone => {
         //   if (milestone.revenueResourceEntries[id]) {
         //     return milestone.revenueResourceEntries[id].employeeId;
@@ -815,7 +847,7 @@ let recievedResourceName =""
               placeholder={
                 // props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]
               //   ?.revenueResourceEntries[id]?.milestoneResourceRevenue
-              props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.milestoneResourceRevenue
+              props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.milestoneResourceRevenue
               }
               onChange={(e) => {
                 updateMilestoneDetails({
@@ -864,7 +896,7 @@ let recievedResourceName =""
             >
               <option value="" disabled selected hidden>
               {
-                        props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.businessType.businessTypeDisplayName
+                        props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.businessType.businessTypeDisplayName
 
                     }
               </option>
@@ -915,7 +947,7 @@ let recievedResourceName =""
             >
               <option value="" disabled selected hidden>
                     {
-                      props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.cocPractice.cocPracticeDisplayName
+                      props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.cocPractice.cocPracticeDisplayName
                     }
                   </option>
               {coc &&
@@ -948,7 +980,7 @@ let recievedResourceName =""
               placeholder={
                 // props?.oppDataByOppId?.fpRevenueEntryVO?.milestones[id]
                 // ?.revenueResourceEntries[id]?.allocation
-                props.newOppData?.fpRevenueEntryVO?.milestones[0]?.revenueResourceEntries[id]?.allocation
+                props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id]?.allocation
               }
               onChange={(e) => {
                 updateMilestoneDetails({
