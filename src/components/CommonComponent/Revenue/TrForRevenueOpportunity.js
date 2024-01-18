@@ -400,10 +400,10 @@ function TrForRevenue(props) {
   };
 
   useEffect(() => {
-    console.log("Called -->", resourceData)
-    const items = [];
-    const iterator = inputNumber >= 0 ? inputNumber : 0;
     if (pricingType == "T&M") {
+      console.log("Hello T&M", resourceData)
+      const items = [];
+      const iterator = inputNumber >= 0 ? inputNumber : 0;
       const tempResourceDetails = [...resourceData];
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -428,9 +428,8 @@ function TrForRevenue(props) {
           />
         );
       }
+      setGridItems(items);
     }
-    setGridItems(items);
-
   }, [isTMSubmit, resourceData])
 
   const generateGrid = (value) => {
@@ -578,10 +577,16 @@ function TrForRevenue(props) {
     setGridItems(items);
   };
 
-  useEffect(()=>{
-    const items = [];
-    const iterator = inputNumber >= 0 ? inputNumber : 0;
+  useEffect(() => {
     if (pricingType == "FP") {
+      const items = [];
+      const iterator = inputNumber >= 0 ?
+        inputNumber
+        :
+        initialMileStoneCount >= 0 ?
+          initialMileStoneCount
+          :
+          0;
       const tempMilestoneDetails = [...milestoneData];
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -597,8 +602,8 @@ function TrForRevenue(props) {
           />
         )
       }
+      setGridItems(items)
     }
-    setGridItems(items)
   }, [isFPSubmit, milestoneData])
 
   const handleNextClick = () => {
@@ -1282,55 +1287,55 @@ function TrForRevenue(props) {
       }
     } else if (pricingType === "FP") {
       const isError = milestoneData?.filter((each) => !each?.milestoneBillingDate ||
-      !each?.milestoneRevenue ||
-      !each?.milestoneResourceCount ||
-      each?.revenueResourceEntries?.filter((ele) =>
-        !ele?.sbuName ||
-        !ele?.locationName ||
-        !ele?.resourceName ||
-        !ele?.resourceStartDate ||
-        !ele?.resourceEndDate ||
-        !ele?.cocPraticeName ||
-        !ele?.employeeId ||
-        !ele?.businessTypeName ||
-        !ele?.allocation ||
-        !ele?.milestoneResourceRevenue)?.length > 0
-    )
-    if (isError?.length > 0) {
-      setIsFPSubmit(true);
-      console.log('isError?.length', isError)
-    } else {
-      setIsFPSubmit(false);
-      const filtered = milestoneData.filter((ele) => {
-        const calculatedTotalRevenue = calculateTotalRevenue(
-          ele.revenueResourceEntries
-        );
-        if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-
-      if (filtered.length > 0) {
-        console.log("filtered", filtered.length)
-
-        setOpenErrorSnackbar(true);
+        !each?.milestoneRevenue ||
+        !each?.milestoneResourceCount ||
+        each?.revenueResourceEntries?.filter((ele) =>
+          !ele?.sbuName ||
+          !ele?.locationName ||
+          !ele?.resourceName ||
+          !ele?.resourceStartDate ||
+          !ele?.resourceEndDate ||
+          !ele?.cocPraticeName ||
+          !ele?.employeeId ||
+          !ele?.businessTypeName ||
+          !ele?.allocation ||
+          !ele?.milestoneResourceRevenue)?.length > 0
+      )
+      if (isError?.length > 0) {
+        setIsFPSubmit(true);
+        console.log('isError?.length', isError)
       } else {
-        axios
-          .post(
-            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
-            milestonePayload
-          )
-          .then((res) => {
-            setIsClicked(false);
-          })
-          .catch((err) => {
-            setIsClicked(false);
-          });
+        setIsFPSubmit(false);
+        const filtered = milestoneData.filter((ele) => {
+          const calculatedTotalRevenue = calculateTotalRevenue(
+            ele.revenueResourceEntries
+          );
+          if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+
+        if (filtered.length > 0) {
+          console.log("filtered", filtered.length)
+
+          setOpenErrorSnackbar(true);
+        } else {
+          axios
+            .post(
+              "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price",
+              milestonePayload
+            )
+            .then((res) => {
+              setIsClicked(false);
+            })
+            .catch((err) => {
+              setIsClicked(false);
+            });
+        }
       }
     }
-  }
   };
 
   return (
@@ -2179,9 +2184,12 @@ function TrForRevenue(props) {
                   onClose={handleCloseErrorSnackbar}
                   severity="error"
                   sx={{
-                    backgroundColor: "#FFBABA",
-                    color: "#D8000C",
+                    backgroundColor: "white",
+                    color: "black",
                     fontSize: "14px",
+                    border: "1px solid black",
+                    borderRadius: "0px !important",
+                    boxShadow: "none"
                   }}
                 >
                   Error: Milestone Revenue and Resource Revenue Entry doesn't

@@ -259,6 +259,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
           updateMilestoneData={updateMilestoneData}
           milestoneData={dataArr}
           id={i}
+          newOppData={newOppData}
           milestoneId={props.id}
           isSaved={isSaved}          
         />
@@ -288,7 +289,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
   
   
 
-  console.log(" newOppData", newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount)
+  console.log(" newOppData", milestoneData)
   return (
     <React.Fragment>
       <br></br>
