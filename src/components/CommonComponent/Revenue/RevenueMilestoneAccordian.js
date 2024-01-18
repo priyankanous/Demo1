@@ -22,7 +22,7 @@ import RevenueMilestoneResourceData from "./RevenueMilestoneResourceData";
 
 const RevenueMilestoneAccordian = (props) => {
 
-  const { milestoneData, updateMilestoneData, id, oppId, isSaved, setIsSaved } = props;
+  const { milestoneData, updateMilestoneData, id, oppId, isSaved, isFPSubmit } = props;
 
   useEffect(() => {
     props.getSbuData();
@@ -186,6 +186,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
           newOppData={newOppData}
           // oppDataByOppId={props.oppDataByOppId}
           isSaved={isSaved}
+          // isFPSubmit={isFPSubmit}
 
         />
       );
@@ -259,13 +260,32 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
           milestoneData={dataArr}
           id={i}
           milestoneId={props.id}
-          isSaved={isSaved}
-          
+          isSaved={isSaved}          
         />
       );
     }
     setMilestoneGridItems(items);
   },[isSaved, milestoneData])
+
+  // useEffect(()=>{
+  //   const dataArr = [...milestoneData];
+  //   console.log("dataArr",dataArr)
+  //   const items = []
+  //   for (let i = 0; i < inputNumber; i++) {
+  //     items.push(
+  //       <RevenueMilestoneResourceData
+  //         updateMilestoneData={updateMilestoneData}
+  //         milestoneData={dataArr}
+  //         id={i}
+  //         milestoneId={props.id}
+  //         isSaved={isFPSubmit}          
+  //       />
+  //     );
+  //   }
+  //   setMilestoneGridItems(items);
+  // },[isFPSubmit, milestoneData])
+
+  
   
 
   console.log(" newOppData", newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneResourceCount)
@@ -347,6 +367,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
                       // height: "30px",
                       // marginTop: "-15px",
                       border: isSaved && !milestoneData[id]?.milestoneBillingDate ? "1px solid red" : "",
+
                     }}
                     size="small"
                     type="date"
@@ -377,6 +398,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
                       // height: "35px",
                       // marginTop: "-15px",
                       border:  isSaved && !milestoneData[id]?.milestoneRevenue ? "1px solid red" : "",
+
                     }}
                     size="small"
                     type="text"
@@ -410,6 +432,7 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
                       // height: "35px",
                       // marginTop: "-15px",
                       border:  isSaved && !milestoneData[id]?.milestoneResourceCount ? "1px solid red" : "",
+
                     }}
                     size="small"
                     type="number"

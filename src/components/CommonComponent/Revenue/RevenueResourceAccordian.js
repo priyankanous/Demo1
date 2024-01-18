@@ -47,7 +47,7 @@ const RevenueResourceAccordian = (props) => {
     props.getLocationData();
     props.getCocPracticeData();
   }, []);
-  const { resourceData, updateResourceData, id } = props;
+  const { resourceData, updateResourceData, id, isTMSaved } = props;
   const month = [
     "Jan",
     "Feb",
@@ -79,9 +79,11 @@ const RevenueResourceAccordian = (props) => {
     console.log("dataArr in updateResourceDetails: ", dataArr);
     const data = dataArr[id];
     data[params?.resourseDetailsColumn] = params?.event?.target?.value;
-
+    let selectedOption
     // Store sbuId based on the selected option
-    const selectedOption = params?.event?.target?.selectedOptions[0];
+    if(params?.event?.target?.selectedOptions?.length > 0) {
+      selectedOption = params?.event?.target?.selectedOptions[0];
+    }
     if (selectedOption) {
       const sbuId = selectedOption.getAttribute(params?.attrKeySbu);
       data[params?.selectedID] = sbuId;
@@ -259,12 +261,12 @@ const RevenueResourceAccordian = (props) => {
     data["businessUnitId"] =
       sbuHeadData?.data?.length > 0
         ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
-            ?.businessUnitId
+          ?.businessUnitId
         : "";
     data["businessUnitName"] =
       sbuHeadData?.data?.length > 0
         ? sbuHeadData?.data[0].strategicBusinessUnit?.businessUnit
-            ?.businessUnitName
+          ?.businessUnitName
         : "";
     dataArr[id] = data;
     setSelectedBuIdToGetCoc(data["businessUnitId"]);
@@ -365,6 +367,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 SBU
               </td>
               <td
@@ -375,6 +379,7 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+
                 SBU Head
               </td>
               <td
@@ -395,6 +400,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Location
               </td>
               <td
@@ -403,7 +410,7 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
-                  width:"110px"
+                  width: "110px"
                 }}
               >
                 <div
@@ -414,7 +421,9 @@ const RevenueResourceAccordian = (props) => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                Resource Name
+                  <span style={{ color: "red" }}>*</span>
+
+                  Resource Name
                 </div>
               </td>
               <td
@@ -425,6 +434,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Employee ID
               </td>
               <td
@@ -434,7 +445,8 @@ const RevenueResourceAccordian = (props) => {
                   fontSize: "14px",
                   color: "#525252",
                 }}
-              >
+              >            <span style={{ color: "red" }}>*</span>
+
                 Start Date
               </td>
               <td
@@ -445,6 +457,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 End Date
               </td>
             </tr>
@@ -457,7 +471,19 @@ const RevenueResourceAccordian = (props) => {
                 border: "1px solid #0000004d",
               }}
             >
-              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px", borderLeft: "solid 1px",
+                borderBottom:
+                  (
+                    isTMSaved && !resourceData[id]?.sbuName 
+                  ) ? "1px solid red"
+                    : "",
+                borderTop:
+                  (
+                    isTMSaved && !resourceData[id]?.sbuName 
+                  ) ? "1px solid red"
+                    : "",
+              }}>
                 <select
                   id="milestoneselect"
                   required
@@ -596,13 +622,25 @@ const RevenueResourceAccordian = (props) => {
                   value={
                     sbuHeadData?.data?.length > 0
                       ? sbuHeadData?.data[0]?.strategicBusinessUnit
-                          ?.businessUnit?.businessUnitName
+                        ?.businessUnit?.businessUnitName
                       : ""
                   }
                   disabled
                 ></input>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",
+                borderBottom:
+                  (
+                    isTMSaved && !resourceData[id]?.locationName
+                  ) ? "1px solid red"
+                    : "",
+                borderTop:
+                  (
+                    isTMSaved && !resourceData[id]?.locationName
+                  ) ? "1px solid red"
+                    : "",
+              }}>
                 <select
                   id="milestoneselect"
                   required
@@ -640,7 +678,19 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",
+                borderBottom:
+                  (
+                    isTMSaved && !resourceData[id]?.resouceName
+                  ) ? "1px solid red"
+                    : "",
+                borderTop:
+                  (
+                    isTMSaved && !resourceData[id]?.resouceName
+                  ) ? "1px solid red"
+                    : "",
+              }}>
                 <input
                   style={{
                     fontFamily: "Roboto",
@@ -662,7 +712,19 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",  
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.employeeId
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.employeeId
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <input
                   style={{
                     fontFamily: "Roboto",
@@ -685,7 +747,19 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.startDate
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.startDate
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <input
                   style={{
                     fontFamily: "Roboto",
@@ -709,7 +783,20 @@ const RevenueResourceAccordian = (props) => {
                   }}
                 />
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",
+
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.endDate
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.endDate
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <input
                   id="milestoneselect"
                   type="date"
@@ -745,6 +832,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Business Type
               </td>
               <td
@@ -755,6 +844,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 CoC Practice
               </td>
               <td
@@ -765,6 +856,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Billing Rate Type
               </td>
               <td
@@ -773,8 +866,12 @@ const RevenueResourceAccordian = (props) => {
                   fontWeight: "400",
                   fontSize: "14px",
                   color: "#525252",
+                  whiteSpace: "nowrap"
+
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Billing Rate (
                 {currencyId || selectedCurrency || currencyLabelResourceLevel})
               </td>
@@ -785,18 +882,20 @@ const RevenueResourceAccordian = (props) => {
                   fontSize: "14px",
                   color: "#525252",
                   padding: "0px",
-                  width:"130px"
+                  width: "130px"
                 }}
               >
-              <div
-                style={{
-                  width: "130px",
-                  overflow: "hidden",
-                  whiteSpace: "nowrap",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                Leave Loss Factor %
+                <div
+                  style={{
+                    width: "137px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  <span style={{ color: "red" }}>*</span>
+
+                  Leave Loss Factor %
                 </div>
               </td>
               <td
@@ -807,6 +906,8 @@ const RevenueResourceAccordian = (props) => {
                   color: "#525252",
                 }}
               >
+                <span style={{ color: "red" }}>*</span>
+
                 Allocation %
               </td>
             </tr>
@@ -818,7 +919,19 @@ const RevenueResourceAccordian = (props) => {
                 border: "1px solid #0000004d",
               }}
             >
-              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px", borderLeft: "solid 1px",
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.businessTypeName
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.businessTypeName
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <select
                   id="milestoneselect"
                   required
@@ -857,7 +970,18 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid 1px", borderLeft: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px", borderLeft: "solid 1px", borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.cocPracticeName 
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.cocPracticeName
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <select
                   id="milestoneselect"
                   required
@@ -896,7 +1020,19 @@ const RevenueResourceAccordian = (props) => {
                     ))}
                 </select>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.billingRateType
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.billingRateType
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <select
                   id="milestoneselect"
                   required
@@ -912,10 +1048,10 @@ const RevenueResourceAccordian = (props) => {
                     fontWeight: "400",
                   }}
 
-                  // value={{
-                  //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
-                  //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
-                  // }}
+                // value={{
+                //   value: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
+                //   label: props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.billingRateType,
+                // }}
                 >
                   <option value="" disabled selected hidden>
                     {
@@ -930,7 +1066,18 @@ const RevenueResourceAccordian = (props) => {
                   <option>Half Annually</option>
                 </select>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px",  borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.billingRate
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.billingRate
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <input
                   type="text"
                   id="resourceinput"
@@ -956,6 +1103,16 @@ const RevenueResourceAccordian = (props) => {
               <td
                 style={{
                   borderRight: "solid 1px",
+                  borderBottom:
+                  (
+                    isTMSaved && !resourceData[id]?.leaveLossFactor 
+                  ) ? "1px solid red"
+                    : "",
+                borderTop:
+                  (
+                    isTMSaved && !resourceData[id]?.leaveLossFactor 
+                  ) ? "1px solid red"
+                    : "",
                 }}
               >
                 <input
@@ -978,10 +1135,22 @@ const RevenueResourceAccordian = (props) => {
                     fontWeight: "400",
                   }}
 
-                  // value={leaveLossData}
+                // value={leaveLossData}
                 ></input>
               </td>
-              <td style={{ borderRight: "solid 1px" }}>
+              <td style={{
+                borderRight: "solid 1px", 
+                borderBottom:
+                (
+                  isTMSaved && !resourceData[id]?.allocation 
+                ) ? "1px solid red"
+                  : "",
+              borderTop:
+                (
+                  isTMSaved && !resourceData[id]?.allocation 
+                ) ? "1px solid red"
+                  : "",
+              }}>
                 <input
                   type="text"
                   id="resourceinput"

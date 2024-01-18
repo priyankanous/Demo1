@@ -655,6 +655,7 @@ console.log(resourceName);
                   ?.locationName
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <select
@@ -706,6 +707,7 @@ console.log(resourceName);
                   ?.resourceName
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <input
@@ -741,6 +743,7 @@ console.log(resourceName);
                   ?.employeeId
                   ? "1px solid red"
                   : "1px solid #898282",
+                
             }}
           >
             <input
@@ -782,6 +785,7 @@ console.log(resourceName);
                   ?.resourceStartDate
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <input
@@ -810,6 +814,7 @@ console.log(resourceName);
                   ?.resourceEndDate
                   ? "1px solid red"
                   : "1px solid #898282",
+                
             }}
           >
             <input
@@ -839,6 +844,7 @@ console.log(resourceName);
                   ?.milestoneResourceRevenue
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <input
@@ -872,6 +878,7 @@ console.log(resourceName);
                   ?.businessTypeName
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <select
@@ -923,6 +930,7 @@ console.log(resourceName);
                   ?.cocPraticeName
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <select
@@ -972,6 +980,7 @@ console.log(resourceName);
                   ?.allocation
                   ? "1px solid red"
                   : "1px solid #898282",
+                 
             }}
           >
             <input

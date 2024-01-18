@@ -78,7 +78,7 @@ const ResourceEntryForm = (props) => {
   const [pricingType, setPricingType] = useState(
     props?.dataObj?.pricingType ? props.dataObj.pricingType : "T&M"
   );
-  const [disabledOpt, setDisabledOpt]=useState("");
+  const [disabledOpt, setDisabledOpt] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
@@ -104,8 +104,7 @@ const ResourceEntryForm = (props) => {
   });
   const [isDisabled, setIsDisabled] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
-  // console.log("isSaved", isSaved, "milestonedsta", milestoneData);
+  const [isTMSaved, setIsTMSaved] = useState(false)
 
   const onOptionChange = (e) => {
     setPricingType(e.target.value);
@@ -181,104 +180,125 @@ const ResourceEntryForm = (props) => {
     return total;
   };
 
+
   const handleSave = () => {
+    console.log("res", resourceData)
     if (pricingType === "T&M") {
-      const payload = {
-        account: {
-          accountId: formData.account.accountId,
-        },
-        opportunity: {
-          opportunityId: formData.opportunity.opportunityID,
-          opportunityName: formData.opportunity.opportunityName,
-        },
-        projectCode: formData.opportunity.projectCode,
-        projectStartDate: formData.opportunity.projectStartDate,
-        projectEndDate: formData.opportunity.projectEndDate,
-
-        businessDevelopmentManager: {
-          bdmId: formData.bdm.bdmID,
-        },
-        currency: {
-          currencyId: formData.currency.currencyID,
-        },
-        probabilityType: {
-          probabilityTypeId: formData.probability.probabilityID,
-        },
-        region: {
-          regionId: formData.region.regionID,
-        },
-        workOrder: {
-          workOrderId: formData.workOrder.workOrderID,
-        },
-        workOrderEndDate: formData.workOrder.workOrderEndDate,
-        workOrderStatus: formData.workOrder.workOrderStatus,
-
-        financialYear: {
-          financialYearId:
-            props?.financialYear?.financialYear[0]?.financialYearId,
-        },
-        resourceCount: resourceData.length,
-        pricingType: pricingType,
-        remarks: "TM Details",
-        status: "Submitted",
-        revenueResourceEntries: resourceData?.map((ele) => ({
-          strategicBusinessUnit: {
-            sbuId: ele.sbuId,
-          },
-          strategicBusinessUnitHead: {
-            sbuHeadId: ele.sbuHeadId,
-          },
-          businessUnit: {
-            businessUnitId: ele.businessUnitId,
-          },
-          businessType: {
-            businessTypeId: ele.businessTypeId,
-          },
-          location: {
-            locationId: ele.locationId,
-          },
-          resourceName: ele.resouceName,
-          employeeId: ele.employeeId,
-          resourceStartDate: formatDateFirstEntry(ele.startDate),
-          resourceEndDate: formatDateFirstEntry(ele.endDate),
-          cocPractice: {
-            cocPracticeId: ele.cocPracticeId,
-          },
-          leaveLossFactor: ele.leaveLossFactor,
-          billingRateType: ele.billingRateType,
-          billingRate: ele.billingRate,
-          allocation: ele.allocation,
-        })),
-      };
-      axios
-        .post(
-          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
-          payload
-        )
-        .then((res) => {
-          props.setIsOpen(false);
-        })
-        .catch((err) => {
-          props.setIsOpen(true);
-        });
-    } else if (pricingType === "FP") {
-      console.log("mmmm", milestoneData)
-      const isError = milestoneData?.filter((each) => !each?.milestoneBillingDate || 
-        !each?.milestoneRevenue || 
-        !each?.milestoneResourceCount ||
-        each?.revenueResourceEntries?.filter((ele)=> 
-        !ele?.sbuName || 
-          !ele?.locationName ||
-          !ele?.resourceName || 
-          !ele?.resourceStartDate ||
-          !ele?.resourceEndDate || 
-          !ele?.cocPraticeName ||
-          !ele?.employeeId || 
-          !ele?.businessTypeName || 
-          !ele?.allocation ||
-          !ele?.milestoneResourceRevenue)?.length>0
+      const isTMError = resourceData?.filter((each) => !each.sbuName ||
+        !each.locationName ||
+        !each.resouceName ||
+        !each.employeeId ||
+        !each.startDate ||
+        !each.endDate ||
+        !each.businessTypeName ||
+        !each.cocPracticeName ||
+        !each.billingRateType ||
+        !each.billingRate ||
+        !each.leaveLossFactor ||
+        !each?.allocation
       )
-      if (isError?.length> 0) {
+      if (isTMError?.length > 0) {
+        setIsTMSaved(true)
+        console.log("isTM", isTMSaved)
+      } else {
+        setIsTMSaved(false)
+
+        const payload = {
+          account: {
+            accountId: formData.account.accountId,
+          },
+          opportunity: {
+            opportunityId: formData.opportunity.opportunityID,
+            opportunityName: formData.opportunity.opportunityName,
+          },
+          projectCode: formData.opportunity.projectCode,
+          projectStartDate: formData.opportunity.projectStartDate,
+          projectEndDate: formData.opportunity.projectEndDate,
+
+          businessDevelopmentManager: {
+            bdmId: formData.bdm.bdmID,
+          },
+          currency: {
+            currencyId: formData.currency.currencyID,
+          },
+          probabilityType: {
+            probabilityTypeId: formData.probability.probabilityID,
+          },
+          region: {
+            regionId: formData.region.regionID,
+          },
+          workOrder: {
+            workOrderId: formData.workOrder.workOrderID,
+          },
+          workOrderEndDate: formData.workOrder.workOrderEndDate,
+          workOrderStatus: formData.workOrder.workOrderStatus,
+
+          financialYear: {
+            financialYearId:
+              props?.financialYear?.financialYear[0]?.financialYearId,
+          },
+          resourceCount: resourceData.length,
+          pricingType: pricingType,
+          remarks: "TM Details",
+          status: "Submitted",
+          revenueResourceEntries: resourceData?.map((ele) => ({
+            strategicBusinessUnit: {
+              sbuId: ele.sbuId,
+            },
+            strategicBusinessUnitHead: {
+              sbuHeadId: ele.sbuHeadId,
+            },
+            businessUnit: {
+              businessUnitId: ele.businessUnitId,
+            },
+            businessType: {
+              businessTypeId: ele.businessTypeId,
+            },
+            location: {
+              locationId: ele.locationId,
+            },
+            resourceName: ele.resouceName,
+            employeeId: ele.employeeId,
+            resourceStartDate: formatDateFirstEntry(ele.startDate),
+            resourceEndDate: formatDateFirstEntry(ele.endDate),
+            cocPractice: {
+              cocPracticeId: ele.cocPracticeId,
+            },
+            leaveLossFactor: ele.leaveLossFactor,
+            billingRateType: ele.billingRateType,
+            billingRate: ele.billingRate,
+            allocation: ele.allocation,
+          })),
+        };
+        axios
+          .post(
+            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+            payload
+          )
+          .then((res) => {
+            props.setIsOpen(false);
+          })
+          .catch((err) => {
+            props.setIsOpen(true);
+          });
+      }
+    } else if (pricingType === "FP") {
+      const isError = milestoneData?.filter((each) => !each?.milestoneBillingDate ||
+        !each?.milestoneRevenue ||
+        !each?.milestoneResourceCount ||
+        each?.revenueResourceEntries?.filter((ele) =>
+          !ele?.sbuName ||
+          !ele?.locationName ||
+          !ele?.resourceName ||
+          !ele?.resourceStartDate ||
+          !ele?.resourceEndDate ||
+          !ele?.cocPraticeName ||
+          !ele?.employeeId ||
+          !ele?.businessTypeName ||
+          !ele?.allocation ||
+          !ele?.milestoneResourceRevenue)?.length > 0
+      )
+      if (isError?.length > 0) {
         setIsSaved(true);
         console.log('isError?.length', isError)
       } else {
@@ -293,7 +313,7 @@ const ResourceEntryForm = (props) => {
             return false;
           }
         });
-  
+
         if (filtered.length > 0) {
           setOpenErrorSnackbar(true);
         } else {
@@ -332,7 +352,7 @@ const ResourceEntryForm = (props) => {
             pricingType: pricingType,
             remarks: "No",
             status: "Submitted",
-  
+
             milestones: milestoneData?.map((ele) => ({
               milestoneNumber: ele?.milestoneNumber,
               milestoneBillingDate: ele?.milestoneBillingDate,
@@ -423,6 +443,7 @@ const ResourceEntryForm = (props) => {
     const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
       setIsSaved(false)
+      setIsTMSaved(false)
       setInputNumber(inputValue);
       generateGrid(inputValue);
     }
@@ -459,6 +480,8 @@ const ResourceEntryForm = (props) => {
             updateResourceData={setResourceData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
             currencyId={formData.currency.currencyDisplayNAme}
+            isTMSaved={isTMSaved}
+            setIsTMSaved={setIsTMSaved}
           />
         );
       }
@@ -474,8 +497,6 @@ const ResourceEntryForm = (props) => {
       }
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
-        console.log("in form", isSaved)
-
         items.push(
           <RevenueMilestoneAccordian
             id={i}
@@ -486,6 +507,7 @@ const ResourceEntryForm = (props) => {
             updateMilestoneData={setMilestoneData}
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
             isSaved={isSaved}
+
             setIsSaved={setIsSaved}
           />
         );
@@ -494,10 +516,36 @@ const ResourceEntryForm = (props) => {
     setGridItems(items);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const items = [];
     const iterator = inputNumber >= 0 ? inputNumber : 0;
-    if (pricingType == "FP" && iterator >= 1){
+    if (pricingType == "T&M" && iterator >= 1) {
+      const tempResourceDetails = [...resourceData];
+
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueResourceAccordian
+            id={i}
+            formData={props.tabIndex.formData}
+            myFormData={formData}
+            pricingType={pricingType}
+            resourceData={tempResourceDetails}
+            updateResourceData={setResourceData}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            currencyId={formData.currency.currencyDisplayNAme}
+            isTMSaved={isTMSaved}
+            setIsTMSaved={setIsTMSaved}
+          />
+        );
+      }
+    }
+    setGridItems(items);
+  }, [isTMSaved, resourceData])
+
+  useEffect(() => {
+    const items = [];
+    const iterator = inputNumber >= 0 ? inputNumber : 0;
+    if (pricingType == "FP" && iterator >= 1) {
       let tempMilestoneDetails = [...milestoneData]
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -516,7 +564,7 @@ const ResourceEntryForm = (props) => {
       }
     }
     setGridItems(items);
-  },[isSaved, milestoneData])
+  }, [isSaved, milestoneData])
 
   const saveResourceDetails = () => {
     props.saveResourceData({
@@ -547,13 +595,13 @@ const ResourceEntryForm = (props) => {
   const getWorkOrderValue = () => {
     const iterable =
       Array.isArray(props?.workOrderData?.workOrderData) &&
-      props?.workOrderData?.workOrderData?.length
+        props?.workOrderData?.workOrderData?.length
         ? props?.workOrderData?.workOrderData?.map((workOrderData, index) => ({
-            value: workOrderData?.workOrderId,
-            label: workOrderData?.workOrderNumber,
-            workOrderEndDate: workOrderData?.workOrderEndDate,
-            workOrderStatus: workOrderData?.workOrderStatus,
-          }))
+          value: workOrderData?.workOrderId,
+          label: workOrderData?.workOrderNumber,
+          workOrderEndDate: workOrderData?.workOrderEndDate,
+          workOrderStatus: workOrderData?.workOrderStatus,
+        }))
         : [{ label: "TBD", value: 0 }];
 
     return iterable?.filter(
@@ -867,7 +915,7 @@ const ResourceEntryForm = (props) => {
                           height: "35px",
                           border:
                             isSubmitted &&
-                            !formData?.opportunity?.opportunityName
+                              !formData?.opportunity?.opportunityName
                               ? "1px solid red"
                               : "",
                         }),
@@ -973,7 +1021,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
-                    disabled
+                      disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1025,7 +1073,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
-                    disabled
+                      disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1058,7 +1106,7 @@ const ResourceEntryForm = (props) => {
                   </div>
                   <div style={{ width: "187px" }}>
                     <InputField
-                    disabled
+                      disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1148,7 +1196,7 @@ const ResourceEntryForm = (props) => {
                         height: "35px",
                         border:
                           isSubmitted &&
-                          !formData?.probability?.probabilityTypeName
+                            !formData?.probability?.probabilityTypeName
                             ? "1px solid red"
                             : "",
                       }),
@@ -1330,15 +1378,15 @@ const ResourceEntryForm = (props) => {
                     placeholder=""
                     options={
                       Array.isArray(props?.workOrderData?.workOrderData) &&
-                      props?.workOrderData?.workOrderData?.length
+                        props?.workOrderData?.workOrderData?.length
                         ? props?.workOrderData?.workOrderData?.map(
-                            (workOrderData, index) => ({
-                              value: workOrderData.workOrderId,
-                              label: workOrderData.workOrderNumber,
-                              workOrderEndDate: workOrderData.workOrderEndDate,
-                              workOrderStatus: workOrderData.workOrderStatus,
-                            })
-                          )
+                          (workOrderData, index) => ({
+                            value: workOrderData.workOrderId,
+                            label: workOrderData.workOrderNumber,
+                            workOrderEndDate: workOrderData.workOrderEndDate,
+                            workOrderStatus: workOrderData.workOrderStatus,
+                          })
+                        )
                         : [{ label: "TBD", value: 0 }]
                     }
                     onChange={(selectedOption) => {
@@ -1384,7 +1432,7 @@ const ResourceEntryForm = (props) => {
 
                   <div style={{ width: "195px" }}>
                     <InputField
-                    disabled
+                      disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1418,7 +1466,7 @@ const ResourceEntryForm = (props) => {
 
                   <div style={{ width: "187px" }}>
                     <InputField
-                    disabled
+                      disabled
                       style={{
                         background: "white",
                         width: "187Px",
@@ -1688,9 +1736,9 @@ const ResourceEntryForm = (props) => {
                   backgroundColor: "white",
                   color: "black",
                   fontSize: "14px",
-                  border:"1px solid black",
-                  borderRadius:"0px !important",
-                  boxShadow:"none"
+                  border: "1px solid black",
+                  borderRadius: "0px !important",
+                  boxShadow: "none"
 
                 }}
               >

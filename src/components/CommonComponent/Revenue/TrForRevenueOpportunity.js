@@ -159,10 +159,6 @@ function TrForRevenue(props) {
   const [oppId, setOppId] = useState();
   const [oppDataByOppId, setOppDataByOppId] = useState([]);
 
-  console.log("oppDataByOppId-->", oppDataByOppId);
-
-
-  console.log("ssssssssss", resourseEntryData?.pricingType);
 
   const column3 = [
     "Start Date",
@@ -195,15 +191,15 @@ function TrForRevenue(props) {
 
   const [inputNumber, setInputNumber] = useState(initialResourceCount);
   const [inputNumberMileStone, setInputNumberMileStone] = useState(initialMileStoneCount);
-  console.log("initialMileStoneCount",initialMileStoneCount)
-
+  console.log("initialMileStoneCount", initialMileStoneCount)
 
   const [openErrorSnackbar, setOpenErrorSnackbar] = useState(false);
 
   const [tabIndex, setTabIndex] = useState({ index: 0, formData: "" });
   const array = [];
   const [currencyData, setCurrencyData] = useState();
-
+  const [isTMSubmit, setIsTMSubmit] = useState(false)
+  const [isFPSubmit, setIsFPSubmit] = useState(false)
   const [formUpdateData, setFormUpdateData] = useState({
     account: { accountId: null, accountName: "" },
     opportunity: {
@@ -258,7 +254,7 @@ function TrForRevenue(props) {
       } else {
         setResourceTableData(response.data.data.fpResourceEntries);
       }
-    } catch {}
+    } catch { }
   };
 
   const toggleRowSelection = (rowIndex) => {
@@ -392,6 +388,8 @@ function TrForRevenue(props) {
   const handleInputChange = (event) => {
     const inputValue = parseInt(event.target.value);
     if (!isNaN(inputValue) && inputValue >= 0) {
+      setIsTMSubmit(false)
+      setIsFPSubmit(false)
       setInputNumber(inputValue);
       generateGrid(inputValue);
     }
@@ -400,6 +398,40 @@ function TrForRevenue(props) {
   const updateResourceData = (data, index) => {
     setResourceData(data);
   };
+
+  useEffect(() => {
+    console.log("Called -->", resourceData)
+    const items = [];
+    const iterator = inputNumber >= 0 ? inputNumber : 0;
+    if (pricingType == "T&M") {
+      const tempResourceDetails = [...resourceData];
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueResourceAccordian
+            id={i}
+            // formData={props.tabIndex.formData}
+            // updateResourceData={updateResourceData}
+            pricingType={pricingType}
+            resourceData={tempResourceDetails}
+            updateResourceData={setResourceData}
+            oppId={oppId}
+            oppDataByOppId={oppDataByOppId}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            setInputNumber={setInputNumber}
+            inputNumber={inputNumber}
+            initialResourceCount={initialResourceCount}
+            generateGrid={generateGrid}
+            getDataByOppId={getDataByOppId}
+            currencyID={formUpdateData.currency.currencyID}
+            currencyLabelResourceLevel={currencyLabelResourceLevel}
+            isTMSaved={isTMSubmit}
+          />
+        );
+      }
+    }
+    setGridItems(items);
+
+  }, [isTMSubmit, resourceData])
 
   const generateGrid = (value) => {
     console.log("inputNumber", inputNumber, value);
@@ -476,6 +508,7 @@ function TrForRevenue(props) {
             getDataByOppId={getDataByOppId}
             currencyID={formUpdateData.currency.currencyID}
             currencyLabelResourceLevel={currencyLabelResourceLevel}
+            isTMSubmit={isTMSubmit}
           />
         );
       }
@@ -486,38 +519,38 @@ function TrForRevenue(props) {
         const milestoneDataRow = {
           index: i,
           milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneEntryId,
+            ?.milestoneEntryId,
           milestoneNumber: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneNumber,
+            ?.milestoneNumber,
           milestoneBillingDate: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneBillingDate,
+            ?.milestoneBillingDate,
           milestoneResourceCount: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneResourceCount,
+            ?.milestoneResourceCount,
           milestoneRevenue: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneRevenue,           
-          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz,i)=>(
-            console.log("revenueEntry113",zzz.revenueResourceEntryId),
-  {
-    revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
-    allocation: zzz.allocation,
-    milestoneResourceRevenue: zzz.milestoneResourceRevenue,
-    employeeId: zzz.employeeId,
-    resourceName: zzz.resourceName,
-    businessTypeId:zzz.businessType.businessTypeId,
-    location: zzz.location?.locationId,
-    resourceStartDate: zzz.resourceStartDate,
-    resourceEndDate: zzz.resourceEndDate,
-    cocPracticeId: zzz.cocPractice.cocPracticeId,
-    sbuId: zzz.strategicBusinessUnit?.sbuId,
-    sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
-    businessUnitId: zzz.businessUnit?.businessUnitId,
+            ?.milestoneRevenue,
+          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz, i) => (
+            console.log("revenueEntry113", zzz.revenueResourceEntryId),
+            {
+              revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+              allocation: zzz.allocation,
+              milestoneResourceRevenue: zzz.milestoneResourceRevenue,
+              employeeId: zzz.employeeId,
+              resourceName: zzz.resourceName,
+              businessTypeId: zzz.businessType.businessTypeId,
+              location: zzz.location?.locationId,
+              resourceStartDate: zzz.resourceStartDate,
+              resourceEndDate: zzz.resourceEndDate,
+              cocPracticeId: zzz.cocPractice.cocPracticeId,
+              sbuId: zzz.strategicBusinessUnit?.sbuId,
+              sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
+              businessUnitId: zzz.businessUnit?.businessUnitId,
 
-  }
-))       
+            }
+          ))
         };
         tempMilestoneDetails.push(milestoneDataRow);
       }
-      console.log(tempMilestoneDetails,'tempMilestoneDetails')
+      console.log(tempMilestoneDetails, 'tempMilestoneDetails')
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -531,11 +564,12 @@ function TrForRevenue(props) {
             oppId={oppId}
             //issue here
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
-            inputNumberMileStone ={inputNumberMileStone}
-            // oppDataByOppId={oppDataByOppId}
-            //done issue
-            // setInputNumber={setInputNumber}
-            // inputNumber={inputNumber}
+            inputNumberMileStone={inputNumberMileStone}
+            isFPSubmit={isFPSubmit}
+          // oppDataByOppId={oppDataByOppId}
+          //done issue
+          // setInputNumber={setInputNumber}
+          // inputNumber={inputNumber}
 
           />
         );
@@ -543,6 +577,29 @@ function TrForRevenue(props) {
     }
     setGridItems(items);
   };
+
+  useEffect(()=>{
+    const items = [];
+    const iterator = inputNumber >= 0 ? inputNumber : 0;
+    if (pricingType == "FP") {
+      const tempMilestoneDetails = [...milestoneData];
+      for (let i = 0; i < iterator; i++) {
+        items.push(
+          <RevenueMilestoneAccordian
+            id={i}
+            pricingType={pricingType}
+            milestoneData={tempMilestoneDetails}
+            updateMilestoneData={setMilestoneData}
+            oppId={oppId}
+            selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+            inputNumberMileStone={inputNumberMileStone}
+            isSaved={isFPSubmit}
+          />
+        )
+      }
+    }
+    setGridItems(items)
+  }, [isFPSubmit, milestoneData])
 
   const handleNextClick = () => {
     console.log("milestoneData", milestoneData)
@@ -583,7 +640,7 @@ function TrForRevenue(props) {
     return `${day}/${month}/${year}`;
   };
 
-  
+
   // const payload = {
   //   account: {
   //     accountId: formUpdateData.account.accountId,
@@ -656,7 +713,7 @@ function TrForRevenue(props) {
   //   })),
   // };
 
-  const OnSubmit = () =>{
+  const OnSubmit = () => {
     console.log(milestoneData, 'abcd')
     if (pricingType === "T&M") {
       const payload = {
@@ -670,7 +727,7 @@ function TrForRevenue(props) {
         projectCode: formUpdateData.opportunity.projectCode,
         projectStartDate: formUpdateData.opportunity.projectStartDate,
         projectEndDate: formUpdateData.opportunity.projectEndDate,
-    
+
         businessDevelopmentManager: {
           bdmId: formUpdateData.bdm.bdmID,
         },
@@ -688,7 +745,7 @@ function TrForRevenue(props) {
         },
         workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
         workOrderStatus: formUpdateData.workOrder.workOrderStatus,
-    
+
         financialYear: {
           financialYearId: formUpdateData.financialYear.financialYearId,
         },
@@ -731,17 +788,17 @@ function TrForRevenue(props) {
         })),
       };
       axios
-            .put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM/${oppId}`,
-        payload
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        setIsOpenSecondLevelEdit(false);
-        setIsOpenThirdLevelEdit(false);
-        console.log("editSave", actualDataObject);
-      });
-    } else if ( pricingType === "FP") {
+        .put(
+          `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM/${oppId}`,
+          payload
+        )
+        .then((response) => {
+          const actualDataObject = response.data.data;
+          setIsOpenSecondLevelEdit(false);
+          setIsOpenThirdLevelEdit(false);
+          console.log("editSave", actualDataObject);
+        });
+    } else if (pricingType === "FP") {
       console.log("oppDataByOppId.fpRevenueEntryVO.milestones", oppDataByOppId.fpRevenueEntryVO.milestones)
       const payloadForFPEditFirstLevel = {
         account: {
@@ -754,7 +811,7 @@ function TrForRevenue(props) {
         projectCode: formUpdateData.opportunity.projectCode,
         projectStartDate: formUpdateData.opportunity.projectStartDate,
         projectEndDate: formUpdateData.opportunity.projectEndDate,
-    
+
         businessDevelopmentManager: {
           bdmId: formUpdateData.bdm.bdmID,
         },
@@ -772,7 +829,7 @@ function TrForRevenue(props) {
         },
         workOrderEndDate: formUpdateData.workOrder.workOrderEndDate,
         workOrderStatus: formUpdateData.workOrder.workOrderStatus,
-    
+
         financialYear: {
           financialYearId: formUpdateData.financialYear.financialYearId,
         },
@@ -780,63 +837,63 @@ function TrForRevenue(props) {
         pricingType: pricingType,
         remarks: "No",
         status: "Submitted",
-        milestones: milestoneData?.map((ele,index) => (
-          console.log("revenueEntry111", ele),        
+        milestones: milestoneData?.map((ele, index) => (
+          console.log("revenueEntry111", ele),
           {
-          milestoneEntryId: ele.milestoneEntryId,
-          milestoneNumber: ele?.milestoneNumber,
-          milestoneBillingDate: ele?.milestoneBillingDate,
-          milestoneRevenue: ele?.milestoneRevenue,
-          milestoneResourceCount: ele?.milestoneResourceCount,
-          revenueResourceEntries: ele?.revenueResourceEntries?.map(
-            (revenueEntry) => {
-              console.log("revenueEntry112---->", revenueEntry)
-              return {
-            //     revenueResourceEntryId:
-            // oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
-            //   ?.revenueResourceEntryId,
-                revenueResourceEntryId: revenueEntry?.revenueResourceEntryId,
-                strategicBusinessUnit: {
-                  sbuId: revenueEntry?.sbuId,
-                },
-                strategicBusinessUnitHead: {
-                  sbuHeadId: revenueEntry?.sbuHeadId,
-                },
-                businessUnit: {
-                  businessUnitId: revenueEntry?.businessUnitId,
-                },
-                businessType: {
-                  businessTypeId: revenueEntry?.businessTypeId,
-                },
-                location: {
-                  locationId: revenueEntry?.locationId,
-                },
-                resourceName: revenueEntry?.resourceName,
-                employeeId: revenueEntry?.employeeId,
-                resourceStartDate: revenueEntry?.resourceStartDate,
-                resourceEndDate: revenueEntry?.resourceEndDate,
-                cocPractice: {
-                  cocPracticeId: revenueEntry?.cocPracticeId,
-                },
-                allocation: revenueEntry?.allocation,
-                milestoneResourceRevenue:
-                  revenueEntry?.milestoneResourceRevenue,
-              };
-            }
-          ),
-        })),
+            milestoneEntryId: ele.milestoneEntryId,
+            milestoneNumber: ele?.milestoneNumber,
+            milestoneBillingDate: ele?.milestoneBillingDate,
+            milestoneRevenue: ele?.milestoneRevenue,
+            milestoneResourceCount: ele?.milestoneResourceCount,
+            revenueResourceEntries: ele?.revenueResourceEntries?.map(
+              (revenueEntry) => {
+                console.log("revenueEntry112---->", revenueEntry)
+                return {
+                  //     revenueResourceEntryId:
+                  // oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[index]
+                  //   ?.revenueResourceEntryId,
+                  revenueResourceEntryId: revenueEntry?.revenueResourceEntryId,
+                  strategicBusinessUnit: {
+                    sbuId: revenueEntry?.sbuId,
+                  },
+                  strategicBusinessUnitHead: {
+                    sbuHeadId: revenueEntry?.sbuHeadId,
+                  },
+                  businessUnit: {
+                    businessUnitId: revenueEntry?.businessUnitId,
+                  },
+                  businessType: {
+                    businessTypeId: revenueEntry?.businessTypeId,
+                  },
+                  location: {
+                    locationId: revenueEntry?.locationId,
+                  },
+                  resourceName: revenueEntry?.resourceName,
+                  employeeId: revenueEntry?.employeeId,
+                  resourceStartDate: revenueEntry?.resourceStartDate,
+                  resourceEndDate: revenueEntry?.resourceEndDate,
+                  cocPractice: {
+                    cocPracticeId: revenueEntry?.cocPracticeId,
+                  },
+                  allocation: revenueEntry?.allocation,
+                  milestoneResourceRevenue:
+                    revenueEntry?.milestoneResourceRevenue,
+                };
+              }
+            ),
+          })),
       };
       axios
-      .put(
-  `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
-  payloadForFPEditFirstLevel
-)
-.then((response) => {
-  const actualDataObject = response.data.data;
-  setIsOpenSecondLevelEdit(false);
-  setIsOpenThirdLevelEdit(false);
-  console.log("editSave", actualDataObject);
-});
+        .put(
+          `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
+          payloadForFPEditFirstLevel
+        )
+        .then((response) => {
+          const actualDataObject = response.data.data;
+          setIsOpenSecondLevelEdit(false);
+          setIsOpenThirdLevelEdit(false);
+          console.log("editSave", actualDataObject);
+        });
     }
   }
   console.log("formUpdateData", formUpdateData);
@@ -861,7 +918,7 @@ function TrForRevenue(props) {
 
   useEffect(() => {
     const initialAccountID =
-      oppDataByOppId?.tmRevenueEntryVO?.account?.accountId || oppDataByOppId?.fpRevenueEntryVO?.account?.accountId ;
+      oppDataByOppId?.tmRevenueEntryVO?.account?.accountId || oppDataByOppId?.fpRevenueEntryVO?.account?.accountId;
     const initialOpportunityId =
       oppDataByOppId.tmRevenueEntryVO?.opportunity?.opportunityId || oppDataByOppId.fpRevenueEntryVO?.opportunity?.opportunityId;
     const initialOpportunityName =
@@ -1194,18 +1251,56 @@ function TrForRevenue(props) {
 
   const handleSave = () => {
     if (pricingType === "T&M") {
-      axios
-        .post(
-          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
-          resourcePayload
-        )
-        .then((res) => {
-          setIsClicked(false);
-        })
-        .catch((err) => {
-          setIsClicked(false);
-        });
+      const isTMError = resourceData?.filter((each) => !each.sbuName ||
+        !each.locationName ||
+        !each.resouceName ||
+        !each.employeeId ||
+        !each.startDate ||
+        !each.endDate ||
+        !each.businessTypeName ||
+        !each.cocPracticeName ||
+        !each.billingRateType ||
+        !each.billingRate ||
+        !each.leaveLossFactor ||
+        !each?.allocation
+      )
+      if (isTMError?.length > 0) {
+        setIsTMSubmit(true)
+      } else {
+        setIsTMSubmit(false)
+        axios
+          .post(
+            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/TandM",
+            resourcePayload
+          )
+          .then((res) => {
+            setIsClicked(false);
+          })
+          .catch((err) => {
+            setIsClicked(false);
+          });
+      }
     } else if (pricingType === "FP") {
+      const isError = milestoneData?.filter((each) => !each?.milestoneBillingDate ||
+      !each?.milestoneRevenue ||
+      !each?.milestoneResourceCount ||
+      each?.revenueResourceEntries?.filter((ele) =>
+        !ele?.sbuName ||
+        !ele?.locationName ||
+        !ele?.resourceName ||
+        !ele?.resourceStartDate ||
+        !ele?.resourceEndDate ||
+        !ele?.cocPraticeName ||
+        !ele?.employeeId ||
+        !ele?.businessTypeName ||
+        !ele?.allocation ||
+        !ele?.milestoneResourceRevenue)?.length > 0
+    )
+    if (isError?.length > 0) {
+      setIsFPSubmit(true);
+      console.log('isError?.length', isError)
+    } else {
+      setIsFPSubmit(false);
       const filtered = milestoneData.filter((ele) => {
         const calculatedTotalRevenue = calculateTotalRevenue(
           ele.revenueResourceEntries
@@ -1218,7 +1313,7 @@ function TrForRevenue(props) {
       })
 
       if (filtered.length > 0) {
-        console.log("filtered",filtered.length)
+        console.log("filtered", filtered.length)
 
         setOpenErrorSnackbar(true);
       } else {
@@ -1235,6 +1330,7 @@ function TrForRevenue(props) {
           });
       }
     }
+  }
   };
 
   return (
@@ -1467,26 +1563,26 @@ function TrForRevenue(props) {
               <tr className="nestedtablebgrevenue">
                 {resourseEntryData?.pricingType === "T&M"
                   ? column3.map((header) => (
-                      <ThirdLevelHeading className="threvenue" key={header}>
-                        {header}
-                      </ThirdLevelHeading>
-                    ))
+                    <ThirdLevelHeading className="threvenue" key={header}>
+                      {header}
+                    </ThirdLevelHeading>
+                  ))
                   : Fpcolumn3.map((header) => (
-                      <ThirdLevelHeading className="threvenue" key={header} 
-                      style={{width:"70px"}}
+                    <ThirdLevelHeading className="threvenue" key={header}
+                      style={{ width: "70px" }}
+                    >
+                      <div
+                        style={{
+                          width: "70px",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                        }}
                       >
-                        <div 
-                            style={{
-                              width: "70px",
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                              textOverflow: "ellipsis",
-                            }}
-                        >
                         {header}
-                        </div>
-                      </ThirdLevelHeading>
-                    ))}
+                      </div>
+                    </ThirdLevelHeading>
+                  ))}
               </tr>
               <tbody>
                 {resourceTableData.length > 0 &&
@@ -1507,7 +1603,7 @@ function TrForRevenue(props) {
                           handleResourceStartDate(obj.resourceStartDate);
                         }}
                       >
-                        <td className="rowtable" style={{width:"90px"}}>
+                        <td className="rowtable" style={{ width: "90px" }}>
                           <div
                             style={{
                               width: "90px",
@@ -1519,9 +1615,9 @@ function TrForRevenue(props) {
                             <span style={{ fontSize: "14px" }}>
                               {obj.resourceStartDate
                                 ? moment(
-                                    obj.resourceStartDate,
-                                    "YYYY-MM-DD"
-                                  ).format("DD/MMM/YYYY")
+                                  obj.resourceStartDate,
+                                  "YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY")
                                 : ""}
                             </span>
                           </div>
@@ -1541,9 +1637,9 @@ function TrForRevenue(props) {
                             <span style={{ fontSize: "14px" }}>
                               {obj.resourceEndDate
                                 ? moment(
-                                    obj.resourceEndDate,
-                                    "YYYY-MM-DD"
-                                  ).format("DD/MMM/YYYY")
+                                  obj.resourceEndDate,
+                                  "YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY")
                                 : ""}
                             </span>
                           </div>
@@ -2253,8 +2349,8 @@ function TrForRevenue(props) {
                               {oppDataByOppId.tmRevenueEntryVO &&
                                 oppDataByOppId.tmRevenueEntryVO.financialYear
                                   .financialYearName || oppDataByOppId.fpRevenueEntryVO &&
-                                  oppDataByOppId.fpRevenueEntryVO.financialYear
-                                    .financialYearName}    
+                                oppDataByOppId.fpRevenueEntryVO.financialYear
+                                  .financialYearName}
                             </option>
                             {props?.financialYear?.financialYear.map(
                               (fyData, index) => {
@@ -2264,7 +2360,7 @@ function TrForRevenue(props) {
                                   <option
                                     data-fyId={fyId}
                                     key={index}
-                                    // selected={fyNameData}
+                                  // selected={fyNameData}
                                   >
                                     {fyNameData}
                                     {/* {console.log("fyNameData", fyNameData)} */}
@@ -2341,8 +2437,8 @@ function TrForRevenue(props) {
                               {oppDataByOppId.tmRevenueEntryVO &&
                                 oppDataByOppId.tmRevenueEntryVO.account
                                   .accountName || oppDataByOppId.fpRevenueEntryVO &&
-                                  oppDataByOppId.fpRevenueEntryVO.account
-                                    .accountName}
+                                oppDataByOppId.fpRevenueEntryVO.account
+                                  .accountName}
                             </option>
                             {console.log("datacheckprop", formUpdateData)}
                             {props.accountData &&
@@ -2498,10 +2594,10 @@ function TrForRevenue(props) {
                                 {oppDataByOppId.tmRevenueEntryVO &&
                                   oppDataByOppId.tmRevenueEntryVO
                                     .businessDevelopmentManager.bdmDisplayName ||
-                                    oppDataByOppId.fpRevenueEntryVO &&
+                                  oppDataByOppId.fpRevenueEntryVO &&
                                   oppDataByOppId.fpRevenueEntryVO
                                     .businessDevelopmentManager.bdmDisplayName
-                                    }
+                                }
                               </option>
                               {props?.bdmData?.bdmData &&
                                 props?.bdmData?.bdmData.map((obj, id) => (
@@ -2520,7 +2616,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                          disabled
+                            disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2573,7 +2669,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                          disabled
+                            disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2609,7 +2705,7 @@ function TrForRevenue(props) {
                         </div>
                         <div style={{ width: "187px" }}>
                           <InputField
-                          disabled
+                            disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2673,8 +2769,8 @@ function TrForRevenue(props) {
                           <option value="" disabled selected hidden>
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.currency
-                                .currencyName || 
-                                oppDataByOppId.fpRevenueEntryVO &&
+                                .currencyName ||
+                              oppDataByOppId.fpRevenueEntryVO &&
                               oppDataByOppId.fpRevenueEntryVO.currency
                                 .currencyName}
                           </option>
@@ -2732,10 +2828,10 @@ function TrForRevenue(props) {
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.probabilityType
                                 .probabilityTypeName ||
-                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO &&
                               oppDataByOppId.fpRevenueEntryVO.probabilityType
                                 .probabilityTypeName
-                                }
+                            }
                           </option>
                           {props?.probabilityData?.probabilityData &&
                             props?.probabilityData?.probabilityData.map(
@@ -2811,7 +2907,7 @@ function TrForRevenue(props) {
                             {oppDataByOppId.tmRevenueEntryVO &&
                               oppDataByOppId.tmRevenueEntryVO.region
                                 .regionDisplayName ||
-                                oppDataByOppId.fpRevenueEntryVO &&
+                              oppDataByOppId.fpRevenueEntryVO &&
                               oppDataByOppId.fpRevenueEntryVO.region
                                 .regionDisplayName}
                           </option>
@@ -2888,10 +2984,10 @@ function TrForRevenue(props) {
                             {oppDataByOppId?.tmRevenueEntryVO &&
                               oppDataByOppId?.tmRevenueEntryVO?.workOrder
                                 .workOrderNumber ||
-                                oppDataByOppId?.fpRevenueEntryVO &&
+                              oppDataByOppId?.fpRevenueEntryVO &&
                               oppDataByOppId?.fpRevenueEntryVO?.workOrder
                                 .workOrderNumber
-                                }
+                            }
                           </option>
                           {props?.workOrderData?.workOrderData &&
                             props?.workOrderData?.workOrderData.map(
@@ -2921,7 +3017,7 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "195px" }}>
                           <InputField
-                          disabled
+                            disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -2957,7 +3053,7 @@ function TrForRevenue(props) {
 
                         <div style={{ width: "187px" }}>
                           <InputField
-                          disabled
+                            disabled
                             style={{
                               background: "white",
                               width: "187Px",
@@ -3596,7 +3692,7 @@ function TrForRevenue(props) {
                   Save
                 </ModalControlButton>
               </div>
-              
+
             </form>
           </ModalDetailSection>
         </Box>
