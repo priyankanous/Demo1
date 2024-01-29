@@ -888,6 +888,22 @@ function TrForRevenue(props) {
             ),
           })),
       };
+
+      const filtered = milestoneData.filter((ele) => {
+        const calculatedTotalRevenue = calculateTotalRevenue(
+          ele.revenueResourceEntries
+        );
+        if (calculatedTotalRevenue !== Number(ele.milestoneRevenue)) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      if (filtered.length > 0) {
+        console.log("filtered", filtered.length)
+
+        setOpenErrorSnackbar(true);
+      } else {
       axios
         .put(
           `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
@@ -900,6 +916,7 @@ function TrForRevenue(props) {
           console.log("editSave", actualDataObject);
         });
     }
+  }
   }
   console.log("formUpdateData", formUpdateData);
 
@@ -1732,9 +1749,22 @@ function TrForRevenue(props) {
                             }}
                           >
                             <span style={{ fontSize: "14px" }}>
-                              {pricingType === "T&M"
-                                ? obj.billingRate
-                                : obj.milestoneBillingDate}
+                              {/* {pricingType === "T&M"
+                                ? moment(obj.billingRate,"YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY") : 
+                                moment(obj.milestoneBillingDate, "YYYY-MM-DD"
+                                ).format("DD/MMM/YYYY")}    */}
+
+{
+  pricingType === "T&M"
+    ? obj.billingRate
+      ? moment(obj.billingRate, "YYYY-MM-DD").format("DD/MMM/YYYY")
+      : ""
+    : obj.milestoneBillingDate
+    ? moment(obj.milestoneBillingDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
+    : ""
+}
+
                             </span>
                           </div>
                         </td>
@@ -2990,11 +3020,9 @@ function TrForRevenue(props) {
                         >
                           <option value="" disabled selected hidden>
                             {oppDataByOppId?.tmRevenueEntryVO &&
-                              oppDataByOppId?.tmRevenueEntryVO?.workOrder
-                                .workOrderNumber ||
+                              oppDataByOppId?.tmRevenueEntryVO?.workOrder?.workOrderNumber ||
                               oppDataByOppId?.fpRevenueEntryVO &&
-                              oppDataByOppId?.fpRevenueEntryVO?.workOrder
-                                .workOrderNumber
+                              oppDataByOppId?.fpRevenueEntryVO?.workOrder?.workOrderNumber
                             }
                           </option>
                           {props?.workOrderData?.workOrderData &&
@@ -3359,6 +3387,34 @@ function TrForRevenue(props) {
                   </div>
                 </>
               )}
+              <Snackbar
+                open={openErrorSnackbar}
+                autoHideDuration={5000} // 5 seconds
+                onClose={handleCloseErrorSnackbar}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                style={{
+                  marginTop: "50px",
+                  width: "300px",
+                  padding: "10px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Alert
+                  onClose={handleCloseErrorSnackbar}
+                  severity="error"
+                  sx={{
+                    backgroundColor: "white",
+                    color: "black",
+                    fontSize: "14px",
+                    border: "1px solid black",
+                    borderRadius: "0px !important",
+                    boxShadow: "none"
+                  }}
+                >
+                  Error: Milestone Revenue and Resource Revenue Entry doesn't
+                  match
+                </Alert>
+              </Snackbar>
             </form>
           </ModalDetailSection>
         </Box>
@@ -3700,7 +3756,34 @@ function TrForRevenue(props) {
                   Save
                 </ModalControlButton>
               </div>
-
+              <Snackbar
+                open={openErrorSnackbar}
+                autoHideDuration={5000} // 5 seconds
+                onClose={handleCloseErrorSnackbar}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                style={{
+                  marginTop: "50px",
+                  width: "300px",
+                  padding: "10px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Alert
+                  onClose={handleCloseErrorSnackbar}
+                  severity="error"
+                  sx={{
+                    backgroundColor: "white",
+                    color: "black",
+                    fontSize: "14px",
+                    border: "1px solid black",
+                    borderRadius: "0px !important",
+                    boxShadow: "none"
+                  }}
+                >
+                  Error: Milestone Revenue and Resource Revenue Entry doesn't
+                  match
+                </Alert>
+              </Snackbar>
             </form>
           </ModalDetailSection>
         </Box>
