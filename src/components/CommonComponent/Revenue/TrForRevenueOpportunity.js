@@ -1758,8 +1758,6 @@ function TrForRevenue(props) {
 {
   pricingType === "T&M"
     ? obj.billingRate
-      ? moment(obj.billingRate, "YYYY-MM-DD").format("DD/MMM/YYYY")
-      : ""
     : obj.milestoneBillingDate
     ? moment(obj.milestoneBillingDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
     : ""
