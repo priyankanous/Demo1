@@ -465,7 +465,7 @@ function TrForRevenue(props) {
               ?.resourceStartDate,
           endDate:
             oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
-              ?.resourceStartDate,
+              ?.resourceEndDate,
           businessTypeId:
             oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
               ?.businessType.businessTypeId,
