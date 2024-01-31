@@ -515,7 +515,7 @@ function TrForRevenue(props) {
       const tempMilestoneDetails = [];
       for (let i = 0; i < iterator; i++) {
         console.log("datdata", tempMilestoneDetails)
-        const milestoneDataRow = {
+        const milestoneDataRow = oppDataByOppId?.length > 0 ? {
           index: i,
           milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
             ?.milestoneEntryId,
@@ -546,6 +546,10 @@ function TrForRevenue(props) {
 
             }
           ))
+        } : {
+          index: i,
+          milestoneNumber: `M${i + 1}`,
+          revenueResourceEntries: [],
         };
         tempMilestoneDetails.push(milestoneDataRow);
       }
@@ -1575,6 +1579,8 @@ function TrForRevenue(props) {
                 <ThirdLevelHeadingCell className="iconsColumn">
                   <a
                     onClick={() => {
+                      setOppId("")
+                      setOppDataByOppId([])
                       setIsClicked(true);
                     }}
                   >
