@@ -286,10 +286,33 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
   //   setMilestoneGridItems(items);
   // },[isFPSubmit, milestoneData])
 
-  
-  
+  const [incomingMileStoneBillingDate, setIncomingMileStoneBillingDate] = useState('');
 
-  console.log(" newOppData", milestoneData)
+  useEffect(() => {
+    const incomingmileDate = newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneBillingDate;
+    if (incomingmileDate) {
+      // Parse incoming date and convert to "YYYY-MM-DD" format
+      const [day, month, year] = incomingmileDate.split('/');
+      const monthMap = {
+        "Jan": "01",
+        "Feb": "02",
+        "Mar": "03",
+        "Apr": "04",
+        "May": "05",
+        "Jun": "06",
+        "Jul": "07",
+        "Aug": "08",
+        "Sep": "09",
+        "Oct": "10",
+        "Nov": "11",
+        "Dec": "12"
+      };
+      const formattedDate = `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+      setIncomingMileStoneBillingDate(formattedDate);
+    }
+  }, [newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneBillingDate]);
+  
+  console.log(" newOppDataAA", newOppData.fpRevenueEntryVO?.milestones[id]?.milestoneBillingDate);
   return (
     <React.Fragment>
       <br></br>
@@ -375,7 +398,9 @@ console.log("allRevenueResourceEntryIds", allRevenueResourceEntryIds)
                     id="name"
                     variant="outlined"
                     spellcheck="false"
+                    value={incomingMileStoneBillingDate}
                     onChange={(e) => {
+                      setIncomingMileStoneBillingDate(e.target.value)
                       updateMilestoneDetails({
                         event: e,
                         milestoneDetailsColumn: "milestoneBillingDate",

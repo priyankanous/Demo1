@@ -432,6 +432,155 @@ function TrForRevenue(props) {
     }
   }, [isTMSubmit, resourceData])
 
+  // const generateGrid = (value) => {
+  //   console.log("inputNumber", inputNumber, value);
+  //   const items = [];
+  //   // const iterator = value ? value : inputNumber;
+  //   const iterator = value;
+  //   if (pricingType == "T&M") {
+  //     const tempResourceDetails = [];
+  //     for (let i = 0; i < iterator; i++) {
+  //       const resourceDataRow = {
+  //         index: i,
+  //         sbuId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.strategicBusinessUnit?.sbuId,
+  //         sbuHeadId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.strategicBusinessUnitHead?.sbuHeadId,
+  //         businessUnitId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.businessUnit?.businessUnitId,
+  //         locationId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.location?.locationId,
+  //         resouceName:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.resourceName,
+  //         employeeId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.employeeId,
+  //         startDate:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.resourceStartDate,
+  //         endDate:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.resourceEndDate,
+  //         businessTypeId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.businessType.businessTypeId,
+  //         cocPracticeId:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.cocPractice.cocPracticeId,
+  //         billingRateType:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.billingRateType,
+  //         billingRate:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.billingRate,
+  //         leaveLossFactor:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.leaveLossFactor,
+  //         allocation:
+  //           oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[i]
+  //             ?.allocation,
+  //       };
+  //       tempResourceDetails.push(resourceDataRow);
+  //     }
+  //     setResourceData(tempResourceDetails);
+  //     for (let i = 0; i < iterator; i++) {
+  //       items.push(
+  //         <RevenueResourceAccordian
+  //           id={i}
+  //           // formData={props.tabIndex.formData}
+  //           // updateResourceData={updateResourceData}
+  //           pricingType={pricingType}
+  //           resourceData={tempResourceDetails}
+  //           updateResourceData={setResourceData}
+  //           oppId={oppId}
+  //           oppDataByOppId={oppDataByOppId}
+  //           selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+  //           setInputNumber={setInputNumber}
+  //           inputNumber={inputNumber}
+  //           initialResourceCount={initialResourceCount}
+  //           generateGrid={generateGrid}
+  //           getDataByOppId={getDataByOppId}
+  //           currencyID={formUpdateData.currency.currencyID}
+  //           currencyLabelResourceLevel={currencyLabelResourceLevel}
+  //           isTMSubmit={isTMSubmit}
+  //         />
+  //       );
+  //     }
+  //   } else {
+  //     const tempMilestoneDetails = [];
+  //     for (let i = 0; i < iterator; i++) {
+  //       console.log("datdata", tempMilestoneDetails)
+  //       const milestoneDataRow = oppDataByOppId?.length > 0 ? {
+  //         index: i,
+  //         milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+  //           ?.milestoneEntryId,
+  //         milestoneNumber: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+  //           ?.milestoneNumber,
+  //         milestoneBillingDate: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+  //           ?.milestoneBillingDate,
+  //         milestoneResourceCount: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+  //           ?.milestoneResourceCount,
+  //         milestoneRevenue: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
+  //           ?.milestoneRevenue,
+  //         revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz, i) => (
+  //           console.log("revenueEntry113", zzz.revenueResourceEntryId),
+  //           {
+  //             revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+  //             allocation: zzz.allocation,
+  //             milestoneResourceRevenue: zzz.milestoneResourceRevenue,
+  //             employeeId: zzz.employeeId,
+  //             resourceName: zzz.resourceName,
+  //             businessTypeId: zzz.businessType.businessTypeId,
+  //             location: zzz.location?.locationId,
+  //             resourceStartDate: zzz.resourceStartDate,
+  //             resourceEndDate: zzz.resourceEndDate,
+  //             cocPracticeId: zzz.cocPractice.cocPracticeId,
+  //             sbuId: zzz.strategicBusinessUnit?.sbuId,
+  //             sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
+  //             businessUnitId: zzz.businessUnit?.businessUnitId,
+
+  //           }
+  //         ))
+  //       } : {
+  //         index: i,
+  //         milestoneNumber: `M${i + 1}`,
+  //         revenueResourceEntries: [],
+  //       };
+  //       tempMilestoneDetails.push(milestoneDataRow);
+  //     }
+  //     console.log(tempMilestoneDetails, 'tempMilestoneDetails')
+  //     setMilestoneData(tempMilestoneDetails);
+  //     for (let i = 0; i < iterator; i++) {
+  //       items.push(
+  //         <RevenueMilestoneAccordian
+  //           id={i}
+  //           // formData={props.tabIndex.formData}
+  //           // myFormData={formData}
+  //           pricingType={pricingType}
+  //           milestoneData={tempMilestoneDetails}
+  //           updateMilestoneData={setMilestoneData}
+  //           oppId={oppId}
+  //           //issue here
+  //           selectedFyIdToGetLocation={selectedFyIdToGetLocation}
+  //           inputNumberMileStone={inputNumberMileStone}
+  //           isFPSubmit={isFPSubmit}
+  //         // oppDataByOppId={oppDataByOppId}
+  //         //done issue
+  //         // setInputNumber={setInputNumber}
+  //         // inputNumber={inputNumber}
+
+  //         />
+  //       );
+  //     }
+  //   }
+  //   setGridItems(items);
+  // };
+
   const generateGrid = (value) => {
     console.log("inputNumber", inputNumber, value);
     const items = [];
@@ -507,7 +656,6 @@ function TrForRevenue(props) {
             getDataByOppId={getDataByOppId}
             currencyID={formUpdateData.currency.currencyID}
             currencyLabelResourceLevel={currencyLabelResourceLevel}
-            isTMSubmit={isTMSubmit}
           />
         );
       }
@@ -515,45 +663,41 @@ function TrForRevenue(props) {
       const tempMilestoneDetails = [];
       for (let i = 0; i < iterator; i++) {
         console.log("datdata", tempMilestoneDetails)
-        const milestoneDataRow = oppDataByOppId?.length > 0 ? {
+        const milestoneDataRow = {
           index: i,
           milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-            ?.milestoneEntryId,
+          ?.milestoneEntryId,
           milestoneNumber: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-            ?.milestoneNumber,
+          ?.milestoneNumber,
           milestoneBillingDate: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-            ?.milestoneBillingDate,
+          ?.milestoneBillingDate,
           milestoneResourceCount: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-            ?.milestoneResourceCount,
+          ?.milestoneResourceCount,
           milestoneRevenue: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-            ?.milestoneRevenue,
-          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz, i) => (
-            console.log("revenueEntry113", zzz.revenueResourceEntryId),
-            {
-              revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
-              allocation: zzz.allocation,
-              milestoneResourceRevenue: zzz.milestoneResourceRevenue,
-              employeeId: zzz.employeeId,
-              resourceName: zzz.resourceName,
-              businessTypeId: zzz.businessType.businessTypeId,
-              location: zzz.location?.locationId,
-              resourceStartDate: zzz.resourceStartDate,
-              resourceEndDate: zzz.resourceEndDate,
-              cocPracticeId: zzz.cocPractice.cocPracticeId,
-              sbuId: zzz.strategicBusinessUnit?.sbuId,
-              sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
-              businessUnitId: zzz.businessUnit?.businessUnitId,
+          ?.milestoneRevenue,           
+          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz,i)=>(
+            console.log("revenueEntry113",zzz.revenueResourceEntryId),
+  {
+    revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+    allocation: zzz.allocation,
+    milestoneResourceRevenue: zzz.milestoneResourceRevenue,
+    employeeId: zzz.employeeId,
+    resourceName: zzz.resourceName,
+    businessTypeId:zzz.businessType.businessTypeId,
+    location: zzz.location?.locationId,
+    resourceStartDate: zzz.resourceStartDate,
+    resourceEndDate: zzz.resourceEndDate,
+    cocPracticeId: zzz.cocPractice.cocPracticeId,
+    sbuId: zzz.strategicBusinessUnit?.sbuId,
+    sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
+    businessUnitId: zzz.businessUnit?.businessUnitId,
 
-            }
-          ))
-        } : {
-          index: i,
-          milestoneNumber: `M${i + 1}`,
-          revenueResourceEntries: [],
+  }
+))       
         };
         tempMilestoneDetails.push(milestoneDataRow);
       }
-      console.log(tempMilestoneDetails, 'tempMilestoneDetails')
+      console.log(tempMilestoneDetails,'tempMilestoneDetails')
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -567,12 +711,11 @@ function TrForRevenue(props) {
             oppId={oppId}
             //issue here
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
-            inputNumberMileStone={inputNumberMileStone}
-            isFPSubmit={isFPSubmit}
-          // oppDataByOppId={oppDataByOppId}
-          //done issue
-          // setInputNumber={setInputNumber}
-          // inputNumber={inputNumber}
+            inputNumberMileStone ={inputNumberMileStone}
+            // oppDataByOppId={oppDataByOppId}
+            //done issue
+            // setInputNumber={setInputNumber}
+            // inputNumber={inputNumber}
 
           />
         );
@@ -921,7 +1064,8 @@ function TrForRevenue(props) {
         });
     }
   }
-  }
+}
+  
   console.log("formUpdateData", formUpdateData);
 
   // const OnSubmit = () => {

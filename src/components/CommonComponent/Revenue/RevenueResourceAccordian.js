@@ -310,6 +310,60 @@ const RevenueResourceAccordian = (props) => {
   const selectedCurrency =
     props?.oppDataByOppId?.tmRevenueEntryVO?.currency?.currency;
 
+    const [incomingResourceStartDate, setIncomingResourceStartDate] = useState('');
+    const [incomingResourceEndDate, setIncomingResourceEndDate] = useState('');
+
+
+
+      useEffect(() => {
+        const incomingDate = props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate;
+        if (incomingDate) {
+          // Parse incoming date and convert to "YYYY-MM-DD" format
+          const [day, month, year] = incomingDate.split('/');
+          const monthMap = {
+            "Jan": "01",
+            "Feb": "02",
+            "Mar": "03",
+            "Apr": "04",
+            "May": "05",
+            "Jun": "06",
+            "Jul": "07",
+            "Aug": "08",
+            "Sep": "09",
+            "Oct": "10",
+            "Nov": "11",
+            "Dec": "12"
+          };
+          const formattedDate = `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+          setIncomingResourceStartDate(formattedDate);
+        }
+      }, [props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate]);
+
+      useEffect(() => {
+        const incomingEndDate = props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate;
+        if (incomingEndDate) {
+          // Parse incoming date and convert to "YYYY-MM-DD" format
+          const [day, month, year] = incomingEndDate.split('/');
+          const monthMap = {
+            "Jan": "01",
+            "Feb": "02",
+            "Mar": "03",
+            "Apr": "04",
+            "May": "05",
+            "Jun": "06",
+            "Jul": "07",
+            "Aug": "08",
+            "Sep": "09",
+            "Oct": "10",
+            "Nov": "11",
+            "Dec": "12"
+          };
+          const formattedDate = `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+          setIncomingResourceEndDate(formattedDate);
+        }
+      }, [props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate])
+
+
   return (
     <React.Fragment>
       <br></br>
@@ -760,7 +814,7 @@ const RevenueResourceAccordian = (props) => {
                 ) ? "1px solid red"
                   : "",
               }}>
-                <input
+                {/* <input
                   style={{
                     fontFamily: "Roboto",
                     fontSize: "14px",
@@ -776,6 +830,24 @@ const RevenueResourceAccordian = (props) => {
                   // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
 
                   onChange={(e) => {
+                    updateResourceDetails({
+                      event: e,
+                      resourseDetailsColumn: "startDate",
+                    });
+                  }}
+                /> */}
+                                <input
+                 
+                  id="milestoneselect"
+                  type="date"
+                  // placeholder={
+                  //   props?.oppDataByOppId?.tmRevenueEntryVO
+                  //     ?.revenueResourceEntries[id]?.resourceStartDate
+                  // }
+                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceStartDate}
+                  value={incomingResourceStartDate}
+                  onChange={(e) => {
+                    setIncomingResourceStartDate(e.target.value);
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "startDate",
@@ -801,12 +873,11 @@ const RevenueResourceAccordian = (props) => {
                   id="milestoneselect"
                   type="date"
                   required
-                  placeholder={
-                    props?.oppDataByOppId?.tmRevenueEntryVO
-                      ?.revenueResourceEntries[id]?.resourceEndDate
-                  }
-                  // value={props?.oppDataByOppId?.tmRevenueEntryVO?.revenueResourceEntries[id]?.resourceEndDate}
+                  value={incomingResourceEndDate}
                   onChange={(e) => {
+                    
+                    setIncomingResourceEndDate(e.target.value);
+
                     updateResourceDetails({
                       event: e,
                       resourseDetailsColumn: "endDate",

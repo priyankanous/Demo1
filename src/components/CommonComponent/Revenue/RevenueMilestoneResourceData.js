@@ -304,9 +304,60 @@ const dynamicResourceId = getResourceId();
 const milestone = props?.oppDataByOppId?.fpRevenueEntryVO?.milestones?.[dynamicMilestoneId];
 const resourceName = milestone?.revenueResourceEntries?.[dynamicResourceId]?.resourceName;
 
-console.log(resourceName);
+console.log("incomingFPResourceStart", props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceStartDate);
+console.log("incomingFPResourceStart", props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceEndDate);
 
 
+const [incomingFPResourceStart, setIncomingFPResourceStart] = useState('');
+const [incomingFPResourceEnd, setIncomingFPResourceEnd] = useState('');
+
+useEffect(() => {
+  const incomingDate = props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceStartDate;
+  if (incomingDate) {
+    // Parse incoming date and convert to "YYYY-MM-DD" format
+    const [day, month, year] = incomingDate.split('/');
+    const monthMap = {
+      "Jan": "01",
+      "Feb": "02",
+      "Mar": "03",
+      "Apr": "04",
+      "May": "05",
+      "Jun": "06",
+      "Jul": "07",
+      "Aug": "08",
+      "Sep": "09",
+      "Oct": "10",
+      "Nov": "11",
+      "Dec": "12"
+    };
+    const formattedDate = `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+    setIncomingFPResourceStart(formattedDate);
+  }
+}, [props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceStartDate]);
+
+useEffect(() => {
+  const incomingEndDate = props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceEndDate;
+  if (incomingEndDate) {
+    // Parse incoming date and convert to "YYYY-MM-DD" format
+    const [day, month, year] = incomingEndDate.split('/');
+    const monthMap = {
+      "Jan": "01",
+      "Feb": "02",
+      "Mar": "03",
+      "Apr": "04",
+      "May": "05",
+      "Jun": "06",
+      "Jul": "07",
+      "Aug": "08",
+      "Sep": "09",
+      "Oct": "10",
+      "Nov": "11",
+      "Dec": "12"
+    };
+    const formattedDate = `${year}-${monthMap[month]}-${day.padStart(2, '0')}`;
+    setIncomingFPResourceEnd(formattedDate);
+  }
+}, [props.newOppData?.fpRevenueEntryVO?.milestones[props.milestoneId]?.revenueResourceEntries[id].resourceEndDate]);
 
   return (
     <React.Fragment>
@@ -791,7 +842,9 @@ console.log(resourceName);
             <input
               id="milestoneinput"
               type="date"
+              value={incomingFPResourceStart}
               onChange={(e) => {
+                setIncomingFPResourceStart(e.target.value)
                 updateMilestoneDetails({
                   event: e,
                   milestoneDetailsColumn: "resourceStartDate",
@@ -820,7 +873,9 @@ console.log(resourceName);
             <input
               id="milestoneinput"
               type="date"
+              value={incomingFPResourceEnd}
               onChange={(e) => {
+                setIncomingFPResourceEnd(e.target.value)
                 updateMilestoneDetails({
                   event: e,
                   milestoneDetailsColumn: "resourceEndDate",
