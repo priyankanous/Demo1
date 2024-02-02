@@ -663,41 +663,46 @@ function TrForRevenue(props) {
       const tempMilestoneDetails = [];
       for (let i = 0; i < iterator; i++) {
         console.log("datdata", tempMilestoneDetails)
-        const milestoneDataRow = {
+        const milestoneDataRow = oppDataByOppId?.fpRevenueEntryVO?.milestones?.length > 0 ? {
           index: i,
           milestoneEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneEntryId,
+            ?.milestoneEntryId,
           milestoneNumber: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneNumber,
+            ?.milestoneNumber,
           milestoneBillingDate: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneBillingDate,
+            ?.milestoneBillingDate,
           milestoneResourceCount: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneResourceCount,
+            ?.milestoneResourceCount,
           milestoneRevenue: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]
-          ?.milestoneRevenue,           
-          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz,i)=>(
-            console.log("revenueEntry113",zzz.revenueResourceEntryId),
-  {
-    revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
-    allocation: zzz.allocation,
-    milestoneResourceRevenue: zzz.milestoneResourceRevenue,
-    employeeId: zzz.employeeId,
-    resourceName: zzz.resourceName,
-    businessTypeId:zzz.businessType.businessTypeId,
-    location: zzz.location?.locationId,
-    resourceStartDate: zzz.resourceStartDate,
-    resourceEndDate: zzz.resourceEndDate,
-    cocPracticeId: zzz.cocPractice.cocPracticeId,
-    sbuId: zzz.strategicBusinessUnit?.sbuId,
-    sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
-    businessUnitId: zzz.businessUnit?.businessUnitId,
+            ?.milestoneRevenue,
+          revenueResourceEntries: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries.map((zzz, i) => (
+            console.log("revenueEntry113", zzz.revenueResourceEntryId),
+            {
+              revenueResourceEntryId: oppDataByOppId?.fpRevenueEntryVO?.milestones[i]?.revenueResourceEntries[i]?.revenueResourceEntryId,
+              allocation: zzz.allocation,
+              milestoneResourceRevenue: zzz.milestoneResourceRevenue,
+              employeeId: zzz.employeeId,
+              resourceName: zzz.resourceName,
+              businessTypeId: zzz.businessType.businessTypeId,
+              location: zzz.location?.locationId,
+              resourceStartDate: zzz.resourceStartDate,
+              resourceEndDate: zzz.resourceEndDate,
+              cocPracticeId: zzz.cocPractice.cocPracticeId,
+              sbuId: zzz.strategicBusinessUnit?.sbuId,
+              sbuHeadId: zzz.strategicBusinessUnitHead?.sbuHeadId,
+              businessUnitId: zzz.businessUnit?.businessUnitId,
 
-  }
-))       
-        };
+            }
+          ))
+        }
+          : {
+            index: i,
+            milestoneNumber: `M${i + 1}`,
+            revenueResourceEntries: [],
+          };
         tempMilestoneDetails.push(milestoneDataRow);
       }
-      console.log(tempMilestoneDetails,'tempMilestoneDetails')
+      console.log(tempMilestoneDetails, 'tempMilestoneDetails')
       setMilestoneData(tempMilestoneDetails);
       for (let i = 0; i < iterator; i++) {
         items.push(
@@ -711,11 +716,11 @@ function TrForRevenue(props) {
             oppId={oppId}
             //issue here
             selectedFyIdToGetLocation={selectedFyIdToGetLocation}
-            inputNumberMileStone ={inputNumberMileStone}
-            // oppDataByOppId={oppDataByOppId}
-            //done issue
-            // setInputNumber={setInputNumber}
-            // inputNumber={inputNumber}
+            inputNumberMileStone={inputNumberMileStone}
+          // oppDataByOppId={oppDataByOppId}
+          //done issue
+          // setInputNumber={setInputNumber}
+          // inputNumber={inputNumber}
 
           />
         );
@@ -1051,21 +1056,21 @@ function TrForRevenue(props) {
 
         setOpenErrorSnackbar(true);
       } else {
-      axios
-        .put(
-          `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
-          payloadForFPEditFirstLevel
-        )
-        .then((response) => {
-          const actualDataObject = response.data.data;
-          setIsOpenSecondLevelEdit(false);
-          setIsOpenThirdLevelEdit(false);
-          console.log("editSave", actualDataObject);
-        });
+        axios
+          .put(
+            `http://192.168.16.55:8080/rollingrevenuereport/api/v1/revenue-entry/fixed-price/${oppId}`,
+            payloadForFPEditFirstLevel
+          )
+          .then((response) => {
+            const actualDataObject = response.data.data;
+            setIsOpenSecondLevelEdit(false);
+            setIsOpenThirdLevelEdit(false);
+            console.log("editSave", actualDataObject);
+          });
+      }
     }
   }
-}
-  
+
   console.log("formUpdateData", formUpdateData);
 
   // const OnSubmit = () => {
@@ -1905,13 +1910,13 @@ function TrForRevenue(props) {
                                 moment(obj.milestoneBillingDate, "YYYY-MM-DD"
                                 ).format("DD/MMM/YYYY")}    */}
 
-{
-  pricingType === "T&M"
-    ? obj.billingRate
-    : obj.milestoneBillingDate
-    ? moment(obj.milestoneBillingDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
-    : ""
-}
+                              {
+                                pricingType === "T&M"
+                                  ? obj.billingRate
+                                  : obj.milestoneBillingDate
+                                    ? moment(obj.milestoneBillingDate, "YYYY-MM-DD").format("DD/MMM/YYYY")
+                                    : ""
+                              }
 
                             </span>
                           </div>
