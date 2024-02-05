@@ -36,9 +36,6 @@ const RevenueResourceAccordian = (props) => {
     currencyLabelResourceLevel,
   } = props;
 
-  console.log("currencyId->", currencyID);
-  console.log("inputNumber->", inputNumber);
-
   useEffect(() => {
     props.getSbuData();
     props.getBuData();
@@ -62,7 +59,6 @@ const RevenueResourceAccordian = (props) => {
     "Nov",
     "Dec",
   ];
-  console.log("Props in accordion new------>", props);
   const [selectedSbuId, setSelectedSbuId] = useState("");
   const [sbuHeadData, setSbuHeadData] = useState(null);
   const [buDataBySbuId, setBuDataBySbuId] = useState(null);
