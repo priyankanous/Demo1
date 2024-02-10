@@ -27,13 +27,29 @@ code {
   color: black;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
   background: #D9D9D9;
+} */
+
+.searchFilterInnerContainer::-webkit-scrollbar {
+  width: 7px; 
+   background: #a91717;
 }
-::-webkit-scrollbar-track {
+
+.searchFilterInnerContainer::-webkit-scrollbar-track {
+  background: #D9D9D9; 
+}
+
+.searchFilterInnerContainer::-webkit-scrollbar-thumb {
+  background: #1E4482; 
+  /* border-radius: 5px; */
+  border: 1px solid #1E4482;
+}
+
+/* ::-webkit-scrollbar-track { */
   /* background: #D9D9D9;  */
-}
+/* } */
 /* ::-webkit-scrollbar-thumb {
   background: blue; 
   height: 50px;
