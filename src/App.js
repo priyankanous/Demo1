@@ -97,6 +97,11 @@ function App() {
           component={Reports.BusinessType}
         />
         <Route path="/settings/account" component={Settings.Account} />
+        <Route
+          path="/reports/regionwiseview"
+          component={Reports.RegionWiseReport}
+        />
+
         <Route path="/settings/opportunity" component={Settings.Opportunity} />
         <Route
           path="/settings/role-user-permission"

@@ -30,6 +30,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.7.4",
     "react-tabs": "^6.0.0",
+    "recharts": "^2.12.0",
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
     "sass": "^1.58.3",
