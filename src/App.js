@@ -96,12 +96,15 @@ function App() {
           path="/reports/businesstypewiseview"
           component={Reports.BusinessType}
         />
-        <Route path="/settings/account" component={Settings.Account} />
         <Route
           path="/reports/regionwiseview"
           component={Reports.RegionWiseReport}
         />
-
+        <Route
+          path="/reports/probabilitytypeview"
+          component={Reports.ProbabilityWiseReport}
+        />
+        <Route path="/settings/account" component={Settings.Account} />
         <Route path="/settings/opportunity" component={Settings.Opportunity} />
         <Route
           path="/settings/role-user-permission"

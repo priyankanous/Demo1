@@ -5,8 +5,6 @@ import {
 	BarChart,
 	Bar,
 	XAxis,
-	YAxis,
-	CartesianGrid,
 	Tooltip,
 	Legend
   } from "recharts";
@@ -108,7 +106,7 @@ import { getProbabilityData } from "../../actions/probability";
 
     
 
- const RegionWiseReport = (props , onBuChange) => {
+ const ProbabilityWiseReport = (props , onBuChange) => {
 
 	//to open the search model
 	const [open, setOpen] = useState(false);
@@ -125,7 +123,8 @@ import { getProbabilityData } from "../../actions/probability";
 	const [locationId, setLocationId] = useState('');
 	const [bdmId, setBdmId] = useState('');
 	const [accountId, setAccountId] = useState('');
-	// const [regionId, setRegionId] = useState('');
+	const [regionId, setRegionId] = useState('');
+
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -137,9 +136,9 @@ import { getProbabilityData } from "../../actions/probability";
 		setChartType(event.target.value);
 	  };
 
-	//   const regionHandler = (e) => {
-	// 	setRegionId(e.target.value);
-	//   }
+	  const regionHandler = (e) => {
+		setRegionId(e.target.value);
+	  }
 
     const handleBuChange = (e) => {
       const selectedBuId = e.target.value;
@@ -188,31 +187,30 @@ import { getProbabilityData } from "../../actions/probability";
 	  // chart related
 
 	  const [responseData, setResponseData] = useState(null);
-	  const [reportRegionData, setReportRegionData] = useState([]);
+	  const [reportProbabilityData, setReportProbabilityData] = useState([]);
 	  const [filteredLabel, setFilteredLabel] = useState([]);
 
-	  const label = reportRegionData?.labels;
-	  const outDTOList = reportRegionData?.outDTOList;
-	  const naData = outDTOList?.find(item => item.label === 'NA')?.data;
-	  const euData = outDTOList?.find(item => item.label === 'EU')?.data;
-	  const apacData = outDTOList?.find(item => item.label === 'APAC')?.data;
+	  const label = reportProbabilityData?.labels;
+	  const outDTOList = reportProbabilityData?.outDTOList;
+	  const confirmedData = outDTOList?.find(item => item.label === 'Confirmed')?.data;
+	  const exceptedData = outDTOList?.find(item => item.label === 'Excepted')?.data;
+	  const upsideData = outDTOList?.find(item => item.label === 'Upside')?.data;
+	  const highUpsideData = outDTOList?.find(item => item.label === 'High-Upside')?.data;
+
 
 	  const dataList = label?.map((labels, index) => ({
 		name: labels,
-		// NA: Math.random() * 5000, 
-		NA: naData ? naData[index] : 0,
-		EU: naData ? euData[index] : 0,
-		APAC: naData ? apacData[index] : 0,	
-		// EU: Math.random() * 5000,
-		// APAC: Math.random() * 5000,
+		Conifmed: confirmedData ? confirmedData[index] : 0,
+		Expected: confirmedData ? exceptedData[index] : 0,
+		Upside: confirmedData ? upsideData[index] : 0,	
+		HighUpside: confirmedData ? highUpsideData[index] : 0,
 	  }));
 
 	  const reportData = {
-		// "viewType": "Quarterly",
-		// "viewType": "Monthly",
 		"viewType": viewType,
 		"data": {
 		  "financialYearName": "2023-2024",
+      "regionId": regionId,
 		  "businessUnitId": buId,
 		  "sbuId": sbuId,
 		  "sbuHeadId": sbuHeadId,
@@ -226,10 +224,10 @@ import { getProbabilityData } from "../../actions/probability";
 	
 	  const getReportRegionData = async () =>{
 		var {data } = await axios.post(
-		  "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/region",
+		  "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/probabilitytype",
 		  reportData
 		);
-		setReportRegionData(data.data);
+		setReportProbabilityData(data.data);
 		setFilteredLabel(data.data.labels);
 	  }
 
@@ -247,8 +245,9 @@ import { getProbabilityData } from "../../actions/probability";
 		setLocationId("");
 		setAccountId("");
 		setBdmId("");
+    setRegionId("");
 		setOpen(false);
-		setReportRegionData([])
+		setReportProbabilityData([])
 	  }
 
   return (
@@ -294,6 +293,35 @@ import { getProbabilityData } from "../../actions/probability";
             /> Tabular
         </div>
 		<div className='searchFilterInnerContainer' style={{paddingRight:"15px",height:"234px",overflowY:"auto",paddingTop:"10px"}}>
+
+    <div style={{ padding: "3px 0px" }}>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  <span>Region :</span>
+                </label>
+                <select
+                  style={{
+                    height: "28px",
+                    width: "100%",
+                    borderRadius: "3px",
+                    boxShadow: "none",
+                    fontFamily:"Roboto",
+                    fontSize:"16px",
+                    fontWeight:"400",
+					border:"1px solid #00000061"
+                  }}
+				  onChange={regionHandler} 
+                >
+                  <option value="" disabled selected hidden>
+                  </option>
+                  {props.regionData.regionData &&
+              props.regionData.regionData.map((obj, id) => (
+                <option value={obj.regionId}>{obj.regionName}</option>
+              ))}
+                </select>
+              </div>
 
 			  <div style={{ padding: "3px 0px" }}>
                 <label
@@ -579,37 +607,22 @@ import { getProbabilityData } from "../../actions/probability";
         bottom: 5
       }}
     >
-      {/* <CartesianGrid strokeDasharray=" 3 3" /> */}
-      {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
-      {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
       <XAxis style={{fontSize:"9px"}}  dataKey="name" interval={0}/>
-
-      {/* <YAxis  /> */}
       <Tooltip />
       <Legend />
-      <Bar dataKey="NA" stackId="a" fill="#93B1A6" />
-      <Bar dataKey="EU" stackId="a" fill="#5C8374" />
-      <Bar dataKey="APAC" stackId="a" fill="#183D3D" />
-      {/* <Bar dataKey="bmy" stackId="a" fill="##040D12" /> */}
-      
-      {/* <Bar dataKey="bmy" fill="#8884d8" /> */}
-      {/* <Bar dataKey="uv" fill="#ffc658" /> */}
-
-
-
+      <Bar dataKey="Conifmed" stackId="a" fill="#93B1A6" />
+      <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
+      <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
+      <Bar dataKey="HighUpside" stackId="a" fill="#040D12" />
     </BarChart>
     </div>
 	)}
-
     </div>
-
 	</div>
   )
 }
 
 const mapStateToProps = (state) => {
-	// console.log("this is the state", state);
-
 	return {
 	  regionData: state.regionData,
 	  buData: state.buData,
@@ -638,4 +651,4 @@ const mapStateToProps = (state) => {
 	//   getReportData: (data) => dispatch(getReportData(data)),
 	};
   };
-export default connect(mapStateToProps, mapDispatchToProps)(RegionWiseReport);
+export default connect(mapStateToProps, mapDispatchToProps)(ProbabilityWiseReport);
