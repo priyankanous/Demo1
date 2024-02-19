@@ -25,91 +25,36 @@ import { getBdmData } from "../../actions/bdm";
 import { getBusinessTypeData } from "../../actions/businessType";
 import { getProbabilityData } from "../../actions/probability";
 import { getFinancialYearData } from "../../actions/financial-year";
-
-const ReportSearchModalBox = styled(Box)({
-  position: "absolute",
-  top: "55%",
-  left: "30%",
-  height: "455px",
-  transform: "translate(-50%, -50%)",
-  width: 235,
-  backgroundColor: "#fff",
-  boxShadow: "0px 0px 8px 5px #00000026",
-  padding: "10px 10px 10px 10px",
-  // overflowY:"auto"
-});
-
-const SearchModalButton = styled(Button)({
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "black",
-  textTransform: "capitalize",
-  "&:hover": {
-    backgroundColor: "transparent",
-  },
-});
-
-const ReportSearchHeading = styled(`h5`)({
-  color: "black",
-  fontSize: "16px",
-  fontWeight: "500",
-  margin: "0px",
-});
-
-export const ReportSearchButtonSection = styled("div")({
-  display: "flex",
-  justifyContent: "space-evenly",
-  padding: "10px 0px",
-});
-
-export const ModalCancelButton = styled(Button)({
-  color: "#000000",
-  background: "#EBEBEB",
-  fontSize: "14px",
-  fontWeight: "500",
-  fontFamily: "Roboto",
-  padding: "5px",
-  "&:hover": {
-    backgroundColor: "#EBEBEB",
-  },
-});
-
-export const ModalControlButton = styled(Button)({
-  color: "#FFFFFF",
-  background: "#1E4482",
-  fontFamily: "Roboto",
-  padding: "5px",
-  "&:hover": {
-    backgroundColor: "#1E4482",
-  },
-});
-
-export const searchModalTitle = styled("div")({
-  display: "flex",
-  alignItems: "center",
-});
-
-const RadioInput = styled(`input`)({
-  boxShadow: "none",
-  marginTop: "10px",
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "#000000",
-});
-
-const OutputTypeHEading = styled(`p`)({
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "#000000",
-  margin: "8px 0px 0px 0px",
-});
-
-export const searchModalinnerContainer = styled("div")({
-  display: "flex",
-  alignItems: "center",
-});
+import { ReportSearchModalBox, SearchModalButton, ReportSearchHeading,
+  ReportSearchButtonSection,
+  ReportModalCancelButton,
+  ReportModalApplyButton,
+  searchModalTitle,
+  OutputTypeHEading,
+  RadioInput,
+  searchModalinnerContainer
+} from "../../utils/constantsValue";
 
 const RegionWiseReport = (props, onBuChange) => {
+
+  //get the current financial year
+  function getCurrentFinancialYear() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth(); // January is 0
+    let financialYearStart;
+
+    if (currentMonth >= 3) {
+        financialYearStart = currentYear;
+    } else {
+        financialYearStart = currentYear - 1;
+    }
+    const financialYearEnd = financialYearStart + 1;
+    return `${financialYearStart}-${financialYearEnd}`;
+}
+const currentFinancialYear = getCurrentFinancialYear();
+
+
   //to open the search model
   const [open, setOpen] = useState(false);
 
@@ -117,7 +62,7 @@ const RegionWiseReport = (props, onBuChange) => {
   const [viewType, setViewType] = useState("Monthly");
   const [chartType, setChartType] = useState("Tabular");
 
-  const [filteredFinancialYear, setFilteredFinancialYear] = useState("");
+  const [filteredFinancialYear, setFilteredFinancialYear] = useState(currentFinancialYear);
   const [buId, setBuId] = useState("");
   const [sbuId, setSbuId] = useState("");
   const [sbuHeadId, setSbuHeadId] = useState("");
@@ -188,10 +133,9 @@ const RegionWiseReport = (props, onBuChange) => {
     props.getBusinessTypeData();
     props.getProbabilityData();
     props.getFinancialYearData();
+    getReportRegionData();
   }, []);
 
-  console.log("getFinancialYearData", props.financialYear);
-  console.log("getBuData", getBuData);
 
   // chart related
 
@@ -209,8 +153,8 @@ const RegionWiseReport = (props, onBuChange) => {
     name: labels,
     // NA: Math.random() * 5000,
     NA: naData ? naData[index] : 0,
-    EU: naData ? euData[index] : 0,
-    APAC: naData ? apacData[index] : 0,
+    EU: euData ? euData[index] : 0,
+    APAC: apacData ? apacData[index] : 0,
     // EU: Math.random() * 5000,
     // APAC: Math.random() * 5000,
   }));
@@ -259,6 +203,7 @@ const RegionWiseReport = (props, onBuChange) => {
     setBdmId("");
     setOpen(false);
     setReportRegionData([]);
+    getReportRegionData();
   };
 
   return (
@@ -299,14 +244,8 @@ const RegionWiseReport = (props, onBuChange) => {
               <div>
                 <ReportSearchHeading>Report Filters: </ReportSearchHeading>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  paddingTop: "5px",
-                }}
-              >
-                <div style={{ width: "100%", paddingRight: "10px" }}>
+              
+                <div style={{ width: "60%",paddingTop:"5px" }}>
                   <label
                     for="email"
                     style={{ fontWeight: "400", fontSize: "16px" }}
@@ -324,6 +263,7 @@ const RegionWiseReport = (props, onBuChange) => {
                       fontWeight: "400",
                       border: "1px solid #00000061",
                     }}
+                    value={filteredFinancialYear}
                     onChange={financialYearHeadHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -336,7 +276,28 @@ const RegionWiseReport = (props, onBuChange) => {
                   </select>
                 </div>
 
-                <div style={{ width: "100%", paddingRight: "10px" }}>
+              <div>
+                <RadioInput
+                  type="radio"
+                  value="Quarterly"
+                  name="viewType"
+                  onChange={handleViewTypeChange}
+                  checked={viewType === "Quarterly"}
+                  // style={{ boxShadow: "none", marginTop:"10px", fontSize:"16px", fontWeight:"400", color:"#000000" }}
+                />
+                Quarterly
+                <br />
+                <RadioInput
+                  type="radio"
+                  value="Monthly"
+                  name="viewType"
+                  onChange={handleViewTypeChange}
+                  checked={viewType === "Monthly"}
+                />{" "}
+                Monthly
+              </div>
+              { viewType == "Monthly" && (
+                <div style={{ width: "60%", paddingTop: "5px" }}>
                   <label
                     for="email"
                     style={{ fontWeight: "400", fontSize: "16px" }}
@@ -359,27 +320,7 @@ const RegionWiseReport = (props, onBuChange) => {
                     <option value="" disabled selected hidden></option>
                   </select>
                 </div>
-              </div>
-              <div>
-                <RadioInput
-                  type="radio"
-                  value="Quarterly"
-                  name="viewType"
-                  onChange={handleViewTypeChange}
-                  checked={viewType === "Quarterly"}
-                  // style={{ boxShadow: "none", marginTop:"10px", fontSize:"16px", fontWeight:"400", color:"#000000" }}
-                />
-                Quarterly
-                <br />
-                <RadioInput
-                  type="radio"
-                  value="Monthly"
-                  name="viewType"
-                  onChange={handleViewTypeChange}
-                  checked={viewType === "Monthly"}
-                />{" "}
-                Monthly
-              </div>
+                )}
               <div>
                 <OutputTypeHEading>Output Type: </OutputTypeHEading>
               </div>
@@ -405,7 +346,7 @@ const RegionWiseReport = (props, onBuChange) => {
                 className="searchFilterInnerContainer"
                 style={{
                   paddingRight: "15px",
-                  height: "220px",
+                  height: "170px",
                   overflowY: "auto",
                   paddingTop: "10px",
                 }}
@@ -648,7 +589,7 @@ const RegionWiseReport = (props, onBuChange) => {
               </div>
 
               <ReportSearchButtonSection>
-                <ModalCancelButton
+                <ReportModalCancelButton
                   type="button"
                   variant="contained"
                   value="Cancel"
@@ -656,8 +597,8 @@ const RegionWiseReport = (props, onBuChange) => {
                   onClick={handleReset}
                 >
                   reset view
-                </ModalCancelButton>
-                <ModalControlButton
+                </ReportModalCancelButton>
+                <ReportModalApplyButton
                   type="button"
                   value="Save"
                   id="create-account"
@@ -665,7 +606,7 @@ const RegionWiseReport = (props, onBuChange) => {
                   onClick={handleApplyButtonClick}
                 >
                   apply
-                </ModalControlButton>
+                </ReportModalApplyButton>
               </ReportSearchButtonSection>
             </ReportSearchModalBox>
           </Modal>
@@ -708,28 +649,36 @@ const RegionWiseReport = (props, onBuChange) => {
                 dataKey="NA"
                 stackId="a"
                 fill="#93B1A6"
-                label={{
-                  position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
+                // label={{
+                //   position: "top",
+                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                // }}
               />
               <Bar
                 dataKey="EU"
                 stackId="a"
                 fill="#5C8374"
-                label={{
-                  position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
+                // label={{
+                //   position: "top",
+                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                // }}
               />
               <Bar
                 dataKey="APAC"
                 stackId="a"
                 fill="#183D3D"
+                // label={{
+                //   position: "top",
+                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                // }}
                 label={{
                   position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
+                  formatter: (value) => {
+                      const formattedValue = value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
+                      return formattedValue;
+                  }
+              }}            
+              
               />
               {/* <Bar dataKey="bmy" stackId="a" fill="##040D12" /> */}
 
