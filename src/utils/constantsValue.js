@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, 
+import { Table, TableBody, TableCell, Box,
   TableContainer, TableHead, TableRow, styled, Typography, InputLabel, TextField, Button } from '@mui/material';
 
 
@@ -224,5 +224,122 @@ export const MoadalStyle2 = {
   // boxShadow: 24,
   // p: 1,
 };
+
+//Report styling
+
+export const ReportSearchModalBox = styled(Box)({
+  position: "absolute",
+  top: "55%",
+  left: "30%",
+  maxHeight: "455px",
+  transform: "translate(-50%, -50%)",
+  width: 235,
+  backgroundColor: "#fff",
+  boxShadow: "0px 0px 8px 5px #00000026",
+  padding: "10px 10px 10px 10px",
+  // overflowY:"auto"
+});
+
+export const SearchModalButton = styled(Button)({
+  fontSize: "16px",
+  fontWeight: "400",
+  color: "black",
+  textTransform: "capitalize",
+  "&:hover": {
+    backgroundColor: "transparent",
+  },
+});
+
+export const ReportSearchHeading = styled(`h5`)({
+  color: "black",
+  fontSize: "16px",
+  fontWeight: "500",
+  margin: "0px",
+});
+
+export const ReportSearchButtonSection = styled("div")({
+  display: "flex",
+  justifyContent: "space-evenly",
+  padding: "10px 0px",
+});
+
+export const ReportModalCancelButton = styled(Button)({
+  color: "#000000",
+  background: "#EBEBEB",
+  fontSize: "14px",
+  fontWeight: "500",
+  fontFamily: "Roboto",
+  padding: "5px",
+  "&:hover": {
+    backgroundColor: "#EBEBEB",
+  },
+});
+
+export const ReportModalApplyButton = styled(Button)({
+  color: "#FFFFFF",
+  background: "#1E4482",
+  fontFamily: "Roboto",
+  padding: "5px",
+  "&:hover": {
+    backgroundColor: "#1E4482",
+  },
+});
+
+export const searchModalTitle = styled("div")({
+      display: "flex",
+      justifyContent: "space-between",
+      paddingRight: "50px",
+});
+
+export const RadioInput = styled(`input`)({
+  boxShadow: "none",
+  marginTop: "10px",
+  fontSize: "16px",
+  fontWeight: "400",
+  color: "#000000",
+});
+
+export const OutputTypeHEading = styled(`p`)({
+  fontSize: "16px",
+  fontWeight: "400",
+  color: "#000000",
+  margin: "8px 0px 0px 0px",
+});
+
+export const searchModalinnerContainer = styled("div")({
+  display: "flex",
+  alignItems: "center",
+});
+
+export const SelectOptions = styled(`select`)({
+  height: "28px",
+  width: "100%",
+  borderRadius: "3px",
+  boxShadow: "none",
+  fontFamily: "Roboto",
+  fontSize: "16px",
+  fontWeight: "400",
+  border: "1px solid #00000061",
+});
+
+export const ReportModalButtonDiv = styled(`div`)({
+  display: "flex", 
+  alignItems: "center"
+});
+
+export const SelectedFYDisplayDiv = styled(`div`)({
+  display: "flex", 
+  alignItems: "center"
+});
+
+export const ReportModalDropDownSection = styled(`div`)({
+  padding: "3px 0px"
+ });
+
+ export const LabelDisplay = styled(`label`)({
+  fontWeight: "400", 
+  fontSize: "16px"
+ });
+
 
 export const apiV1 = "http://192.168.16.55:8080/rollingrevenuereport/api/v1";

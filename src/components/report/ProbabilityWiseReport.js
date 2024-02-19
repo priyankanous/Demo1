@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Label, Tooltip, Legend } from "recharts";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import { Button, Typography, styled } from "@mui/material";
+import { Typography, Modal, styled } from "@mui/material";
 import { getRegionData } from "../../actions/region";
 import { getBuData } from "../../actions/bu";
 import { getSbuHeadData } from "../../actions/sbuHead";
@@ -16,99 +14,70 @@ import { getBdmData } from "../../actions/bdm";
 import { getBusinessTypeData } from "../../actions/businessType";
 import { getProbabilityData } from "../../actions/probability";
 import { getFinancialYearData } from "../../actions/financial-year";
-
-const ReportSearchModalBox = styled(Box)({
-  position: "absolute",
-  top: "55%",
-  left: "30%",
-  height: "455px",
-  transform: "translate(-50%, -50%)",
-  width: 235,
-  backgroundColor: "#fff",
-  boxShadow: "0px 0px 8px 5px #00000026",
-  padding: "10px 10px 10px 10px",
-  // overflowY:"auto"
-});
-
-const SearchModalButton = styled(Button)({
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "black",
-  textTransform: "capitalize",
-  "&:hover": {
-    backgroundColor: "transparent",
-  },
-});
-
-const ReportSearchHeading = styled(`h5`)({
-  color: "black",
-  fontSize: "16px",
-  fontWeight: "500",
-  margin: "0px",
-});
-
-export const ReportSearchButtonSection = styled("div")({
-  display: "flex",
-  justifyContent: "space-evenly",
-  padding: "10px 0px",
-});
-
-export const ModalCancelButton = styled(Button)({
-  color: "#000000",
-  background: "#EBEBEB",
-  fontSize: "14px",
-  fontWeight: "500",
-  fontFamily: "Roboto",
-  padding: "5px",
-  "&:hover": {
-    backgroundColor: "#EBEBEB",
-  },
-});
-
-export const ModalControlButton = styled(Button)({
-  color: "#FFFFFF",
-  background: "#1E4482",
-  fontFamily: "Roboto",
-  padding: "5px",
-  "&:hover": {
-    backgroundColor: "#1E4482",
-  },
-});
-
-export const searchModalTitle = styled("div")({
-  display: "flex",
-  alignItems: "center",
-});
-
-const RadioInput = styled(`input`)({
-  boxShadow: "none",
-  marginTop: "10px",
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "#000000",
-});
-
-const OutputTypeHEading = styled(`p`)({
-  fontSize: "16px",
-  fontWeight: "400",
-  color: "#000000",
-  margin: "8px 0px 0px 0px",
-});
-
-export const searchModalinnerContainer = styled("div")({
-  display: "flex",
-  alignItems: "center",
-});
+import {
+  ReportSearchModalBox,
+  SearchModalButton,
+  ReportSearchHeading,
+  ReportSearchButtonSection,
+  ReportModalCancelButton,
+  ReportModalApplyButton,
+  searchModalTitle,
+  OutputTypeHEading,
+  RadioInput,
+  searchModalinnerContainer,
+  SelectOptions,
+  ReportModalButtonDiv,
+  SelectedFYDisplayDiv,
+  ReportModalDropDownSection,
+  LabelDisplay
+} from "../../utils/constantsValue";
+import {
+  APPLY_FILTER_HERE,
+  FINANCIAL_YEAR,
+  REPORT_FILTERS,
+  WEEK,
+  QUARTERLY,
+  MONTHLY,
+  OUTPUT_TYPE,
+  CHART,
+  TABULAR,
+  REGION_LABEL,
+  BU_LABEL,
+  SBU_LABEL,
+  SBU_HEAD_LABEL,
+  BUSINESS_TYPE_LABEL,
+  PROBABILITY_TYPE_LABEL,
+  LOCATION_LABEL,
+  ACCOUNT_LABEL,
+  BDM_LABEL,
+  RESET_VIEW,
+  APPLY,
+} from "../../utils/Constants";
 
 const ProbabilityWiseReport = (props, onBuChange) => {
-  //to open the search model
-  const [open, setOpen] = useState(false);
 
-  //to set the chart type
+  //get the current financial year
+  function getCurrentFinancialYear() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    let financialYearStart;
+
+    if (currentMonth >= 3) {
+      financialYearStart = currentYear;
+    } else {
+      financialYearStart = currentYear - 1;
+    }
+    const financialYearEnd = financialYearStart + 1;
+    return `${financialYearStart}-${financialYearEnd}`;
+  }
+  const currentFinancialYear = getCurrentFinancialYear();
+
+  const [open, setOpen] = useState(false);
   const [viewType, setViewType] = useState("Monthly");
   const [chartType, setChartType] = useState("Tabular");
-  const [filteredFinancialYear, setFilteredFinancialYear] = useState("");
-
+  const [filteredFinancialYear, setFilteredFinancialYear] =
+    useState(currentFinancialYear);
   const [buId, setBuId] = useState("");
   const [sbuId, setSbuId] = useState("");
   const [sbuHeadId, setSbuHeadId] = useState("");
@@ -119,12 +88,14 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   const [accountId, setAccountId] = useState("");
   const [regionId, setRegionId] = useState("");
 
+  //open and close modal
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleViewTypeChange = (event) => {
     setViewType(event.target.value);
   };
+
   const handleChartTypeChange = (event) => {
     setChartType(event.target.value);
   };
@@ -168,7 +139,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   };
 
   useEffect(() => {
-    // Dispatch the action to get region data when the component mounts
+    // Dispatch the action to get the data
     props.getRegionData();
     props.getBuData();
     props.getSbuHeadData();
@@ -179,11 +150,10 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     props.getBusinessTypeData();
     props.getProbabilityData();
     props.getFinancialYearData();
+    getReportProbabilityData();
   }, []);
 
-  // chart related
-
-  const [responseData, setResponseData] = useState(null);
+  // chart related states
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
 
@@ -202,12 +172,13 @@ const ProbabilityWiseReport = (props, onBuChange) => {
 
   const dataList = label?.map((labels, index) => ({
     name: labels,
-    Conifmed: confirmedData ? confirmedData[index] : 0,
+    confirmed: confirmedData ? confirmedData[index] : 0,
     Expected: confirmedData ? exceptedData[index] : 0,
     Upside: confirmedData ? upsideData[index] : 0,
     HighUpside: confirmedData ? highUpsideData[index] : 0,
   }));
 
+  //payload
   const reportData = {
     viewType: viewType,
     data: {
@@ -224,7 +195,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     },
   };
 
-  const getReportRegionData = async () => {
+  const getReportProbabilityData = async () => {
     var { data } = await axios.post(
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/probabilitytype",
       reportData
@@ -233,11 +204,13 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     setFilteredLabel(data.data.labels);
   };
 
+  //API response trigger
   const handleApplyButtonClick = () => {
-    getReportRegionData();
+    getReportProbabilityData();
     setOpen(false);
   };
 
+  //reset modal filters
   const handleReset = () => {
     setFilteredFinancialYear("");
     setBuId("");
@@ -263,22 +236,22 @@ const ProbabilityWiseReport = (props, onBuChange) => {
             paddingRight: "50px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <ReportModalButtonDiv>
             <FilterAltOutlinedIcon />
             <SearchModalButton onClick={handleOpen}>
-              Apply filter here for other views
+              {APPLY_FILTER_HERE}
             </SearchModalButton>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          </ReportModalButtonDiv>
+          <SelectedFYDisplayDiv >
             {filteredFinancialYear ? (
               <Typography>
-                Financial Year:{` ${filteredFinancialYear}`}
+                {FINANCIAL_YEAR}:{` ${filteredFinancialYear}`}
               </Typography>
             ) : (
               ""
             )}
             {/* <Typography>Week :</Typography> */}
-          </div>
+          </SelectedFYDisplayDiv>
         </searchModalTitle>
         <div>
           <Modal
@@ -289,22 +262,12 @@ const ProbabilityWiseReport = (props, onBuChange) => {
           >
             <ReportSearchModalBox>
               <div>
-                <ReportSearchHeading>Report Filters: </ReportSearchHeading>
+                <ReportSearchHeading>{REPORT_FILTERS}: </ReportSearchHeading>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  paddingTop: "5px",
-                }}
-              >
-                <div style={{ width: "100%", paddingRight: "10px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Financial Year :</span>
-                  </label>
+                <div style={{ width: "60%", paddingTop: "5px" }}>
+                  <LabelDisplay>
+                    <span>{FINANCIAL_YEAR} :</span>
+                  </LabelDisplay>
                   <select
                     style={{
                       height: "28px",
@@ -317,6 +280,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                       border: "1px solid #00000061",
                     }}
                     onChange={financialYearHeadHandler}
+                    value={filteredFinancialYear}
                   >
                     <option value="" disabled selected hidden></option>
                     {props?.financialYear?.financialYear &&
@@ -327,30 +291,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                       ))}
                   </select>
                 </div>
-                <div style={{ width: "100%", paddingRight: "10px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Week :</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
-                    onChange={handleBuChange}
-                  >
-                    <option value="" disabled selected hidden></option>
-                  </select>
-                </div>
-              </div>
               <div>
                 <RadioInput
                   type="radio"
@@ -360,7 +300,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   checked={viewType === "Quarterly"}
                   // style={{ boxShadow: "none", marginTop:"10px", fontSize:"16px", fontWeight:"400", color:"#000000" }}
                 />
-                Quarterly
+                {QUARTERLY}
                 <br />
                 <RadioInput
                   type="radio"
@@ -369,73 +309,13 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   onChange={handleViewTypeChange}
                   checked={viewType === "Monthly"}
                 />{" "}
-                Monthly
+                {MONTHLY}
               </div>
-              <div>
-                <OutputTypeHEading>Output Type: </OutputTypeHEading>
-              </div>
-              <div>
-                <RadioInput
-                  type="radio"
-                  value="Chart"
-                  name="chartType"
-                  defaultChecked
-                  onChange={handleChartTypeChange}
-                />{" "}
-                Chart
-                <RadioInput
-                  type="radio"
-                  value="Tabular"
-                  name="chartType"
-                  disabled
-                  onChange={handleChartTypeChange}
-                />{" "}
-                Tabular
-              </div>
-              <div
-                className="searchFilterInnerContainer"
-                style={{
-                  paddingRight: "15px",
-                  height: "220px",
-                  overflowY: "auto",
-                  paddingTop: "10px",
-                }}
-              >
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Region :</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
-                    onChange={regionHandler}
-                  >
-                    <option value="" disabled selected hidden></option>
-                    {props.regionData.regionData &&
-                      props.regionData.regionData.map((obj, id) => (
-                        <option value={obj.regionId}>{obj.regionName}</option>
-                      ))}
-                  </select>
-                </div>
-
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>BU :</span>
-                  </label>
+              {viewType == "Monthly" && (
+              <div style={{ width: "60%", paddingTop: "5px" }}>
+                  <LabelDisplay>
+                    <span>{WEEK} :</span>
+                  </LabelDisplay>
                   <select
                     style={{
                       height: "28px",
@@ -450,33 +330,77 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                     onChange={handleBuChange}
                   >
                     <option value="" disabled selected hidden></option>
+                  </select>
+                </div>
+                )}
+              <div>
+                <OutputTypeHEading>{OUTPUT_TYPE}: </OutputTypeHEading>
+              </div>
+              <div>
+                <RadioInput
+                  type="radio"
+                  value="Chart"
+                  name="chartType"
+                  defaultChecked
+                  onChange={handleChartTypeChange}
+                />{" "}
+                {CHART}
+                <RadioInput
+                  type="radio"
+                  value="Tabular"
+                  name="chartType"
+                  disabled
+                  onChange={handleChartTypeChange}
+                />{" "}
+                {TABULAR}
+              </div>
+              <div
+                className="searchFilterInnerContainer"
+                style={{
+                  paddingRight: "15px",
+                  height: "170px",
+                  overflowY: "auto",
+                  paddingTop: "10px",
+                }}
+              >
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{REGION_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
+                    onChange={regionHandler}
+                  >
+                    <option value="" disabled selected hidden></option>
+                    {props.regionData.regionData &&
+                      props.regionData.regionData.map((obj, id) => (
+                        <option value={obj.regionId}>{obj.regionName}</option>
+                      ))}
+                  </SelectOptions>
+                </ReportModalDropDownSection>
+
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{BU_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
+                    
+                    onChange={handleBuChange}
+                  >
+                    <option value="" disabled selected hidden></option>
                     {props?.buData?.buData &&
                       props.buData.buData.map((obj, id) => (
                         <option value={obj.businessUnitId}>
                           {obj.businessUnitName}
                         </option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>SBU:</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{SBU_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
                     onChange={sbuIdHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -484,27 +408,14 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                       props.sbuData.sbuData.map((obj, id) => (
                         <option value={obj.sbuId}>{obj.sbuName}</option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>SBU Head :</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{SBU_HEAD_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
                     onChange={sbuHeadHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -512,27 +423,14 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                       props.sbuHeadData.sbuHeadData.map((obj, id) => (
                         <option value={obj.sbuHeadId}>{obj.sbuHeadName}</option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Business Type :</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{BUSINESS_TYPE_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
                     onChange={businessTypeHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -542,27 +440,15 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                           {obj.businessTypeDisplayName}
                         </option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Probability Type:</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{PROBABILITY_TYPE_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
+                    
                     onChange={probabilityHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -572,27 +458,14 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                           {obj.probabilityTypeName}
                         </option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Location:</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{LOCATION_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
                     onChange={locationHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -602,29 +475,15 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                           {obj.locationName}
                         </option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Account:</span>
-                    <select
-                      id="revenue-select"
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{ACCOUNT_LABEL} :</span>
+                    <SelectOptions
                       name="accountId"
                       onChange={accountHandler}
-                      style={{
-                        height: "28px",
-                        width: "100%",
-                        borderRadius: "3px",
-                        boxShadow: "none",
-                        fontFamily: "Roboto",
-                        fontSize: "16px",
-                        fontWeight: "400",
-                        border: "1px solid #00000061",
-                      }}
                     >
                       <option value="" disabled selected hidden></option>
                       {props.accountData.accountData &&
@@ -633,28 +492,15 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                             {obj.accountName}
                           </option>
                         ))}
-                    </select>
-                  </label>
-                </div>
+                    </SelectOptions>
+                  </LabelDisplay>
+                </ReportModalDropDownSection>
 
-                <div style={{ padding: "3px 0px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>BDM:</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
+                <ReportModalDropDownSection >
+                  <LabelDisplay>
+                    <span>{BDM_LABEL} :</span>
+                  </LabelDisplay>
+                  <SelectOptions
                     onChange={bdmIdHandler}
                   >
                     <option value="" disabled selected hidden></option>
@@ -662,29 +508,29 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                       props.bdmData.bdmData.map((obj, id) => (
                         <option value={obj.bdmId}>{obj.bdmName}</option>
                       ))}
-                  </select>
-                </div>
+                  </SelectOptions>
+                </ReportModalDropDownSection>
               </div>
 
               <ReportSearchButtonSection>
-                <ModalCancelButton
+                <ReportModalCancelButton
                   type="button"
                   variant="contained"
                   value="Cancel"
                   id="create-account"
                   onClick={handleReset}
                 >
-                  reset view
-                </ModalCancelButton>
-                <ModalControlButton
+                  {RESET_VIEW}
+                </ReportModalCancelButton>
+                <ReportModalApplyButton
                   type="button"
                   value="Save"
                   id="create-account"
                   variant="contained"
                   onClick={handleApplyButtonClick}
                 >
-                  apply
-                </ModalControlButton>
+                  {APPLY}
+                </ReportModalApplyButton>
               </ReportSearchButtonSection>
             </ReportSearchModalBox>
           </Modal>
@@ -715,42 +561,24 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   style={{ textAnchor: "middle" }}
                 />
               </YAxis>
-              <Tooltip />
+              <Tooltip
+                formatter={(value, name, props) => ["$" + value, name]}
+              />
               <Legend />
-              <Bar
-                dataKey="Conifmed"
-                stackId="a"
-                fill="#93B1A6"
-                label={{
-                  position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
-              />
-              <Bar
-                dataKey="Expected"
-                stackId="a"
-                fill="#5C8374"
-                label={{
-                  position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
-              />
-              <Bar
-                dataKey="Upside"
-                stackId="a"
-                fill="#183D3D"
-                label={{
-                  position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
-                }}
-              />
+              <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
+              <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
+              <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
               <Bar
                 dataKey="HighUpside"
                 stackId="a"
                 fill="#040D12"
                 label={{
                   position: "top",
-                  formatter: (value) => (value !== 0 ? `$${value}` : null),
+                  formatter: (value) => {
+                    const formattedValue =
+                      value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
+                    return formattedValue;
+                  },
                 }}
               />
             </BarChart>
