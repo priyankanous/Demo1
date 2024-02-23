@@ -54,7 +54,7 @@ import {
   APPLY,
 } from "../../utils/Constants";
 
-const ProbabilityWiseReport = (props, onBuChange) => {
+const ClientWiseReport = (props, onBuChange) => {
 
   //get the current financial year
   function getCurrentFinancialYear() {
@@ -154,40 +154,29 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   }, []);
 
   // chart related states
-  const HIGH_UPSIDE = "High Upside";
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
 
   const label = reportProbabilityData?.labels;
+
   const outDTOList = reportProbabilityData?.outDTOList;
+
   const confirmedData = outDTOList?.find(
-    (item) => item.label === "Confirmed"
-  )?.data;
-  const exceptedData = outDTOList?.find(
-    (item) => item.label === "Excepted"
-  )?.data;
-  const upsideData = outDTOList?.find((item) => item.label === "Upside")?.data;
-  const highUpsideData = outDTOList?.find(
-    (item) => item.label === "High-Upside"
+    (item) => item.label === "ABC Retail Inc."
   )?.data;
 
-  const dataList = label?.map((labels, index) => ({
-    name: labels,
-    confirmed: confirmedData ? confirmedData[index] : 0,
-    Expected: confirmedData ? exceptedData[index] : 0,
-    Upside: confirmedData ? upsideData[index] : 0,
-    HighUpside: confirmedData ? highUpsideData[index] : 0,
-  }));
 
-  // const label = ["check", "cccec", "cccec"];
+// console.log("outDTOList:", outDTOList);
+// console.log("labels:", labels);
 
-  // const dataList = label?.map((labels, index) => ({
-	// 	name: labels,
-	// 	confirmed: Math.random() * 5000, 	
-	// 	Expected: Math.random() * 5000,
-	// 	Upside: Math.random() * 5000,
-	// 	HighUpside: Math.random() * 5000,
-	//   }));
+
+// Create dataList by mapping over labels
+const dataList = label?.map((label, index) => ({
+  name: label,
+  ABCRetailInc: confirmedData ? confirmedData[index] : 0,
+//   other: confirmedData ? confirmedData1[index] : 0,
+}));
+
 
   //payload
   const reportData = {
@@ -208,7 +197,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
 
   const getReportProbabilityData = async () => {
     var { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/probabilitytype",
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/clienttype",
       reportData
     );
     setReportProbabilityData(data.data);
@@ -235,14 +224,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     setRegionId("");
     setOpen(false);
     setReportProbabilityData([]);
-  };
-
-  const calculateChartWidth = () => {
-    const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; // Adjust as needed
-    const minWidth = 200; // Minimum width for the chart
-    const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
-    return calculatedWidth;
   };
 
   return (
@@ -559,9 +540,8 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
-            <div style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
             <BarChart
-              width={calculateChartWidth()}
+              width={1000}
               height={400}
               style={{ marginTop: "30px" }}
               data={dataList}
@@ -585,25 +565,18 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                 formatter={(value, name, props) => ["$" + value, name]}
               />
               <Legend />
-              <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
-              <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
-              <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
-              <Bar
-                dataKey="HighUpside"
-                stackId="a"
-                fill="#040D12"
-                label={{
-                  position: "top",
-                  formatter: (value) => {
-                    const formattedValue =
-                      value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                    return formattedValue;
-                  },
-                }}
-              />
+              <Bar dataKey="ABCRetailInc" stackId="a" fill="#93B1A6" 
+			                  label={{
+								position: "top",
+								formatter: (value) => {
+								  const formattedValue =
+									value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
+								  return formattedValue;
+								},
+							  }}
+			  />
+
             </BarChart>
-           
-            </div>
           </div>
         )}
       </div>
@@ -644,4 +617,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProbabilityWiseReport);
+)(ClientWiseReport);
