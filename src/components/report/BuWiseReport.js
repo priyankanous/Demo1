@@ -54,7 +54,7 @@ import {
   APPLY,
 } from "../../utils/Constants";
 
-const ProbabilityWiseReport = (props, onBuChange) => {
+const BuWiseReport = (props, onBuChange) => {
 
   //get the current financial year
   function getCurrentFinancialYear() {
@@ -154,40 +154,29 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   }, []);
 
   // chart related states
-  const HIGH_UPSIDE = "High Upside";
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
 
   const label = reportProbabilityData?.labels;
+
   const outDTOList = reportProbabilityData?.outDTOList;
-  const confirmedData = outDTOList?.find(
-    (item) => item.label === "Confirmed"
+
+  const gssdData = outDTOList?.find(
+    (item) => item.label === "GSS"
   )?.data;
-  const exceptedData = outDTOList?.find(
-    (item) => item.label === "Excepted"
+  const testreeData = outDTOList?.find(
+    (item) => item.label === "Testree"
   )?.data;
-  const upsideData = outDTOList?.find((item) => item.label === "Upside")?.data;
-  const highUpsideData = outDTOList?.find(
-    (item) => item.label === "High-Upside"
+  const VServeData = outDTOList?.find(
+    (item) => item.label === "VServe"
   )?.data;
 
   const dataList = label?.map((labels, index) => ({
     name: labels,
-    confirmed: confirmedData ? confirmedData[index] : 0,
-    Expected: confirmedData ? exceptedData[index] : 0,
-    Upside: confirmedData ? upsideData[index] : 0,
-    HighUpside: confirmedData ? highUpsideData[index] : 0,
+    GSS: gssdData ? gssdData[index] : 0,
+    Testree: gssdData ? testreeData[index] : 0,
+    VServe: gssdData ? VServeData[index] : 0,
   }));
-
-  // const label = ["check", "cccec", "cccec"];
-
-  // const dataList = label?.map((labels, index) => ({
-	// 	name: labels,
-	// 	confirmed: Math.random() * 5000, 	
-	// 	Expected: Math.random() * 5000,
-	// 	Upside: Math.random() * 5000,
-	// 	HighUpside: Math.random() * 5000,
-	//   }));
 
   //payload
   const reportData = {
@@ -196,19 +185,19 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       financialYearName: filteredFinancialYear,
       regionId: regionId,
       businessUnitId: buId,
-      sbuId: sbuId,
+    //   sbuId: sbuId,
       sbuHeadId: sbuHeadId,
       businessTypeId: businessTypeID,
       probabilityTypeId: probabilityId,
       locationId: locationId,
-      accountId: accountId,
+    //   accountId: accountId,
       bdmId: bdmId,
     },
   };
 
   const getReportProbabilityData = async () => {
     var { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/probabilitytype",
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/businessunit",
       reportData
     );
     setReportProbabilityData(data.data);
@@ -235,14 +224,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     setRegionId("");
     setOpen(false);
     setReportProbabilityData([]);
-  };
-
-  const calculateChartWidth = () => {
-    const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; // Adjust as needed
-    const minWidth = 200; // Minimum width for the chart
-    const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
-    return calculatedWidth;
   };
 
   return (
@@ -415,7 +396,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   </SelectOptions>
                 </ReportModalDropDownSection>
 
-                <ReportModalDropDownSection>
+                {/* <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{SBU_LABEL} :</span>
                   </LabelDisplay>
@@ -428,7 +409,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                         <option value={obj.sbuId}>{obj.sbuName}</option>
                       ))}
                   </SelectOptions>
-                </ReportModalDropDownSection>
+                </ReportModalDropDownSection> */}
 
                 <ReportModalDropDownSection>
                   <LabelDisplay>
@@ -497,7 +478,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   </SelectOptions>
                 </ReportModalDropDownSection>
 
-                <ReportModalDropDownSection>
+                {/* <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{ACCOUNT_LABEL} :</span>
                     <SelectOptions
@@ -513,7 +494,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                         ))}
                     </SelectOptions>
                   </LabelDisplay>
-                </ReportModalDropDownSection>
+                </ReportModalDropDownSection> */}
 
                 <ReportModalDropDownSection >
                   <LabelDisplay>
@@ -559,9 +540,8 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
-            <div style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
             <BarChart
-              width={calculateChartWidth()}
+              width={1000}
               height={400}
               style={{ marginTop: "30px" }}
               data={dataList}
@@ -585,13 +565,12 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                 formatter={(value, name, props) => ["$" + value, name]}
               />
               <Legend />
-              <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
-              <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
-              <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
+              <Bar dataKey="GSS" stackId="a" fill="#93B1A6" />
+              <Bar dataKey="Testree" stackId="a" fill="#5C8374" />
               <Bar
-                dataKey="HighUpside"
+                dataKey="VServe"
                 stackId="a"
-                fill="#040D12"
+                fill="#183D3D"
                 label={{
                   position: "top",
                   formatter: (value) => {
@@ -602,8 +581,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                 }}
               />
             </BarChart>
-           
-            </div>
           </div>
         )}
       </div>
@@ -644,4 +621,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProbabilityWiseReport);
+)(BuWiseReport);

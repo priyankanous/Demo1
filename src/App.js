@@ -104,6 +104,14 @@ function App() {
           path="/reports/probabilitytypeview"
           component={Reports.ProbabilityWiseReport}
         />
+        <Route
+          path="/reports/buwiseview"
+          component={Reports.BuWiseReport}
+        />
+                <Route
+          path="/reports/clientwiseview"
+          component={Reports.ClientWiseReport}
+        />
         <Route path="/settings/account" component={Settings.Account} />
         <Route path="/settings/opportunity" component={Settings.Opportunity} />
         <Route

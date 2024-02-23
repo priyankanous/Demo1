@@ -206,6 +206,14 @@ const currentFinancialYear = getCurrentFinancialYear();
     getReportRegionData();
   };
 
+  const calculateChartWidth = () => {
+    const numItems = dataList ? dataList.length : 0;
+    const labelWidth = 80; 
+    const minWidth = 400;
+    const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
+    return calculatedWidth;
+  };
+
   return (
     <div>
       <div className="report-container">
@@ -614,10 +622,10 @@ const currentFinancialYear = getCurrentFinancialYear();
       </div>
 
       <div style={{ marginLeft: "250px" }}>
-        {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+        {reportRegionData !== "" && reportRegionData !== "0" && (
           <div>
             <BarChart
-              width={1000}
+              width={calculateChartWidth()}
               height={400}
               style={{ marginTop: "30px" }}
               data={dataList}
@@ -631,9 +639,9 @@ const currentFinancialYear = getCurrentFinancialYear();
               {/* <CartesianGrid strokeDasharray=" 3 3" /> */}
               {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
               {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
-              <XAxis style={{ fontSize: "9px" }} dataKey="name" interval={0} />
+              <XAxis style={{ fontSize: "10px" }} dataKey="name" interval={0} />
 
-              <YAxis style={{ fontSize: "9px" }} interval={0}>
+              <YAxis style={{ fontSize: "10px" }} interval={0}>
                 <Label
                   value="Revenue"
                   position="insideLeft"
