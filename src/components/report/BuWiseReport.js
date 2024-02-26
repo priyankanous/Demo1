@@ -226,6 +226,14 @@ const BuWiseReport = (props, onBuChange) => {
     setReportProbabilityData([]);
   };
 
+  const calculateChartWidth = () => {
+    const numItems = dataList ? dataList.length : 0;
+    const labelWidth = 80; 
+    const minWidth = 200; 
+    const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
+    return calculatedWidth;
+  };
+
   return (
     <div>
       <div className="report-container">
@@ -540,8 +548,10 @@ const BuWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
+			            <div style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
+
             <BarChart
-              width={1000}
+              width={calculateChartWidth()}
               height={400}
               style={{ marginTop: "30px" }}
               data={dataList}
@@ -581,6 +591,7 @@ const BuWiseReport = (props, onBuChange) => {
                 }}
               />
             </BarChart>
+			</div>
           </div>
         )}
       </div>
