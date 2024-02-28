@@ -34,7 +34,7 @@ code {
 
 .searchFilterInnerContainer::-webkit-scrollbar {
   width: 7px; 
-   background: #a91717;
+  height: 5px;
 }
 
 .searchFilterInnerContainer::-webkit-scrollbar-track {

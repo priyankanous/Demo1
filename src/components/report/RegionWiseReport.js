@@ -32,7 +32,8 @@ import { ReportSearchModalBox, SearchModalButton, ReportSearchHeading,
   searchModalTitle,
   OutputTypeHEading,
   RadioInput,
-  searchModalinnerContainer
+  searchModalinnerContainer,
+  SelectedFYDisplayDiv
 } from "../../utils/constantsValue";
 
 const RegionWiseReport = (props, onBuChange) => {
@@ -230,6 +231,9 @@ const currentFinancialYear = getCurrentFinancialYear();
               Apply filter here for other views
             </SearchModalButton>
           </div>
+          <SelectedFYDisplayDiv>
+          <Typography>Region -  {` ${viewType}`} { `${"View"}`}</Typography>
+          </SelectedFYDisplayDiv>
           <div style={{ display: "flex", alignItems: "center" }}>
             {filteredFinancialYear ? (
               <Typography>
