@@ -29,7 +29,7 @@ import {
   ReportModalButtonDiv,
   SelectedFYDisplayDiv,
   ReportModalDropDownSection,
-  LabelDisplay
+  LabelDisplay,
 } from "../../utils/constantsValue";
 import {
   APPLY_FILTER_HERE,
@@ -55,7 +55,6 @@ import {
 } from "../../utils/Constants";
 
 const BuWiseReport = (props, onBuChange) => {
-
   //get the current financial year
   function getCurrentFinancialYear() {
     const today = new Date();
@@ -161,15 +160,11 @@ const BuWiseReport = (props, onBuChange) => {
 
   const outDTOList = reportProbabilityData?.outDTOList;
 
-  const gssdData = outDTOList?.find(
-    (item) => item.label === "GSS"
-  )?.data;
+  const gssdData = outDTOList?.find((item) => item.label === "GSS")?.data;
   const testreeData = outDTOList?.find(
     (item) => item.label === "Testree"
   )?.data;
-  const VServeData = outDTOList?.find(
-    (item) => item.label === "VServe"
-  )?.data;
+  const VServeData = outDTOList?.find((item) => item.label === "VServe")?.data;
 
   const dataList = label?.map((labels, index) => ({
     name: labels,
@@ -185,12 +180,12 @@ const BuWiseReport = (props, onBuChange) => {
       financialYearName: filteredFinancialYear,
       regionId: regionId,
       businessUnitId: buId,
-    //   sbuId: sbuId,
+      //   sbuId: sbuId,
       sbuHeadId: sbuHeadId,
       businessTypeId: businessTypeID,
       probabilityTypeId: probabilityId,
       locationId: locationId,
-    //   accountId: accountId,
+      //   accountId: accountId,
       bdmId: bdmId,
     },
   };
@@ -228,8 +223,8 @@ const BuWiseReport = (props, onBuChange) => {
 
   const calculateChartWidth = () => {
     const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; 
-    const minWidth = 200; 
+    const labelWidth = 80;
+    const minWidth = 200;
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
   };
@@ -250,7 +245,10 @@ const BuWiseReport = (props, onBuChange) => {
               {APPLY_FILTER_HERE}
             </SearchModalButton>
           </ReportModalButtonDiv>
-          <SelectedFYDisplayDiv >
+          <SelectedFYDisplayDiv>
+          <Typography>BU Wise -  {` ${viewType}`} { `${"View"}`}</Typography>
+          </SelectedFYDisplayDiv>
+          <SelectedFYDisplayDiv>
             {filteredFinancialYear ? (
               <Typography>
                 {FINANCIAL_YEAR}:{` ${filteredFinancialYear}`}
@@ -272,33 +270,33 @@ const BuWiseReport = (props, onBuChange) => {
               <div>
                 <ReportSearchHeading>{REPORT_FILTERS}: </ReportSearchHeading>
               </div>
-                <div style={{ width: "60%", paddingTop: "5px" }}>
-                  <LabelDisplay>
-                    <span>{FINANCIAL_YEAR} :</span>
-                  </LabelDisplay>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
-                    onChange={financialYearHeadHandler}
-                    value={filteredFinancialYear}
-                  >
-                    <option value="" disabled selected hidden></option>
-                    {props?.financialYear?.financialYear &&
-                      props.financialYear.financialYear.map((obj, id) => (
-                        <option value={obj.financialYearName}>
-                          {obj.financialYearName}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+              <div style={{ width: "60%", paddingTop: "5px" }}>
+                <LabelDisplay>
+                  <span>{FINANCIAL_YEAR} :</span>
+                </LabelDisplay>
+                <select
+                  style={{
+                    height: "28px",
+                    width: "100%",
+                    borderRadius: "3px",
+                    boxShadow: "none",
+                    fontFamily: "Roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    border: "1px solid #00000061",
+                  }}
+                  onChange={financialYearHeadHandler}
+                  value={filteredFinancialYear}
+                >
+                  <option value="" disabled selected hidden></option>
+                  {props?.financialYear?.financialYear &&
+                    props.financialYear.financialYear.map((obj, id) => (
+                      <option value={obj.financialYearName}>
+                        {obj.financialYearName}
+                      </option>
+                    ))}
+                </select>
+              </div>
               <div>
                 <RadioInput
                   type="radio"
@@ -320,7 +318,7 @@ const BuWiseReport = (props, onBuChange) => {
                 {MONTHLY}
               </div>
               {viewType == "Monthly" && (
-              <div style={{ width: "60%", paddingTop: "5px" }}>
+                <div style={{ width: "60%", paddingTop: "5px" }}>
                   <LabelDisplay>
                     <span>{WEEK} :</span>
                   </LabelDisplay>
@@ -340,7 +338,7 @@ const BuWiseReport = (props, onBuChange) => {
                     <option value="" disabled selected hidden></option>
                   </select>
                 </div>
-                )}
+              )}
               <div>
                 <OutputTypeHEading>{OUTPUT_TYPE}: </OutputTypeHEading>
               </div>
@@ -375,9 +373,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{REGION_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={regionHandler}
-                  >
+                  <SelectOptions onChange={regionHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.regionData.regionData &&
                       props.regionData.regionData.map((obj, id) => (
@@ -390,10 +386,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{BU_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    
-                    onChange={handleBuChange}
-                  >
+                  <SelectOptions onChange={handleBuChange}>
                     <option value="" disabled selected hidden></option>
                     {props?.buData?.buData &&
                       props.buData.buData.map((obj, id) => (
@@ -423,9 +416,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{SBU_HEAD_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={sbuHeadHandler}
-                  >
+                  <SelectOptions onChange={sbuHeadHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.sbuHeadData.sbuHeadData &&
                       props.sbuHeadData.sbuHeadData.map((obj, id) => (
@@ -438,9 +429,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{BUSINESS_TYPE_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={businessTypeHandler}
-                  >
+                  <SelectOptions onChange={businessTypeHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.businessTypeData.businessTypeData &&
                       props.businessTypeData.businessTypeData.map((obj, id) => (
@@ -455,10 +444,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{PROBABILITY_TYPE_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    
-                    onChange={probabilityHandler}
-                  >
+                  <SelectOptions onChange={probabilityHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.probabilityData.probabilityData &&
                       props.probabilityData.probabilityData.map((obj, id) => (
@@ -473,9 +459,7 @@ const BuWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{LOCATION_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={locationHandler}
-                  >
+                  <SelectOptions onChange={locationHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.locationData.locationData &&
                       props.locationData.locationData.map((obj, id) => (
@@ -486,31 +470,11 @@ const BuWiseReport = (props, onBuChange) => {
                   </SelectOptions>
                 </ReportModalDropDownSection>
 
-                {/* <ReportModalDropDownSection>
-                  <LabelDisplay>
-                    <span>{ACCOUNT_LABEL} :</span>
-                    <SelectOptions
-                      name="accountId"
-                      onChange={accountHandler}
-                    >
-                      <option value="" disabled selected hidden></option>
-                      {props.accountData.accountData &&
-                        props.accountData.accountData.map((obj, id) => (
-                          <option value={obj.accountId}>
-                            {obj.accountName}
-                          </option>
-                        ))}
-                    </SelectOptions>
-                  </LabelDisplay>
-                </ReportModalDropDownSection> */}
-
-                <ReportModalDropDownSection >
+                <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{BDM_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={bdmIdHandler}
-                  >
+                  <SelectOptions onChange={bdmIdHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.bdmData.bdmData &&
                       props.bdmData.bdmData.map((obj, id) => (
@@ -548,50 +512,56 @@ const BuWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
-			            <div style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
-
-            <BarChart
-              width={calculateChartWidth()}
-              height={400}
-              style={{ marginTop: "30px" }}
-              data={dataList}
-              margin={{
-                top: 30,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
+            <div
+              className="searchFilterInnerContainer"
+              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
             >
-              <XAxis style={{ fontSize: "9px" }} dataKey="name" interval={0} />
-              <YAxis style={{ fontSize: "9px" }} interval={0}>
-                <Label
-                  value="Revenue"
-                  position="insideLeft"
-                  angle={-90}
-                  style={{ textAnchor: "middle" }}
-                />
-              </YAxis>
-              <Tooltip
-                formatter={(value, name, props) => ["$" + value, name]}
-              />
-              <Legend />
-              <Bar dataKey="GSS" stackId="a" fill="#93B1A6" />
-              <Bar dataKey="Testree" stackId="a" fill="#5C8374" />
-              <Bar
-                dataKey="VServe"
-                stackId="a"
-                fill="#183D3D"
-                label={{
-                  position: "top",
-                  formatter: (value) => {
-                    const formattedValue =
-                      value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                    return formattedValue;
-                  },
+              <BarChart
+                width={calculateChartWidth()}
+                height={400}
+                style={{ marginTop: "30px" }}
+                data={dataList}
+                margin={{
+                  top: 30,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
                 }}
-              />
-            </BarChart>
-			</div>
+              >
+                <XAxis
+                  style={{ fontSize: "9px" }}
+                  dataKey="name"
+                  interval={0}
+                />
+                <YAxis style={{ fontSize: "9px" }} interval={0}>
+                  <Label
+                    value="Revenue"
+                    position="insideLeft"
+                    angle={-90}
+                    style={{ textAnchor: "middle" }}
+                  />
+                </YAxis>
+                <Tooltip
+                  formatter={(value, name, props) => ["$" + value, name]}
+                />
+                <Legend />
+                <Bar dataKey="GSS" stackId="a" fill="#93B1A6" />
+                <Bar dataKey="Testree" stackId="a" fill="#5C8374" />
+                <Bar
+                  dataKey="VServe"
+                  stackId="a"
+                  fill="#183D3D"
+                  label={{
+                    position: "top",
+                    formatter: (value) => {
+                      const formattedValue =
+                        value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
+                      return formattedValue;
+                    },
+                  }}
+                />
+              </BarChart>
+            </div>
           </div>
         )}
       </div>
@@ -629,7 +599,4 @@ const mapDispatchToProps = (dispatch) => {
     //   getReportData: (data) => dispatch(getReportData(data)),
   };
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BuWiseReport);
+export default connect(mapStateToProps, mapDispatchToProps)(BuWiseReport);

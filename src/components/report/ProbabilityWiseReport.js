@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Label, Tooltip, Legend } from "recharts";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { Typography, Modal, styled } from "@mui/material";
+import { Typography, Modal } from "@mui/material";
 import { getRegionData } from "../../actions/region";
 import { getBuData } from "../../actions/bu";
 import { getSbuHeadData } from "../../actions/sbuHead";
@@ -157,27 +157,8 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   const HIGH_UPSIDE = "High Upside";
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
+  const [rhs, setRhs] = useState([]);
 
-  const label = reportProbabilityData?.labels;
-  const outDTOList = reportProbabilityData?.outDTOList;
-  const confirmedData = outDTOList?.find(
-    (item) => item.label === "Confirmed"
-  )?.data;
-  const exceptedData = outDTOList?.find(
-    (item) => item.label === "Excepted"
-  )?.data;
-  const upsideData = outDTOList?.find((item) => item.label === "Upside")?.data;
-  const highUpsideData = outDTOList?.find(
-    (item) => item.label === "High-Upside"
-  )?.data;
-
-  const dataList = label?.map((labels, index) => ({
-    name: labels,
-    confirmed: confirmedData ? confirmedData[index] : 0,
-    Expected: confirmedData ? exceptedData[index] : 0,
-    Upside: confirmedData ? upsideData[index] : 0,
-    HighUpside: confirmedData ? highUpsideData[index] : 0,
-  }));
 
   // const label = ["check", "cccec", "cccec"];
 
@@ -206,6 +187,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     },
   };
 
+  //api call - probability
   const getReportProbabilityData = async () => {
     var { data } = await axios.post(
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/probabilitytype",
@@ -237,10 +219,39 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     setReportProbabilityData([]);
   };
 
+  useEffect(() => {
+    if (reportProbabilityData?.outDTOList && reportProbabilityData?.outDTOList) {
+      const labels = reportProbabilityData?.outDTOList.map(item => item.label);
+      setRhs(labels)
+    }
+  },[reportProbabilityData?.outDTOList]);
+
+  const label = reportProbabilityData?.labels;
+  const outDTOList = reportProbabilityData?.outDTOList;
+
+  const confirmedData = outDTOList?.find(
+    (item) => item.label === rhs[0]
+  )?.data;
+  const exceptedData = outDTOList?.find(
+    (item) => item.label === rhs[1]
+  )?.data;
+  const upsideData = outDTOList?.find((item) => item.label === rhs[2])?.data;
+  const highUpsideData = outDTOList?.find(
+    (item) => item.label === rhs[3]
+  )?.data;
+
+  const dataList = label?.map((labels, index) => ({
+    name: labels,
+    confirmed: confirmedData ? confirmedData[index] : 0,
+    Expected: confirmedData ? exceptedData[index] : 0,
+    Upside: confirmedData ? upsideData[index] : 0,
+    HighUpside: confirmedData ? highUpsideData[index] : 0,
+  }));
+
   const calculateChartWidth = () => {
     const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; // Adjust as needed
-    const minWidth = 200; // Minimum width for the chart
+    const labelWidth = 80; 
+    const minWidth = 200; 
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
   };
@@ -261,6 +272,9 @@ const ProbabilityWiseReport = (props, onBuChange) => {
               {APPLY_FILTER_HERE}
             </SearchModalButton>
           </ReportModalButtonDiv>
+          <SelectedFYDisplayDiv>
+          <Typography>Probability -  {` ${viewType}`} { `${"View"}`}</Typography>
+          </SelectedFYDisplayDiv>
           <SelectedFYDisplayDiv >
             {filteredFinancialYear ? (
               <Typography>
@@ -559,7 +573,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
-            <div style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
+            <div className="searchFilterInnerContainer" style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
             <BarChart
               width={calculateChartWidth()}
               height={400}
