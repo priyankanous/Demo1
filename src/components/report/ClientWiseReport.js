@@ -86,8 +86,7 @@ const ClientWiseReport = (props, onBuChange) => {
   const [bdmId, setBdmId] = useState("");
   const [accountId, setAccountId] = useState("");
   const [regionId, setRegionId] = useState("");
-  const [rhs, setRhs] = useState([])
-
+  const [rhs, setRhs] = useState([]);
 
   //open and close modal
   const handleOpen = () => setOpen(true);
@@ -207,24 +206,24 @@ const ClientWiseReport = (props, onBuChange) => {
   };
 
   useEffect(() => {
-    if (reportProbabilityData?.outDTOList && reportProbabilityData?.outDTOList) {
-      const labels = reportProbabilityData?.outDTOList.map(item => item.label);
-      setRhs(labels)
+    if (
+      reportProbabilityData?.outDTOList &&
+      reportProbabilityData?.outDTOList
+    ) {
+      const labels = reportProbabilityData?.outDTOList.map(
+        (item) => item.label
+      );
+      setRhs(labels);
     }
-  },[reportProbabilityData?.outDTOList]);
+  }, [reportProbabilityData?.outDTOList]);
 
   const label = reportProbabilityData?.labels;
 
   const outDTOList = reportProbabilityData?.outDTOList;
 
-  const clientOne = outDTOList?.find(
-    (item) => item.label === rhs[0]
-  )?.data;
+  const clientOne = outDTOList?.find((item) => item.label === rhs[0])?.data;
 
-  const clientTwo = outDTOList?.find(
-    (item) => item.label === rhs[1]
-  )?.data;
-
+  const clientTwo = outDTOList?.find((item) => item.label === rhs[1])?.data;
 
   const dataList = label?.map((label, index) => ({
     name: label,
@@ -247,7 +246,7 @@ const ClientWiseReport = (props, onBuChange) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingRight: "50px",
+            paddingRight: "37px",
           }}
         >
           <ReportModalButtonDiv>
@@ -256,19 +255,73 @@ const ClientWiseReport = (props, onBuChange) => {
               {APPLY_FILTER_HERE}
             </SearchModalButton>
           </ReportModalButtonDiv>
+          <div style={{ display: "flex" }}>
           <SelectedFYDisplayDiv>
-          <Typography>Client Wise -  {` ${viewType}`} { `${"View"}`}</Typography>
+            <Typography>
+              View:
+            </Typography>
+            <input
+                style={{
+                  boxShadow: "none",
+                  border: "1px solid #0000004d",
+                  borderRadius: "6px",
+                  background: "transparent",
+                  margin: "0px 6px",
+                  textAlign: "center",
+                }}
+                disabled
+                // type="text" value={`${viewType} View`}
+                // value={`${viewType} View`}
+                value={`Client Wise - ${viewType} View`}
+              />
           </SelectedFYDisplayDiv>
           <SelectedFYDisplayDiv>
             {filteredFinancialYear ? (
+                              <div style={{ display: "flex",alignItems:"center" }}>
+
               <Typography>
-                {FINANCIAL_YEAR}:{` ${filteredFinancialYear}`}
+                {FINANCIAL_YEAR} :
               </Typography>
+              <input
+                    style={{
+                      boxShadow: "none",
+                      border: "1px solid #0000004d",
+                      borderRadius: "6px",
+                      background: "transparent",
+                      margin: "0px 6px",
+                      width: "70px",
+                      textAlign: "center",
+                    }}
+                    value={filteredFinancialYear}
+                    disabled
+
+                  />
+                  </div>
             ) : (
               ""
             )}
             {/* <Typography>Week :</Typography> */}
           </SelectedFYDisplayDiv>
+          {viewType == "Monthly" && (
+              <SelectedFYDisplayDiv>
+                <Typography>Week :</Typography>
+                <input
+                  style={{
+                    boxShadow: "none",
+                    border: "1px solid #0000004d",
+                    borderRadius: "6px",
+                    background: "transparent",
+                    margin: "0px 6px",
+                    width: "70px",
+                    textAlign: "center",
+                  }}
+                  // value={2}
+                  disabled
+
+                />
+              </SelectedFYDisplayDiv>
+            )}
+            </div>
         </searchModalTitle>
         <div>
           <Modal
@@ -569,11 +622,7 @@ const ClientWiseReport = (props, onBuChange) => {
                   formatter={(value, name, props) => ["$" + value, name]}
                 />
                 <Legend />
-                <Bar
-                  dataKey="ABCRetailInc"
-                  stackId="a"
-                  fill="#93B1A6"
-                />
+                <Bar dataKey="ABCRetailInc" stackId="a" fill="#E8BCB9" />
                 <Bar
                   dataKey={rhs[1]}
                   stackId="a"

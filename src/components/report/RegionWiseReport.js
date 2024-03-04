@@ -161,8 +161,6 @@ const currentFinancialYear = getCurrentFinancialYear();
   }));
 
   const reportData = {
-    // "viewType": "Quarterly",
-    // "viewType": "Monthly",
     viewType: viewType,
     data: {
       // financialYearName: "2023-2024",
@@ -222,7 +220,7 @@ const currentFinancialYear = getCurrentFinancialYear();
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingRight: "50px",
+            paddingRight: "37px",
           }}
         >
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -231,16 +229,69 @@ const currentFinancialYear = getCurrentFinancialYear();
               Apply filter here for other views
             </SearchModalButton>
           </div>
+          <div style={{ display: "flex" }}>
           <SelectedFYDisplayDiv>
-          <Typography>Region -  {` ${viewType}`} { `${"View"}`}</Typography>
+          <Typography>View:</Typography>
+          <input
+                style={{
+                  boxShadow: "none",
+                  border: "1px solid #0000004d",
+                  borderRadius: "6px",
+                  background: "transparent",
+                  margin: "0px 6px",
+                  textAlign: "center",
+                }}
+                disabled
+                // type="text" value={`${viewType} View`}
+                // value={`${viewType} View`}
+                value={`Region - ${viewType} View`}
+              />
           </SelectedFYDisplayDiv>
-          <div style={{ display: "flex", alignItems: "center" }}>
+          {/* <div style={{ display: "flex", alignItems: "center" }}> */}
+          <SelectedFYDisplayDiv>
+
             {filteredFinancialYear ? (
+                              <div style={{ display: "flex",alignItems:"center" }}>
               <Typography>
-                Financial Year:{` ${filteredFinancialYear}`}
+                Financial Year:
               </Typography>
+              <input
+                    style={{
+                      boxShadow: "none",
+                      border: "1px solid #0000004d",
+                      borderRadius: "6px",
+                      background: "transparent",
+                      margin: "0px 6px",
+                      width: "70px",
+                      textAlign: "center",
+                    }}
+                    value={filteredFinancialYear}
+                    disabled
+
+                  />
+                  </div>
             ) : (
               ""
+            )}
+                        </SelectedFYDisplayDiv>
+                        {viewType == "Monthly" && (
+              <SelectedFYDisplayDiv>
+                <Typography>Week :</Typography>
+                <input
+                  style={{
+                    boxShadow: "none",
+                    border: "1px solid #0000004d",
+                    borderRadius: "6px",
+                    background: "transparent",
+                    margin: "0px 6px",
+                    width: "70px",
+                    textAlign: "center",
+                  }}
+                  // value={2}
+                  disabled
+
+                />
+              </SelectedFYDisplayDiv>
             )}
             {/* <Typography>Week :</Typography> */}
           </div>

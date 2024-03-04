@@ -67,11 +67,11 @@ function App() {
           path="/administration/status"
           component={RollingRevenueAdministration.Status}
         />
-       <Route
+        <Route
           path="/administration/account"
           component={RollingRevenueAdministration.AccountSettings}
         />
-         <Route
+        <Route
           path="/administration/opportunity"
           component={RollingRevenueAdministration.Opportunity}
         />
@@ -101,14 +101,15 @@ function App() {
           component={Reports.RegionWiseReport}
         />
         <Route
+          path="/reports/sbuclientwiseview"
+          component={Reports.SBUClientWise}
+        />
+        <Route
           path="/reports/probabilitytypeview"
           component={Reports.ProbabilityWiseReport}
         />
+        <Route path="/reports/buwiseview" component={Reports.BuWiseReport} />
         <Route
-          path="/reports/buwiseview"
-          component={Reports.BuWiseReport}
-        />
-                <Route
           path="/reports/clientwiseview"
           component={Reports.ClientWiseReport}
         />
@@ -127,21 +128,18 @@ function App() {
           component={Settings.AnnualTargetEntry}
         />
         <Route
-         path="/calender/holidaycalender"
-         component={Calendar.HolidayCalendar}
+          path="/calender/holidaycalender"
+          component={Calendar.HolidayCalendar}
         />
         <Route
-         path="/calender/fortnightlymeeting"
-         component={Calendar.FortnightlyMeetings}
+          path="/calender/fortnightlymeeting"
+          component={Calendar.FortnightlyMeetings}
         />
         <Route
-         path="/calender/monthlybdmmeetings"
-         component={Calendar.BdmMeetings}
+          path="/calender/monthlybdmmeetings"
+          component={Calendar.BdmMeetings}
         />
-        <Route
-        path="/settings/roles"
-        component={Settings.Roles}
-      />
+        <Route path="/settings/roles" component={Settings.Roles} />
       </Switch>
     </Router>
   );
