@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Label, Tooltip, Legend } from "recharts";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { Typography, Modal } from "@mui/material";
+import { Typography, Modal, TextField } from "@mui/material";
 import { getRegionData } from "../../actions/region";
 import { getBuData } from "../../actions/bu";
 import { getSbuHeadData } from "../../actions/sbuHead";
@@ -29,7 +29,8 @@ import {
   ReportModalButtonDiv,
   SelectedFYDisplayDiv,
   ReportModalDropDownSection,
-  LabelDisplay
+  LabelDisplay,
+  InputField,
 } from "../../utils/constantsValue";
 import {
   APPLY_FILTER_HERE,
@@ -55,7 +56,6 @@ import {
 } from "../../utils/Constants";
 
 const ProbabilityWiseReport = (props, onBuChange) => {
-
   //get the current financial year
   function getCurrentFinancialYear() {
     const today = new Date();
@@ -159,16 +159,15 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   const [filteredLabel, setFilteredLabel] = useState([]);
   const [rhs, setRhs] = useState([]);
 
-
   // const label = ["check", "cccec", "cccec"];
 
   // const dataList = label?.map((labels, index) => ({
-	// 	name: labels,
-	// 	confirmed: Math.random() * 5000, 	
-	// 	Expected: Math.random() * 5000,
-	// 	Upside: Math.random() * 5000,
-	// 	HighUpside: Math.random() * 5000,
-	//   }));
+  // 	name: labels,
+  // 	confirmed: Math.random() * 5000,
+  // 	Expected: Math.random() * 5000,
+  // 	Upside: Math.random() * 5000,
+  // 	HighUpside: Math.random() * 5000,
+  //   }));
 
   //payload
   const reportData = {
@@ -220,21 +219,22 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   };
 
   useEffect(() => {
-    if (reportProbabilityData?.outDTOList && reportProbabilityData?.outDTOList) {
-      const labels = reportProbabilityData?.outDTOList.map(item => item.label);
-      setRhs(labels)
+    if (
+      reportProbabilityData?.outDTOList &&
+      reportProbabilityData?.outDTOList
+    ) {
+      const labels = reportProbabilityData?.outDTOList.map(
+        (item) => item.label
+      );
+      setRhs(labels);
     }
-  },[reportProbabilityData?.outDTOList]);
+  }, [reportProbabilityData?.outDTOList]);
 
   const label = reportProbabilityData?.labels;
   const outDTOList = reportProbabilityData?.outDTOList;
 
-  const confirmedData = outDTOList?.find(
-    (item) => item.label === rhs[0]
-  )?.data;
-  const exceptedData = outDTOList?.find(
-    (item) => item.label === rhs[1]
-  )?.data;
+  const confirmedData = outDTOList?.find((item) => item.label === rhs[0])?.data;
+  const exceptedData = outDTOList?.find((item) => item.label === rhs[1])?.data;
   const upsideData = outDTOList?.find((item) => item.label === rhs[2])?.data;
   const highUpsideData = outDTOList?.find(
     (item) => item.label === rhs[3]
@@ -250,10 +250,15 @@ const ProbabilityWiseReport = (props, onBuChange) => {
 
   const calculateChartWidth = () => {
     const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; 
-    const minWidth = 200; 
+    const labelWidth = 80;
+    const minWidth = 200;
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
+  };
+
+  const inputStyle = {
+    borderRadius: "4px",
+    padding: "2.5px 14px !important",
   };
 
   return (
@@ -263,7 +268,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            paddingRight: "50px",
+            paddingRight: "37px",
           }}
         >
           <ReportModalButtonDiv>
@@ -272,19 +277,67 @@ const ProbabilityWiseReport = (props, onBuChange) => {
               {APPLY_FILTER_HERE}
             </SearchModalButton>
           </ReportModalButtonDiv>
-          <SelectedFYDisplayDiv>
-          <Typography>Probability -  {` ${viewType}`} { `${"View"}`}</Typography>
-          </SelectedFYDisplayDiv>
-          <SelectedFYDisplayDiv >
-            {filteredFinancialYear ? (
-              <Typography>
-                {FINANCIAL_YEAR}:{` ${filteredFinancialYear}`}
-              </Typography>
-            ) : (
-              ""
+          <div style={{ display: "flex" }}>
+            <SelectedFYDisplayDiv>
+              <Typography>View: </Typography>
+              <input
+                style={{
+                  boxShadow: "none",
+                  border: "1px solid #0000004d",
+                  borderRadius: "6px",
+                  background: "transparent",
+                  margin: "0px 6px",
+                  textAlign: "center",
+                }}
+                disabled
+                // type="text" value={`${viewType} View`}
+                // value={`${viewType} View`}
+                value={`Probability - ${viewType} View`}
+              />
+            </SelectedFYDisplayDiv>
+            <SelectedFYDisplayDiv>
+              {filteredFinancialYear ? (
+                <div style={{ display: "flex",alignItems:"center" }}>
+                  <Typography>{FINANCIAL_YEAR} :</Typography>
+                  <input
+                    style={{
+                      boxShadow: "none",
+                      border: "1px solid #0000004d",
+                      borderRadius: "6px",
+                      background: "transparent",
+                      margin: "0px 6px",
+                      width: "70px",
+                      textAlign: "center",
+                    }}
+                    value={filteredFinancialYear}
+                    disabled
+
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </SelectedFYDisplayDiv>
+            {viewType == "Monthly" && (
+              <SelectedFYDisplayDiv>
+                <Typography>Week :</Typography>
+                <input
+                  style={{
+                    boxShadow: "none",
+                    border: "1px solid #0000004d",
+                    borderRadius: "6px",
+                    background: "transparent",
+                    margin: "0px 6px",
+                    width: "70px",
+                    textAlign: "center",
+                  }}
+                  // value={2}
+                  disabled
+
+                />
+              </SelectedFYDisplayDiv>
             )}
-            {/* <Typography>Week :</Typography> */}
-          </SelectedFYDisplayDiv>
+          </div>
         </searchModalTitle>
         <div>
           <Modal
@@ -297,33 +350,33 @@ const ProbabilityWiseReport = (props, onBuChange) => {
               <div>
                 <ReportSearchHeading>{REPORT_FILTERS}: </ReportSearchHeading>
               </div>
-                <div style={{ width: "60%", paddingTop: "5px" }}>
-                  <LabelDisplay>
-                    <span>{FINANCIAL_YEAR} :</span>
-                  </LabelDisplay>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
-                    onChange={financialYearHeadHandler}
-                    value={filteredFinancialYear}
-                  >
-                    <option value="" disabled selected hidden></option>
-                    {props?.financialYear?.financialYear &&
-                      props.financialYear.financialYear.map((obj, id) => (
-                        <option value={obj.financialYearName}>
-                          {obj.financialYearName}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+              <div style={{ width: "60%", paddingTop: "5px" }}>
+                <LabelDisplay>
+                  <span>{FINANCIAL_YEAR} :</span>
+                </LabelDisplay>
+                <select
+                  style={{
+                    height: "28px",
+                    width: "100%",
+                    borderRadius: "3px",
+                    boxShadow: "none",
+                    fontFamily: "Roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    border: "1px solid #00000061",
+                  }}
+                  onChange={financialYearHeadHandler}
+                  value={filteredFinancialYear}
+                >
+                  <option value="" disabled selected hidden></option>
+                  {props?.financialYear?.financialYear &&
+                    props.financialYear.financialYear.map((obj, id) => (
+                      <option value={obj.financialYearName}>
+                        {obj.financialYearName}
+                      </option>
+                    ))}
+                </select>
+              </div>
               <div>
                 <RadioInput
                   type="radio"
@@ -345,7 +398,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                 {MONTHLY}
               </div>
               {viewType == "Monthly" && (
-              <div style={{ width: "60%", paddingTop: "5px" }}>
+                <div style={{ width: "60%", paddingTop: "5px" }}>
                   <LabelDisplay>
                     <span>{WEEK} :</span>
                   </LabelDisplay>
@@ -365,7 +418,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                     <option value="" disabled selected hidden></option>
                   </select>
                 </div>
-                )}
+              )}
               <div>
                 <OutputTypeHEading>{OUTPUT_TYPE}: </OutputTypeHEading>
               </div>
@@ -400,9 +453,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{REGION_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={regionHandler}
-                  >
+                  <SelectOptions onChange={regionHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.regionData.regionData &&
                       props.regionData.regionData.map((obj, id) => (
@@ -415,10 +466,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{BU_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    
-                    onChange={handleBuChange}
-                  >
+                  <SelectOptions onChange={handleBuChange}>
                     <option value="" disabled selected hidden></option>
                     {props?.buData?.buData &&
                       props.buData.buData.map((obj, id) => (
@@ -433,9 +481,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{SBU_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={sbuIdHandler}
-                  >
+                  <SelectOptions onChange={sbuIdHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.sbuData.sbuData &&
                       props.sbuData.sbuData.map((obj, id) => (
@@ -448,9 +494,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{SBU_HEAD_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={sbuHeadHandler}
-                  >
+                  <SelectOptions onChange={sbuHeadHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.sbuHeadData.sbuHeadData &&
                       props.sbuHeadData.sbuHeadData.map((obj, id) => (
@@ -463,9 +507,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{BUSINESS_TYPE_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={businessTypeHandler}
-                  >
+                  <SelectOptions onChange={businessTypeHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.businessTypeData.businessTypeData &&
                       props.businessTypeData.businessTypeData.map((obj, id) => (
@@ -480,10 +522,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{PROBABILITY_TYPE_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    
-                    onChange={probabilityHandler}
-                  >
+                  <SelectOptions onChange={probabilityHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.probabilityData.probabilityData &&
                       props.probabilityData.probabilityData.map((obj, id) => (
@@ -498,9 +537,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   <LabelDisplay>
                     <span>{LOCATION_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={locationHandler}
-                  >
+                  <SelectOptions onChange={locationHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.locationData.locationData &&
                       props.locationData.locationData.map((obj, id) => (
@@ -514,10 +551,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                 <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{ACCOUNT_LABEL} :</span>
-                    <SelectOptions
-                      name="accountId"
-                      onChange={accountHandler}
-                    >
+                    <SelectOptions name="accountId" onChange={accountHandler}>
                       <option value="" disabled selected hidden></option>
                       {props.accountData.accountData &&
                         props.accountData.accountData.map((obj, id) => (
@@ -529,13 +563,11 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   </LabelDisplay>
                 </ReportModalDropDownSection>
 
-                <ReportModalDropDownSection >
+                <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{BDM_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={bdmIdHandler}
-                  >
+                  <SelectOptions onChange={bdmIdHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.bdmData.bdmData &&
                       props.bdmData.bdmData.map((obj, id) => (
@@ -573,50 +605,56 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       <div style={{ marginLeft: "250px" }}>
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
-            <div className="searchFilterInnerContainer" style={{ width: '98%', overflowX: 'auto', overflowY:"hidden" }}>
-            <BarChart
-              width={calculateChartWidth()}
-              height={400}
-              style={{ marginTop: "30px" }}
-              data={dataList}
-              margin={{
-                top: 30,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
+            <div
+              className="searchFilterInnerContainer"
+              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
             >
-              <XAxis style={{ fontSize: "9px" }} dataKey="name" interval={0} />
-              <YAxis style={{ fontSize: "9px" }} interval={0}>
-                <Label
-                  value="Revenue"
-                  position="insideLeft"
-                  angle={-90}
-                  style={{ textAnchor: "middle" }}
-                />
-              </YAxis>
-              <Tooltip
-                formatter={(value, name, props) => ["$" + value, name]}
-              />
-              <Legend />
-              <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
-              <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
-              <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
-              <Bar
-                dataKey="HighUpside"
-                stackId="a"
-                fill="#040D12"
-                label={{
-                  position: "top",
-                  formatter: (value) => {
-                    const formattedValue =
-                      value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                    return formattedValue;
-                  },
+              <BarChart
+                width={calculateChartWidth()}
+                height={400}
+                style={{ marginTop: "30px" }}
+                data={dataList}
+                margin={{
+                  top: 30,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
                 }}
-              />
-            </BarChart>
-           
+              >
+                <XAxis
+                  style={{ fontSize: "9px" }}
+                  dataKey="name"
+                  interval={0}
+                />
+                <YAxis style={{ fontSize: "9px" }} interval={0}>
+                  <Label
+                    value="Revenue"
+                    position="insideLeft"
+                    angle={-90}
+                    style={{ textAnchor: "middle" }}
+                  />
+                </YAxis>
+                <Tooltip
+                  formatter={(value, name, props) => ["$" + value, name]}
+                />
+                <Legend />
+                <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
+                <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
+                <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
+                <Bar
+                  dataKey="HighUpside"
+                  stackId="a"
+                  fill="#040D12"
+                  label={{
+                    position: "top",
+                    formatter: (value) => {
+                      const formattedValue =
+                        value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
+                      return formattedValue;
+                    },
+                  }}
+                />
+              </BarChart>
             </div>
           </div>
         )}

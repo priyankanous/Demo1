@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Label, Tooltip, Legend } from "recharts";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { Typography, Modal, styled } from "@mui/material";
+import { Typography, Modal } from "@mui/material";
 import { getRegionData } from "../../actions/region";
 import { getBuData } from "../../actions/bu";
 import { getSbuHeadData } from "../../actions/sbuHead";
@@ -54,7 +54,7 @@ import {
   APPLY,
 } from "../../utils/Constants";
 
-const BuWiseReport = (props, onBuChange) => {
+const SBUClientWise = (props, onBuChange) => {
   //get the current financial year
   function getCurrentFinancialYear() {
     const today = new Date();
@@ -153,25 +153,10 @@ const BuWiseReport = (props, onBuChange) => {
   }, []);
 
   // chart related states
+  const HIGH_UPSIDE = "High Upside";
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
-
-  const label = reportProbabilityData?.labels;
-
-  const outDTOList = reportProbabilityData?.outDTOList;
-
-  const gssdData = outDTOList?.find((item) => item.label === "GSS")?.data;
-  const testreeData = outDTOList?.find(
-    (item) => item.label === "Testree"
-  )?.data;
-  const VServeData = outDTOList?.find((item) => item.label === "VServe")?.data;
-
-  const dataList = label?.map((labels, index) => ({
-    name: labels,
-    GSS: gssdData ? gssdData[index] : 0,
-    Testree: gssdData ? testreeData[index] : 0,
-    VServe: gssdData ? VServeData[index] : 0,
-  }));
+  const [rhs, setRhs] = useState([]);
 
   //payload
   const reportData = {
@@ -180,19 +165,20 @@ const BuWiseReport = (props, onBuChange) => {
       financialYearName: filteredFinancialYear,
       regionId: regionId,
       businessUnitId: buId,
-      //   sbuId: sbuId,
+      sbuId: sbuId,
       sbuHeadId: sbuHeadId,
       businessTypeId: businessTypeID,
       probabilityTypeId: probabilityId,
       locationId: locationId,
-      //   accountId: accountId,
+      accountId: accountId,
       bdmId: bdmId,
     },
   };
 
+  //api call - probability
   const getReportProbabilityData = async () => {
     var { data } = await axios.post(
-      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/businessunit",
+      "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/sbuclientType",
       reportData
     );
     setReportProbabilityData(data.data);
@@ -221,6 +207,44 @@ const BuWiseReport = (props, onBuChange) => {
     setReportProbabilityData([]);
   };
 
+  useEffect(() => {
+    if (
+      reportProbabilityData?.outDTOList &&
+      reportProbabilityData?.outDTOList
+    ) {
+      const labels = reportProbabilityData?.outDTOList.map(
+        (item) => item.label
+      );
+      setRhs(labels);
+    }
+  }, [reportProbabilityData?.outDTOList]);
+
+  const label = reportProbabilityData?.labels;
+  const outDTOList = reportProbabilityData?.outDTOList;
+
+  const AMU = outDTOList?.find((item) => item.label === rhs[0])?.data;
+  const APAC1 = outDTOList?.find((item) => item.label === rhs[1])?.data;
+  const EURASIAUSRTM1 = outDTOList?.find((item) => item.label === rhs[2])?.data;
+  const USBFSIE = outDTOList?.find((item) => item.label === rhs[3])?.data;
+  const USFITCHRTM3 = outDTOList?.find((item) => item.label === rhs[4])?.data;
+  const USHLCEMVRTM2 = outDTOList?.find((item) => item.label === rhs[5])?.data;
+  const Testree1 = outDTOList?.find((item) => item.label === rhs[6])?.data;
+  const Testree2 = outDTOList?.find((item) => item.label === rhs[6])?.data;
+  const Vserve = outDTOList?.find((item) => item.label === rhs[7])?.data;
+
+  const dataList = label?.map((labels, index) => ({
+    name: labels,
+    AMU: AMU ? AMU[index] : 0,
+    APAC1: AMU ? APAC1[index] : 0,
+    EURASIAUSRTM1: AMU ? EURASIAUSRTM1[index] : 0,
+    USBFSIE: AMU ? USBFSIE[index] : 0,
+    USFITCHRTM3: AMU ? USBFSIE[index] : 0,
+    USHLCEMVRTM2: AMU ? USBFSIE[index] : 0,
+    Testree1: AMU ? USBFSIE[index] : 0,
+    Testree2: AMU ? USBFSIE[index] : 0,
+    Vserve: AMU ? USBFSIE[index] : 0,
+  }));
+
   const calculateChartWidth = () => {
     const numItems = dataList ? dataList.length : 0;
     const labelWidth = 80;
@@ -247,8 +271,10 @@ const BuWiseReport = (props, onBuChange) => {
           </ReportModalButtonDiv>
           <div style={{ display: "flex" }}>
           <SelectedFYDisplayDiv>
-          <Typography>View: </Typography>
-          <input
+            <Typography>
+              View:
+            </Typography>
+			<input
                 style={{
                   boxShadow: "none",
                   border: "1px solid #0000004d",
@@ -258,19 +284,16 @@ const BuWiseReport = (props, onBuChange) => {
                   textAlign: "center",
                 }}
                 disabled
-                // type="text" value={`${viewType} View`}
-                // value={`${viewType} View`}
-                value={`BU Wise - ${viewType} View`}
+                value={`SBU Client - ${viewType} View`}
               />
           </SelectedFYDisplayDiv>
           <SelectedFYDisplayDiv>
             {filteredFinancialYear ? (
-                              <div style={{ display: "flex",alignItems:"center" }}>
-
+				                <div style={{ display: "flex",alignItems:"center" }}>
               <Typography>
                 {FINANCIAL_YEAR}:
               </Typography>
-              <input
+			  <input
                     style={{
                       boxShadow: "none",
                       border: "1px solid #0000004d",
@@ -284,13 +307,13 @@ const BuWiseReport = (props, onBuChange) => {
                     disabled
 
                   />
-                  </div>
+				  </div>
             ) : (
               ""
             )}
             {/* <Typography>Week :</Typography> */}
           </SelectedFYDisplayDiv>
-          {viewType == "Monthly" && (
+		  {viewType == "Monthly" && (
               <SelectedFYDisplayDiv>
                 <Typography>Week :</Typography>
                 <input
@@ -309,7 +332,7 @@ const BuWiseReport = (props, onBuChange) => {
                 />
               </SelectedFYDisplayDiv>
             )}
-            </div>
+			</div>
         </searchModalTitle>
         <div>
           <Modal
@@ -449,20 +472,18 @@ const BuWiseReport = (props, onBuChange) => {
                   </SelectOptions>
                 </ReportModalDropDownSection>
 
-                {/* <ReportModalDropDownSection>
+                <ReportModalDropDownSection>
                   <LabelDisplay>
                     <span>{SBU_LABEL} :</span>
                   </LabelDisplay>
-                  <SelectOptions
-                    onChange={sbuIdHandler}
-                  >
+                  <SelectOptions onChange={sbuIdHandler}>
                     <option value="" disabled selected hidden></option>
                     {props.sbuData.sbuData &&
                       props.sbuData.sbuData.map((obj, id) => (
                         <option value={obj.sbuId}>{obj.sbuName}</option>
                       ))}
                   </SelectOptions>
-                </ReportModalDropDownSection> */}
+                </ReportModalDropDownSection>
 
                 <ReportModalDropDownSection>
                   <LabelDisplay>
@@ -520,6 +541,21 @@ const BuWiseReport = (props, onBuChange) => {
                         </option>
                       ))}
                   </SelectOptions>
+                </ReportModalDropDownSection>
+
+                <ReportModalDropDownSection>
+                  <LabelDisplay>
+                    <span>{ACCOUNT_LABEL} :</span>
+                    <SelectOptions name="accountId" onChange={accountHandler}>
+                      <option value="" disabled selected hidden></option>
+                      {props.accountData.accountData &&
+                        props.accountData.accountData.map((obj, id) => (
+                          <option value={obj.accountId}>
+                            {obj.accountName}
+                          </option>
+                        ))}
+                    </SelectOptions>
+                  </LabelDisplay>
                 </ReportModalDropDownSection>
 
                 <ReportModalDropDownSection>
@@ -597,12 +633,18 @@ const BuWiseReport = (props, onBuChange) => {
                   formatter={(value, name, props) => ["$" + value, name]}
                 />
                 <Legend />
-                <Bar dataKey="GSS" stackId="a" fill="#93B1A6" />
-                <Bar dataKey="Testree" stackId="a" fill="#5C8374" />
+                <Bar dataKey="AMU" stackId="a" fill="#0C7075" />
+                <Bar dataKey="APAC1" stackId="a" fill="#0F969C" />
+                <Bar dataKey="EURASIAUSRTM1" stackId="a" fill="#183D3D" />
+                <Bar dataKey="USBFSIE" stackId="a" fill="#183D3D" />
+                <Bar dataKey="USFITCHRTM3" stackId="a" fill="#183D3D" />
+                <Bar dataKey="USHLCEMVRTM2" stackId="a" fill="#183D3D" />
+                <Bar dataKey="Testree1" stackId="a" fill="#183D3D" />
+                <Bar dataKey="Testree2" stackId="a" fill="#183D3D" />
                 <Bar
-                  dataKey="VServe"
+                  dataKey="Vserve"
                   stackId="a"
-                  fill="#183D3D"
+                  fill="#040D12"
                   label={{
                     position: "top",
                     formatter: (value) => {
@@ -651,4 +693,4 @@ const mapDispatchToProps = (dispatch) => {
     //   getReportData: (data) => dispatch(getReportData(data)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(BuWiseReport);
+export default connect(mapStateToProps, mapDispatchToProps)(SBUClientWise);
