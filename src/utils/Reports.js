@@ -4,6 +4,7 @@ import ProbabilityWiseReport from "../components/report/ProbabilityWiseReport";
 import BuWiseReport from "../components/report/BuWiseReport";
 import ClientWiseReport from "../components/report/ClientWiseReport";
 import SBUClientWise from "../components/report/SBUClientWise";
+import BusinessTypeWise from "../components/report/BusinessTypeWise";
 
 export const Reports = {
   BusinessType,
@@ -12,4 +13,5 @@ export const Reports = {
   BuWiseReport,
   ClientWiseReport,
   SBUClientWise,
+  BusinessTypeWise
 };

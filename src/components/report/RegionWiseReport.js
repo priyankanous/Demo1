@@ -146,6 +146,8 @@ const currentFinancialYear = getCurrentFinancialYear();
 
   const label = reportRegionData?.labels;
   const outDTOList = reportRegionData?.outDTOList;
+
+  console.log("outDTOList", outDTOList)
   const naData = outDTOList?.find((item) => item.label === "NA")?.data;
   const euData = outDTOList?.find((item) => item.label === "EU")?.data;
   const apacData = outDTOList?.find((item) => item.label === "APAC")?.data;
