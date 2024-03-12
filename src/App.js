@@ -92,9 +92,14 @@ function App() {
           component={RollingRevenueAdministration.GlobalLeaveLossFactor}
         />
         <Route path="/revenue/rrentry" component={RevenueEntry.RREntry} />
-        <Route
+        {/* <Route
           path="/reports/businesstypewiseview"
           component={Reports.BusinessType}
+        /> */}
+        
+        <Route
+          path="/reports/businesstypewiseview"
+          component={Reports.BusinessTypeWise}
         />
         <Route
           path="/reports/regionwiseview"
