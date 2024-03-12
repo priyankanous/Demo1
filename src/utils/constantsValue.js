@@ -212,6 +212,31 @@ export const MoadalStyleRREntry = {
   // p: 1,
 };
 
+export const ModalControlButtonapply = styled(Button)({
+  borderRadius: '4px',
+  border:' 1px solid var(--base-text, rgba(0, 0, 0, 0.87))',
+  background: '#ffffff',
+  color: "#000000",
+  fontFamily:"Roboto",
+  boxShadow:'none',
+  '&:hover': {
+    backgroundColor: '#ffffff',
+    boxShadow:'none'
+  },
+});
+
+export const ModalControlButton2 = styled(Button)({
+  borderRadius: '4px',
+  background: 'var(--contained-button-contained-button, #EBEBEB)',
+  color: "#000000", 
+  fontFamily:"Roboto",
+  boxShadow:'none',
+  '&:hover': {
+    backgroundColor: '#EBEBEB',
+    boxShadow:'none'
+  },
+});
+
 export const MoadalStyle2 = {
   position: 'absolute',
   top: '50%',
