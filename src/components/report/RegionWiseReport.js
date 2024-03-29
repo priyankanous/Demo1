@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import {
@@ -35,6 +35,22 @@ import { ReportSearchModalBox, SearchModalButton, ReportSearchHeading,
   searchModalinnerContainer,
   SelectedFYDisplayDiv
 } from "../../utils/constantsValue";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+
+const ButtonTocroll = styled(Button)({
+  color: "black",
+  background: "transparent",
+  border: "transparent",
+  padding: "0px",
+});
 
 const RegionWiseReport = (props, onBuChange) => {
 
@@ -61,7 +77,7 @@ const currentFinancialYear = getCurrentFinancialYear();
 
   //to set the chart type
   const [viewType, setViewType] = useState("Monthly");
-  const [chartType, setChartType] = useState("Tabular");
+  const [chartType, setChartType] = useState("Chart");
 
   const [filteredFinancialYear, setFilteredFinancialYear] = useState(currentFinancialYear);
   const [buId, setBuId] = useState("");
@@ -147,14 +163,13 @@ const currentFinancialYear = getCurrentFinancialYear();
   const label = reportRegionData?.labels;
   const outDTOList = reportRegionData?.outDTOList;
 
-  console.log("outDTOList", outDTOList)
+  console.log("outDTOList", label)
   const naData = outDTOList?.find((item) => item.label === "NA")?.data;
   const euData = outDTOList?.find((item) => item.label === "EU")?.data;
   const apacData = outDTOList?.find((item) => item.label === "APAC")?.data;
 
   const dataList = label?.map((labels, index) => ({
     name: labels,
-    // NA: Math.random() * 5000,
     NA: naData ? naData[index] : 0,
     EU: euData ? euData[index] : 0,
     APAC: apacData ? apacData[index] : 0,
@@ -164,6 +179,7 @@ const currentFinancialYear = getCurrentFinancialYear();
 
   const reportData = {
     viewType: viewType,
+    outPutType: chartType,
     data: {
       // financialYearName: "2023-2024",
       financialYearName: filteredFinancialYear,
@@ -213,6 +229,28 @@ const currentFinancialYear = getCurrentFinancialYear();
     const minWidth = 400;
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
+  };
+
+  const tableHeading = ['April-2023', 'May-2023', 'June-2023', 'July-2023', 'August-2023', 'September-2023', 'October-2023', 'November-2023', 'December-2023', 'January-2024', 'February-2024', 'March-2024']
+
+  const [arrowDisable, setArrowDisable] = useState(true);
+  const elementRef = useRef(null);
+
+
+  const handleHorizantalScroll = (element, speed, distance, step) => {
+    let scrollAmount = 0;
+    const slideTimer = setInterval(() => {
+      element.scrollLeft += step;
+      scrollAmount += Math.abs(step);
+      if (scrollAmount >= distance) {
+        clearInterval(slideTimer);
+      }
+      if (element.scrollLeft === 0) {
+        setArrowDisable(true);
+      } else {
+        setArrowDisable(false);
+      }
+    }, speed);
   };
 
   return (
@@ -396,14 +434,16 @@ const currentFinancialYear = getCurrentFinancialYear();
                   name="chartType"
                   defaultChecked
                   onChange={handleChartTypeChange}
+                  checked={chartType === "Chart"}
                 />{" "}
                 Chart
                 <RadioInput
                   type="radio"
                   value="Tabular"
                   name="chartType"
-                  disabled
                   onChange={handleChartTypeChange}
+                  checked={chartType === "Tabular"}
+
                 />{" "}
                 Tabular
               </div>
@@ -679,8 +719,14 @@ const currentFinancialYear = getCurrentFinancialYear();
       </div>
 
       <div style={{ marginLeft: "250px" }}>
-        {reportRegionData !== "" && reportRegionData !== "0" && (
+      {chartType === "Chart" ? (
+  <div>
+            {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
+            <div
+              className="searchFilterInnerContainer"
+              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
+            >
             <BarChart
               width={calculateChartWidth()}
               height={400}
@@ -745,13 +791,74 @@ const currentFinancialYear = getCurrentFinancialYear();
               }}            
               
               />
-              {/* <Bar dataKey="bmy" stackId="a" fill="##040D12" /> */}
-
-              {/* <Bar dataKey="bmy" fill="#8884d8" /> */}
-              {/* <Bar dataKey="uv" fill="#ffc658" /> */}
             </BarChart>
           </div>
+          </div>
         )}
+      </div>
+      ):(
+        <div
+      style={{ marginTop:"60px", position: "relative", overflow: "hidden", paddingBottom: "8px", width:"97%" }}
+    >
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          // marginTop: "10px",
+        }}
+      >
+        <ButtonTocroll
+          onClick={() => {
+            handleHorizantalScroll(elementRef.current, 25, 100, -10);
+          }}
+          disabled={arrowDisable}
+        >
+          <KeyboardDoubleArrowLeftIcon />
+        </ButtonTocroll>
+        <ButtonTocroll
+          onClick={() => {
+            handleHorizantalScroll(elementRef.current, 25, 100, 10);
+          }}
+        >
+          <KeyboardDoubleArrowRightIcon />
+        </ButtonTocroll> 
+      </div>
+      <div>
+        <TableContainer
+          component={Paper}
+          style={{ overflow: "hidden", margin: "0px 0px 0px 20px", width:"97%", 
+          // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)" 
+        boxShadow:"none"
+        }}
+          ref={elementRef}
+        >
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
+                <TableCell style={{ whiteSpace: 'nowrap', textAlign:"center" }}>Region</TableCell>
+                {label?.map((heading, index) => (
+                  <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap', textAlign:"center" }} key={index}>
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            {reportRegionData?.outDTOList.map((item, index) => (
+            <TableRow key={index} style={{backgroundColor:"transparent"}}>
+              <TableCell style={{textAlign:"center", whiteSpace: 'nowrap'}} >{item.label}</TableCell>
+              {item?.data.map((value, index) => (
+                <TableCell key={index} style={{textAlign:"center"}} >{value}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
+      )}
       </div>
     </div>
   );

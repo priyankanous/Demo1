@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Label, Tooltip, Legend } from "recharts";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
-import { Typography, Modal, styled } from "@mui/material";
+import { Typography, Modal, styled, TextField, Button } from "@mui/material";
 import { getRegionData } from "../../actions/region";
 import { getBuData } from "../../actions/bu";
 import { getSbuHeadData } from "../../actions/sbuHead";
@@ -54,6 +54,24 @@ import {
   APPLY,
 } from "../../utils/Constants";
 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+
+const ButtonTocroll = styled(Button)({
+  color: "black",
+  background: "transparent",
+  border: "transparent",
+  padding: "0px",
+});
+
+
 const BuWiseReport = (props, onBuChange) => {
   //get the current financial year
   function getCurrentFinancialYear() {
@@ -74,7 +92,7 @@ const BuWiseReport = (props, onBuChange) => {
 
   const [open, setOpen] = useState(false);
   const [viewType, setViewType] = useState("Monthly");
-  const [chartType, setChartType] = useState("Tabular");
+  const [chartType, setChartType] = useState("Chart");
   const [filteredFinancialYear, setFilteredFinancialYear] =
     useState(currentFinancialYear);
   const [buId, setBuId] = useState("");
@@ -176,6 +194,7 @@ const BuWiseReport = (props, onBuChange) => {
   //payload
   const reportData = {
     viewType: viewType,
+    outPutType: chartType,
     data: {
       financialYearName: filteredFinancialYear,
       regionId: regionId,
@@ -227,6 +246,27 @@ const BuWiseReport = (props, onBuChange) => {
     const minWidth = 200;
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
+  };
+
+  const tableHeading = ['April-2023', 'May-2023', 'June-2023', 'July-2023', 'August-2023', 'September-2023', 'October-2023', 'November-2023', 'December-2023', 'January-2024', 'February-2024', 'March-2024']
+
+  const [arrowDisable, setArrowDisable] = useState(true);
+  const elementRef = useRef(null);
+
+  const handleHorizantalScroll = (element, speed, distance, step) => {
+    let scrollAmount = 0;
+    const slideTimer = setInterval(() => {
+      element.scrollLeft += step;
+      scrollAmount += Math.abs(step);
+      if (scrollAmount >= distance) {
+        clearInterval(slideTimer);
+      }
+      if (element.scrollLeft === 0) {
+        setArrowDisable(true);
+      } else {
+        setArrowDisable(false);
+      }
+    }, speed);
   };
 
   return (
@@ -401,13 +441,14 @@ const BuWiseReport = (props, onBuChange) => {
                   name="chartType"
                   defaultChecked
                   onChange={handleChartTypeChange}
+                  checked={chartType === "Chart"}
                 />{" "}
                 {CHART}
                 <RadioInput
                   type="radio"
                   value="Tabular"
                   name="chartType"
-                  disabled
+                  checked={chartType === "Tabular"}
                   onChange={handleChartTypeChange}
                 />{" "}
                 {TABULAR}
@@ -562,6 +603,9 @@ const BuWiseReport = (props, onBuChange) => {
       </div>
 
       <div style={{ marginLeft: "250px" }}>
+{chartType === "Chart" ? (
+  <div>
+
         {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
           <div>
             <div
@@ -617,7 +661,86 @@ const BuWiseReport = (props, onBuChange) => {
           </div>
         )}
       </div>
+):(
+  <div
+      style={{ marginTop:"60px", position: "relative", overflow: "hidden", paddingBottom: "8px", width:"97%" }}
+    >
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          // marginTop: "10px",
+        }}
+      >
+                <ButtonTocroll
+          onClick={() => {
+            handleHorizantalScroll(elementRef.current, 25, 100, -10);
+          }}
+          disabled={arrowDisable}
+        >
+          <KeyboardDoubleArrowLeftIcon />
+        </ButtonTocroll>
+        <ButtonTocroll
+          onClick={() => {
+            handleHorizantalScroll(elementRef.current, 25, 100, 10);
+          }}
+        >
+          <KeyboardDoubleArrowRightIcon />
+        </ButtonTocroll> 
+      </div>
+      <div>
+        <TableContainer
+          component={Paper}
+          style={{ overflow: "hidden", margin: "0px 0px 0px 20px", width:"97%", 
+          // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)" 
+        boxShadow:"none"
+        }}
+          ref={elementRef}
+        >
+                    <Table aria-label="simple table">
+            <TableHead>
+              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
+                <TableCell style={{ whiteSpace: 'nowrap',textAlign:"center" }}>Probability</TableCell>
+                {tableHeading.map((heading, index) => (
+                  <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap' }} key={index}>
+                    {heading}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            <TableRow style={{backgroundColor:"transparent"}}>
+            <TableCell>confirmed</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+            </TableRow>
+
+            <TableRow style={{backgroundColor:"transparent"}}>
+            <TableCell>Expected</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+            </TableRow>
+            <TableRow style={{backgroundColor:"transparent"}}>
+            <TableCell>Upside</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+              <TableCell>126</TableCell>
+            </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
     </div>
+    </div>
+)}
+
+</div>
+</div>
   );
 };
 
