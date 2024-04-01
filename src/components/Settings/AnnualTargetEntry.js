@@ -45,12 +45,55 @@ import CloseIcon from "@mui/icons-material/Close";
 function AnnualTargetEntry() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [regionName, setRegionName] = useState(null);
-
-  const [regionDisplayName, setRegionDisplayName] = useState(null);
-  const [regionData, setRegionData] = useState({
-    regionName: "",
-    regionDisplayName: "",
+  const [financialYearData, setFinancialYearData] = useState([]);
+  const [financialYear, setFinancialYear] = useState("");
+  const [annualData, setAnnualData] = useState({
+    financialYear: {
+      financialYearName: "",
+      financialYearCustomName: "",
+      startingFrom: "",
+      endingOn: "",
+    },
+    businessUnit: {
+      businessUnitName: "",
+    },
+    startegicBusinessUnit: {
+      sbuName: "",
+    },
+    strategicBusinessUnitHead: {
+      sbuHeadName: "",
+    },
+    location: {
+      locationName: "",
+    },
+    region: {
+      regionName: "",
+    },
+    account: {
+      accountName: "",
+    },
+    businessType: {
+      businessTypeName: "",
+    },
+    cocPractice: {
+      cocPracticeName: "",
+    },
+    businessDevelopmentManager: {
+      bdmName: "",
+    },
+    q1FYB: 0,
+    q1FYS: 0,
+    q1FYT: 0,
+    q2FYB: 0,
+    q2FYS: 0,
+    q2FYT: 0,
+    q3FYB: 0,
+    q3FYS: 0,
+    q3FYT: 0,
+    q4FYB: 0,
+    q4FYS: 0,
+    q4FYT: 0,
+    fy: 0,
   });
   const [activeClass, setActiveClass] = useState(true);
   const [setUser, setActiveUser] = useState("");
@@ -59,35 +102,27 @@ function AnnualTargetEntry() {
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
-    getAllRegionData();
+    getFinancialYearNameData();
   }, []);
 
-  const getAllRegionData = async () => {
-    await axios
-      .get(`http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions`)
-      .then((response) => {
-        console.log("This is axios resp", response);
-        const actualDataObject = response.data.data;
-        setData(actualDataObject);
-      });
-  };
-  const AddDataToRegion = async (e) => {
-    try {
-      const response = await axios.post(
-        "http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions",
-        regionData
-      );
-      console.log("this is the response", response.data);
-      getAllRegionData();
-      setIsOpen(false);
-    } catch {}
-  };
   const handleModalClose = () => {
     setIsOpen(false);
     setSelectedFile(null);
   };
 
-  const childAccount = ["nous", "nous", "nous"];
+  const getFinancialYearNameData = async () => {
+    console.log("in financial year data");
+    await axios
+      .get(
+        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/financial-year`
+      )
+      .then((response) => {
+        console.log("This is axios resp", response);
+        const actualDataObject = response.data.data;
+        setFinancialYearData(actualDataObject);
+      });
+  };
+  console.log("fifff", financialYearData);
 
   const resetData = () => {
     // setIsOpen(false);
@@ -100,21 +135,6 @@ function AnnualTargetEntry() {
     // setProjectEndDate(null)
   };
 
-  const cutAndPasteToUsers = (typeofuser) => {
-    // if (typeofuser === 'availablePerson'){
-    //     setSelectedusers([...availableUsers,setUser]);
-    //     const avaialbleUsers = [...availableUsers];
-    //     avaialbleUsers.filter
-    // }
-  };
-
-  const highlightBackground = (e, key) => {
-    console.log(key, e.target);
-    e.target.style.color = "pink";
-    setActiveClass(false);
-    setActiveUser(key);
-  };
-
   const handleAnnualEntryChange = (e) => {
     setIsAnnualEntrySelected(e.target.checked);
     setIsUploadEntrySelected(false);
@@ -124,6 +144,7 @@ function AnnualTargetEntry() {
     setIsUploadEntrySelected(e.target.checked);
     setIsAnnualEntrySelected(false);
   };
+
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation(); // Prevent opening the file in a new tab
@@ -156,6 +177,22 @@ function AnnualTargetEntry() {
     cursor: "pointer",
     height: "150px",
   });
+
+  const handleChange = (value, p1, p2, p3) => {
+    console.log("p1", p1, "p2", p2, "p3", p3);
+    let temp = { ...annualData };
+    if (p1 && p2 && p3) {
+      temp[p1][p2][p3] = value;
+    } else if (p1 && p2) {
+      temp[p1][p2] = value;
+    } else if (p1) {
+      temp[p1] = value;
+    }
+    setAnnualData(temp);
+  };
+
+  console.log("Annual Data -->", annualData);
+
   return (
     <div>
       <MemoizedBaseComponent
@@ -164,13 +201,7 @@ function AnnualTargetEntry() {
         data={data}
         buttonText="Add New"
         Tr={(obj) => {
-          return (
-            <Tr
-              data={obj}
-              getAllRegionData={getAllRegionData}
-              setRegionData={setRegionData}
-            />
-          );
+          return <Tr data={obj} />;
         }}
         setIsOpen={setIsOpen}
       />
@@ -221,19 +252,39 @@ function AnnualTargetEntry() {
                           width: "160px",
                           marginLeft: "8px",
                         }}
-                        // onChange={(e) => {
-                        //   setAccountName(e.target.value);
-                        // }}
-                        // value={accountName}
+                        onChange={(e) => {
+                          const found = financialYearData?.find(
+                            (fy) => fy?.financialYearName === e.target.value
+                          );
+                          if (found) {
+                            handleChange(
+                              found.financialYearName,
+                              "financialYear",
+                              "financialYearName"
+                            );
+                            handleChange(
+                              found.financialYearCustomName,
+                              "financialYear",
+                              "financialYearCustomName"
+                            );
+                            handleChange(
+                              found.startingFrom,
+                              "financialYear",
+                              "startingFrom"
+                            );
+                            handleChange(
+                              found.endingOn,
+                              "financialYear",
+                              "endingOn"
+                            );
+                          }
+                        }}
+                        value={annualData?.financialYear?.financialYearName}
                       >
-                        {childAccount?.map((accountName, index) => {
+                        {financialYearData?.map((ele, index) => {
                           return (
-                            <MenuItem
-                              value={JSON.stringify(accountName)}
-                              selected={childAccount === childAccount}
-                              key={index}
-                            >
-                              {accountName}
+                            <MenuItem value={ele.financialYearName} key={index}>
+                              {ele.financialYearName}
                             </MenuItem>
                           );
                         })}
@@ -284,46 +335,122 @@ function AnnualTargetEntry() {
                       >
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>BU</span>
+                          <span>SBU</span>
                         </div>
                         <div>
                           <div>
-                            <InputField
-                              size="small"
-                              type="text"
-                              id="name"
-                              variant="outlined"
-                              spellcheck="false"
-                              // onChange={(e) => {
-                              //   setAccountData({
-                              //     ...accountData,
-                              //     accountName: e.target.value,
-                              //   });
-                              // }}
-                            />
+                            <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                           </div>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>SBU</span>
+                          <span>BU</span>
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
@@ -333,19 +460,57 @@ function AnnualTargetEntry() {
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                     </div>
@@ -371,19 +536,57 @@ function AnnualTargetEntry() {
                           <span>Location</span>
                         </div>
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
@@ -393,19 +596,57 @@ function AnnualTargetEntry() {
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
@@ -415,19 +656,57 @@ function AnnualTargetEntry() {
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                     </div>
@@ -453,19 +732,57 @@ function AnnualTargetEntry() {
                           <span>Business Type</span>
                         </div>
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
@@ -475,19 +792,57 @@ function AnnualTargetEntry() {
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                       <div style={{ flexBasis: "25%" }}>
@@ -497,19 +852,57 @@ function AnnualTargetEntry() {
                         </div>
 
                         <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
+                        <FormControl>
+                              <Select
+                                size="small"
+                                style={{
+                                  background: "white",
+                                  width: "206px",
+                                }}
+                                onChange={(e) => {
+                                  const found = financialYearData?.find(
+                                    (fy) =>
+                                      fy?.financialYearName === e.target.value
+                                  );
+                                  if (found) {
+                                    handleChange(
+                                      found.financialYearName,
+                                      "financialYear",
+                                      "financialYearName"
+                                    );
+                                    handleChange(
+                                      found.financialYearCustomName,
+                                      "financialYear",
+                                      "financialYearCustomName"
+                                    );
+                                    handleChange(
+                                      found.startingFrom,
+                                      "financialYear",
+                                      "startingFrom"
+                                    );
+                                    handleChange(
+                                      found.endingOn,
+                                      "financialYear",
+                                      "endingOn"
+                                    );
+                                  }
+                                }}
+                                value={
+                                  annualData?.financialYear?.financialYearName
+                                }
+                              >
+                                {financialYearData?.map((ele, index) => {
+                                  return (
+                                    <MenuItem
+                                      value={ele.financialYearName}
+                                      key={index}
+                                    >
+                                      {ele.financialYearName}
+                                    </MenuItem>
+                                  );
+                                })}
+                              </Select>
+                            </FormControl>
                         </div>
                       </div>
                     </div>
@@ -532,7 +925,7 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q1 FY23 B</span>
+                          <span>Q1 FY B</span>
                         </div>
                         <div>
                           <InputField
@@ -553,7 +946,7 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q1 FY23 S</span>
+                          <span>Q1 FY S</span>
                         </div>
 
                         <div>
@@ -575,168 +968,7 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q1 FY23 T</span>
-                        </div>
-
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                      }}
-                    >
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q2 FY23 B</span>
-                        </div>
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q2 FY23 S</span>
-                        </div>
-
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q2 FY23 T</span>
-                        </div>
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      rowGap: "30px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexBasis: "100%",
-                        gap: "100px",
-                      }}
-                    >
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q3 FY23 B</span>
-                        </div>
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q3 FY23 S</span>
-                        </div>
-
-                        <div>
-                          <InputField
-                            size="small"
-                            type="text"
-                            id="name"
-                            variant="outlined"
-                            spellcheck="false"
-                            // onChange={(e) => {
-                            //   setAccountData({
-                            //     ...accountData,
-                            //     accountName: e.target.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                      </div>
-                      <div style={{ flexBasis: "25%" }}>
-                        <div>
-                          <span style={{ color: "red" }}>*</span>
-                          <span>Q3 FY23 T</span>
+                          <span>Q1 FY T</span>
                         </div>
 
                         <div>
@@ -774,7 +1006,7 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q4 FY23 B</span>
+                          <span>Q2 FY B</span>
                         </div>
                         <div>
                           <InputField
@@ -795,7 +1027,7 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q4 FY23 S</span>
+                          <span>Q2 FY S</span>
                         </div>
 
                         <div>
@@ -817,7 +1049,168 @@ function AnnualTargetEntry() {
                       <div style={{ flexBasis: "25%" }}>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>Q4 FY23 T</span>
+                          <span>Q2 FY T</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q3 FY T</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      rowGap: "30px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexBasis: "100%",
+                        gap: "100px",
+                      }}
+                    >
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY B</span>
+                        </div>
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY S</span>
+                        </div>
+
+                        <div>
+                          <InputField
+                            size="small"
+                            type="text"
+                            id="name"
+                            variant="outlined"
+                            spellcheck="false"
+                            // onChange={(e) => {
+                            //   setAccountData({
+                            //     ...accountData,
+                            //     accountName: e.target.value,
+                            //   });
+                            // }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ flexBasis: "25%" }}>
+                        <div>
+                          <span style={{ color: "red" }}>*</span>
+                          <span>Q4 FY T</span>
                         </div>
 
                         <div>
@@ -855,7 +1248,7 @@ function AnnualTargetEntry() {
                       <div>
                         <div>
                           <span style={{ color: "red" }}>*</span>
-                          <span>FY 23</span>
+                          <span>FY</span>
                         </div>
                         <div>
                           <InputField
@@ -995,18 +1388,18 @@ function AnnualTargetEntry() {
     </div>
   );
 }
-function Tr({
-  getAllRegionData,
-  setRegionData,
-  data: { regionId, regionName, regionDisplayName, isActive },
-}) {
+function Tr(
+  {
+    // data: { regionId, regionName, regionDisplayName, isActive },
+  }
+) {
   const [isDropdown, setDropdown] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [responseData, setResponseData] = useState({
-    regionId: regionId,
-    regionName: regionName,
-    regionDisplayName: regionDisplayName,
-  });
+  // const [responseData, setResponseData] = useState({
+  //   regionId: regionId,
+  //   regionName: regionName,
+  //   regionDisplayName: regionDisplayName,
+  // });
 
   const OutsideClick = (ref) => {
     useEffect(() => {
@@ -1026,31 +1419,6 @@ function Tr({
     isDropdown ? setDropdown(false) : setDropdown(true);
   };
 
-  const OnSubmit = () => {
-    axios
-      .put(
-        `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/${regionId}`,
-        responseData
-      )
-      .then((response) => {
-        const actualDataObject = response.data.data;
-        getAllRegionData();
-        setIsOpen(false);
-      });
-  };
-
-  const activeDeactivateTableData = async (id) => {
-    const { data } = await axios.put(
-      `http://192.168.16.55:8080/rollingrevenuereport/api/v1/regions/activate-or-deactivate/${id}`
-    );
-    if (data?.message === "Success" && data?.responseCode === 200) {
-      setRegionData({ regionName: "", regionDisplayName: "" });
-      setIsOpen(false);
-      getAllRegionData();
-    }
-  };
-  // API calls to delete Record
-
   // const DeleteRecord = () => {
   //   axios
   //     .delete(
@@ -1067,13 +1435,11 @@ function Tr({
   return (
     <React.Fragment>
       <tr ref={wrapperRef}>
-        <td className={!isActive && "disable-table-row"}>
-          <span>{regionName || "Unknown"}</span>
+        <td>
+          <span>{"" || "Unknown"}</span>
         </td>
         <td>
-          <span className={!isActive && "disable-table-row"}>
-            {regionDisplayName || "Unknown"}
-          </span>
+          <span>{"" || "Unknown"}</span>
           <span style={{ float: "right" }}>
             <AiIcons.AiOutlineMore
               onClick={(e) => {
@@ -1103,24 +1469,6 @@ function Tr({
                 >
                   <AiIcons.AiOutlineDelete /> Delete
                 </a> */}
-                <a
-                  style={{ padding: "5px" }}
-                  className={isActive && "disable-table-row"}
-                  onClick={() => {
-                    activeDeactivateTableData(regionId);
-                  }}
-                >
-                  <AiIcons.AiOutlineCheckCircle /> Activate
-                </a>
-                <a
-                  className={!isActive && "disable-table-row"}
-                  onClick={() => {
-                    activeDeactivateTableData(regionId);
-                  }}
-                  style={{ padding: "5px" }}
-                >
-                  <AiIcons.AiOutlineCloseCircle /> Deactivate
-                </a>
               </div>
             )}
           </span>
@@ -1150,13 +1498,13 @@ function Tr({
                     type="text"
                     id="id"
                     spellcheck="false"
-                    value={responseData.regionName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        regionName: e.target.value,
-                      });
-                    }}
+                    // value={responseData.regionName}
+                    // onChange={(e) => {
+                    //   setResponseData({
+                    //     ...responseData,
+                    //     regionName: e.target.value,
+                    //   });
+                    // }}
                   />
                 </div>
                 <div>
@@ -1165,13 +1513,13 @@ function Tr({
                     type="text"
                     id="id"
                     spellcheck="false"
-                    value={responseData.regionDisplayName}
-                    onChange={(e) => {
-                      setResponseData({
-                        ...responseData,
-                        regionDisplayName: e.target.value,
-                      });
-                    }}
+                    // value={responseData.regionDisplayName}
+                    // onChange={(e) => {
+                    //   setResponseData({
+                    //     ...responseData,
+                    //     regionDisplayName: e.target.value,
+                    //   });
+                    // }}
                   />
                 </div>
                 <div>
@@ -1181,7 +1529,7 @@ function Tr({
                       value="Save"
                       id="create-account"
                       class="button"
-                      onClick={OnSubmit}
+                      // onClick={OnSubmit}
                     />
                     <input
                       type="button"

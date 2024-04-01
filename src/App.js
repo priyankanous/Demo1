@@ -118,8 +118,6 @@ function App() {
           path="/reports/clientwiseview"
           component={Reports.ClientWiseReport}
         />
-        <Route path="/settings/account" component={Settings.Account} />
-        <Route path="/settings/opportunity" component={Settings.Opportunity} />
         <Route
           path="/settings/role-user-permission"
           component={Settings.RoleUserPermission}
@@ -145,6 +143,10 @@ function App() {
           component={Calendar.BdmMeetings}
         />
         <Route path="/settings/roles" component={Settings.Roles} />
+        <Route
+          path="/settings/add-users"
+          component={Settings.AddUsers}
+        />
       </Switch>
     </Router>
   );

@@ -130,6 +130,11 @@ export const SidebarData = [
         path: "/settings/annual-target-entry",
         cName: "sub-nav",
       },
+      {
+        title: "Add Users",
+        path: "/settings/add-users",
+        cName: "sub-nav",
+      },
     ],
   },
   {

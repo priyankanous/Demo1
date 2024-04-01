@@ -734,6 +734,7 @@ function RoleUserPermission() {
   const [allRoles, setAllRoles] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true)
 
   useEffect(() => {
     getAllRolesData();
@@ -753,11 +754,14 @@ function RoleUserPermission() {
   };
 
   const updateRolesData = (dataObj) => {
-    setRolesData(dataObj);
+    if(isSaveDisabled) {
+      setIsSaveDisabled(false)
+    }
+    setRolesData(dataObj)
   };
 
   const handleModalClose = () => {
-    setIsOpen(false);
+    resetData();
   };
 
   const handleChange = (event, newValue) => {
@@ -770,7 +774,7 @@ function RoleUserPermission() {
     const temp = value ? { ...defaultSelectAllObj } : { ...defaultRolesObj };
     delete temp["roleName"];
     delete temp["roleDisplayName"];
-    setRolesData({ ...rolesData, ...temp });
+    updateRolesData({ ...rolesData, ...temp });
   };
 
   const handleRolesDataChange = (
@@ -844,7 +848,7 @@ function RoleUserPermission() {
             temp[property][section] = sectionData;
           }
         }
-        setRolesData(temp);
+        updateRolesData(temp);
       } else {
         const temp = { ...rolesData };
         //To manage the all permissions key of the main section &&
@@ -889,7 +893,7 @@ function RoleUserPermission() {
           }
         }
         temp[property][section][subSection][subSectionKey] = value;
-        setRolesData(temp);
+        updateRolesData(temp);
       }
     } else if (property && section && subSection) {
       if (typeof updateAll === "boolean") {
@@ -954,7 +958,7 @@ function RoleUserPermission() {
             temp[property][section][subSection] = subSectionData;
           }
         }
-        setRolesData(temp);
+        updateRolesData(temp);
       } else {
         const temp = { ...rolesData };
         //To manage the all permissions key of the main section &&
@@ -997,7 +1001,7 @@ function RoleUserPermission() {
           }
         }
         temp[property][section][subSection] = value;
-        setRolesData(temp);
+        updateRolesData(temp);
       }
     } else if (property && section) {
       if (typeof updateAll === "boolean") {
@@ -1043,7 +1047,7 @@ function RoleUserPermission() {
             }
           });
           temp[property] = outerData;
-          setRolesData(temp);
+          updateRolesData(temp);
         }
       } else if (typeof viewAll === "boolean") {
         const temp = { ...rolesData };
@@ -1145,7 +1149,7 @@ function RoleUserPermission() {
             }
           });
           temp[property] = outerData;
-          setRolesData(temp);
+          updateRolesData(temp);
         }
       } else {
         const temp = { ...rolesData };
@@ -1191,20 +1195,20 @@ function RoleUserPermission() {
           }
         }
         temp[property][section] = value;
-        setRolesData(temp);
+        updateRolesData(temp);
       }
     } else if (property) {
       const temp = { ...rolesData };
       temp[property] = value;
-      setRolesData(temp);
+      updateRolesData(temp);
     }
   };
 
   const resetData = () => {
+    setAllRoles(null);
     setIsOpen(false);
     getAllRolesData();
-    setRolesData(defaultRolesObj);
-    setAllRoles(null);
+    updateRolesData(defaultRolesObj);
   };
 
   const handleSave = async (e) => {
@@ -1214,13 +1218,20 @@ function RoleUserPermission() {
       try {
         setIsSubmitted(false);
         console.log("issbunn", isSubmitted);
-        const response = await axios.post(
-          "http://192.168.16.55:8080/rollingrevenuereport/api/v1/roles",
-          rolesData
-        );
-        setIsOpen(false);
-        console.log("rolesdata", response.data.data);
-        // setOpportunityData(response.data.data.opportunities);
+        if(rolesData?.roleId){
+          const response = await axios.put(
+            `http://192.168.16.55:8080/rollingrevenuereport/api/v1/roles/${rolesData?.roleId}`,
+            rolesData
+          );
+          console.log("rolesdata", response.data.data);
+        }else{
+          const response = await axios.post(
+            "http://192.168.16.55:8080/rollingrevenuereport/api/v1/roles",
+            rolesData
+          );
+          console.log("rolesdata", response.data.data);
+        }
+        resetData();
       } catch {}
     }
   };
@@ -1245,6 +1256,7 @@ function RoleUserPermission() {
               data={obj}
               value={value}
               rolesData={allRoles}
+              setIsSaveDisabled={setIsSaveDisabled}
               updateIsOpen={updateIsOpen}
               updateRolesData={updateRolesData}
               getAllRolesData={getAllRolesData}
@@ -1265,7 +1277,7 @@ function RoleUserPermission() {
             <ModalHeadingText>Setup Roles</ModalHeadingText>
             <CloseIcon
               onClick={() => {
-                setIsOpen(false);
+                resetData();
               }}
               style={{ cursor: "pointer" }}
             />
@@ -1401,7 +1413,7 @@ function RoleUserPermission() {
                                 delete temp["roleId"];
                                 delete temp["roleName"];
                                 delete temp["roleDisplayName"];
-                                setRolesData({
+                                updateRolesData({
                                   ...rolesData,
                                   ...temp,
                                 });
@@ -8685,6 +8697,7 @@ function RoleUserPermission() {
                       onClick={() => {
                         handleSave();
                       }}
+                      disabled={isSaveDisabled}
                     >
                       Save
                     </ModalControlButton>
@@ -8702,6 +8715,7 @@ function RoleUserPermission() {
 function Tr({
   data: { roleId, roleDisplayName, roleName, active },
   rolesData,
+  setIsSaveDisabled,
   getAllRolesData,
   updateIsOpen,
   updateRolesData,
@@ -8776,6 +8790,7 @@ function Tr({
                     const found = rolesData?.find((e) => e?.roleId === roleId);
                     if (found) {
                       updateRolesData(found);
+                      setIsSaveDisabled(true);
                       updateIsOpen(true);
                     }
                   }}

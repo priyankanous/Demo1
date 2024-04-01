@@ -168,7 +168,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-9px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -201,7 +202,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-9px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -234,7 +236,7 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -267,7 +269,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-9px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -302,7 +305,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-9px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -335,7 +339,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-9px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -368,7 +373,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "2px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
@@ -401,7 +407,8 @@ function ExplicitPermission() {
                         style={{
                           background: "white",
                           width: "160px",
-                          marginLeft: "8px",
+                          marginLeft: "-5px",
+                          marginTop:"-5px"
                         }}
                         // onChange={(e) => {
                         //   setAccountName(e.target.value);
