@@ -138,6 +138,33 @@ h3 {
   border-radius: 20px; */
 }
 
+.dashboard_container {
+  overflow: hidden;
+  position: absolute;
+  width: 80%;
+  left: 20%;
+  top: 11%;
+  height: 85%;
+}
+
+.dashboard_holiday_section {
+  padding-right: 20px;
+  overflow-y: auto;
+  height: 209px;
+}
+
+.dashboard_holiday_section::-webkit-scrollbar {
+  width: 6px;
+}
+.dashboard_holiday_section::-webkit-scrollbar-track {
+  background-color: rgb(193, 191, 191);
+}
+.dashboard_holiday_section::-webkit-scrollbar-thumb {
+  /* background: #007a7e; */
+  background: rgba(30, 68, 130, 1);
+  border-radius: 25px;
+}
+
 .report-container {
   overflow: hidden;
   position: absolute;

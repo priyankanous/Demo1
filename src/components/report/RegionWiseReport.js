@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import {
@@ -25,7 +25,10 @@ import { getBdmData } from "../../actions/bdm";
 import { getBusinessTypeData } from "../../actions/businessType";
 import { getProbabilityData } from "../../actions/probability";
 import { getFinancialYearData } from "../../actions/financial-year";
-import { ReportSearchModalBox, SearchModalButton, ReportSearchHeading,
+import {
+  ReportSearchModalBox,
+  SearchModalButton,
+  ReportSearchHeading,
   ReportSearchButtonSection,
   ReportModalCancelButton,
   ReportModalApplyButton,
@@ -33,15 +36,15 @@ import { ReportSearchModalBox, SearchModalButton, ReportSearchHeading,
   OutputTypeHEading,
   RadioInput,
   searchModalinnerContainer,
-  SelectedFYDisplayDiv
+  SelectedFYDisplayDiv,
 } from "../../utils/constantsValue";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 
@@ -53,7 +56,6 @@ const ButtonTocroll = styled(Button)({
 });
 
 const RegionWiseReport = (props, onBuChange) => {
-
   //get the current financial year
   function getCurrentFinancialYear() {
     const today = new Date();
@@ -62,15 +64,14 @@ const RegionWiseReport = (props, onBuChange) => {
     let financialYearStart;
 
     if (currentMonth >= 3) {
-        financialYearStart = currentYear;
+      financialYearStart = currentYear;
     } else {
-        financialYearStart = currentYear - 1;
+      financialYearStart = currentYear - 1;
     }
     const financialYearEnd = financialYearStart + 1;
     return `${financialYearStart}-${financialYearEnd}`;
-}
-const currentFinancialYear = getCurrentFinancialYear();
-
+  }
+  const currentFinancialYear = getCurrentFinancialYear();
 
   //to open the search model
   const [open, setOpen] = useState(false);
@@ -79,7 +80,8 @@ const currentFinancialYear = getCurrentFinancialYear();
   const [viewType, setViewType] = useState("Monthly");
   const [chartType, setChartType] = useState("Chart");
 
-  const [filteredFinancialYear, setFilteredFinancialYear] = useState(currentFinancialYear);
+  const [filteredFinancialYear, setFilteredFinancialYear] =
+    useState(currentFinancialYear);
   const [buId, setBuId] = useState("");
   const [sbuId, setSbuId] = useState("");
   const [sbuHeadId, setSbuHeadId] = useState("");
@@ -153,7 +155,6 @@ const currentFinancialYear = getCurrentFinancialYear();
     getReportRegionData();
   }, []);
 
-
   // chart related
 
   const [responseData, setResponseData] = useState(null);
@@ -163,7 +164,7 @@ const currentFinancialYear = getCurrentFinancialYear();
   const label = reportRegionData?.labels;
   const outDTOList = reportRegionData?.outDTOList;
 
-  console.log("outDTOList", label)
+  console.log("outDTOList", label);
   const naData = outDTOList?.find((item) => item.label === "NA")?.data;
   const euData = outDTOList?.find((item) => item.label === "EU")?.data;
   const apacData = outDTOList?.find((item) => item.label === "APAC")?.data;
@@ -181,8 +182,8 @@ const currentFinancialYear = getCurrentFinancialYear();
     viewType: viewType,
     outPutType: chartType,
     data: {
-      // financialYearName: "2023-2024",
-      financialYearName: filteredFinancialYear,
+      financialYearName: "2023-2024",
+      // financialYearName: filteredFinancialYear,
       businessUnitId: buId,
       sbuId: sbuId,
       sbuHeadId: sbuHeadId,
@@ -225,17 +226,29 @@ const currentFinancialYear = getCurrentFinancialYear();
 
   const calculateChartWidth = () => {
     const numItems = dataList ? dataList.length : 0;
-    const labelWidth = 80; 
+    const labelWidth = 80;
     const minWidth = 400;
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
   };
 
-  const tableHeading = ['April-2023', 'May-2023', 'June-2023', 'July-2023', 'August-2023', 'September-2023', 'October-2023', 'November-2023', 'December-2023', 'January-2024', 'February-2024', 'March-2024']
+  const tableHeading = [
+    "April-2023",
+    "May-2023",
+    "June-2023",
+    "July-2023",
+    "August-2023",
+    "September-2023",
+    "October-2023",
+    "November-2023",
+    "December-2023",
+    "January-2024",
+    "February-2024",
+    "March-2024",
+  ];
 
   const [arrowDisable, setArrowDisable] = useState(true);
   const elementRef = useRef(null);
-
 
   const handleHorizantalScroll = (element, speed, distance, step) => {
     let scrollAmount = 0;
@@ -270,9 +283,9 @@ const currentFinancialYear = getCurrentFinancialYear();
             </SearchModalButton>
           </div>
           <div style={{ display: "flex" }}>
-          <SelectedFYDisplayDiv>
-          <Typography>View:</Typography>
-          <input
+            <SelectedFYDisplayDiv>
+              <Typography>View:</Typography>
+              <input
                 style={{
                   boxShadow: "none",
                   border: "1px solid #0000004d",
@@ -286,16 +299,13 @@ const currentFinancialYear = getCurrentFinancialYear();
                 // value={`${viewType} View`}
                 value={`Region - ${viewType} View`}
               />
-          </SelectedFYDisplayDiv>
-          {/* <div style={{ display: "flex", alignItems: "center" }}> */}
-          <SelectedFYDisplayDiv>
-
-            {filteredFinancialYear ? (
-                              <div style={{ display: "flex",alignItems:"center" }}>
-              <Typography>
-                Financial Year:
-              </Typography>
-              <input
+            </SelectedFYDisplayDiv>
+            {/* <div style={{ display: "flex", alignItems: "center" }}> */}
+            <SelectedFYDisplayDiv>
+              {filteredFinancialYear ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Typography>Financial Year:</Typography>
+                  <input
                     style={{
                       boxShadow: "none",
                       border: "1px solid #0000004d",
@@ -307,14 +317,13 @@ const currentFinancialYear = getCurrentFinancialYear();
                     }}
                     value={filteredFinancialYear}
                     disabled
-
                   />
-                  </div>
-            ) : (
-              ""
-            )}
-                        </SelectedFYDisplayDiv>
-                        {viewType == "Monthly" && (
+                </div>
+              ) : (
+                ""
+              )}
+            </SelectedFYDisplayDiv>
+            {viewType == "Monthly" && (
               <SelectedFYDisplayDiv>
                 <Typography>Week :</Typography>
                 <input
@@ -329,7 +338,6 @@ const currentFinancialYear = getCurrentFinancialYear();
                   }}
                   // value={2}
                   disabled
-
                 />
               </SelectedFYDisplayDiv>
             )}
@@ -347,37 +355,37 @@ const currentFinancialYear = getCurrentFinancialYear();
               <div>
                 <ReportSearchHeading>Report Filters: </ReportSearchHeading>
               </div>
-              
-                <div style={{ width: "60%",paddingTop:"5px" }}>
-                  <label
-                    for="email"
-                    style={{ fontWeight: "400", fontSize: "16px" }}
-                  >
-                    <span>Financial Year :</span>
-                  </label>
-                  <select
-                    style={{
-                      height: "28px",
-                      width: "100%",
-                      borderRadius: "3px",
-                      boxShadow: "none",
-                      fontFamily: "Roboto",
-                      fontSize: "16px",
-                      fontWeight: "400",
-                      border: "1px solid #00000061",
-                    }}
-                    value={filteredFinancialYear}
-                    onChange={financialYearHeadHandler}
-                  >
-                    <option value="" disabled selected hidden></option>
-                    {props?.financialYear?.financialYear &&
-                      props.financialYear.financialYear.map((obj, id) => (
-                        <option value={obj.financialYearName}>
-                          {obj.financialYearName}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+
+              <div style={{ width: "60%", paddingTop: "5px" }}>
+                <label
+                  for="email"
+                  style={{ fontWeight: "400", fontSize: "16px" }}
+                >
+                  <span>Financial Year :</span>
+                </label>
+                <select
+                  style={{
+                    height: "28px",
+                    width: "100%",
+                    borderRadius: "3px",
+                    boxShadow: "none",
+                    fontFamily: "Roboto",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    border: "1px solid #00000061",
+                  }}
+                  value={filteredFinancialYear}
+                  onChange={financialYearHeadHandler}
+                >
+                  <option value="" disabled selected hidden></option>
+                  {props?.financialYear?.financialYear &&
+                    props.financialYear.financialYear.map((obj, id) => (
+                      <option value={obj.financialYearName}>
+                        {obj.financialYearName}
+                      </option>
+                    ))}
+                </select>
+              </div>
 
               <div>
                 <RadioInput
@@ -399,7 +407,7 @@ const currentFinancialYear = getCurrentFinancialYear();
                 />{" "}
                 Monthly
               </div>
-              { viewType == "Monthly" && (
+              {viewType == "Monthly" && (
                 <div style={{ width: "60%", paddingTop: "5px" }}>
                   <label
                     for="email"
@@ -423,7 +431,7 @@ const currentFinancialYear = getCurrentFinancialYear();
                     <option value="" disabled selected hidden></option>
                   </select>
                 </div>
-                )}
+              )}
               <div>
                 <OutputTypeHEading>Output Type: </OutputTypeHEading>
               </div>
@@ -443,7 +451,6 @@ const currentFinancialYear = getCurrentFinancialYear();
                   name="chartType"
                   onChange={handleChartTypeChange}
                   checked={chartType === "Tabular"}
-
                 />{" "}
                 Tabular
               </div>
@@ -719,146 +726,196 @@ const currentFinancialYear = getCurrentFinancialYear();
       </div>
 
       <div style={{ marginLeft: "250px" }}>
-      {chartType === "Chart" ? (
-  <div>
-            {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+        {chartType === "Chart" ? (
           <div>
+            {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+              <div>
+                <div
+                  className="searchFilterInnerContainer"
+                  style={{
+                    width: "98%",
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                  }}
+                >
+                  <BarChart
+                    width={calculateChartWidth()}
+                    height={400}
+                    style={{ marginTop: "30px" }}
+                    data={dataList}
+                    margin={{
+                      top: 30,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    {/* <CartesianGrid strokeDasharray=" 3 3" /> */}
+                    {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
+                    {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
+                    <XAxis
+                      style={{ fontSize: "10px" }}
+                      dataKey="name"
+                      interval={0}
+                    />
+
+                    <YAxis style={{ fontSize: "10px" }} interval={0}>
+                      <Label
+                        value="Revenue"
+                        position="insideLeft"
+                        angle={-90}
+                        style={{ textAnchor: "middle" }}
+                      />
+                    </YAxis>
+                    <Tooltip
+                      formatter={(value, name, props) => ["$" + value, name]}
+                    />
+                    <Legend />
+                    <Bar
+                      dataKey="NA"
+                      stackId="a"
+                      fill="#93B1A6"
+                      // label={{
+                      //   position: "top",
+                      //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                      // }}
+                    />
+                    <Bar
+                      dataKey="EU"
+                      stackId="a"
+                      fill="#5C8374"
+                      // label={{
+                      //   position: "top",
+                      //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                      // }}
+                    />
+                    <Bar
+                      dataKey="APAC"
+                      stackId="a"
+                      fill="#183D3D"
+                      // label={{
+                      //   position: "top",
+                      //   formatter: (value) => (value !== 0 ? `$${value}` : null),
+                      // }}
+                      label={{
+                        position: "top",
+                        formatter: (value) => {
+                          const formattedValue =
+                            value !== 0
+                              ? `$${(value / 1000).toFixed(0)}k`
+                              : null;
+                          return formattedValue;
+                        },
+                      }}
+                    />
+                  </BarChart>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            style={{
+              marginTop: "60px",
+              position: "relative",
+              overflow: "hidden",
+              paddingBottom: "8px",
+              width: "97%",
+            }}
+          >
             <div
-              className="searchFilterInnerContainer"
-              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
-            >
-            <BarChart
-              width={calculateChartWidth()}
-              height={400}
-              style={{ marginTop: "30px" }}
-              data={dataList}
-              margin={{
-                top: 30,
-                right: 30,
-                left: 20,
-                bottom: 5,
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                // marginTop: "10px",
               }}
             >
-              {/* <CartesianGrid strokeDasharray=" 3 3" /> */}
-              {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
-              {/* <XAxis  tick={{ fontSize: 12 }} tickFormatter={(value, index) => label[index]}/> */}
-              <XAxis style={{ fontSize: "10px" }} dataKey="name" interval={0} />
-
-              <YAxis style={{ fontSize: "10px" }} interval={0}>
-                <Label
-                  value="Revenue"
-                  position="insideLeft"
-                  angle={-90}
-                  style={{ textAnchor: "middle" }}
-                />
-              </YAxis>
-              <Tooltip
-                formatter={(value, name, props) => ["$" + value, name]}
-              />
-              <Legend />
-              <Bar
-                dataKey="NA"
-                stackId="a"
-                fill="#93B1A6"
-                // label={{
-                //   position: "top",
-                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
-                // }}
-              />
-              <Bar
-                dataKey="EU"
-                stackId="a"
-                fill="#5C8374"
-                // label={{
-                //   position: "top",
-                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
-                // }}
-              />
-              <Bar
-                dataKey="APAC"
-                stackId="a"
-                fill="#183D3D"
-                // label={{
-                //   position: "top",
-                //   formatter: (value) => (value !== 0 ? `$${value}` : null),
-                // }}
-                label={{
-                  position: "top",
-                  formatter: (value) => {
-                      const formattedValue = value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                      return formattedValue;
-                  }
-              }}            
-              
-              />
-            </BarChart>
-          </div>
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, -10);
+                }}
+                disabled={arrowDisable}
+              >
+                <KeyboardDoubleArrowLeftIcon />
+              </ButtonTocroll>
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, 10);
+                }}
+              >
+                <KeyboardDoubleArrowRightIcon />
+              </ButtonTocroll>
+            </div>
+            <div>
+              <TableContainer
+                component={Paper}
+                style={{
+                  overflow: "hidden",
+                  margin: "0px 0px 0px 20px",
+                  width: "97%",
+                  // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)"
+                  boxShadow: "none",
+                }}
+                ref={elementRef}
+              >
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
+                    >
+                      <TableCell
+                        style={{ whiteSpace: "nowrap", textAlign: "center" }}
+                      >
+                        Region
+                      </TableCell>
+                      {label?.map((heading, index) => (
+                        <TableCell
+                          style={{
+                            padding: "0px 15px",
+                            whiteSpace: "nowrap",
+                            textAlign: "center",
+                          }}
+                          key={index}
+                        >
+                          {heading}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {reportRegionData?.outDTOList.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <TableCell
+                          style={{ textAlign: "center", whiteSpace: "nowrap" }}
+                        >
+                          {item.label}
+                        </TableCell>
+                        {item?.data.map((value, index) => (
+                          <TableCell
+                            key={index}
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: label[index].includes("FYP")
+                                ? "rgba(234, 237, 74, 0.54)"
+                                : label[index].includes("FYA")
+                                ? "rgba(126, 237, 74, 0.54)"
+                                : "transparent",
+                            }}
+                          >
+                            {value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
           </div>
         )}
-      </div>
-      ):(
-        <div
-      style={{ marginTop:"60px", position: "relative", overflow: "hidden", paddingBottom: "8px", width:"97%" }}
-    >
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          // marginTop: "10px",
-        }}
-      >
-        <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, -10);
-          }}
-          disabled={arrowDisable}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </ButtonTocroll>
-        <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, 10);
-          }}
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </ButtonTocroll> 
-      </div>
-      <div>
-        <TableContainer
-          component={Paper}
-          style={{ overflow: "hidden", margin: "0px 0px 0px 20px", width:"97%", 
-          // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)" 
-        boxShadow:"none"
-        }}
-          ref={elementRef}
-        >
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
-                <TableCell style={{ whiteSpace: 'nowrap', textAlign:"center" }}>Region</TableCell>
-                {label?.map((heading, index) => (
-                  <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap', textAlign:"center" }} key={index}>
-                    {heading}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {reportRegionData?.outDTOList.map((item, index) => (
-            <TableRow key={index} style={{backgroundColor:"transparent"}}>
-              <TableCell style={{textAlign:"center", whiteSpace: 'nowrap'}} >{item.label}</TableCell>
-              {item?.data.map((value, index) => (
-                <TableCell key={index} style={{textAlign:"center"}} >{value}</TableCell>
-              ))}
-            </TableRow>
-          ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    </div>
-      )}
       </div>
     </div>
   );

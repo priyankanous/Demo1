@@ -9,13 +9,23 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { useHistory } from 'react-router-dom';
+
 
 export const SidebarData = [
   {
     title: "Dashboard",
     path: "/dashboard",
     icon: <HomeIcon style={{fontSize:"medium"}} />,
-    subNav: [],
+    iconClosed: <ArrowDropDownIcon />,
+    iconOpened: <ArrowDropUpIcon />,
+    subNav: [
+      {
+        title: "Dashboard",
+        path: "/dashboard",
+        cName: "sub-nav",
+      },
+    ]
   },
   {
     title: "Revenue",

@@ -8,13 +8,16 @@ import { RevenueEntry } from "./utils/RevenueEntry";
 import { Reports } from "./utils/Reports";
 import { Settings } from "./utils/Settings";
 import Calendar from "./utils/Calendar";
+import { Dashboard } from "./utils/Dashboard";
 
 function App() {
   return (
     <Router>
       <Sidebar />
       <Switch>
-        <Route path="/dashboard" component={HomePage} />
+        <Route path="/dashboard" 
+        component={Dashboard.HomePage} 
+        />
         <Route
           path="/administration/bu"
           component={RollingRevenueAdministration.BuisnessUnit}
