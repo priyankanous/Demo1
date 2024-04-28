@@ -21,10 +21,8 @@ import {
   ReportSearchButtonSection,
   ReportModalCancelButton,
   ReportModalApplyButton,
-  searchModalTitle,
   OutputTypeHEading,
   RadioInput,
-  searchModalinnerContainer,
   SelectOptions,
   ReportModalButtonDiv,
   SelectedFYDisplayDiv,
@@ -54,13 +52,13 @@ import {
   RESET_VIEW,
   APPLY,
 } from "../../utils/Constants";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 
@@ -103,8 +101,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   const [bdmId, setBdmId] = useState("");
   const [accountId, setAccountId] = useState("");
   const [regionId, setRegionId] = useState("");
-
-  console.log("chartType", chartType)
 
   //open and close modal
   const handleOpen = () => setOpen(true);
@@ -172,20 +168,9 @@ const ProbabilityWiseReport = (props, onBuChange) => {
   }, []);
 
   // chart related states
-  const HIGH_UPSIDE = "High Upside";
   const [reportProbabilityData, setReportProbabilityData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
   const [rhs, setRhs] = useState([]);
-
-  // const label = ["check", "cccec", "cccec"];
-
-  // const dataList = label?.map((labels, index) => ({
-  // 	name: labels,
-  // 	confirmed: Math.random() * 5000,
-  // 	Expected: Math.random() * 5000,
-  // 	Upside: Math.random() * 5000,
-  // 	HighUpside: Math.random() * 5000,
-  //   }));
 
   //payload
   const reportData = {
@@ -274,16 +259,9 @@ const ProbabilityWiseReport = (props, onBuChange) => {
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
   };
-  const inputStyle = {
-    borderRadius: "4px",
-    padding: "2.5px 14px !important",
-  };
-
-  const tableHeading = ['April-2023', 'May-2023', 'June-2023', 'July-2023', 'August-2023', 'September-2023', 'October-2023', 'November-2023', 'December-2023', 'January-2024', 'February-2024', 'March-2024']
 
   const [arrowDisable, setArrowDisable] = useState(true);
   const elementRef = useRef(null);
-
 
   const handleHorizantalScroll = (element, speed, distance, step) => {
     let scrollAmount = 0;
@@ -300,7 +278,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       }
     }, speed);
   };
-  
+
   return (
     <div>
       <div className="report-container">
@@ -330,14 +308,12 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   textAlign: "center",
                 }}
                 disabled
-                // type="text" value={`${viewType} View`}
-                // value={`${viewType} View`}
                 value={`Probability - ${viewType} View`}
               />
             </SelectedFYDisplayDiv>
             <SelectedFYDisplayDiv>
               {filteredFinancialYear ? (
-                <div style={{ display: "flex",alignItems:"center" }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
                   <Typography>{FINANCIAL_YEAR} :</Typography>
                   <input
                     style={{
@@ -351,7 +327,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                     }}
                     value={filteredFinancialYear}
                     disabled
-
                   />
                 </div>
               ) : (
@@ -373,7 +348,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   }}
                   // value={2}
                   disabled
-
                 />
               </SelectedFYDisplayDiv>
             )}
@@ -408,7 +382,7 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   onChange={financialYearHeadHandler}
                   value={filteredFinancialYear}
                 >
-                  <option value="" disabled selected hidden></option>
+                  {/* <option value="" disabled selected hidden></option> */}
                   {props?.financialYear?.financialYear &&
                     props.financialYear.financialYear.map((obj, id) => (
                       <option value={obj.financialYearName}>
@@ -424,7 +398,6 @@ const ProbabilityWiseReport = (props, onBuChange) => {
                   name="viewType"
                   onChange={handleViewTypeChange}
                   checked={viewType === "Quarterly"}
-                  // style={{ boxShadow: "none", marginTop:"10px", fontSize:"16px", fontWeight:"400", color:"#000000" }}
                 />
                 {QUARTERLY}
                 <br />
@@ -644,143 +617,168 @@ const ProbabilityWiseReport = (props, onBuChange) => {
       </div>
 
       <div style={{ marginLeft: "250px" }}>
-{chartType === "Chart" ? (
-  <div>
-        {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+        {chartType === "Chart" ? (
           <div>
+            {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+              <div>
+                <div
+                  className="searchFilterInnerContainer"
+                  style={{
+                    width: "98%",
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                  }}
+                >
+                  <BarChart
+                    width={calculateChartWidth()}
+                    height={400}
+                    style={{ marginTop: "30px" }}
+                    data={dataList}
+                    margin={{
+                      top: 30,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <XAxis
+                      style={{ fontSize: "9px" }}
+                      dataKey="name"
+                      interval={0}
+                    />
+                    <YAxis style={{ fontSize: "9px" }} interval={0}>
+                      <Label
+                        value="Revenue"
+                        position="insideLeft"
+                        angle={-90}
+                        style={{ textAnchor: "middle" }}
+                      />
+                    </YAxis>
+                    <Tooltip
+                      formatter={(value, name, props) => ["$" + value, name]}
+                    />
+                    <Legend />
+                    <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
+                    <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
+                    <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
+                    <Bar
+                      dataKey="HighUpside"
+                      stackId="a"
+                      fill="#040D12"
+                      label={{
+                        position: "top",
+                        formatter: (value) => {
+                          const formattedValue =
+                            value !== 0
+                              ? `$${(value / 1000).toFixed(0)}k`
+                              : null;
+                          return formattedValue;
+                        },
+                      }}
+                    />
+                  </BarChart>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            style={{
+              marginTop: "60px",
+              position: "relative",
+              overflow: "hidden",
+              paddingBottom: "8px",
+              width: "97%",
+            }}
+          >
             <div
-              className="searchFilterInnerContainer"
-              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                // marginTop: "10px",
+              }}
             >
-              <BarChart
-                width={calculateChartWidth()}
-                height={400}
-                style={{ marginTop: "30px" }}
-                data={dataList}
-                margin={{
-                  top: 30,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, -10);
+                }}
+                disabled={arrowDisable}
+              >
+                <KeyboardDoubleArrowLeftIcon />
+              </ButtonTocroll>
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, 10);
                 }}
               >
-                <XAxis
-                  style={{ fontSize: "9px" }}
-                  dataKey="name"
-                  interval={0}
-                />
-                <YAxis style={{ fontSize: "9px" }} interval={0}>
-                  <Label
-                    value="Revenue"
-                    position="insideLeft"
-                    angle={-90}
-                    style={{ textAnchor: "middle" }}
-                  />
-                </YAxis>
-                <Tooltip
-                  formatter={(value, name, props) => ["$" + value, name]}
-                />
-                <Legend />
-                <Bar dataKey="confirmed" stackId="a" fill="#93B1A6" />
-                <Bar dataKey="Expected" stackId="a" fill="#5C8374" />
-                <Bar dataKey="Upside" stackId="a" fill="#183D3D" />
-                <Bar
-                  dataKey="HighUpside"
-                  stackId="a"
-                  fill="#040D12"
-                  label={{
-                    position: "top",
-                    formatter: (value) => {
-                      const formattedValue =
-                        value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                      return formattedValue;
-                    },
-                  }}
-                />
-              </BarChart>
+                <KeyboardDoubleArrowRightIcon />
+              </ButtonTocroll>
+            </div>
+            <div>
+              <TableContainer
+                component={Paper}
+                style={{
+                  overflow: "hidden",
+                  margin: "0px 0px 0px 20px",
+                  width: "97%",
+                  // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)"
+                  boxShadow: "none",
+                }}
+                ref={elementRef}
+              >
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
+                    >
+                      <TableCell
+                        style={{ whiteSpace: "nowrap", textAlign: "center" }}
+                      >
+                        Probability
+                      </TableCell>
+                      {label?.map((heading, index) => (
+                        <TableCell
+                          style={{ padding: "0px 15px", whiteSpace: "nowrap" }}
+                          key={index}
+                        >
+                          {heading}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {reportProbabilityData?.outDTOList.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <TableCell
+                          style={{ textAlign: "center", whiteSpace: "nowrap" }}
+                        >
+                          {item.label}
+                        </TableCell>
+                        {item?.data.map((value, index) => (
+                          <TableCell
+                            key={index}
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: label[index].includes("FYP")
+                                ? "rgba(234, 237, 74, 0.54)"
+                                : label[index].includes("FYA")
+                                ? "rgba(126, 237, 74, 0.54)"
+                                : "transparent",
+                            }}
+                          >
+                            {value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
           </div>
-        )}
-        </div>
-
-        ):(
-
-<div
-      style={{ marginTop:"60px", position: "relative", overflow: "hidden", paddingBottom: "8px", width:"97%" }}
-    >
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          // marginTop: "10px",
-        }}
-      >
-        <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, -10);
-          }}
-          disabled={arrowDisable}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </ButtonTocroll>
-        <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, 10);
-          }}
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </ButtonTocroll> 
-      </div>
-      <div>
-        <TableContainer
-          component={Paper}
-          style={{ overflow: "hidden", margin: "0px 0px 0px 20px", width:"97%", 
-          // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)" 
-        boxShadow:"none"
-        }}
-          ref={elementRef}
-        >
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
-                <TableCell style={{ whiteSpace: 'nowrap',textAlign:"center" }}>Probability</TableCell>
-                {tableHeading.map((heading, index) => (
-                  <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap' }} key={index}>
-                    {heading}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>confirmed</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Expected</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Upside</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    </div>
         )}
       </div>
     </div>

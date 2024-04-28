@@ -702,7 +702,7 @@ const BuWiseReport = (props, onBuChange) => {
             <TableHead>
               <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
                 <TableCell style={{ whiteSpace: 'nowrap',textAlign:"center" }}>Probability</TableCell>
-                {tableHeading.map((heading, index) => (
+                {label.map((heading, index) => (
                   <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap' }} key={index}>
                     {heading}
                   </TableCell>
@@ -710,28 +710,34 @@ const BuWiseReport = (props, onBuChange) => {
               </TableRow>
             </TableHead>
             <TableBody>
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>confirmed</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
+            {reportProbabilityData?.outDTOList.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <TableCell
+                          style={{ textAlign: "center", whiteSpace: "nowrap" }}
+                        >
+                          {item.label}
+                        </TableCell>
+                        {item?.data.map((value, index) => (
+                          <TableCell
+                            key={index}
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: label[index].includes("FYP")
+                                ? "rgba(234, 237, 74, 0.54)"
+                                : label[index].includes("FYA")
+                                ? "rgba(126, 237, 74, 0.54)"
+                                : "transparent",
+                            }}
+                          >
+                            {value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
 
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Expected</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Upside</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
