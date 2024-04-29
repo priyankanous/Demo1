@@ -21,10 +21,8 @@ import {
   ReportSearchButtonSection,
   ReportModalCancelButton,
   ReportModalApplyButton,
-  searchModalTitle,
   OutputTypeHEading,
   RadioInput,
-  searchModalinnerContainer,
   SelectOptions,
   ReportModalButtonDiv,
   SelectedFYDisplayDiv,
@@ -53,13 +51,13 @@ import {
   RESET_VIEW,
   APPLY,
 } from "../../utils/Constants";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 
@@ -103,7 +101,7 @@ const SBUClientWise = (props, onBuChange) => {
   const [accountId, setAccountId] = useState("");
   const [regionId, setRegionId] = useState("");
 
-  //open and close modal
+  //To handle modal
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -169,10 +167,11 @@ const SBUClientWise = (props, onBuChange) => {
   }, []);
 
   // chart related states
-  const HIGH_UPSIDE = "High Upside";
-  const [reportProbabilityData, setReportProbabilityData] = useState([]);
+  const [sbuClientData, setSBUClientData] = useState([]);
   const [filteredLabel, setFilteredLabel] = useState([]);
   const [rhs, setRhs] = useState([]);
+  const [arrowDisable, setArrowDisable] = useState(true);
+  const elementRef = useRef(null);
 
   //payload
   const reportData = {
@@ -192,13 +191,13 @@ const SBUClientWise = (props, onBuChange) => {
     },
   };
 
-  //api call - probability
+  //api call - SBUClient
   const getReportProbabilityData = async () => {
     var { data } = await axios.post(
       "http://192.168.16.55:8080/rollingrevenuereport/api/v1/report/sbuclientType",
       reportData
     );
-    setReportProbabilityData(data.data);
+    setSBUClientData(data.data);
     setFilteredLabel(data.data.labels);
   };
 
@@ -221,23 +220,23 @@ const SBUClientWise = (props, onBuChange) => {
     setBdmId("");
     setRegionId("");
     setOpen(false);
-    setReportProbabilityData([]);
+    setSBUClientData([]);
   };
 
   useEffect(() => {
     if (
-      reportProbabilityData?.outDTOList &&
-      reportProbabilityData?.outDTOList
+      sbuClientData?.outDTOList &&
+      sbuClientData?.outDTOList
     ) {
-      const labels = reportProbabilityData?.outDTOList.map(
+      const labels = sbuClientData?.outDTOList.map(
         (item) => item.label
       );
       setRhs(labels);
     }
-  }, [reportProbabilityData?.outDTOList]);
+  }, [sbuClientData?.outDTOList]);
 
-  const label = reportProbabilityData?.labels;
-  const outDTOList = reportProbabilityData?.outDTOList;
+  const label = sbuClientData?.labels;
+  const outDTOList = sbuClientData?.outDTOList;
 
   console.log("label", label);
 
@@ -257,11 +256,11 @@ const SBUClientWise = (props, onBuChange) => {
     APAC1: AMU ? APAC1[index] : 0,
     EURASIAUSRTM1: AMU ? EURASIAUSRTM1[index] : 0,
     USBFSIE: AMU ? USBFSIE[index] : 0,
-    USFITCHRTM3: AMU ? USBFSIE[index] : 0,
-    USHLCEMVRTM2: AMU ? USBFSIE[index] : 0,
-    Testree1: AMU ? USBFSIE[index] : 0,
-    Testree2: AMU ? USBFSIE[index] : 0,
-    Vserve: AMU ? USBFSIE[index] : 0,
+    USFITCHRTM3: AMU ? USFITCHRTM3[index] : 0,
+    USHLCEMVRTM2: AMU ? USHLCEMVRTM2[index] : 0,
+    Testree1: AMU ? Testree1[index] : 0,
+    Testree2: AMU ? Testree2[index] : 0,
+    Vserve: AMU ? Vserve[index] : 0,
   }));
 
   const calculateChartWidth = () => {
@@ -271,11 +270,6 @@ const SBUClientWise = (props, onBuChange) => {
     const calculatedWidth = Math.max(minWidth, numItems * labelWidth);
     return calculatedWidth;
   };
-
-  const tableHeading = ['April-2023', 'May-2023', 'June-2023', 'July-2023', 'August-2023', 'September-2023', 'October-2023', 'November-2023', 'December-2023', 'January-2024', 'February-2024', 'March-2024']
-
-  const [arrowDisable, setArrowDisable] = useState(true);
-  const elementRef = useRef(null);
 
   const handleHorizantalScroll = (element, speed, distance, step) => {
     let scrollAmount = 0;
@@ -310,11 +304,9 @@ const SBUClientWise = (props, onBuChange) => {
             </SearchModalButton>
           </ReportModalButtonDiv>
           <div style={{ display: "flex" }}>
-          <SelectedFYDisplayDiv>
-            <Typography>
-              View:
-            </Typography>
-			<input
+            <SelectedFYDisplayDiv>
+              <Typography>View:</Typography>
+              <input
                 style={{
                   boxShadow: "none",
                   border: "1px solid #0000004d",
@@ -326,14 +318,12 @@ const SBUClientWise = (props, onBuChange) => {
                 disabled
                 value={`SBU Client - ${viewType} View`}
               />
-          </SelectedFYDisplayDiv>
-          <SelectedFYDisplayDiv>
-            {filteredFinancialYear ? (
-				                <div style={{ display: "flex",alignItems:"center" }}>
-              <Typography>
-                {FINANCIAL_YEAR}:
-              </Typography>
-			  <input
+            </SelectedFYDisplayDiv>
+            <SelectedFYDisplayDiv>
+              {filteredFinancialYear ? (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Typography>{FINANCIAL_YEAR}:</Typography>
+                  <input
                     style={{
                       boxShadow: "none",
                       border: "1px solid #0000004d",
@@ -345,15 +335,13 @@ const SBUClientWise = (props, onBuChange) => {
                     }}
                     value={filteredFinancialYear}
                     disabled
-
                   />
-				  </div>
-            ) : (
-              ""
-            )}
-            {/* <Typography>Week :</Typography> */}
-          </SelectedFYDisplayDiv>
-		  {viewType == "Monthly" && (
+                </div>
+              ) : (
+                ""
+              )}
+            </SelectedFYDisplayDiv>
+            {viewType == "Monthly" && (
               <SelectedFYDisplayDiv>
                 <Typography>Week :</Typography>
                 <input
@@ -366,13 +354,11 @@ const SBUClientWise = (props, onBuChange) => {
                     width: "70px",
                     textAlign: "center",
                   }}
-                  // value={2}
                   disabled
-
                 />
               </SelectedFYDisplayDiv>
             )}
-			</div>
+          </div>
         </searchModalTitle>
         <div>
           <Modal
@@ -419,7 +405,6 @@ const SBUClientWise = (props, onBuChange) => {
                   name="viewType"
                   onChange={handleViewTypeChange}
                   checked={viewType === "Quarterly"}
-                  // style={{ boxShadow: "none", marginTop:"10px", fontSize:"16px", fontWeight:"400", color:"#000000" }}
                 />
                 {QUARTERLY}
                 <br />
@@ -465,7 +450,6 @@ const SBUClientWise = (props, onBuChange) => {
                   defaultChecked
                   onChange={handleChartTypeChange}
                   checked={chartType === "Chart"}
-
                 />{" "}
                 {CHART}
                 <RadioInput
@@ -474,7 +458,6 @@ const SBUClientWise = (props, onBuChange) => {
                   name="chartType"
                   onChange={handleChartTypeChange}
                   checked={chartType === "Tabular"}
-
                 />{" "}
                 {TABULAR}
               </div>
@@ -641,148 +624,178 @@ const SBUClientWise = (props, onBuChange) => {
       </div>
 
       <div style={{ marginLeft: "250px" }}>
-      {chartType === "Chart" ? (
-  <div>
-        {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+        {chartType === "Chart" ? (
           <div>
+            {filteredFinancialYear !== "" && filteredFinancialYear !== "0" && (
+              <div>
+                <div
+                  className="searchFilterInnerContainer"
+                  style={{
+                    width: "98%",
+                    overflowX: "auto",
+                    overflowY: "hidden",
+                  }}
+                >
+                  <BarChart
+                    width={calculateChartWidth()}
+                    height={400}
+                    style={{ marginTop: "30px" }}
+                    data={dataList}
+                    margin={{
+                      top: 30,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <XAxis
+                      style={{ fontSize: "9px" }}
+                      dataKey="name"
+                      interval={0}
+                    />
+                    <YAxis style={{ fontSize: "9px" }} interval={0}>
+                      <Label
+                        value="Revenue"
+                        position="insideLeft"
+                        angle={-90}
+                        style={{ textAnchor: "middle" }}
+                      />
+                    </YAxis>
+                    <Tooltip
+                      formatter={(value, name, props) => ["$" + value, name]}
+                    />
+                    <Legend />
+                    <Bar dataKey="AMU" stackId="a" fill="#0C7075" />
+                    <Bar dataKey="APAC1" stackId="a" fill="#0F969C" />
+                    <Bar dataKey="EURASIAUSRTM1" stackId="a" fill="#183D3D" />
+                    <Bar dataKey="USBFSIE" stackId="a" fill="#183D3D" />
+                    <Bar dataKey="USFITCHRTM3" stackId="a" fill="#183D3D" />
+                    <Bar dataKey="USHLCEMVRTM2" stackId="a" fill="#183D3D" />
+                    <Bar dataKey="Testree1" stackId="a" fill="#183D3D" />
+                    <Bar dataKey="Testree2" stackId="a" fill="#183D3D" />
+                    <Bar
+                      dataKey="Vserve"
+                      stackId="a"
+                      fill="#040D12"
+                      label={{
+                        position: "top",
+                        formatter: (value) => {
+                          const formattedValue =
+                            value !== 0
+                              ? `$${(value / 1000).toFixed(0)}k`
+                              : null;
+                          return formattedValue;
+                        },
+                      }}
+                    />
+                  </BarChart>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            style={{
+              marginTop: "60px",
+              position: "relative",
+              overflow: "hidden",
+              paddingBottom: "8px",
+              width: "97%",
+            }}
+          >
             <div
-              className="searchFilterInnerContainer"
-              style={{ width: "98%", overflowX: "auto", overflowY: "hidden" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                // marginTop: "10px",
+              }}
             >
-              <BarChart
-                width={calculateChartWidth()}
-                height={400}
-                style={{ marginTop: "30px" }}
-                data={dataList}
-                margin={{
-                  top: 30,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, -10);
+                }}
+                disabled={arrowDisable}
+              >
+                <KeyboardDoubleArrowLeftIcon />
+              </ButtonTocroll>
+              <ButtonTocroll
+                onClick={() => {
+                  handleHorizantalScroll(elementRef.current, 25, 100, 10);
                 }}
               >
-                <XAxis
-                  style={{ fontSize: "9px" }}
-                  dataKey="name"
-                  interval={0}
-                />
-                <YAxis style={{ fontSize: "9px" }} interval={0}>
-                  <Label
-                    value="Revenue"
-                    position="insideLeft"
-                    angle={-90}
-                    style={{ textAnchor: "middle" }}
-                  />
-                </YAxis>
-                <Tooltip
-                  formatter={(value, name, props) => ["$" + value, name]}
-                />
-                <Legend />
-                <Bar dataKey="AMU" stackId="a" fill="#0C7075" />
-                <Bar dataKey="APAC1" stackId="a" fill="#0F969C" />
-                <Bar dataKey="EURASIAUSRTM1" stackId="a" fill="#183D3D" />
-                <Bar dataKey="USBFSIE" stackId="a" fill="#183D3D" />
-                <Bar dataKey="USFITCHRTM3" stackId="a" fill="#183D3D" />
-                <Bar dataKey="USHLCEMVRTM2" stackId="a" fill="#183D3D" />
-                <Bar dataKey="Testree1" stackId="a" fill="#183D3D" />
-                <Bar dataKey="Testree2" stackId="a" fill="#183D3D" />
-                <Bar
-                  dataKey="Vserve"
-                  stackId="a"
-                  fill="#040D12"
-                  label={{
-                    position: "top",
-                    formatter: (value) => {
-                      const formattedValue =
-                        value !== 0 ? `$${(value / 1000).toFixed(0)}k` : null;
-                      return formattedValue;
-                    },
-                  }}
-                />
-              </BarChart>
+                <KeyboardDoubleArrowRightIcon />
+              </ButtonTocroll>
+            </div>
+            <div>
+              <TableContainer
+                className="searchFilterInnerContainer"
+                component={Paper}
+                style={{
+                  overflow: "hidden",
+                  margin: "0px 0px 0px 20px",
+                  width: "97%",
+                  height: "375px",
+                  // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)"
+                  boxShadow: "none",
+                }}
+                ref={elementRef}
+              >
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      style={{ backgroundColor: "rgba(225, 222, 222, 0.5)" }}
+                    >
+                      <TableCell
+                        style={{ whiteSpace: "nowrap", textAlign: "center" }}
+                      >
+                        Probability
+                      </TableCell>
+                      {label?.map((heading, index) => (
+                        <TableCell
+                          style={{ padding: "0px 15px", whiteSpace: "nowrap" }}
+                          key={index}
+                        >
+                          {heading}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody style={{ overflowY: "scroll" }}>
+                    {sbuClientData?.outDTOList.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        style={{ backgroundColor: "transparent" }}
+                      >
+                        <TableCell
+                          style={{ textAlign: "center", whiteSpace: "nowrap" }}
+                        >
+                          {item.label}
+                        </TableCell>
+                        {item?.data.map((value, index) => (
+                          <TableCell
+                            key={index}
+                            style={{
+                              textAlign: "center",
+                              backgroundColor: label[index].includes("FYP")
+                                ? "rgba(234, 237, 74, 0.54)"
+                                : label[index].includes("FYA")
+                                ? "rgba(126, 237, 74, 0.54)"
+                                : "transparent",
+                            }}
+                          >
+                            {value}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </div>
           </div>
         )}
       </div>
-      ):(
-        <div
-      style={{ marginTop:"60px", position: "relative", overflow: "hidden", paddingBottom: "8px", width:"97%" }}
-    >
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          // marginTop: "10px",
-        }}
-      >
-       <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, -10);
-          }}
-          disabled={arrowDisable}
-        >
-          <KeyboardDoubleArrowLeftIcon />
-        </ButtonTocroll>
-        <ButtonTocroll
-          onClick={() => {
-            handleHorizantalScroll(elementRef.current, 25, 100, 10);
-          }}
-        >
-          <KeyboardDoubleArrowRightIcon />
-        </ButtonTocroll> 
-        </div>
-        <div>
-        <TableContainer
-          component={Paper}
-          style={{ overflow: "hidden", margin: "0px 0px 0px 20px", width:"97%", 
-          // boxShadow:"1px 1px 5px 0px rgba(0, 0, 0, 0.3)" 
-        boxShadow:"none"
-        }}
-          ref={elementRef}
-        >
-                    <Table aria-label="simple table">
-            <TableHead>
-              <TableRow style={{backgroundColor:"rgba(225, 222, 222, 0.5)"}}>
-                <TableCell style={{ whiteSpace: 'nowrap',textAlign:"center" }}>Probability</TableCell>
-                {tableHeading.map((heading, index) => (
-                  <TableCell style={{ padding: "0px 15px", whiteSpace: 'nowrap' }} key={index}>
-                    {heading}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>confirmed</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Expected</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-            <TableRow style={{backgroundColor:"transparent"}}>
-            <TableCell>Upside</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-              <TableCell>126</TableCell>
-            </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-</div>
     </div>
-      )}
-      </div>
-      </div>
   );
 };
 
